@@ -25,7 +25,16 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     });
   }
 
-  const decoded = atob(encoded);
+  let decoded: string;
+
+  try {
+    decoded = atob(encoded);
+  } catch {
+    return new Response("Malformed authorization header", {
+      status: 400,
+    });
+  }
+
   const index = decoded.indexOf(":");
   const user = decoded.substring(0, index);
   const pass = decoded.substring(index + 1);

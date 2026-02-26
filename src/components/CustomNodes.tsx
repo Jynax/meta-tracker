@@ -1,4 +1,4 @@
-import { Handle, Position, type NodeProps, type NodeTypes } from '@xyflow/react';
+import { Handle, Position, type NodeTypes } from '@xyflow/react';
 import type { TreeNodeData } from './treeLayout';
 
 interface InteractiveData extends TreeNodeData {
@@ -11,7 +11,7 @@ function ToolBadge({ toolLabel, tool }: { toolLabel?: string; tool?: TreeNodeDat
   return <span className={`rounded-full border px-2 py-0.5 text-xs ${color}`}>{toolLabel}</span>;
 }
 
-export function PhaseNode({ id, data }: NodeProps<InteractiveData>) {
+export function PhaseNode({ id, data }: { id: string; data: InteractiveData }) {
   const isRoot = data.kind === 'root';
   return (
     <div className="w-64 rounded-xl border border-sky-400/60 bg-slate-800/90 p-4 text-slate-100 shadow-lg transition hover:brightness-110">
@@ -32,7 +32,7 @@ export function PhaseNode({ id, data }: NodeProps<InteractiveData>) {
   );
 }
 
-export function DecisionNode({ id, data }: NodeProps<InteractiveData>) {
+export function DecisionNode({ id, data }: { id: string; data: InteractiveData }) {
   return (
     <div className="w-64 rounded-xl border border-emerald-400/70 bg-emerald-950/40 p-3 text-slate-100 transition hover:brightness-110">
       <Handle type="target" position={Position.Top} className="!bg-emerald-300" />
@@ -47,7 +47,7 @@ export function DecisionNode({ id, data }: NodeProps<InteractiveData>) {
   );
 }
 
-export function EventNode({ id, data }: NodeProps<InteractiveData>) {
+export function EventNode({ id, data }: { id: string; data: InteractiveData }) {
   return (
     <div className="w-56 rounded-xl border border-cyan-400/70 bg-cyan-950/40 p-3 text-slate-100 transition hover:brightness-110">
       <Handle type="target" position={Position.Top} className="!bg-cyan-300" />
@@ -60,7 +60,7 @@ export function EventNode({ id, data }: NodeProps<InteractiveData>) {
   );
 }
 
-export function DeadEndNode({ id, data }: NodeProps<InteractiveData>) {
+export function DeadEndNode({ id, data }: { id: string; data: InteractiveData }) {
   return (
     <div className="w-56 rounded-xl border border-rose-400/70 bg-rose-950/40 p-3 text-slate-100 opacity-60 transition hover:brightness-110">
       <Handle type="target" position={Position.Top} className="!bg-rose-300" />
@@ -76,7 +76,7 @@ export function DeadEndNode({ id, data }: NodeProps<InteractiveData>) {
   );
 }
 
-export function AlternativeNode({ data }: NodeProps<InteractiveData>) {
+export function AlternativeNode({ data }: { data: InteractiveData }) {
   return (
     <div className="w-48 rounded-xl border border-slate-600 bg-slate-900/60 p-2 text-xs text-slate-300 opacity-50 transition hover:brightness-110">
       <Handle type="target" position={Position.Top} className="!bg-rose-300" />

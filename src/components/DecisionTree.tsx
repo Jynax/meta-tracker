@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import ReactFlow, { Background, Controls, MiniMap } from '@xyflow/react';
+import { ReactFlow, Background, Controls, MiniMap } from '@xyflow/react';
 import { bipProject } from '../data/bipProject';
 import type { FilterType } from '../types';
 import { nodeTypes } from './CustomNodes';

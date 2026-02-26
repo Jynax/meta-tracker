@@ -73,7 +73,10 @@ export default function DecisionTree() {
         ))}
       </div>
 
-      <div className="h-[calc(100vh-140px)] overflow-hidden rounded-2xl border border-slate-700">
+      <div
+        className="h-[calc(100vh-140px)] overflow-hidden rounded-2xl border border-slate-700"
+        style={{ height: 'calc(100vh - 140px)' }}
+      >
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -82,6 +85,7 @@ export default function DecisionTree() {
           fitViewOptions={{ maxZoom: 1, minZoom: 0.1, padding: 0.2 }}
           proOptions={{ hideAttribution: true }}
           className="bg-[#0f172a]"
+          style={{ backgroundColor: '#0f172a' }}
         >
           <MiniMap pannable zoomable className="!bg-slate-900/90" nodeStrokeColor="#38bdf8" />
           <Controls className="!bg-slate-900 !border-slate-700" />

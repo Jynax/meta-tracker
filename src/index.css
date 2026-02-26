@@ -1,2 +1,7 @@
+@import '@xyflow/react/dist/style.css' layer(base);
 @import "tailwindcss";
-@import '@xyflow/react/dist/style.css';
+
+body {
+  background-color: #0f172a;
+  color: #e2e8f0;
+}

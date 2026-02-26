@@ -49,26 +49,53 @@ function NodeDetail({ node }: { node: ProjectNode }) {
   );
 }
 
-function DecisionFork({ alternatives }: { alternatives: string[] }) {
+function DecisionFork({ chosenPath, alternatives }: { chosenPath: string; alternatives: string[] }) {
+  const forkHeight = 220;
+  const trunkX = 84;
+  const splitY = 70;
+
+  const alternativeTargets = alternatives.map((_, index) => {
+    const spacing = forkHeight / (alternatives.length + 1);
+    const targetY = spacing * (index + 1);
+    return Math.max(20, Math.min(forkHeight - 18, targetY));
+  });
+
   return (
-    <div className="mt-3 rounded-md border border-emerald-600/40 bg-slate-900/60 p-2">
-      <svg viewBox="0 0 240 62" className="h-12 w-full">
-        <path d="M120 4 L120 34" stroke="rgba(16,185,129,0.9)" strokeWidth="2" fill="none" />
-        <path d="M120 34 L120 58" stroke="rgba(52,211,153,1)" strokeWidth="3" fill="none" />
-        {alternatives.map((_, index) => {
-          const x = 50 + index * (140 / Math.max(1, alternatives.length - 1));
+    <div className="mt-3 rounded-md border border-emerald-600/40 bg-slate-900/60 p-3">
+      <svg viewBox="0 0 360 220" className="h-56 w-full">
+        <path d={`M${trunkX} 8 L${trunkX} ${splitY}`} stroke="rgba(45,212,191,0.6)" strokeWidth="1.5" fill="none" />
+        <path d={`M${trunkX} ${splitY} L${trunkX} ${forkHeight - 6}`} stroke="rgba(45,212,191,1)" strokeWidth="3" fill="none" />
+
+        {alternativeTargets.map((targetY, index) => {
+          const controlX = trunkX + 70;
+          const endX = 250;
           return (
             <path
-              key={index}
-              d={`M120 34 Q ${x} 44 ${x} 58`}
-              stroke="rgba(148,163,184,0.4)"
-              strokeWidth="2"
+              key={`${alternatives[index]}-${index}`}
+              d={`M${trunkX} ${splitY} Q ${controlX} ${targetY} ${endX} ${targetY}`}
+              stroke="rgba(148,163,184,0.35)"
+              strokeWidth="1.5"
               fill="none"
             />
           );
         })}
+
+        <text x={trunkX + 12} y={forkHeight - 10} fill="rgba(167,243,208,0.95)" fontSize="13" fontWeight={700}>
+          {chosenPath}
+        </text>
+
+        {alternatives.map((alternative, index) => (
+          <text
+            key={`${alternative}-label-${index}`}
+            x={258}
+            y={alternativeTargets[index] + 4}
+            fill="rgba(148,163,184,0.85)"
+            fontSize="12"
+          >
+            {alternative}
+          </text>
+        ))}
       </svg>
-      <p className="text-xs text-emerald-200">Bold line = chosen path, dim lines = alternatives</p>
     </div>
   );
 }
@@ -91,17 +118,15 @@ function TreeNode({
 
   return (
     <div className="relative flex gap-3 pb-4 pl-1">
-      <div className="relative w-14 shrink-0">
-        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 56 100" preserveAspectRatio="none">
-          {index > 0 && <path d="M28 0 L28 40" stroke="rgba(125,211,252,0.35)" strokeWidth="1.5" fill="none" />}
-          {!isDeadEnd && index < total - 1 && (
-            <path d="M28 56 L28 100" stroke="rgba(125,211,252,0.35)" strokeWidth="1.5" fill="none" />
-          )}
-          <path d="M28 48 L46 48" stroke="rgba(125,211,252,0.5)" strokeWidth="1.5" fill="none" />
+      <div className="relative w-24 shrink-0">
+        <svg className="absolute inset-0 h-full w-full" viewBox="-16 0 92 100" preserveAspectRatio="none">
+          {index > 0 && <path d="M30 0 L30 40" stroke="rgba(125,211,252,0.35)" strokeWidth="1.5" fill="none" />}
+          {index < total - 1 && <path d="M30 56 L30 100" stroke="rgba(125,211,252,0.35)" strokeWidth="1.5" fill="none" />}
+          {!isDeadEnd && <path d="M30 48 L62 48" stroke="rgba(125,211,252,0.5)" strokeWidth="1.5" fill="none" />}
           {isDeadEnd && (
             <>
-              <path d="M28 48 L12 24" stroke="rgba(251,113,133,0.55)" strokeWidth="1.5" fill="none" />
-              <path d="M6 16 L16 26 M16 16 L6 26" stroke="rgba(251,113,133,0.75)" strokeWidth="1.8" />
+              <path d="M30 48 L-12 48" stroke="rgba(251,113,133,0.7)" strokeWidth="1.8" fill="none" />
+              <path d="M-12 48 L-5 42 M-12 48 L-5 54" stroke="rgba(251,113,133,0.8)" strokeWidth="1.6" />
             </>
           )}
         </svg>
@@ -110,7 +135,7 @@ function TreeNode({
       <article
         className={`w-full rounded-xl border p-3 transition hover:-translate-y-0.5 ${NODE_STYLES[node.type]} ${
           node.type === 'event' ? 'max-w-2xl' : ''
-        }`}
+        } ${isDeadEnd ? '-ml-14 mr-14' : ''}`}
       >
         <button className="w-full text-left" onClick={() => onToggle(node.id)}>
           <div className="flex items-start justify-between gap-3">
@@ -126,7 +151,7 @@ function TreeNode({
           </div>
         </button>
 
-        {isDecision && <DecisionFork alternatives={node.alternatives} />}
+        {isDecision && <DecisionFork chosenPath={node.chosenPath} alternatives={node.alternatives} />}
         {isExpanded && <NodeDetail node={node} />}
       </article>
     </div>

@@ -1,6 +1,14 @@
 import { defineConfig } from 'vite';
-import tailwindcss from '@tailwindcss/vite';
+import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
-  plugins: [tailwindcss()],
+  resolve: {
+    alias: [
+      {
+        find: '@xyflow/react/dist/style.css',
+        replacement: fileURLToPath(new URL('./src/lib/xyflow-style.css', import.meta.url)),
+      },
+      { find: '@xyflow/react', replacement: fileURLToPath(new URL('./src/lib/xyflow-react.tsx', import.meta.url)) },
+    ],
+  },
 });

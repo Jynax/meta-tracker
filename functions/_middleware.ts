@@ -19,7 +19,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
   const [scheme, encoded] = authorization.split(" ");
 
-  if (!encoded || scheme !== "Basic") {
+  if (!encoded || scheme.toLowerCase() !== "basic") {
     return new Response("Malformed authorization header", {
       status: 400,
     });

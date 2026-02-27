@@ -42,8 +42,8 @@ const NODE_WIDTH = 260;
 const PHASE_NODE_WIDTH = 280;
 const ALT_NODE_WIDTH = 200;
 
-const ROOT_TO_PHASE_GAP = 140;
-const PHASE_V_GAP = 30;
+const ROOT_TO_PHASE_GAP = 260;
+const PHASE_V_GAP = 60;
 const EXPANDED_PHASE_BOTTOM = 50;
 const CHILD_V_GAP = 140;
 const BRANCH_H_GAP = 100;
@@ -133,7 +133,7 @@ export function buildTreeLayout(
     }
 
     const children = phase.nodes.filter((n) => matchesFilter(n, options.filter));
-    let childY = cursorY;
+    let childY = cursorY + 20;
     const childX = phaseX + PHASE_NODE_WIDTH + BRANCH_H_GAP;
 
     children.forEach((node) => {

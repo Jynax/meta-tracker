@@ -16,7 +16,7 @@ const FILTERS: Array<{ id: FilterType; label: string }> = [
 
 export default function DecisionTree() {
   const [filter, setFilter] = useState<FilterType>('all');
-  const [expandedPhases, setExpandedPhases] = useState<Set<string>>(new Set());
+  const [expandedPhases, setExpandedPhases] = useState<Set<string>>(new Set(['phase-1']));
   const [detailNodes, setDetailNodes] = useState<Set<string>>(new Set());
 
   const togglePhase = (phaseId: string) => {

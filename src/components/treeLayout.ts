@@ -36,10 +36,10 @@ interface TreeLayoutOptions {
 
 const NODE_WIDTH = 260;
 const ALT_NODE_WIDTH = 200;
-const CHILD_GAP = 40;
-const ALT_GAP = 20;
-const V_SPACING = 160;
-const MIN_PHASE_GAP = 60;
+const CHILD_GAP = 80;
+const ALT_GAP = 40;
+const V_SPACING = 200;
+const MIN_PHASE_GAP = 140;
 const COLLAPSED_PHASE_WIDTH = NODE_WIDTH;
 
 const matchesFilter = (node: ProjectNode, filter: FilterType) =>

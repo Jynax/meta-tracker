@@ -15,12 +15,14 @@ export const bipProject: Project = {
         {
           id: 'p1-event-1',
           type: 'event',
+          category: 'functional',
           title: 'Discover GPT-5.3 Codex',
           description: "Michael hears about Codex and learns it's available in the ChatGPT sidebar.",
         },
         {
           id: 'p1-decision-1',
           type: 'decision',
+          category: 'functional',
           title: 'Choose project: Reading Log App',
           description:
             'Build a reading log explorer for partner Marcie using her 20+ year spreadsheet with 5,350+ books.',
@@ -39,6 +41,7 @@ export const bipProject: Project = {
         {
           id: 'p2-deadend-1',
           type: 'dead-end',
+          category: 'technical',
           title: 'Python not installed',
           description: 'Tried Python-first approach and hit local environment blockers on Windows.',
           failureReason: 'Python was not installed, so this path was abandoned early.',
@@ -46,6 +49,7 @@ export const bipProject: Project = {
         {
           id: 'p2-decision-1',
           type: 'decision',
+          category: 'technical',
           title: 'Choose tech stack',
           description: 'Settled on a browser-first stack to reduce setup friction and move quickly.',
           chosenPath: 'Vite + React + TypeScript (browser-based workflow).',
@@ -54,12 +58,14 @@ export const bipProject: Project = {
         {
           id: 'p2-event-1',
           type: 'event',
+          category: 'technical',
           title: 'Install Git, Node.js, npm',
           description: 'First-time setup of essential development tooling.',
         },
         {
           id: 'p2-event-2',
           type: 'event',
+          category: 'technical',
           title: 'Create GitHub account & repo',
           description: 'Created github.com/Jynax and initialized a private repository.',
         },
@@ -75,12 +81,14 @@ export const bipProject: Project = {
         {
           id: 'p3-event-1',
           type: 'event',
+          category: 'technical',
           title: 'First Codex task: scaffold app',
           description: 'Initial React app included file upload, CSV parsing, and basic charting.',
         },
         {
           id: 'p3-deadend-1',
           type: 'dead-end',
+          category: 'technical',
           title: 'CSV-only limitation',
           description: 'Real spreadsheet had 30 tabs in XLSX format, and CSV dropped almost all context.',
           failureReason: 'CSV exports keep one tab at a time, losing critical multi-sheet data.',
@@ -88,12 +96,14 @@ export const bipProject: Project = {
         {
           id: 'p3-event-2',
           type: 'event',
+          category: 'technical',
           title: 'Create desktop run shortcut',
           description: 'Added a .bat shortcut to pull updates and start the dev server quickly.',
         },
         {
           id: 'p3-decision-1',
           type: 'decision',
+          category: 'functional',
           title: 'Support XLSX directly',
           description: 'Needed native spreadsheet ingestion for realistic usage.',
           chosenPath: 'Use SheetJS for direct XLSX parsing.',
@@ -111,18 +121,21 @@ export const bipProject: Project = {
         {
           id: 'p4-event-1',
           type: 'event',
+          category: 'technical',
           title: 'normalize.ts deep rewrite',
           description: 'Added TriBool parsing, column token sets, and 319 lines of self-checking logic.',
         },
         {
           id: 'p4-event-2',
           type: 'event',
+          category: 'technical',
           title: 'Column alias mapping',
           description: 'Defined 8 alias pairs to support old vs newer column naming variants.',
         },
         {
           id: 'p4-deadend-1',
           type: 'dead-end',
+          category: 'functional',
           title: 'Stacked bar chart PR #18',
           description: 'Solid work sat unmerged while 29+ other PRs landed.',
           failureReason: 'PR #18 became unmergeable due to heavy conflict drift.',
@@ -130,6 +143,7 @@ export const bipProject: Project = {
         {
           id: 'p4-event-3',
           type: 'event',
+          category: 'functional',
           title: 'Seasonal color scheme',
           description: 'Iterated on seasonal chart colors and legend readability.',
         },
@@ -145,6 +159,7 @@ export const bipProject: Project = {
         {
           id: 'p5-decision-1',
           type: 'decision',
+          category: 'technical',
           title: 'Host externally',
           description: 'Needed simple public deployment with low cost and automatic deploys.',
           chosenPath: 'Cloudflare Pages with free tier auto-deploy.',
@@ -153,12 +168,14 @@ export const bipProject: Project = {
         {
           id: 'p5-event-1',
           type: 'event',
+          category: 'functional',
           title: 'Register jynaxxapps.com',
           description: 'Picked .com over .ca to avoid exposing location details.',
         },
         {
           id: 'p5-deadend-1',
           type: 'dead-end',
+          category: 'technical',
           title: 'Zero Trust auth attempt',
           description: 'Investigated Cloudflare Zero Trust for protection.',
           failureReason: 'Payment requirement and UX complexity blocked adoption.',
@@ -166,6 +183,7 @@ export const bipProject: Project = {
         {
           id: 'p5-decision-2',
           type: 'decision',
+          category: 'technical',
           title: 'Worker-based basic auth',
           description: 'Introduced an auth proxy layer in front of the app.',
           chosenPath: 'Cloudflare Worker as a lightweight auth proxy.',
@@ -174,6 +192,7 @@ export const bipProject: Project = {
         {
           id: 'p5-deadend-2',
           type: 'dead-end',
+          category: 'technical',
           title: 'Worker redirect interceptor bug',
           description: 'A debugging interceptor left in Worker code broke proxy behavior.',
           failureReason: 'The lingering debug redirect stalled forward progress in ChatGPT workflows.',
@@ -181,6 +200,7 @@ export const bipProject: Project = {
         {
           id: 'p5-event-2',
           type: 'event',
+          category: 'functional',
           title: 'Published Work module started',
           description: 'Launched side workstream for Marcie’s published reviews and articles.',
         },
@@ -196,6 +216,7 @@ export const bipProject: Project = {
         {
           id: 'p6-decision-1',
           type: 'decision',
+          category: 'functional',
           title: 'Switch from ChatGPT to Claude Cowork',
           description: 'Copy-pasting overhead became unsustainable in the prior workflow.',
           chosenPath: 'Use Claude Cowork browser extension for direct repo control.',
@@ -213,18 +234,21 @@ export const bipProject: Project = {
         {
           id: 'p7-event-1',
           type: 'event',
+          category: 'technical',
           title: 'Full project audit',
           description: 'Reviewed ChatGPT history, Cloudflare config, GitHub state, and live app behavior.',
         },
         {
           id: 'p7-event-2',
           type: 'event',
+          category: 'technical',
           title: 'Fix Worker redirect bug',
           description: 'Located and removed the debugging interceptor that blocked proxy flow.',
         },
         {
           id: 'p7-event-3',
           type: 'event',
+          category: 'technical',
           title: 'Review stale PR #18',
           description: 'Confirmed unmergeable state and chose a fresh implementation path.',
         },
@@ -240,18 +264,21 @@ export const bipProject: Project = {
         {
           id: 'p8-event-1',
           type: 'event',
+          category: 'technical',
           title: 'Analyze real spreadsheet',
           description: 'Mapped 30 sheets: 26 data sheets plus 4 non-data support sheets.',
         },
         {
           id: 'p8-event-2',
           type: 'event',
+          category: 'technical',
           title: 'Identify 4 parsing gaps',
           description: 'Found missing multi-sheet support, classifier logic, aliases, and year resolution.',
         },
         {
           id: 'p8-event-3',
           type: 'event',
+          category: 'technical',
           title: 'Codex multi-sheet task',
           description:
             'Delivered sheetClassifier.ts (173 lines), plus parseExcel.ts and App.tsx ingestion updates.',
@@ -268,6 +295,7 @@ export const bipProject: Project = {
         {
           id: 'p9-decision-1',
           type: 'decision',
+          category: 'functional',
           title: 'Fresh stacked chart',
           description: 'Needed a modern implementation that could merge cleanly to main.',
           chosenPath: 'New chart on current main (PR #49, +44/-50).',
@@ -276,12 +304,14 @@ export const bipProject: Project = {
         {
           id: 'p9-event-1',
           type: 'event',
+          category: 'technical',
           title: 'Close PR #18',
           description: 'Superseded by PR #49 and no longer maintained.',
         },
         {
           id: 'p9-decision-2',
           type: 'decision',
+          category: 'technical',
           title: 'Decompose App.tsx monolith',
           description: 'App.tsx had reached 3,066 lines and needed safer modularization.',
           chosenPath: 'Extracted 5 components in PR #50.',
@@ -299,18 +329,21 @@ export const bipProject: Project = {
         {
           id: 'p10-event-1',
           type: 'event',
+          category: 'functional',
           title: 'YearTimeline component',
           description: 'Implemented a custom timeline visualization at roughly 700 lines.',
         },
         {
           id: 'p10-event-2',
           type: 'event',
+          category: 'technical',
           title: 'sessionStorage cross-tab fix',
           description: 'Shipped PR #60 for reliable new-tab timeline viewing behavior.',
         },
         {
           id: 'p10-event-3',
           type: 'event',
+          category: 'technical',
           title: '4 PRs merged',
           description: 'PRs #56, #57, #59, and #60 merged and auto-deployed.',
         },

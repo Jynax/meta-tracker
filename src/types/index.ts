@@ -3,6 +3,7 @@ export type NodeType = 'decision' | 'event' | 'dead-end';
 export interface BaseNode {
   id: string;
   type: NodeType;
+  category?: 'technical' | 'functional';
   title: string;
   description: string;
 }
@@ -54,4 +55,10 @@ export interface Project {
   stats: ProjectStats;
 }
 
-export type FilterType = 'all' | 'decision' | 'dead-end' | 'event';
+export type FilterType =
+  | 'all'
+  | 'decision'
+  | 'dead-end'
+  | 'event'
+  | 'technical'
+  | 'functional';

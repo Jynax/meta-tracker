@@ -42,8 +42,13 @@ const V_SPACING = 200;
 const MIN_PHASE_GAP = 140;
 const COLLAPSED_PHASE_WIDTH = NODE_WIDTH;
 
-const matchesFilter = (node: ProjectNode, filter: FilterType) =>
-  filter === 'all' || node.type === filter;
+const matchesFilter = (node: ProjectNode, filter: FilterType) => {
+  if (filter === 'all') return true;
+  if (filter === 'technical' || filter === 'functional') {
+    return node.category === filter;
+  }
+  return node.type === filter;
+};
 
 function calcSubtreeWidth(
   phase: Phase,

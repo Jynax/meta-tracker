@@ -21,6 +21,10 @@ export interface TreeNodeData {
   failureReason?: string;
   expanded?: boolean;
   detailOpen?: boolean;
+  nodeCount?: number;
+  decisionCount?: number;
+  eventCount?: number;
+  deadEndCount?: number;
 }
 
 export interface TreeLayoutResult {
@@ -35,12 +39,17 @@ interface TreeLayoutOptions {
 }
 
 const NODE_WIDTH = 260;
+const PHASE_NODE_WIDTH = 280;
 const ALT_NODE_WIDTH = 200;
-const CHILD_GAP = 80;
-const ALT_GAP = 40;
-const V_SPACING = 200;
-const MIN_PHASE_GAP = 140;
-const COLLAPSED_PHASE_WIDTH = NODE_WIDTH;
+
+const ROOT_TO_PHASE_GAP = 140;
+const PHASE_V_GAP = 30;
+const EXPANDED_PHASE_BOTTOM = 50;
+const CHILD_V_GAP = 100;
+const BRANCH_H_GAP = 100;
+const ALT_H_GAP = 60;
+const ALT_V_GAP = 70;
+const COLLAPSED_PHASE_HEIGHT = 80;
 
 const matchesFilter = (node: ProjectNode, filter: FilterType) => {
   if (filter === 'all') return true;
@@ -50,28 +59,14 @@ const matchesFilter = (node: ProjectNode, filter: FilterType) => {
   return node.type === filter;
 };
 
-function calcSubtreeWidth(
-  phase: Phase,
-  expanded: boolean,
-  filter: FilterType,
-): number {
-  if (!expanded) return COLLAPSED_PHASE_WIDTH;
-  const children = phase.nodes.filter((n) => matchesFilter(n, filter));
-  if (children.length === 0) return COLLAPSED_PHASE_WIDTH;
-  const childColumnWidths = children.map((child) => {
-    let width = NODE_WIDTH;
-    if (child.type === 'decision' && child.alternatives.length > 0) {
-      const altRowWidth =
-        child.alternatives.length * ALT_NODE_WIDTH +
-        (child.alternatives.length - 1) * ALT_GAP;
-      width = Math.max(width, altRowWidth);
-    }
-    return width;
-  });
-  const totalChildrenWidth =
-    childColumnWidths.reduce((sum, w) => sum + w, 0) +
-    (children.length - 1) * CHILD_GAP;
-  return Math.max(totalChildrenWidth, COLLAPSED_PHASE_WIDTH);
+function countByType(nodes: ProjectNode[], filter: FilterType) {
+  const filtered = nodes.filter((n) => matchesFilter(n, filter));
+  return {
+    total: filtered.length,
+    decisions: filtered.filter((n) => n.type === 'decision').length,
+    events: filtered.filter((n) => n.type === 'event').length,
+    deadEnds: filtered.filter((n) => n.type === 'dead-end').length,
+  };
 }
 
 export function buildTreeLayout(
@@ -80,21 +75,6 @@ export function buildTreeLayout(
 ): TreeLayoutResult {
   const nodes: Node<TreeNodeData>[] = [];
   const edges: Edge[] = [];
-
-  const subtreeWidths = project.phases.map((phase) =>
-    calcSubtreeWidth(phase, options.expandedPhases.has(phase.id), options.filter),
-  );
-
-  const totalWidth =
-    subtreeWidths.reduce((sum, w) => sum + w, 0) +
-    (project.phases.length - 1) * MIN_PHASE_GAP;
-
-  let cursorX = -totalWidth / 2;
-  const phaseXPositions = subtreeWidths.map((w, i) => {
-    const x = cursorX + w / 2;
-    cursorX += w + (i < subtreeWidths.length - 1 ? MIN_PHASE_GAP : 0);
-    return x;
-  });
 
   nodes.push({
     id: project.id,
@@ -111,16 +91,17 @@ export function buildTreeLayout(
     draggable: false,
   });
 
-  project.phases.forEach((phase, phaseIndex) => {
-    const phaseId = phase.id;
-    const phaseX = phaseXPositions[phaseIndex];
-    const phaseY = V_SPACING;
+  let cursorY = ROOT_TO_PHASE_GAP;
+
+  project.phases.forEach((phase) => {
     const phaseExpanded = options.expandedPhases.has(phase.id);
+    const counts = countByType(phase.nodes, options.filter);
+    const phaseX = -PHASE_NODE_WIDTH / 2;
 
     nodes.push({
-      id: phaseId,
+      id: phase.id,
       type: 'phaseNode',
-      position: { x: phaseX - NODE_WIDTH / 2, y: phaseY },
+      position: { x: phaseX, y: cursorY },
       data: {
         kind: 'phase',
         label: phase.name,
@@ -128,6 +109,10 @@ export function buildTreeLayout(
         toolLabel: phase.toolLabel,
         tool: phase.tool,
         expanded: phaseExpanded,
+        nodeCount: counts.total,
+        decisionCount: counts.decisions,
+        eventCount: counts.events,
+        deadEndCount: counts.deadEnds,
       },
       draggable: false,
     });
@@ -135,48 +120,34 @@ export function buildTreeLayout(
     edges.push({
       id: `${project.id}-${phase.id}`,
       source: project.id,
+      sourceHandle: 'bottom',
       target: phase.id,
-      type: 'straight',
+      targetHandle: 'top',
+      type: 'smoothstep',
       style: { stroke: 'rgba(56, 189, 248, 0.7)', strokeWidth: 1.7 },
     });
 
-    if (!phaseExpanded) return;
+    if (!phaseExpanded || counts.total === 0) {
+      cursorY += COLLAPSED_PHASE_HEIGHT + PHASE_V_GAP;
+      return;
+    }
 
-    const children = phase.nodes.filter((node) => matchesFilter(node, options.filter));
-    if (children.length === 0) return;
+    const children = phase.nodes.filter((n) => matchesFilter(n, options.filter));
+    let childY = cursorY;
+    const childX = phaseX + PHASE_NODE_WIDTH + BRANCH_H_GAP;
 
-    const childColumnWidths = children.map((child) => {
-      let width = NODE_WIDTH;
-      if (child.type === 'decision' && child.alternatives.length > 0) {
-        const altRowWidth =
-          child.alternatives.length * ALT_NODE_WIDTH +
-          (child.alternatives.length - 1) * ALT_GAP;
-        width = Math.max(width, altRowWidth);
-      }
-      return width;
-    });
-
-    const totalChildrenWidth =
-      childColumnWidths.reduce((sum, w) => sum + w, 0) +
-      (children.length - 1) * CHILD_GAP;
-    let childCursorX = phaseX - totalChildrenWidth / 2;
-
-    children.forEach((node, childIndex) => {
-      const childId = node.id;
-      const colWidth = childColumnWidths[childIndex];
-      const childX = childCursorX + colWidth / 2;
-      const childY = phaseY + V_SPACING;
-      childCursorX += colWidth + CHILD_GAP;
-
+    children.forEach((node) => {
       const nodeType =
-        node.type === 'dead-end' ? 'deadEndNode'
-        : node.type === 'decision' ? 'decisionNode'
-        : 'eventNode';
+        node.type === 'dead-end'
+          ? 'deadEndNode'
+          : node.type === 'decision'
+          ? 'decisionNode'
+          : 'eventNode';
 
       nodes.push({
-        id: childId,
+        id: node.id,
         type: nodeType,
-        position: { x: childX - NODE_WIDTH / 2, y: childY },
+        position: { x: childX, y: childY },
         data: {
           kind: node.type,
           label: node.title,
@@ -190,41 +161,54 @@ export function buildTreeLayout(
       });
 
       edges.push({
-        id: `${phase.id}-${childId}`,
+        id: `${phase.id}-${node.id}`,
         source: phase.id,
-        target: childId,
+        sourceHandle: 'right',
+        target: node.id,
+        targetHandle: 'left',
         type: 'smoothstep',
         style: { stroke: 'rgba(56, 189, 248, 0.6)', strokeWidth: 1.6 },
       });
 
-      if (node.type !== 'decision') return;
+      if (node.type === 'decision' && node.alternatives.length > 0) {
+        let altY = childY;
+        const altX = childX + NODE_WIDTH + ALT_H_GAP;
 
-      const altCount = node.alternatives.length;
-      const altRowWidth = altCount * ALT_NODE_WIDTH + (altCount - 1) * ALT_GAP;
-      let altCursorX = childX - altRowWidth / 2;
+        node.alternatives.forEach((alt, i) => {
+          const altId = `${node.id}-alt-${i}`;
 
-      node.alternatives.forEach((alternative, altIndex) => {
-        const alternativeId = `${node.id}-alt-${altIndex}`;
-        const altX = altCursorX + ALT_NODE_WIDTH / 2;
-        altCursorX += ALT_NODE_WIDTH + ALT_GAP;
+          nodes.push({
+            id: altId,
+            type: 'alternativeNode',
+            position: { x: altX, y: altY },
+            data: { kind: 'alternative', label: alt },
+            draggable: false,
+          });
 
-        nodes.push({
-          id: alternativeId,
-          type: 'alternativeNode',
-          position: { x: altX - ALT_NODE_WIDTH / 2, y: childY + V_SPACING },
-          data: { kind: 'alternative', label: alternative },
-          draggable: false,
+          edges.push({
+            id: `${node.id}-${altId}`,
+            source: node.id,
+            sourceHandle: 'right',
+            target: altId,
+            targetHandle: 'left',
+            type: 'default',
+            style: {
+              stroke: 'rgba(251, 113, 133, 0.85)',
+              strokeDasharray: '6 5',
+              strokeWidth: 1.3,
+            },
+          });
+
+          altY += ALT_V_GAP;
         });
 
-        edges.push({
-          id: `${childId}-${alternativeId}`,
-          source: childId,
-          target: alternativeId,
-          type: 'default',
-          style: { stroke: 'rgba(251, 113, 133, 0.85)', strokeDasharray: '6 5', strokeWidth: 1.3 },
-        });
-      });
+        childY = Math.max(childY + CHILD_V_GAP, altY);
+      } else {
+        childY += CHILD_V_GAP;
+      }
     });
+
+    cursorY = childY + EXPANDED_PHASE_BOTTOM;
   });
 
   return { nodes, edges };

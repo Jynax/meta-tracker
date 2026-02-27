@@ -22,7 +22,7 @@ function PhaseSummary({ data }: { data: InteractiveData }) {
   if (data.decisionCount) parts.push(`${data.decisionCount} decision${data.decisionCount > 1 ? 's' : ''}`);
   if (data.eventCount) parts.push(`${data.eventCount} event${data.eventCount > 1 ? 's' : ''}`);
   if (data.deadEndCount) parts.push(`${data.deadEndCount} dead end${data.deadEndCount > 1 ? 's' : ''}`);
-  return <p className="mt-1 text-xs text-slate-400">{parts.join(' \u00B7 ')}</p>;
+  return <p className="mt-1 text-xs text-slate-400">{parts.join(' · ')}</p>;
 }
 
 export function PhaseNode({ id, data }: { id: string; data: InteractiveData }) {
@@ -37,7 +37,7 @@ export function PhaseNode({ id, data }: { id: string; data: InteractiveData }) {
             <h3 className="mt-1 text-lg font-semibold">{data.label}</h3>
             {data.period && <p className="mt-1 text-xs text-slate-300">{data.period}</p>}
           </div>
-          {!isRoot && <span className="text-slate-300">{data.expanded ? '\u2212' : '+'}</span>}
+          {!isRoot && <span className="text-slate-300">{data.expanded ? String.fromCharCode(0x2212) : '+'}</span>}
         </div>
         {data.toolLabel && (
           <div className="mt-2">
@@ -91,7 +91,7 @@ export function DeadEndNode({ id, data }: { id: string; data: InteractiveData })
       <button className="w-full text-left" onClick={() => data.onToggleDetail?.(id)}>
         <div className="flex items-center justify-between gap-2">
           <p className="text-xs uppercase text-rose-200">Dead End</p>
-          <span className="font-bold text-rose-300">\u2715</span>
+          <span className="font-bold text-rose-300">{String.fromCharCode(0x2715)}</span>
         </div>
         <h4 className="mt-1 text-sm font-semibold">{data.label}</h4>
       </button>

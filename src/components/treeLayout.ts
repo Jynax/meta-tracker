@@ -45,11 +45,11 @@ const ALT_NODE_WIDTH = 200;
 const ROOT_TO_PHASE_GAP = 140;
 const PHASE_V_GAP = 30;
 const EXPANDED_PHASE_BOTTOM = 50;
-const CHILD_V_GAP = 100;
+const CHILD_V_GAP = 140;
 const BRANCH_H_GAP = 100;
 const ALT_H_GAP = 60;
 const ALT_V_GAP = 70;
-const COLLAPSED_PHASE_HEIGHT = 80;
+const COLLAPSED_PHASE_HEIGHT = 140;
 
 const matchesFilter = (node: ProjectNode, filter: FilterType) => {
   if (filter === 'all') return true;

@@ -131,7 +131,7 @@ export function buildTreeLayout(
       id: `${project.id}-${phase.id}`,
       source: project.id,
       target: phase.id,
-      type: 'smoothstep',
+      type: 'straight',
       style: { stroke: 'rgba(56, 189, 248, 0.7)', strokeWidth: 1.7 },
     });
 
@@ -215,7 +215,7 @@ export function buildTreeLayout(
           id: `${childId}-${alternativeId}`,
           source: childId,
           target: alternativeId,
-          type: 'smoothstep',
+          type: 'default',
           style: { stroke: 'rgba(251, 113, 133, 0.85)', strokeDasharray: '6 5', strokeWidth: 1.3 },
         });
       });

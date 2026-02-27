@@ -10,6 +10,8 @@ const FILTERS: Array<{ id: FilterType; label: string }> = [
   { id: 'decision', label: 'Decisions' },
   { id: 'dead-end', label: 'Dead Ends' },
   { id: 'event', label: 'Events' },
+  { id: 'technical', label: 'Technical' },
+  { id: 'functional', label: 'Functional' },
 ];
 
 export default function DecisionTree() {

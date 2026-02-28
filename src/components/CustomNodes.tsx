@@ -50,6 +50,7 @@ export function PhaseNode({ id, data }: { id: string; data: InteractiveData }) {
       </button>
       <Handle type="source" position={Position.Bottom} id="bottom" className="!bg-sky-300" />
       {!isRoot && <Handle type="source" position={Position.Right} id="right" className="!bg-sky-300" />}
+      {!isRoot && <Handle type="source" position={Position.Left} id="left" className="!bg-sky-300" />}
     </div>
   );
 }
@@ -58,6 +59,7 @@ export function DecisionNode({ id, data }: { id: string; data: InteractiveData }
   return (
     <div className="w-64 rounded-xl border border-emerald-400/70 bg-emerald-950/40 p-3 text-slate-100 transition hover:brightness-110">
       <Handle type="target" position={Position.Left} id="left" className="!bg-emerald-300" />
+      <Handle type="target" position={Position.Right} id="right" className="!bg-emerald-300" />
       <button className="w-full text-left" onClick={() => data.onToggleDetail?.(id)}>
         <p className="text-xs uppercase text-emerald-200">Decision</p>
         <h4 className="mt-1 font-semibold">{data.label}</h4>
@@ -67,6 +69,7 @@ export function DecisionNode({ id, data }: { id: string; data: InteractiveData }
         <p className="mt-2 border-t border-emerald-300/20 pt-2 text-xs text-slate-200">{data.description}</p>
       )}
       <Handle type="source" position={Position.Right} id="right" className="!bg-emerald-300" />
+      <Handle type="source" position={Position.Left} id="left" className="!bg-emerald-300" />
     </div>
   );
 }
@@ -75,6 +78,7 @@ export function EventNode({ id, data }: { id: string; data: InteractiveData }) {
   return (
     <div className="w-56 rounded-xl border border-cyan-400/70 bg-cyan-950/40 p-3 text-slate-100 transition hover:brightness-110">
       <Handle type="target" position={Position.Left} id="left" className="!bg-cyan-300" />
+      <Handle type="target" position={Position.Right} id="right" className="!bg-cyan-300" />
       <button className="w-full text-left" onClick={() => data.onToggleDetail?.(id)}>
         <p className="text-xs uppercase text-cyan-200">Event</p>
         <h4 className="mt-1 text-sm font-semibold">{data.label}</h4>
@@ -90,6 +94,7 @@ export function DeadEndNode({ id, data }: { id: string; data: InteractiveData })
   return (
     <div className="w-56 rounded-xl border border-rose-400/70 bg-rose-950/40 p-3 text-slate-100 opacity-60 transition hover:brightness-110">
       <Handle type="target" position={Position.Left} id="left" className="!bg-rose-300" />
+      <Handle type="target" position={Position.Right} id="right" className="!bg-rose-300" />
       <button className="w-full text-left" onClick={() => data.onToggleDetail?.(id)}>
         <div className="flex items-center justify-between gap-2">
           <p className="text-xs uppercase text-rose-200">Dead End</p>
@@ -108,6 +113,7 @@ export function DiscoveryNode({ id, data }: { id: string; data: InteractiveData 
   return (
     <div className="w-56 rounded-xl border border-amber-400/70 bg-amber-950/40 p-3 text-slate-100 transition hover:brightness-110">
       <Handle type="target" position={Position.Left} id="left" className="!bg-amber-300" />
+      <Handle type="target" position={Position.Right} id="right" className="!bg-amber-300" />
       <button className="w-full text-left" onClick={() => data.onToggleDetail?.(id)}>
         <p className="text-xs uppercase text-amber-200">Discovery</p>
         <h4 className="mt-1 text-sm font-semibold">{data.label}</h4>
@@ -123,6 +129,7 @@ export function PivotNode({ id, data }: { id: string; data: InteractiveData }) {
   return (
     <div className="w-64 rounded-xl border border-violet-400/70 bg-violet-950/40 p-3 text-slate-100 transition hover:brightness-110">
       <Handle type="target" position={Position.Left} id="left" className="!bg-violet-300" />
+      <Handle type="target" position={Position.Right} id="right" className="!bg-violet-300" />
       <button className="w-full text-left" onClick={() => data.onToggleDetail?.(id)}>
         <p className="text-xs uppercase text-violet-200">Pivot</p>
         <h4 className="mt-1 font-semibold">{data.label}</h4>
@@ -132,6 +139,7 @@ export function PivotNode({ id, data }: { id: string; data: InteractiveData }) {
         <p className="mt-2 border-t border-violet-300/20 pt-2 text-xs text-slate-200">{data.description}</p>
       )}
       <Handle type="source" position={Position.Right} id="right" className="!bg-violet-300" />
+      <Handle type="source" position={Position.Left} id="left" className="!bg-violet-300" />
     </div>
   );
 }
@@ -140,6 +148,7 @@ export function AlternativeNode({ data }: { data: InteractiveData }) {
   return (
     <div className="w-48 rounded-xl border border-slate-600 bg-slate-900/60 p-2 text-xs text-slate-300 opacity-50 transition hover:brightness-110">
       <Handle type="target" position={Position.Left} id="left" className="!bg-rose-300" />
+      <Handle type="target" position={Position.Right} id="right" className="!bg-rose-300" />
       <p className="uppercase tracking-wide text-slate-400">Alternative</p>
       <p className="mt-1">{data.label}</p>
     </div>

@@ -23,6 +23,7 @@ export interface TreeNodeData {
   failureReason?: string;
   expanded?: boolean;
   detailOpen?: boolean;
+  side?: 'left' | 'right';
   nodeCount?: number;
   decisionCount?: number;
   eventCount?: number;
@@ -142,9 +143,13 @@ export function buildTreeLayout(
 
     const children = chapter.nodes.filter((n) => matchesFilter(n, options.filter));
     let childY = cursorY + 20;
-    const childX = chapterX + PHASE_NODE_WIDTH + BRANCH_H_GAP;
 
-    children.forEach((node) => {
+    children.forEach((node, childIndex) => {
+      const side = childIndex % 2 === 0 ? 'right' : 'left';
+      const childX = side === 'right'
+        ? chapterX + PHASE_NODE_WIDTH + BRANCH_H_GAP
+        : chapterX - BRANCH_H_GAP - NODE_WIDTH;
+
       const nodeType =
         node.type === 'dead-end'
           ? 'deadEndNode'
@@ -168,6 +173,7 @@ export function buildTreeLayout(
           alternatives: (node.type === 'decision' || node.type === 'pivot') ? node.alternatives : undefined,
           failureReason: node.type === 'dead-end' ? node.failureReason : undefined,
           detailOpen: options.detailNodes.has(node.id),
+          side,
         },
         draggable: false,
       });
@@ -175,9 +181,9 @@ export function buildTreeLayout(
       edges.push({
         id: `${chapter.id}-${node.id}`,
         source: chapter.id,
-        sourceHandle: 'right',
+        sourceHandle: side === 'right' ? 'right' : 'left',
         target: node.id,
-        targetHandle: 'left',
+        targetHandle: side === 'right' ? 'left' : 'right',
         type: 'smoothstep',
         style: { stroke: 'rgba(56, 189, 248, 0.6)', strokeWidth: 1.6 },
       });
@@ -186,7 +192,9 @@ export function buildTreeLayout(
 
       if ((node.type === 'decision' || node.type === 'pivot') && node.alternatives.length > 0) {
         let altY = childY;
-        const altX = childX + NODE_WIDTH + ALT_H_GAP;
+        const altX = side === 'right'
+          ? childX + NODE_WIDTH + ALT_H_GAP
+          : childX - ALT_H_GAP - ALT_NODE_WIDTH;
 
         node.alternatives.forEach((alt, i) => {
           const altId = `${node.id}-alt-${i}`;
@@ -202,9 +210,9 @@ export function buildTreeLayout(
           edges.push({
             id: `${node.id}-${altId}`,
             source: node.id,
-            sourceHandle: 'right',
+            sourceHandle: side === 'right' ? 'right' : 'left',
             target: altId,
-            targetHandle: 'left',
+            targetHandle: side === 'right' ? 'left' : 'right',
             type: 'default',
             style: {
               stroke: 'rgba(251, 113, 133, 0.85)',

@@ -4,7 +4,7 @@ export const bipProject: Project = {
   id: 'buried-in-print',
   name: 'AI Project Decision Tracker',
   subtitle: 'Buried in Print (BIP) journey from inception to deployment improvements',
-  phases: [
+  chapters: [
     {
       id: 'phase-1',
       name: 'Inception',

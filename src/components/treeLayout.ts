@@ -1,5 +1,5 @@
 import type { Edge, Node } from '@xyflow/react';
-import type { FilterType, Phase, Project, ProjectNode } from '../types';
+import type { Chapter, FilterType, Project, ProjectNode } from '../types';
 
 export type TreeNodeKind =
   | 'root'
@@ -7,6 +7,8 @@ export type TreeNodeKind =
   | 'decision'
   | 'event'
   | 'dead-end'
+  | 'discovery'
+  | 'pivot'
   | 'alternative';
 
 export interface TreeNodeData {
@@ -14,7 +16,7 @@ export interface TreeNodeData {
   label: string;
   period?: string;
   toolLabel?: string;
-  tool?: Phase['tool'];
+  tool?: Chapter['tool'];
   description?: string;
   chosenPath?: string;
   alternatives?: string[];
@@ -25,6 +27,8 @@ export interface TreeNodeData {
   decisionCount?: number;
   eventCount?: number;
   deadEndCount?: number;
+  discoveryCount?: number;
+  pivotCount?: number;
 }
 
 export interface TreeLayoutResult {
@@ -33,7 +37,7 @@ export interface TreeLayoutResult {
 }
 
 interface TreeLayoutOptions {
-  expandedPhases: Set<string>;
+  expandedChapters: Set<string>;
   detailNodes: Set<string>;
   filter: FilterType;
 }
@@ -53,7 +57,7 @@ const COLLAPSED_PHASE_HEIGHT = 140;
 
 const matchesFilter = (node: ProjectNode, filter: FilterType) => {
   if (filter === 'all') return true;
-  if (filter === 'technical' || filter === 'functional') {
+  if (filter === 'technical' || filter === 'functional' || filter === 'ux-design' || filter === 'process') {
     return node.category === filter;
   }
   return node.type === filter;
@@ -66,6 +70,8 @@ function countByType(nodes: ProjectNode[], filter: FilterType) {
     decisions: filtered.filter((n) => n.type === 'decision').length,
     events: filtered.filter((n) => n.type === 'event').length,
     deadEnds: filtered.filter((n) => n.type === 'dead-end').length,
+    discoveries: filtered.filter((n) => n.type === 'discovery').length,
+    pivots: filtered.filter((n) => n.type === 'pivot').length,
   };
 }
 
@@ -93,48 +99,50 @@ export function buildTreeLayout(
 
   let cursorY = ROOT_TO_PHASE_GAP;
 
-  project.phases.forEach((phase) => {
-    const phaseExpanded = options.expandedPhases.has(phase.id);
-    const counts = countByType(phase.nodes, options.filter);
-    const phaseX = -PHASE_NODE_WIDTH / 2;
+  project.chapters.forEach((chapter) => {
+    const chapterExpanded = options.expandedChapters.has(chapter.id);
+    const counts = countByType(chapter.nodes, options.filter);
+    const chapterX = -PHASE_NODE_WIDTH / 2;
 
     nodes.push({
-      id: phase.id,
+      id: chapter.id,
       type: 'phaseNode',
-      position: { x: phaseX, y: cursorY },
+      position: { x: chapterX, y: cursorY },
       data: {
         kind: 'phase',
-        label: phase.name,
-        period: phase.period,
-        toolLabel: phase.toolLabel,
-        tool: phase.tool,
-        expanded: phaseExpanded,
+        label: chapter.name,
+        period: chapter.period,
+        toolLabel: chapter.toolLabel,
+        tool: chapter.tool,
+        expanded: chapterExpanded,
         nodeCount: counts.total,
         decisionCount: counts.decisions,
         eventCount: counts.events,
         deadEndCount: counts.deadEnds,
+        discoveryCount: counts.discoveries,
+        pivotCount: counts.pivots,
       },
       draggable: false,
     });
 
     edges.push({
-      id: `${project.id}-${phase.id}`,
+      id: `${project.id}-${chapter.id}`,
       source: project.id,
       sourceHandle: 'bottom',
-      target: phase.id,
+      target: chapter.id,
       targetHandle: 'top',
       type: 'smoothstep',
       style: { stroke: 'rgba(56, 189, 248, 0.7)', strokeWidth: 1.7 },
     });
 
-    if (!phaseExpanded || counts.total === 0) {
+    if (!chapterExpanded || counts.total === 0) {
       cursorY += COLLAPSED_PHASE_HEIGHT + PHASE_V_GAP;
       return;
     }
 
-    const children = phase.nodes.filter((n) => matchesFilter(n, options.filter));
+    const children = chapter.nodes.filter((n) => matchesFilter(n, options.filter));
     let childY = cursorY + 20;
-    const childX = phaseX + PHASE_NODE_WIDTH + BRANCH_H_GAP;
+    const childX = chapterX + PHASE_NODE_WIDTH + BRANCH_H_GAP;
 
     children.forEach((node) => {
       const nodeType =
@@ -142,6 +150,10 @@ export function buildTreeLayout(
           ? 'deadEndNode'
           : node.type === 'decision'
           ? 'decisionNode'
+          : node.type === 'discovery'
+          ? 'discoveryNode'
+          : node.type === 'pivot'
+          ? 'pivotNode'
           : 'eventNode';
 
       nodes.push({
@@ -152,8 +164,8 @@ export function buildTreeLayout(
           kind: node.type,
           label: node.title,
           description: node.description,
-          chosenPath: node.type === 'decision' ? node.chosenPath : undefined,
-          alternatives: node.type === 'decision' ? node.alternatives : undefined,
+          chosenPath: (node.type === 'decision' || node.type === 'pivot') ? node.chosenPath : undefined,
+          alternatives: (node.type === 'decision' || node.type === 'pivot') ? node.alternatives : undefined,
           failureReason: node.type === 'dead-end' ? node.failureReason : undefined,
           detailOpen: options.detailNodes.has(node.id),
         },
@@ -161,8 +173,8 @@ export function buildTreeLayout(
       });
 
       edges.push({
-        id: `${phase.id}-${node.id}`,
-        source: phase.id,
+        id: `${chapter.id}-${node.id}`,
+        source: chapter.id,
         sourceHandle: 'right',
         target: node.id,
         targetHandle: 'left',
@@ -172,7 +184,7 @@ export function buildTreeLayout(
 
       const detailExtra = (options.detailNodes.has(node.id) && node.description) ? 60 : 0;
 
-      if (node.type === 'decision' && node.alternatives.length > 0) {
+      if ((node.type === 'decision' || node.type === 'pivot') && node.alternatives.length > 0) {
         let altY = childY;
         const altX = childX + NODE_WIDTH + ALT_H_GAP;
 

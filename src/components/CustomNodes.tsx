@@ -22,7 +22,9 @@ function PhaseSummary({ data }: { data: InteractiveData }) {
   if (data.decisionCount) parts.push(`${data.decisionCount} decision${data.decisionCount > 1 ? 's' : ''}`);
   if (data.eventCount) parts.push(`${data.eventCount} event${data.eventCount > 1 ? 's' : ''}`);
   if (data.deadEndCount) parts.push(`${data.deadEndCount} dead end${data.deadEndCount > 1 ? 's' : ''}`);
-  return <p className="mt-1 text-xs text-slate-400">{parts.join(' · ')}</p>;
+  if (data.discoveryCount) parts.push(`${data.discoveryCount} discover${data.discoveryCount > 1 ? 'ies' : 'y'}`);
+  if (data.pivotCount) parts.push(`${data.pivotCount} pivot${data.pivotCount > 1 ? 's' : ''}`);
+  return <p className="mt-1 text-xs text-slate-400">{parts.join(' ' + String.fromCharCode(0x00B7) + ' ')}</p>;
 }
 
 export function PhaseNode({ id, data }: { id: string; data: InteractiveData }) {
@@ -33,7 +35,7 @@ export function PhaseNode({ id, data }: { id: string; data: InteractiveData }) {
       <button className="w-full text-left" onClick={() => data.onToggleExpand?.(id)}>
         <div className="flex items-start justify-between gap-2">
           <div>
-            <p className="text-xs uppercase tracking-wider text-slate-400">{isRoot ? 'Project' : 'Phase'}</p>
+            <p className="text-xs uppercase tracking-wider text-slate-400">{isRoot ? 'Project' : 'Chapter'}</p>
             <h3 className="mt-1 text-lg font-semibold">{data.label}</h3>
             {data.period && <p className="mt-1 text-xs text-slate-300">{data.period}</p>}
           </div>
@@ -102,6 +104,38 @@ export function DeadEndNode({ id, data }: { id: string; data: InteractiveData })
   );
 }
 
+export function DiscoveryNode({ id, data }: { id: string; data: InteractiveData }) {
+  return (
+    <div className="w-56 rounded-xl border border-amber-400/70 bg-amber-950/40 p-3 text-slate-100 transition hover:brightness-110">
+      <Handle type="target" position={Position.Left} id="left" className="!bg-amber-300" />
+      <button className="w-full text-left" onClick={() => data.onToggleDetail?.(id)}>
+        <p className="text-xs uppercase text-amber-200">Discovery</p>
+        <h4 className="mt-1 text-sm font-semibold">{data.label}</h4>
+      </button>
+      {data.detailOpen && data.description && (
+        <p className="mt-2 text-xs text-amber-100">{data.description}</p>
+      )}
+    </div>
+  );
+}
+
+export function PivotNode({ id, data }: { id: string; data: InteractiveData }) {
+  return (
+    <div className="w-64 rounded-xl border border-violet-400/70 bg-violet-950/40 p-3 text-slate-100 transition hover:brightness-110">
+      <Handle type="target" position={Position.Left} id="left" className="!bg-violet-300" />
+      <button className="w-full text-left" onClick={() => data.onToggleDetail?.(id)}>
+        <p className="text-xs uppercase text-violet-200">Pivot</p>
+        <h4 className="mt-1 font-semibold">{data.label}</h4>
+        {data.chosenPath && <p className="mt-1 text-xs text-violet-100">New direction: {data.chosenPath}</p>}
+      </button>
+      {data.detailOpen && data.description && (
+        <p className="mt-2 border-t border-violet-300/20 pt-2 text-xs text-slate-200">{data.description}</p>
+      )}
+      <Handle type="source" position={Position.Right} id="right" className="!bg-violet-300" />
+    </div>
+  );
+}
+
 export function AlternativeNode({ data }: { data: InteractiveData }) {
   return (
     <div className="w-48 rounded-xl border border-slate-600 bg-slate-900/60 p-2 text-xs text-slate-300 opacity-50 transition hover:brightness-110">
@@ -117,5 +151,7 @@ export const nodeTypes: NodeTypes = {
   decisionNode: DecisionNode,
   eventNode: EventNode,
   deadEndNode: DeadEndNode,
+  discoveryNode: DiscoveryNode,
+  pivotNode: PivotNode,
   alternativeNode: AlternativeNode,
 };

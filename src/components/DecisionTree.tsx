@@ -20,7 +20,7 @@ const FILTERS: Array<{ id: FilterType; label: string }> = [
 
 export default function DecisionTree() {
   const [filter, setFilter] = useState<FilterType>('all');
-  const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set(['phase-1']));
+  const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set(['ch-spark']));
   const [detailNodes, setDetailNodes] = useState<Set<string>>(new Set());
 
   const toggleChapter = (chapterId: string) => {

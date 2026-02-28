@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { ReactFlow, Background, Controls } from '@xyflow/react';
 import { bipProject } from '../data/bipProject';
-import type { FilterType } from '../types';
+import { metaProject } from '../data/metaProject';
+import type { FilterType, Project } from '../types';
 import { nodeTypes } from './CustomNodes';
 import { buildTreeLayout } from './treeLayout';
 
@@ -18,8 +19,11 @@ const FILTERS: Array<{ id: FilterType; label: string }> = [
   { id: 'process', label: 'Process' },
 ];
 
+const PROJECTS = [bipProject, metaProject];
+
 export default function DecisionTree() {
   const [filter, setFilter] = useState<FilterType>('all');
+  const [activeProject, setActiveProject] = useState<Project>(bipProject);
   const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set(['ch-spark']));
   const [detailNodes, setDetailNodes] = useState<Set<string>>(new Set());
 
@@ -41,8 +45,18 @@ export default function DecisionTree() {
     });
   };
 
+  const switchProject = (projectId: string) => {
+    const project = PROJECTS.find((p) => p.id === projectId);
+    if (project) {
+      setActiveProject(project);
+      setExpandedChapters(new Set([project.chapters[0]?.id].filter(Boolean)));
+      setDetailNodes(new Set());
+      setFilter('all');
+    }
+  };
+
   const { nodes, edges } = useMemo(() => {
-    const result = buildTreeLayout(bipProject, { expandedChapters, detailNodes, filter });
+    const result = buildTreeLayout(activeProject, { expandedChapters, detailNodes, filter });
     return {
       nodes: result.nodes.map((node) => ({
         ...node,
@@ -54,13 +68,30 @@ export default function DecisionTree() {
       })),
       edges: result.edges,
     };
-  }, [detailNodes, expandedChapters, filter]);
+  }, [activeProject, detailNodes, expandedChapters, filter]);
 
   return (
     <section className="mx-auto max-w-[1800px] px-4 py-8 text-slate-100 sm:px-8">
       <header className="mb-5">
-        <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{bipProject.subtitle}</p>
-        <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">{bipProject.name}</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{activeProject.subtitle}</p>
+        {PROJECTS.length > 1 && (
+          <div className="mt-2 flex items-center gap-2">
+            {PROJECTS.map((proj) => (
+              <button
+                key={proj.id}
+                onClick={() => switchProject(proj.id)}
+                className={`rounded-lg px-3 py-1.5 text-sm transition ${
+                  activeProject.id === proj.id
+                    ? 'bg-slate-100 text-slate-950'
+                    : 'border border-slate-700 bg-slate-800 text-slate-300 hover:brightness-110'
+                }`}
+              >
+                {proj.name}
+              </button>
+            ))}
+          </div>
+        )}
+        <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">{activeProject.name}</h1>
       </header>
 
       <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/80 p-3">

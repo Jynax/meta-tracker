@@ -170,6 +170,8 @@ export function buildTreeLayout(
         style: { stroke: 'rgba(56, 189, 248, 0.6)', strokeWidth: 1.6 },
       });
 
+      const detailExtra = (options.detailNodes.has(node.id) && node.description) ? 60 : 0;
+
       if (node.type === 'decision' && node.alternatives.length > 0) {
         let altY = childY;
         const altX = childX + NODE_WIDTH + ALT_H_GAP;
@@ -202,9 +204,9 @@ export function buildTreeLayout(
           altY += ALT_V_GAP;
         });
 
-        childY = Math.max(childY + CHILD_V_GAP, altY);
+        childY = Math.max(childY + CHILD_V_GAP + detailExtra, altY + detailExtra);
       } else {
-        childY += CHILD_V_GAP;
+        childY += CHILD_V_GAP + detailExtra;
       }
     });
 

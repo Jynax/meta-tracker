@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ReactFlow, Background, Controls, MiniMap } from '@xyflow/react';
+import { ReactFlow, Background, Controls } from '@xyflow/react';
 import { bipProject } from '../data/bipProject';
 import type { FilterType } from '../types';
 import { nodeTypes } from './CustomNodes';
@@ -89,7 +89,6 @@ export default function DecisionTree() {
           className="bg-[#0f172a]"
           style={{ backgroundColor: '#0f172a' }}
         >
-          <MiniMap pannable zoomable className="!bg-slate-900/90" nodeStrokeColor="#38bdf8" />
           <Controls className="!bg-slate-900 !border-slate-700" />
           <Background variant="dots" gap={18} size={1.2} color="rgba(148,163,184,0.08)" />
         </ReactFlow>

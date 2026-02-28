@@ -46,7 +46,7 @@ const NODE_WIDTH = 260;
 const PHASE_NODE_WIDTH = 280;
 const ALT_NODE_WIDTH = 200;
 
-const ROOT_TO_PHASE_GAP = 260;
+const ROOT_TO_PHASE_GAP = 300;
 const PHASE_V_GAP = 60;
 const EXPANDED_PHASE_BOTTOM = 50;
 const CHILD_V_GAP = 140;
@@ -131,7 +131,7 @@ export function buildTreeLayout(
       sourceHandle: 'bottom',
       target: chapter.id,
       targetHandle: 'top',
-      type: 'smoothstep',
+      type: 'default',
       style: { stroke: 'rgba(56, 189, 248, 0.7)', strokeWidth: 1.7 },
     });
 
@@ -182,7 +182,7 @@ export function buildTreeLayout(
         style: { stroke: 'rgba(56, 189, 248, 0.6)', strokeWidth: 1.6 },
       });
 
-      const detailExtra = (options.detailNodes.has(node.id) && node.description) ? 60 : 0;
+      const detailExtra = (options.detailNodes.has(node.id) && node.description) ? Math.max(60, Math.ceil(node.description.length / 40) * 25) : 0;
 
       if ((node.type === 'decision' || node.type === 'pivot') && node.alternatives.length > 0) {
         let altY = childY;

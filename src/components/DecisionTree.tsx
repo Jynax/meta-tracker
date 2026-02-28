@@ -10,20 +10,24 @@ const FILTERS: Array<{ id: FilterType; label: string }> = [
   { id: 'decision', label: 'Decisions' },
   { id: 'dead-end', label: 'Dead Ends' },
   { id: 'event', label: 'Events' },
+  { id: 'discovery', label: 'Discoveries' },
+  { id: 'pivot', label: 'Pivots' },
   { id: 'technical', label: 'Technical' },
   { id: 'functional', label: 'Functional' },
+  { id: 'ux-design', label: 'UX/Design' },
+  { id: 'process', label: 'Process' },
 ];
 
 export default function DecisionTree() {
   const [filter, setFilter] = useState<FilterType>('all');
-  const [expandedPhases, setExpandedPhases] = useState<Set<string>>(new Set(['phase-1']));
+  const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set(['phase-1']));
   const [detailNodes, setDetailNodes] = useState<Set<string>>(new Set());
 
-  const togglePhase = (phaseId: string) => {
-    setExpandedPhases((current) => {
+  const toggleChapter = (chapterId: string) => {
+    setExpandedChapters((current) => {
       const next = new Set(current);
-      if (next.has(phaseId)) next.delete(phaseId);
-      else next.add(phaseId);
+      if (next.has(chapterId)) next.delete(chapterId);
+      else next.add(chapterId);
       return next;
     });
   };
@@ -38,19 +42,19 @@ export default function DecisionTree() {
   };
 
   const { nodes, edges } = useMemo(() => {
-    const result = buildTreeLayout(bipProject, { expandedPhases, detailNodes, filter });
+    const result = buildTreeLayout(bipProject, { expandedChapters, detailNodes, filter });
     return {
       nodes: result.nodes.map((node) => ({
         ...node,
         data: {
           ...node.data,
-          onToggleExpand: togglePhase,
+          onToggleExpand: toggleChapter,
           onToggleDetail: toggleDetail,
         },
       })),
       edges: result.edges,
     };
-  }, [detailNodes, expandedPhases, filter]);
+  }, [detailNodes, expandedChapters, filter]);
 
   return (
     <section className="mx-auto max-w-[1800px] px-4 py-8 text-slate-100 sm:px-8">

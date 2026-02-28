@@ -1,11 +1,14 @@
-export type NodeType = 'decision' | 'event' | 'dead-end';
+export type NodeType = 'decision' | 'event' | 'dead-end' | 'discovery' | 'pivot';
+
+export type NodeCategory = 'technical' | 'functional' | 'ux-design' | 'process';
 
 export interface BaseNode {
   id: string;
   type: NodeType;
-  category?: 'technical' | 'functional';
+  category?: NodeCategory;
   title: string;
   description: string;
+  lesson?: string;
 }
 
 export interface DecisionNode extends BaseNode {
@@ -23,16 +26,26 @@ export interface DeadEndNode extends BaseNode {
   failureReason: string;
 }
 
-export type ProjectNode = DecisionNode | EventNode | DeadEndNode;
+export interface DiscoveryNode extends BaseNode {
+  type: 'discovery';
+}
 
-export type PhaseTool = 'chatgpt' | 'mixed' | 'claude';
+export interface PivotNode extends BaseNode {
+  type: 'pivot';
+  chosenPath: string;
+  alternatives: string[];
+}
 
-export interface Phase {
+export type ProjectNode = DecisionNode | EventNode | DeadEndNode | DiscoveryNode | PivotNode;
+
+export type ChapterTool = 'chatgpt' | 'mixed' | 'claude';
+
+export interface Chapter {
   id: string;
   name: string;
   period: string;
   toolLabel: string;
-  tool: PhaseTool;
+  tool: ChapterTool;
   nodes: ProjectNode[];
 }
 
@@ -51,7 +64,7 @@ export interface Project {
   id: string;
   name: string;
   subtitle: string;
-  phases: Phase[];
+  chapters: Chapter[];
   stats: ProjectStats;
 }
 
@@ -60,5 +73,9 @@ export type FilterType =
   | 'decision'
   | 'dead-end'
   | 'event'
+  | 'discovery'
+  | 'pivot'
   | 'technical'
-  | 'functional';
+  | 'functional'
+  | 'ux-design'
+  | 'process';

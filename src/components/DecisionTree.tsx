@@ -4,6 +4,7 @@ import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
 import type { FilterType, NodeCategory, Project, ProjectNode } from '../types';
 import { nodeTypes } from './CustomNodes';
+import MetricsDashboard from './MetricsDashboard';
 import type { TreeNodeData } from './treeLayout';
 import { buildTreeLayout } from './treeLayout';
 
@@ -82,7 +83,7 @@ function CategoryBar({ categories, total, compact = false }: { categories: Recor
   );
 }
 
-function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { onToggleExpand?: (id: string) => void; chapterStats?: ChapterStat } }) {
+function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { onToggleExpand?: (id: string) => void; chapterStats?: ChapterStat; onJumpToMetrics?: (tab: 'overview' | 'code' | 'bugs' | 'sessions') => void } }) {
   const isRoot = data.kind === 'root';
   const stats = data.chapterStats;
   return (
@@ -105,7 +106,19 @@ function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { o
             {stats.deadEnds > 0 && <span style={{ color: '#fb7185' }}>{stats.deadEnds} dead ends</span>}
             {stats.discoveries > 0 && <span style={{ color: '#fbbf24' }}>{stats.discoveries} discoveries</span>}
             {stats.pivots > 0 && <span style={{ color: '#a78bfa' }}>{stats.pivots} pivots</span>}
-            {stats.bugs > 0 && <span className="underline decoration-dotted" style={{ color: '#fb7185' }}>{stats.bugs} bugs</span>}
+            {stats.bugs > 0 && (
+              <button
+                type="button"
+                className="underline decoration-dotted"
+                style={{ color: '#fb7185' }}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  data.onJumpToMetrics?.('bugs');
+                }}
+              >
+                {stats.bugs} bugs
+              </button>
+            )}
           </div>
         )}
       </button>
@@ -120,6 +133,7 @@ function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { o
 export default function DecisionTree() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [view, setView] = useState<'tree' | 'metrics'>('tree');
+  const [metricsTab, setMetricsTab] = useState<'overview' | 'code' | 'bugs' | 'sessions'>('overview');
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [activeProject, setActiveProject] = useState<Project>(bipProject);
   const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set(['ch-spark']));
@@ -152,6 +166,7 @@ export default function DecisionTree() {
       setFilter('all');
       setFiltersExpanded(false);
       setView('tree');
+      setMetricsTab('overview');
     }
   };
 
@@ -180,6 +195,10 @@ export default function DecisionTree() {
           ...node.data,
           onToggleExpand: toggleChapter,
           onToggleDetail: toggleDetail,
+          onJumpToMetrics: (tab: 'overview' | 'code' | 'bugs' | 'sessions') => {
+            setMetricsTab(tab);
+            setView('metrics');
+          },
           chapterStats: projectSummary.chapterStats[node.id],
         },
       })),
@@ -319,14 +338,14 @@ export default function DecisionTree() {
       )}
 
       {view === 'metrics' && (
-        <div
-          className="flex h-[calc(100vh-140px)] items-center justify-center rounded-2xl border"
-          style={{ backgroundColor: '#1e293b', borderColor: '#334155' }}
-        >
-          <div className="rounded-xl border border-slate-700 bg-slate-900 px-6 py-10 text-center text-slate-200">
-            Metrics view coming soon
-          </div>
-        </div>
+        <MetricsDashboard
+          projectId={activeProject.id}
+          initialTab={metricsTab}
+          onJumpToChapter={(chapterId) => {
+            setView('tree');
+            setExpandedChapters((current) => new Set([...current, chapterId]));
+          }}
+        />
       )}
     </section>
   );

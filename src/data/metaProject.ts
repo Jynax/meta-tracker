@@ -443,11 +443,11 @@ export const metaProject: Project = {
   stats: {
     totalDays: 4,
     chatGptMessages: '250+',
-    coworkSessions: 7,
+    coworkSessions: 8,
     prsCreated: '31+',
-    codexTasks: '22+',
-    linesOfCode: '2,200+',
-    deadEnds: 3,
+    codexTasks: '31+',
+    linesOfCode: '2,300+',
+    deadEnds: 2,
     majorDecisions: 15,
   },
 };

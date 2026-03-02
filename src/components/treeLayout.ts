@@ -99,6 +99,7 @@ export function buildTreeLayout(
   });
 
   let cursorY = ROOT_TO_PHASE_GAP;
+  let previousChapterId: string | null = null;
 
   project.chapters.forEach((chapter) => {
     const chapterExpanded = options.expandedChapters.has(chapter.id);
@@ -126,15 +127,20 @@ export function buildTreeLayout(
       draggable: false,
     });
 
+    const sourceId = previousChapterId ?? project.id;
+    const isChapterSpineEdge = previousChapterId !== null;
+
     edges.push({
-      id: `${project.id}-${chapter.id}`,
-      source: project.id,
-      sourceHandle: 'bottom',
+      id: `${sourceId}-${chapter.id}`,
+      source: sourceId,
+      sourceHandle: isChapterSpineEdge ? 'bottom-right' : 'bottom',
       target: chapter.id,
-      targetHandle: 'top',
+      targetHandle: isChapterSpineEdge ? 'top-right' : 'top',
       type: 'default',
       style: { stroke: 'rgba(56, 189, 248, 0.7)', strokeWidth: 1.7 },
     });
+
+    previousChapterId = chapter.id;
 
     if (!chapterExpanded || counts.total === 0) {
       cursorY += COLLAPSED_PHASE_HEIGHT + PHASE_V_GAP;

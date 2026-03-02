@@ -1,8 +1,8 @@
 import { useMemo, useState, useEffect } from 'react';
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
-import { bipCodeVolume, bipSessions, bipBugs, bipDerived, bipStack } from '../data/bipMetrics';
-import { metaCodeVolume, metaSessions, metaBugs, metaDerived, metaStack } from '../data/metaMetrics';
+import { bipCodeVolume, bipSessions, bipBugs, bipDerived, bipStack, bipDateRange } from '../data/bipMetrics';
+import { metaCodeVolume, metaSessions, metaBugs, metaDerived, metaStack, metaDateRange } from '../data/metaMetrics';
 
 type MetricsTab = 'overview' | 'code' | 'bugs' | 'sessions';
 
@@ -39,7 +39,8 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
     const bugs = projectId === 'meta' ? metaBugs : bipBugs;
     const derived = projectId === 'meta' ? metaDerived : bipDerived;
     const stack = projectId === 'meta' ? metaStack : bipStack;
-    return { project, codeVolume, sessions, bugs, derived, stack };
+    const dateRange = projectId === 'meta' ? metaDateRange : bipDateRange;
+    return { project, codeVolume, sessions, bugs, derived, stack, dateRange };
   }, [projectId]);
 
   const chapterMap = useMemo(
@@ -55,21 +56,6 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const maxTotal = Math.max(...selected.codeVolume.map((item) => item.total), 1);
   const maxDelta = Math.max(...selected.codeVolume.map((item) => Math.max(item.added, item.deleted)), 1);
   const maxNetAbs = Math.max(...selected.codeVolume.map((item) => Math.abs(item.net)), 1);
-
-  const nodeCounts = useMemo(() => {
-    const nodes = selected.project.chapters.flatMap((chapter) => chapter.nodes);
-    return {
-      decisions: nodes.filter((node) => node.type === 'decision').length,
-      events: nodes.filter((node) => node.type === 'event').length,
-      deadEnds: nodes.filter((node) => node.type === 'dead-end').length,
-      discoveries: nodes.filter((node) => node.type === 'discovery').length,
-      pivots: nodes.filter((node) => node.type === 'pivot').length,
-      technical: nodes.filter((node) => node.category === 'technical').length,
-      functional: nodes.filter((node) => node.category === 'functional').length,
-      ux: nodes.filter((node) => node.category === 'ux-design').length,
-      process: nodes.filter((node) => node.category === 'process').length,
-    };
-  }, [selected.project.chapters]);
 
   const bySeverity = selected.bugs.reduce<Record<string, number>>((acc, bug) => {
     acc[bug.severity] = (acc[bug.severity] ?? 0) + 1;
@@ -139,22 +125,9 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <Card label="Sessions" value={selected.sessions.length} color={C.cyan} />
             <Card label="PRs Merged" value={totalPRs} color={C.emerald} />
-            <Card label="Hours" value={`~${totalHours}h`} color={C.amber} />
+            <Card label="Hours" value={`${totalHours}h`} color={C.amber} />
             <Card label="Current LOC" value={currentLoc.toLocaleString()} color={C.white} />
-            <Card label="Bugs Found" value={selected.bugs.length} color={C.rose} />
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            <Card label="Decisions" value={nodeCounts.decisions} color={C.cyan} />
-            <Card label="Events" value={nodeCounts.events} color={C.emerald} />
-            <Card label="Dead Ends" value={nodeCounts.deadEnds} color={C.rose} />
-            <Card label="Discoveries" value={nodeCounts.discoveries} color={C.amber} />
-            <Card label="Pivots" value={nodeCounts.pivots} color={C.violet} />
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Card label="Technical" value={nodeCounts.technical} color={C.cyan} />
-            <Card label="Functional" value={nodeCounts.functional} color={C.emerald} />
-            <Card label="UX/Design" value={nodeCounts.ux} color={C.amber} />
-            <Card label="Process" value={nodeCounts.process} color={C.violet} />
+            <Card label="Timeline" value={`${selected.dateRange.start} – ${selected.dateRange.end}`} color={C.violet} />
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {selected.derived.map((metric) => (
@@ -280,7 +253,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
             <Card label="Total PRs" value={totalPRs} color={C.emerald} />
             <Card label="Total Decisions" value={selected.sessions.reduce((sum, item) => sum + item.decisions, 0)} color={C.cyan} />
             <Card label="Total Dead Ends" value={selected.sessions.reduce((sum, item) => sum + item.deadEnds, 0)} color={C.rose} />
-            <Card label="Total Hours" value={`~${totalHours}h`} color={C.amber} />
+            <Card label="Total Hours" value={`${totalHours}h`} color={C.amber} />
           </div>
           <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
             <h3 className="mb-3 text-sm font-semibold">Session Activity</h3>
@@ -303,7 +276,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                 <h4 className="text-base font-semibold">{entry.session}</h4>
                 <p className="mb-3 text-sm" style={{ color: C.cyan }}>{entry.focus}</p>
                 <div className="grid grid-cols-2 gap-2 text-xs" style={{ color: C.slate }}>
-                  <span>Duration</span><span>~{entry.duration}h</span>
+                  <span>Duration</span><span>{entry.duration}h</span>
                   <span>PRs</span><span>{entry.prs}</span>
                   <span>Decisions</span><span>{entry.decisions}</span>
                   <span>Dead Ends</span><span>{entry.deadEnds}</span>

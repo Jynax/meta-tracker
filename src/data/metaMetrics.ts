@@ -114,6 +114,11 @@ export const metaSessions: SessionEntry[] = [
   },
 ];
 
+export const metaDateRange = {
+  start: 'Feb 2026',
+  end: 'Mar 2026',
+};
+
 export const metaBugs: BugEntry[] = [
   {
     id: 1,

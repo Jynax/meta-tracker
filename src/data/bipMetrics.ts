@@ -85,6 +85,11 @@ export const bipSessions: SessionEntry[] = [
   },
 ];
 
+export const bipDateRange = {
+  start: 'Jan 2026',
+  end: 'Feb 2026',
+};
+
 export const bipBugs: BugEntry[] = [
   {
     id: 1,

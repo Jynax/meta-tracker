@@ -27,6 +27,7 @@ const TABS: Array<{ id: MetricsTab; label: string }> = [
 
 export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview' }: MetricsDashboardProps) {
   const [tab, setTab] = useState<MetricsTab>(initialTab);
+  const [hoveredPointIndex, setHoveredPointIndex] = useState<number | null>(null);
 
   useEffect(() => {
     setTab(initialTab);
@@ -53,9 +54,57 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const currentLoc = selected.codeVolume[selected.codeVolume.length - 1]?.total ?? 0;
   const totalAdded = selected.codeVolume.reduce((sum, item) => sum + item.added, 0);
   const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);
-  const maxTotal = Math.max(...selected.codeVolume.map((item) => item.total), 1);
   const maxDelta = Math.max(...selected.codeVolume.map((item) => Math.max(item.added, item.deleted)), 1);
   const maxNetAbs = Math.max(...selected.codeVolume.map((item) => Math.abs(item.net)), 1);
+
+  const chartDims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
+  const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
+  const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
+  const yTickCount = 4;
+  const rawStep = currentLoc / yTickCount || 1;
+  const magnitude = 10 ** Math.floor(Math.log10(rawStep));
+  const niceStep = Math.max(1, Math.ceil(rawStep / magnitude) * magnitude);
+  const chartYMax = niceStep * yTickCount;
+
+  const chartPoints = useMemo(
+    () => selected.codeVolume.map((entry, index) => {
+      const ratioX = selected.codeVolume.length > 1 ? index / (selected.codeVolume.length - 1) : 0;
+      const ratioY = chartYMax > 0 ? entry.total / chartYMax : 0;
+      return {
+        ...entry,
+        x: chartDims.left + ratioX * chartInnerWidth,
+        y: chartDims.top + (1 - ratioY) * chartInnerHeight,
+      };
+    }),
+    [chartInnerHeight, chartInnerWidth, chartYMax, selected.codeVolume],
+  );
+
+  const smoothLinePath = useMemo(() => {
+    if (!chartPoints.length) return '';
+    if (chartPoints.length === 1) return `M ${chartPoints[0].x} ${chartPoints[0].y}`;
+
+    let path = `M ${chartPoints[0].x} ${chartPoints[0].y}`;
+    for (let i = 1; i < chartPoints.length; i += 1) {
+      const previous = chartPoints[i - 1];
+      const current = chartPoints[i];
+      const midX = (previous.x + current.x) / 2;
+      const midY = (previous.y + current.y) / 2;
+      path += ` Q ${previous.x} ${previous.y} ${midX} ${midY}`;
+    }
+    const last = chartPoints[chartPoints.length - 1];
+    path += ` L ${last.x} ${last.y}`;
+    return path;
+  }, [chartPoints]);
+
+  const areaPath = useMemo(() => {
+    if (!chartPoints.length || !smoothLinePath) return '';
+    const first = chartPoints[0];
+    const last = chartPoints[chartPoints.length - 1];
+    const baseline = chartDims.height - chartDims.bottom;
+    return `${smoothLinePath} L ${last.x} ${baseline} L ${first.x} ${baseline} Z`;
+  }, [chartPoints, smoothLinePath]);
+
+  const hoveredPoint = hoveredPointIndex === null ? null : chartPoints[hoveredPointIndex];
 
   const bySeverity = selected.bugs.reduce<Record<string, number>>((acc, bug) => {
     acc[bug.severity] = (acc[bug.severity] ?? 0) + 1;
@@ -136,18 +185,83 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
           </div>
           <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
             <h3 className="mb-2 text-sm font-semibold">Codebase Size Over Time</h3>
-            <div className="space-y-2">
-              {selected.codeVolume.map((entry) => (
-                <div key={entry.session}>
-                  <div className="mb-1 flex justify-between text-xs" style={{ color: C.slate }}>
-                    <span>{entry.label}</span>
-                    <span>{entry.total.toLocaleString()} LOC</span>
-                  </div>
-                  <div className="h-3 rounded" style={{ backgroundColor: '#0b1220' }}>
-                    <div className="h-3 rounded" style={{ width: `${(entry.total / maxTotal) * 100}%`, backgroundColor: C.cyan }} />
-                  </div>
+            <div className="relative">
+              <svg viewBox={`0 0 ${chartDims.width} ${chartDims.height}`} style={{ width: '100%', height: 280 }}>
+                <defs>
+                  <linearGradient id={`locAreaGradient-${projectId}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={C.cyan} stopOpacity="0.3" />
+                    <stop offset="100%" stopColor={C.cyan} stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+
+                {Array.from({ length: yTickCount + 1 }, (_, index) => {
+                  const value = index * niceStep;
+                  const y = chartDims.top + chartInnerHeight - (index / yTickCount) * chartInnerHeight;
+                  return (
+                    <g key={`tick-${value}`}>
+                      <line
+                        x1={chartDims.left}
+                        y1={y}
+                        x2={chartDims.width - chartDims.right}
+                        y2={y}
+                        stroke={C.border}
+                        strokeDasharray="4 4"
+                        strokeOpacity="0.3"
+                      />
+                      <text x={chartDims.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">
+                        {value.toLocaleString()}
+                      </text>
+                    </g>
+                  );
+                })}
+
+                <path d={areaPath} fill={`url(#locAreaGradient-${projectId})`} />
+                <path d={smoothLinePath} fill="none" stroke={C.cyan} strokeWidth="2" />
+
+                {chartPoints.map((point, index) => (
+                  <circle
+                    key={point.session}
+                    cx={point.x}
+                    cy={point.y}
+                    r={hoveredPointIndex === index ? 6 : 4}
+                    fill={C.cyan}
+                    onMouseEnter={() => setHoveredPointIndex(index)}
+                    onMouseLeave={() => setHoveredPointIndex(null)}
+                  />
+                ))}
+
+                {chartPoints.map((point) => (
+                  <text
+                    key={`${point.session}-label`}
+                    x={point.x}
+                    y={chartDims.height - 10}
+                    textAnchor="middle"
+                    fill={C.slate}
+                    fontSize="10"
+                  >
+                    {point.label}
+                  </text>
+                ))}
+              </svg>
+
+              {hoveredPoint && (
+                <div
+                  className="pointer-events-none absolute"
+                  style={{
+                    left: `${(hoveredPoint.x / chartDims.width) * 100}%`,
+                    top: `${(hoveredPoint.y / chartDims.height) * 100}%`,
+                    transform: 'translate(-50%, calc(-100% - 12px))',
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    border: `1px solid ${C.border}`,
+                    borderRadius: 8,
+                    padding: '8px 12px',
+                    minWidth: 120,
+                  }}
+                >
+                  <div style={{ color: C.white, fontSize: 12, fontWeight: 700 }}>{hoveredPoint.label}</div>
+                  <div style={{ color: C.cyan, fontSize: 11 }}>{hoveredPoint.total.toLocaleString()} LOC</div>
                 </div>
-              ))}
+              )}
             </div>
           </div>
           <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>

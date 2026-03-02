@@ -39,16 +39,55 @@ export interface StackEntry {
 }
 
 export const bipCodeVolume: CodeVolumeEntry[] = [
-  { session: 'Pre-Cowork', label: 'ChatGPT Era', added: 3066, deleted: 0, net: 3066, total: 3066 },
-  { session: 'Session 1', label: 'Audit', added: 0, deleted: 0, net: 0, total: 3066 },
-  { session: 'Session 2', label: 'Data Wrangling', added: 275, deleted: 8, net: 267, total: 3333 },
-  { session: 'Session 3', label: 'Decomposition', added: 136, deleted: 570, net: -434, total: 2899 },
-  { session: 'Session 4', label: 'Timeline', added: 173, deleted: 38, net: 135, total: 3034 },
+  { session: 'ChatGPT 1', label: 'Scaffold & Cards', added: 1102, deleted: 89, net: 1013, total: 640 },
+  { session: 'ChatGPT 2', label: 'Refactoring', added: 146, deleted: 231, net: -85, total: 585 },
+  { session: 'ChatGPT 3', label: 'Data & Charts', added: 2230, deleted: 1043, net: 1187, total: 1330 },
+  { session: 'ChatGPT 4', label: 'Representation', added: 4287, deleted: 1534, net: 2753, total: 3066 },
+  { session: 'Cowork 1', label: 'Audit', added: 0, deleted: 0, net: 0, total: 3066 },
+  { session: 'Cowork 2', label: 'Data Wrangling', added: 275, deleted: 8, net: 267, total: 3333 },
+  { session: 'Cowork 3', label: 'Decomposition', added: 136, deleted: 570, net: -434, total: 2899 },
+  { session: 'Cowork 4', label: 'Timeline', added: 173, deleted: 38, net: 135, total: 3034 },
 ];
 
 export const bipSessions: SessionEntry[] = [
   {
-    session: 'Session 1',
+    session: 'ChatGPT 1',
+    duration: 2,
+    prs: 2,
+    decisions: 2,
+    deadEnds: 0,
+    focus: 'Initial Scaffold & Card Exports',
+    chapterId: 'bip-spark',
+  },
+  {
+    session: 'ChatGPT 2',
+    duration: 1,
+    prs: 1,
+    decisions: 1,
+    deadEnds: 0,
+    focus: 'Refactoring & Cleanup',
+    chapterId: 'bip-spark',
+  },
+  {
+    session: 'ChatGPT 3',
+    duration: 4,
+    prs: 16,
+    decisions: 6,
+    deadEnds: 1,
+    focus: 'Data Pipeline, Charts & Normalization',
+    chapterId: 'bip-wrangling',
+  },
+  {
+    session: 'ChatGPT 4',
+    duration: 5,
+    prs: 27,
+    decisions: 8,
+    deadEnds: 1,
+    focus: 'Representation Engine & Polish',
+    chapterId: 'bip-repr',
+  },
+  {
+    session: 'Cowork 1',
     duration: 2,
     prs: 0,
     decisions: 3,
@@ -57,7 +96,7 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'bip-deploy',
   },
   {
-    session: 'Session 2',
+    session: 'Cowork 2',
     duration: 3,
     prs: 1,
     decisions: 2,
@@ -66,7 +105,7 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'bip-wrangling',
   },
   {
-    session: 'Session 3',
+    session: 'Cowork 3',
     duration: 3,
     prs: 2,
     decisions: 3,
@@ -75,7 +114,7 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'bip-decomp',
   },
   {
-    session: 'Session 4',
+    session: 'Cowork 4',
     duration: 2,
     prs: 4,
     decisions: 5,
@@ -86,14 +125,14 @@ export const bipSessions: SessionEntry[] = [
 ];
 
 export const bipDateRange = {
-  start: 'Jan 2026',
+  start: 'Feb 2026',
   end: 'Feb 2026',
 };
 
 export const bipBugs: BugEntry[] = [
   {
     id: 1,
-    summary: "Boolean 'f' globally truthy — corrupted representation data",
+    summary: "Boolean 'f' globally truthy \u2014 corrupted representation data",
     severity: 'Critical',
     source: 'ChatGPT Code Review',
     status: 'Fixed',
@@ -158,11 +197,11 @@ export const bipBugs: BugEntry[] = [
 ];
 
 export const bipDerived: DerivedMetric[] = [
-  { label: 'Churn Rate', value: '1.06', detail: 'Refactoring-heavy', color: '#a78bfa' },
-  { label: 'Codex Success', value: '88%', detail: '7/8 clean PRs', color: '#34d399' },
-  { label: 'Cycle Time', value: '1.4h', detail: 'Per merged PR', color: '#34d399' },
-  { label: 'Decisions', value: '3.25', detail: 'Per session avg', color: '#22d3ee' },
-  { label: 'Bug Rate', value: '1.14', detail: 'Per PR merged', color: '#fbbf24' },
+  { label: 'Churn Rate', value: '0.49', detail: 'Includes heavy refactoring', color: '#a78bfa' },
+  { label: 'Codex Success', value: '88%', detail: '7/8 Cowork-era PRs', color: '#34d399' },
+  { label: 'Cycle Time', value: '0.38h', detail: 'Per merged PR (all eras)', color: '#34d399' },
+  { label: 'Decisions', value: '3.75', detail: 'Per session avg', color: '#22d3ee' },
+  { label: 'Bug Rate', value: '0.15', detail: 'Per PR merged', color: '#fbbf24' },
 ];
 
 export const bipStack: StackEntry[] = [

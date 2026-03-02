@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, type ReactNode } from 'react';
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
 import { bipCodeVolume, bipSessions, bipBugs, bipDerived, bipStack, bipDateRange } from '../data/bipMetrics';
@@ -28,6 +28,10 @@ const TABS: Array<{ id: MetricsTab; label: string }> = [
 export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview' }: MetricsDashboardProps) {
   const [tab, setTab] = useState<MetricsTab>(initialTab);
   const [hoveredPointIndex, setHoveredPointIndex] = useState<number | null>(null);
+  const [hoveredCodeSession, setHoveredCodeSession] = useState<string | null>(null);
+  const [hoveredNetSession, setHoveredNetSession] = useState<string | null>(null);
+  const [hoveredSessionGroup, setHoveredSessionGroup] = useState<string | null>(null);
+  const [tooltip, setTooltip] = useState<{ x: number; y: number; content: ReactNode } | null>(null);
   const [animateBugDonuts, setAnimateBugDonuts] = useState(false);
 
   useEffect(() => {
@@ -64,6 +68,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);
   const maxDelta = Math.max(...selected.codeVolume.map((item) => Math.max(item.added, item.deleted)), 1);
   const maxNetAbs = Math.max(...selected.codeVolume.map((item) => Math.abs(item.net)), 1);
+  const maxSessionMetric = Math.max(...selected.sessions.map((item) => Math.max(item.prs, item.decisions, item.deadEnds)), 1);
 
   const chartDims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
   const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
@@ -113,6 +118,8 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   }, [chartPoints, smoothLinePath]);
 
   const hoveredPoint = hoveredPointIndex === null ? null : chartPoints[hoveredPointIndex];
+  const sessionChartMaxHeight = 180;
+  const scaleSessionBarHeight = (value: number) => Math.max(6, (value / maxSessionMetric) * sessionChartMaxHeight);
 
   const bySeverity = selected.bugs.reduce<Record<string, number>>((acc, bug) => {
     acc[bug.severity] = (acc[bug.severity] ?? 0) + 1;
@@ -190,7 +197,8 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   };
 
   return (
-    <div className="rounded-2xl border p-4" style={{ backgroundColor: C.bg, borderColor: C.border }}>
+    <>
+      <div className="rounded-2xl border p-4" style={{ backgroundColor: C.bg, borderColor: C.border }}>
       <div className="mb-4 flex flex-wrap gap-2">
         {TABS.map((item) => (
           <button
@@ -257,6 +265,18 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                 <path d={areaPath} fill={`url(#locAreaGradient-${projectId})`} />
                 <path d={smoothLinePath} fill="none" stroke={C.cyan} strokeWidth="2" />
 
+                {hoveredPoint && (
+                  <line
+                    x1={hoveredPoint.x}
+                    y1={hoveredPoint.y}
+                    x2={hoveredPoint.x}
+                    y2={chartDims.height - chartDims.bottom}
+                    stroke={C.slate}
+                    strokeDasharray="4 4"
+                    strokeOpacity="0.45"
+                  />
+                )}
+
                 {chartPoints.map((point, index) => (
                   <circle
                     key={point.session}
@@ -264,8 +284,26 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                     cy={point.y}
                     r={hoveredPointIndex === index ? 6 : 4}
                     fill={C.cyan}
-                    onMouseEnter={() => setHoveredPointIndex(index)}
-                    onMouseLeave={() => setHoveredPointIndex(null)}
+                    onMouseEnter={(event) => {
+                      setHoveredPointIndex(index);
+                      setTooltip({
+                        x: event.clientX,
+                        y: event.clientY,
+                        content: (
+                          <>
+                            <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{point.label}</div>
+                            <div style={{ color: C.cyan, fontSize: 11 }}>{point.total.toLocaleString()} LOC</div>
+                          </>
+                        ),
+                      });
+                    }}
+                    onMouseMove={(event) => {
+                      setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                    }}
+                    onMouseLeave={() => {
+                      setHoveredPointIndex(null);
+                      setTooltip(null);
+                    }}
                   />
                 ))}
 
@@ -283,24 +321,6 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                 ))}
               </svg>
 
-              {hoveredPoint && (
-                <div
-                  className="pointer-events-none absolute"
-                  style={{
-                    left: `${(hoveredPoint.x / chartDims.width) * 100}%`,
-                    top: `${(hoveredPoint.y / chartDims.height) * 100}%`,
-                    transform: 'translate(-50%, calc(-100% - 12px))',
-                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                    border: `1px solid ${C.border}`,
-                    borderRadius: 8,
-                    padding: '8px 12px',
-                    minWidth: 120,
-                  }}
-                >
-                  <div style={{ color: C.white, fontSize: 12, fontWeight: 700 }}>{hoveredPoint.label}</div>
-                  <div style={{ color: C.cyan, fontSize: 11 }}>{hoveredPoint.total.toLocaleString()} LOC</div>
-                </div>
-              )}
             </div>
           </div>
           <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
@@ -333,7 +353,35 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
             <h3 className="mb-3 text-sm font-semibold">Lines Added vs Deleted</h3>
             <div className="space-y-3">
               {selected.codeVolume.filter((entry) => entry.added > 0 || entry.deleted > 0).map((entry) => (
-                <div key={entry.session}>
+                <div
+                  key={entry.session}
+                  onMouseEnter={(event) => {
+                    setHoveredCodeSession(entry.session);
+                    setTooltip({
+                      x: event.clientX,
+                      y: event.clientY,
+                      content: (
+                        <>
+                          <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.session}</div>
+                          <div style={{ color: C.cyan, fontSize: 11 }}>Added: {entry.added.toLocaleString()}</div>
+                          <div style={{ color: C.rose, fontSize: 11 }}>Deleted: {entry.deleted.toLocaleString()}</div>
+                        </>
+                      ),
+                    });
+                  }}
+                  onMouseMove={(event) => {
+                    setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredCodeSession(null);
+                    setTooltip(null);
+                  }}
+                  style={{
+                    backgroundColor: hoveredCodeSession === entry.session ? 'rgba(15, 23, 42, 0.5)' : 'transparent',
+                    borderRadius: 8,
+                    padding: 6,
+                  }}
+                >
                   <div className="mb-1 text-xs" style={{ color: C.slate }}>{entry.session}</div>
                   <div className="flex gap-2">
                     <div className="h-3 rounded" style={{ width: `${(entry.added / maxDelta) * 100}%`, backgroundColor: C.emerald }} />
@@ -347,7 +395,36 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
             <h3 className="mb-3 text-sm font-semibold">Net Change by Session</h3>
             <div className="space-y-3">
               {selected.codeVolume.map((entry) => (
-                <div key={`${entry.session}-net`}>
+                <div
+                  key={`${entry.session}-net`}
+                  onMouseEnter={(event) => {
+                    setHoveredNetSession(entry.session);
+                    setTooltip({
+                      x: event.clientX,
+                      y: event.clientY,
+                      content: (
+                        <>
+                          <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.session}</div>
+                          <div style={{ color: entry.net >= 0 ? C.emerald : C.rose, fontSize: 11 }}>
+                            Net: {entry.net > 0 ? '+' : ''}{entry.net.toLocaleString()}
+                          </div>
+                        </>
+                      ),
+                    });
+                  }}
+                  onMouseMove={(event) => {
+                    setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredNetSession(null);
+                    setTooltip(null);
+                  }}
+                  style={{
+                    backgroundColor: hoveredNetSession === entry.session ? 'rgba(15, 23, 42, 0.5)' : 'transparent',
+                    borderRadius: 8,
+                    padding: 6,
+                  }}
+                >
                   <div className="mb-1 flex justify-between text-xs" style={{ color: C.slate }}>
                     <span>{entry.session}</span>
                     <span>{entry.net > 0 ? '+' : ''}{entry.net}</span>
@@ -438,17 +515,91 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
           </div>
           <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
             <h3 className="mb-3 text-sm font-semibold">Session Activity</h3>
-            <div className="space-y-3">
-              {selected.sessions.map((entry) => (
-                <div key={`${entry.session}-activity`}>
-                  <div className="mb-1 text-xs" style={{ color: C.slate }}>{entry.session}</div>
-                  <div className="flex gap-2">
-                    <div className="h-3 rounded" style={{ width: `${entry.prs * 14}px`, backgroundColor: C.emerald }} />
-                    <div className="h-3 rounded" style={{ width: `${entry.decisions * 14}px`, backgroundColor: C.cyan }} />
-                    <div className="h-3 rounded" style={{ width: `${entry.deadEnds * 14}px`, backgroundColor: C.rose }} />
+            <div style={{ position: 'relative', overflowX: 'auto', paddingBottom: 4 }}>
+              <div style={{ position: 'absolute', inset: '20px 0 28px 0', pointerEvents: 'none' }}>
+                {Array.from({ length: 5 }, (_, index) => (
+                  <div
+                    key={`session-grid-${index}`}
+                    style={{
+                      position: 'absolute',
+                      left: 0,
+                      right: 0,
+                      bottom: `${(index / 4) * sessionChartMaxHeight}px`,
+                      borderTop: `1px dashed ${C.border}`,
+                      opacity: 0.25,
+                    }}
+                  />
+                ))}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 20, padding: '20px 0 28px', minHeight: 228, position: 'relative' }}>
+                {selected.sessions.map((entry) => (
+                  <div
+                    key={`${entry.session}-activity`}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      padding: '6px 8px',
+                      borderRadius: 8,
+                      backgroundColor: hoveredSessionGroup === entry.session ? 'rgba(15, 23, 42, 0.5)' : 'transparent',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4 }}>
+                      {[
+                        { value: entry.prs, color: C.cyan },
+                        { value: entry.decisions, color: C.emerald },
+                        { value: entry.deadEnds, color: C.rose },
+                      ].map((bar, idx) => (
+                        <div
+                          key={`${entry.session}-bar-${idx}`}
+                          onMouseEnter={(event) => {
+                            setHoveredSessionGroup(entry.session);
+                            setTooltip({
+                              x: event.clientX,
+                              y: event.clientY,
+                              content: (
+                                <>
+                                  <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.session}</div>
+                                  <div style={{ color: C.cyan, fontSize: 11 }}>PRs Merged: {entry.prs}</div>
+                                  <div style={{ color: C.emerald, fontSize: 11 }}>Decisions: {entry.decisions}</div>
+                                  <div style={{ color: C.rose, fontSize: 11 }}>Dead Ends: {entry.deadEnds}</div>
+                                </>
+                              ),
+                            });
+                          }}
+                          onMouseMove={(event) => {
+                            setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                          }}
+                          onMouseLeave={() => {
+                            setHoveredSessionGroup(null);
+                            setTooltip(null);
+                          }}
+                          style={{
+                            width: 20,
+                            height: scaleSessionBarHeight(bar.value),
+                            background: bar.color,
+                            borderRadius: '4px 4px 0 0',
+                            transition: 'opacity 0.15s ease',
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <span style={{ fontSize: 10, color: C.muted, marginTop: 6, textAlign: 'center' }}>{entry.session}</span>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+                {[
+                  { label: 'PRs Merged', color: C.cyan },
+                  { label: 'Decisions', color: C.emerald },
+                  { label: 'Dead Ends', color: C.rose },
+                ].map((item) => (
+                  <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: C.slate }}>
+                    <span style={{ width: 10, height: 10, borderRadius: 2, backgroundColor: item.color }} />
+                    {item.label}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
@@ -474,6 +625,25 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
           </div>
         </div>
       )}
-    </div>
+      </div>
+      {tooltip && (
+      <div
+        style={{
+          position: 'fixed',
+          left: tooltip.x + 12,
+          top: tooltip.y - 10,
+          background: 'rgba(15, 23, 42, 0.95)',
+          border: `1px solid ${C.border}`,
+          borderRadius: 8,
+          padding: '8px 12px',
+          pointerEvents: 'none',
+          zIndex: 50,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+        }}
+      >
+        {tooltip.content}
+      </div>
+      )}
+    </>
   );
 }

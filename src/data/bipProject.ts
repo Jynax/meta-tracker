@@ -3,7 +3,7 @@ import type { Project } from '../types';
 export const bipProject: Project = {
   id: 'bip',
   name: 'BIP: Buried in Print Reader Stats',
-  subtitle: 'A reading log explorer built with GPT-5.3 Codex',
+  subtitle: 'BUILT WITH CHATGPT · CLAUDE COWORK · CODEX',
   chapters: [
     {
       id: 'ch-spark',

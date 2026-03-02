@@ -46,6 +46,7 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 5', label: 'Layout Refactor', added: 202, deleted: 141, net: 61, total: 1000 },
   { session: 'Session 7', label: 'Data Model Alignment', added: 671, deleted: 289, net: 382, total: 1382 },
   { session: 'Session 8', label: 'Spine Fix & Dashboard', added: 100, deleted: 30, net: 70, total: 1452 },
+  { session: 'Session 9', label: 'UX Polish', added: 432, deleted: 104, net: 328, total: 2319 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -112,12 +113,15 @@ export const metaSessions: SessionEntry[] = [
     focus: 'Spine fix, dashboard infrastructure',
     chapterId: 'meta-v08',
   },
+  { session: 'Session 9', duration: 3, prs: 4, decisions: 6, deadEnds: 0, focus: 'Dashboard UX Polish', chapterId: 'meta-ch-ux-polish' },
 ];
 
 export const metaDateRange = {
   start: 'Feb 2026',
   end: 'Mar 2026',
 };
+
+export const dateRange = { start: 'Feb 2026', end: 'Mar 2026' };
 
 export const metaBugs: BugEntry[] = [
   {

@@ -205,15 +205,249 @@ export const metaProject: Project = {
         },
       ],
     },
+    {
+      id: 'meta-ch-data-alignment',
+      name: 'The Data Model Alignment',
+      period: 'Session 7 (Feb 2026)',
+      toolLabel: 'Claude Cowork, Codex',
+      tool: 'mixed',
+      nodes: [
+        {
+          id: 'meta-phases-to-chapters',
+          type: 'decision',
+          category: 'process',
+          title: 'Phases Renamed to Chapters',
+          description:
+            'Renamed Phase to Chapter across the entire codebase: types, component names, state variables, UI labels, and data files. One vocabulary everywhere.',
+          chosenPath: 'Full rename across codebase',
+          alternatives: ['Keeping phases in code but showing chapters in UI only'],
+        },
+        {
+          id: 'meta-discovery-pivot-types',
+          type: 'decision',
+          category: 'functional',
+          title: 'Discovery and Pivot Node Types Added',
+          description:
+            'Added Discovery (amber, lightbulb-style) and Pivot (violet, direction changes) as first-class node types with distinct colors and filtering.',
+          chosenPath: 'First-class types with visual distinction',
+          alternatives: ['Mapping Discovery to Event and Pivot to Decision', 'Adding as subtypes'],
+        },
+        {
+          id: 'meta-category-expansion',
+          type: 'decision',
+          category: 'functional',
+          title: 'Category Expansion to Four',
+          description:
+            'Added UX/Design and Process to categories. Filter bar expanded from 6 to 10 buttons (All + 5 types + 4 categories).',
+          chosenPath: 'Four categories: Technical, Functional, UX/Design, Process',
+          alternatives: ['Keeping 2 categories and mapping the new ones'],
+        },
+        {
+          id: 'meta-bip-data-loaded',
+          type: 'event',
+          category: 'functional',
+          title: 'Full BIP Dataset Loaded',
+          description:
+            'Replaced placeholder bipProject.ts with full manual conversion from BIP/decisions.md. 10 chapters, ~30 entries across all 5 types and 4 categories.',
+        },
+        {
+          id: 'meta-multi-project',
+          type: 'decision',
+          category: 'functional',
+          title: 'Multi-Project Support with Project Selector',
+          description:
+            'Created metaProject.ts as second dataset. Added PROJECTS array and project selector buttons in the header.',
+          chosenPath: 'Button selector with state reset on switch',
+          alternatives: ['Dropdown menu', 'Separate routes per project', 'Tabs'],
+        },
+        {
+          id: 'meta-parser-deferred',
+          type: 'decision',
+          category: 'technical',
+          title: 'Build-Time Markdown Parser Deferred',
+          description:
+            'Deferred the decisions.md to JSON parser. Manual conversion was fast enough for 2 projects.',
+          lesson: "Don't automate until the manual process is proven and painful.",
+          chosenPath: 'Manual conversion now, automate later',
+          alternatives: ['Building the parser this session'],
+        },
+        {
+          id: 'meta-proportional-detail',
+          type: 'decision',
+          category: 'technical',
+          title: 'Proportional Detail Height Fix',
+          description:
+            'Changed detailExtra from fixed 60px to proportional calculation: Math.max(60, Math.ceil(description.length / 40) * 25).',
+          chosenPath: 'Proportional to character count',
+          alternatives: ['Larger fixed value', 'Measuring rendered text height'],
+        },
+        {
+          id: 'meta-alternating-layout',
+          type: 'pivot',
+          category: 'ux-design',
+          title: 'Alternating Left/Right Child Layout',
+          description:
+            "Modified treeLayout.ts to alternate child positioning: odd right, even left. Michael's design instinct for better use of horizontal space.",
+          lesson:
+            'Layout paradigm changes driven by visual review are the highest-impact improvements.',
+          chosenPath: 'Odd-indexed right, even-indexed left with bidirectional handles',
+          alternatives: ['Keeping right-only with more spacing', 'Grid layout for children'],
+        },
+      ],
+    },
+    {
+      id: 'meta-ch-spine-dashboard',
+      name: 'The Spine Fix & Dashboard Infrastructure',
+      period: 'Session 8 (Mar 2026)',
+      toolLabel: 'Claude Cowork, Codex',
+      tool: 'mixed',
+      nodes: [
+        {
+          id: 'meta-spine-offset',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Spine Edge Offset Fix',
+          description:
+            'Offset vertical spine edges ~30-40px right of chapter center to avoid clipping through left-side child nodes.',
+          chosenPath: 'Offset spine right (Option A)',
+          alternatives: ['Route edges around children', 'Increase horizontal gap', 'Z-index styling'],
+        },
+        {
+          id: 'meta-view-switcher',
+          type: 'decision',
+          category: 'functional',
+          title: 'View Switcher Added',
+          description:
+            'Added tab-style view switcher: Decision Tree and Metrics tabs with active/inactive styling.',
+          chosenPath: 'Tab-style view switcher',
+          alternatives: ['Dropdown menu', 'Sidebar navigation', 'Separate routes'],
+        },
+        {
+          id: 'meta-summary-bar',
+          type: 'pivot',
+          category: 'ux-design',
+          title: 'Summary Bar Replaces Summary Cards',
+          description:
+            'Removed metric summary cards. Replaced with compact horizontal bar showing entry count, notable type badges, stacked category bar with legend.',
+          chosenPath: 'Option C: separated entry count from category visualization',
+          alternatives: ['Option B: category bar + entry count in one line'],
+        },
+        {
+          id: 'meta-collapsible-filters',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Collapsible Filter Buttons',
+          description:
+            'Collapsed filters behind a Filter button. Expands on click, shows active filter name as badge when filtered.',
+          chosenPath: 'Hidden by default with toggle',
+          alternatives: ['Removing filters entirely', 'Keeping always visible'],
+        },
+        {
+          id: 'meta-chapter-stats-simplified',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Chapter Stats Simplified',
+          description:
+            'Simplified chapter stats to: mini category bar, entry count, notable types, clickable bug count linking to Metrics.',
+          chosenPath: 'Decision context only, metrics in Metrics view',
+          alternatives: ['Keeping all stats'],
+        },
+        {
+          id: 'meta-metrics-data-files',
+          type: 'event',
+          category: 'technical',
+          title: 'Metrics Data Files Created',
+          description:
+            'Created bipMetrics.ts and metaMetrics.ts with typed exports: CodeVolume, Sessions, Bugs, DerivedMetrics, Stack.',
+        },
+        {
+          id: 'meta-metrics-dashboard',
+          type: 'event',
+          category: 'functional',
+          title: 'Metrics Dashboard Built',
+          description:
+            'Built MetricsDashboard.tsx with 4 tabs (Overview, Code, Bugs, Sessions). All div-based charts. Bidirectional linking with Decision Tree.',
+        },
+      ],
+    },
+    {
+      id: 'meta-ch-ux-polish',
+      name: 'The UX Polish Pass',
+      period: 'Session 9 (Mar 2026)',
+      toolLabel: 'Claude Cowork, Codex',
+      tool: 'mixed',
+      nodes: [
+        {
+          id: 'meta-overview-cleanup',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Overview Tab Decluttered',
+          description:
+            'Removed decision-related stat rows (type counts, category counts) and Bugs Found card from the Metrics Overview. Added project date range and dynamic subtitle listing tools used per project.',
+          chosenPath: 'Code metrics only in Metrics view; decision data stays in tree',
+          alternatives: ['Keeping all stats in both views'],
+        },
+        {
+          id: 'meta-area-chart',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Codebase Chart Converted to SVG Area Chart',
+          description:
+            'Replaced horizontal LOC bars with an SVG area/line chart showing codebase growth trajectory. Includes hover tooltips with session name and LOC.',
+          chosenPath: 'Inline SVG area chart with gradient fill',
+          alternatives: ['Keeping horizontal bars', 'Installing Recharts'],
+        },
+        {
+          id: 'meta-donut-charts',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Bug Breakdowns Converted to Donut Charts',
+          description:
+            'Replaced severity/category/source horizontal bars with SVG donut ring charts. Clockwise fill animation on load using CSS stroke-dashoffset transitions.',
+          chosenPath: 'SVG donut rings with staggered animation',
+          alternatives: ['Keeping horizontal bars', 'Pie charts'],
+        },
+        {
+          id: 'meta-vertical-bar-chart',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Session Activity Vertical Bar Chart',
+          description:
+            'Replaced Session Activity horizontal bars with vertical grouped bar chart (PRs, Decisions, Dead Ends per session) for visual variety.',
+          chosenPath: 'Vertical grouped bars',
+          alternatives: ['Keeping horizontal bars'],
+        },
+        {
+          id: 'meta-hover-tooltips',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Hover Tooltips Added Across All Charts',
+          description:
+            'Added consistent hover tooltips to all charts (area chart, Code tab bars, Sessions bars). Darker transparent blue highlight background, not pink/seashell.',
+          chosenPath: 'Unified tooltip pattern with dark blue hover highlight',
+          alternatives: ['No tooltips', 'Click-based detail panels'],
+        },
+        {
+          id: 'meta-review-checklist',
+          type: 'decision',
+          category: 'process',
+          title: 'Technical Review Checklist Added',
+          description:
+            'Added a tiered code review checklist to How We Work: always-check items, component-level concerns, visualization checks, and escalation criteria.',
+          chosenPath: 'Checklist in How We Work doc, matched to change type',
+          alternatives: ['Separate review doc', 'Ad-hoc review per PR'],
+        },
+      ],
+    },
   ],
   stats: {
-    totalDays: 3,
-    chatGptMessages: '200+',
-    coworkSessions: 5,
-    prsCreated: '17+',
-    codexTasks: '15+',
-    linesOfCode: '2,000+',
+    totalDays: 4,
+    chatGptMessages: '250+',
+    coworkSessions: 7,
+    prsCreated: '31+',
+    codexTasks: '22+',
+    linesOfCode: '2,200+',
     deadEnds: 3,
-    majorDecisions: 10,
+    majorDecisions: 15,
   },
 };

@@ -28,10 +28,18 @@ const TABS: Array<{ id: MetricsTab; label: string }> = [
 export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview' }: MetricsDashboardProps) {
   const [tab, setTab] = useState<MetricsTab>(initialTab);
   const [hoveredPointIndex, setHoveredPointIndex] = useState<number | null>(null);
+  const [animateBugDonuts, setAnimateBugDonuts] = useState(false);
 
   useEffect(() => {
     setTab(initialTab);
   }, [initialTab]);
+
+  useEffect(() => {
+    if (tab !== 'bugs') return;
+    setAnimateBugDonuts(false);
+    const timer = window.setTimeout(() => setAnimateBugDonuts(true), 50);
+    return () => window.clearTimeout(timer);
+  }, [tab]);
 
   const selected = useMemo(() => {
     const project = projectId === 'meta' ? metaProject : bipProject;
@@ -118,7 +126,6 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
     acc[bug.source] = (acc[bug.source] ?? 0) + 1;
     return acc;
   }, {});
-  const maxGroup = Math.max(...Object.values(bySource), ...Object.values(byCategory), ...Object.values(bySeverity), 1);
 
   const fixedBugs = selected.bugs.filter((bug) => bug.status.toLowerCase() === 'fixed').length;
   const openBugs = selected.bugs.length - fixedBugs;
@@ -131,24 +138,56 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
     </div>
   );
 
-  const Breakdown = ({ title, data, colors }: { title: string; data: Record<string, number>; colors: Record<string, string> }) => (
-    <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-      <h3 className="mb-3 text-sm font-semibold">{title}</h3>
-      <div className="space-y-2">
-        {Object.entries(data).map(([key, value]) => (
-          <div key={key}>
-            <div className="mb-1 flex items-center justify-between text-xs" style={{ color: C.slate }}>
-              <span>{key}</span>
-              <span>{value}</span>
-            </div>
-            <div className="h-2 rounded" style={{ backgroundColor: '#0b1220' }}>
-              <div className="h-2 rounded" style={{ width: `${(value / maxGroup) * 100}%`, backgroundColor: colors[key] ?? C.violet }} />
-            </div>
+  const DonutBreakdown = ({ title, label, items }: { title: string; label: string; items: Array<{ label: string; count: number; color: string }> }) => {
+    const radius = 48;
+    const circumference = 2 * Math.PI * radius;
+    const total = items.reduce((sum, item) => sum + item.count, 0);
+    let accumulated = 0;
+    const segments = items
+      .filter((item) => item.count > 0)
+      .map((item, index) => {
+        const arcLength = total > 0 ? (item.count / total) * circumference : 0;
+        const offset = -accumulated;
+        accumulated += arcLength;
+        return { ...item, arcLength, offset, index };
+      });
+
+    return (
+      <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
+        <h3 className="mb-3 text-center text-sm font-semibold">{title}</h3>
+        <div className="flex flex-col items-center justify-center">
+          <svg viewBox="0 0 120 120" style={{ width: 120, height: 120 }}>
+            <circle cx="60" cy="60" r={radius} fill="none" stroke={C.border} strokeWidth="14" opacity="0.3" />
+            {segments.map((seg) => (
+              <circle
+                key={seg.label}
+                cx="60"
+                cy="60"
+                r={radius}
+                fill="none"
+                stroke={seg.color}
+                strokeWidth="14"
+                strokeDasharray={`${seg.arcLength} ${Math.max(circumference - seg.arcLength, 0)}`}
+                strokeDashoffset={animateBugDonuts ? seg.offset : circumference}
+                transform="rotate(-90 60 60)"
+                style={{ transition: 'stroke-dashoffset 0.8s ease', transitionDelay: `${seg.index * 100}ms` }}
+              />
+            ))}
+            <text x="60" y="56" textAnchor="middle" fill={C.white} fontSize="20" fontWeight="700">{total}</text>
+            <text x="60" y="72" textAnchor="middle" fill={C.muted} fontSize="9">{label}</text>
+          </svg>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', marginTop: 10 }}>
+            {items.map((item) => (
+              <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: C.muted }}>
+                <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color }} />
+                {item.label} <span style={{ color: C.white, fontWeight: 600 }}>({item.count})</span>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="rounded-2xl border p-4" style={{ backgroundColor: C.bg, borderColor: C.border }}>
@@ -331,9 +370,37 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
             <Card label="Open / Deferred" value={openBugs} color={C.amber} />
           </div>
           <div className="grid gap-4 lg:grid-cols-3">
-            <Breakdown title="By Severity" data={bySeverity} colors={{ Critical: C.rose, High: C.amber, Medium: C.cyan, Low: C.muted }} />
-            <Breakdown title="By Category" data={byCategory} colors={{ Technical: C.cyan, Functional: C.emerald, UX: C.amber }} />
-            <Breakdown title="By Source" data={bySource} colors={{}} />
+            <DonutBreakdown
+              title="By Severity"
+              label="severity"
+              items={[
+                { label: 'Critical', count: bySeverity.Critical ?? 0, color: '#ef4444' },
+                { label: 'High', count: bySeverity.High ?? 0, color: '#f97316' },
+                { label: 'Medium', count: bySeverity.Medium ?? 0, color: '#fbbf24' },
+                { label: 'Low', count: bySeverity.Low ?? 0, color: '#64748b' },
+              ]}
+            />
+            <DonutBreakdown
+              title="By Category"
+              label="category"
+              items={[
+                { label: 'Technical', count: byCategory.Technical ?? 0, color: '#22d3ee' },
+                { label: 'Functional', count: byCategory.Functional ?? 0, color: '#34d399' },
+                { label: 'UX', count: byCategory.UX ?? 0, color: '#fbbf24' },
+              ]}
+            />
+            <DonutBreakdown
+              title="By Source"
+              label="source"
+              items={[
+                { label: 'ChatGPT Code Review', count: bySource['ChatGPT Code Review'] ?? 0, color: '#22d3ee' },
+                { label: 'Cowork Audit', count: bySource['Cowork Audit'] ?? 0, color: '#34d399' },
+                { label: 'Code Review', count: bySource['Code Review'] ?? 0, color: '#a78bfa' },
+                { label: 'Cowork Code Review', count: bySource['Cowork Code Review'] ?? 0, color: '#fbbf24' },
+                { label: 'User Report', count: bySource['User Report'] ?? 0, color: '#fb7185' },
+                { label: 'Codex Auto-Review', count: bySource['Codex Auto-Review'] ?? 0, color: '#64748b' },
+              ]}
+            />
           </div>
           <div className="overflow-x-auto rounded-xl border" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
             <table className="w-full border-collapse text-xs">

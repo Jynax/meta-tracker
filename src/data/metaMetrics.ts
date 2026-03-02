@@ -45,7 +45,7 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 4', label: 'Overlap & Filters', added: 157, deleted: 37, net: 120, total: 940 },
   { session: 'Session 5', label: 'Layout Refactor', added: 202, deleted: 141, net: 61, total: 1000 },
   { session: 'Session 7', label: 'Data Model Alignment', added: 671, deleted: 289, net: 382, total: 1382 },
-  { session: 'Session 8', label: 'Spine Fix & Dashboard', added: 100, deleted: 30, net: 70, total: 1452 },
+  { session: 'Session 8', label: 'Spine Fix & Dashboard', added: 650, deleted: 41, net: 609, total: 1991 },
   { session: 'Session 9', label: 'UX Polish', added: 432, deleted: 104, net: 328, total: 2319 },
 ];
 
@@ -57,7 +57,7 @@ export const metaSessions: SessionEntry[] = [
     decisions: 3,
     deadEnds: 0,
     focus: 'Scaffold, deploy, auth setup',
-    chapterId: 'meta-inception',
+    chapterId: 'meta-ch-inception',
   },
   {
     session: 'Session 2',
@@ -66,7 +66,7 @@ export const metaSessions: SessionEntry[] = [
     decisions: 4,
     deadEnds: 0,
     focus: 'Vertical tree exploration',
-    chapterId: 'meta-horizontal',
+    chapterId: 'meta-ch-horizontal',
   },
   {
     session: 'Session 3',
@@ -75,7 +75,7 @@ export const metaSessions: SessionEntry[] = [
     decisions: 5,
     deadEnds: 1,
     focus: 'React Flow rebuild',
-    chapterId: 'meta-horizontal',
+    chapterId: 'meta-ch-horizontal',
   },
   {
     session: 'Session 4',
@@ -84,7 +84,7 @@ export const metaSessions: SessionEntry[] = [
     decisions: 3,
     deadEnds: 0,
     focus: 'Overlap fix, category filter',
-    chapterId: 'meta-overhaul',
+    chapterId: 'meta-ch-layout-overhaul',
   },
   {
     session: 'Session 5',
@@ -93,7 +93,7 @@ export const metaSessions: SessionEntry[] = [
     decisions: 4,
     deadEnds: 2,
     focus: 'Vertical layout, spacing tuning',
-    chapterId: 'meta-spacing',
+    chapterId: 'meta-ch-spacing-wars',
   },
   {
     session: 'Session 7',
@@ -102,31 +102,35 @@ export const metaSessions: SessionEntry[] = [
     decisions: 8,
     deadEnds: 0,
     focus: 'Type system, multi-project, alternating layout',
-    chapterId: 'meta-alignment',
+    chapterId: 'meta-ch-data-alignment',
   },
   {
     session: 'Session 8',
     duration: 3,
-    prs: 2,
-    decisions: 2,
+    prs: 4,
+    decisions: 7,
     deadEnds: 0,
     focus: 'Spine fix, dashboard infrastructure',
-    chapterId: 'meta-v08',
+    chapterId: 'meta-ch-spine-dashboard',
   },
-  { session: 'Session 9', duration: 3, prs: 4, decisions: 6, deadEnds: 0, focus: 'Dashboard UX Polish', chapterId: 'meta-ch-ux-polish' },
+  {
+    session: 'Session 9',
+    duration: 2,
+    prs: 5,
+    decisions: 6,
+    deadEnds: 0,
+    focus: 'Dashboard UX Polish',
+    chapterId: 'meta-ch-ux-polish',
+  },
 ];
 
-export const metaDateRange = {
-  start: 'Feb 2026',
-  end: 'Mar 2026',
-};
-
+export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };
 export const dateRange = { start: 'Feb 2026', end: 'Mar 2026' };
 
 export const metaBugs: BugEntry[] = [
   {
     id: 1,
-    summary: 'Tailwind CSS not rendering — missing @tailwindcss/vite plugin',
+    summary: 'Tailwind CSS not rendering \u2014 missing @tailwindcss/vite plugin',
     severity: 'High',
     source: 'Testing',
     status: 'Fixed',
@@ -220,14 +224,22 @@ export const metaBugs: BugEntry[] = [
     status: 'Fixed',
     category: 'UX',
   },
+  {
+    id: 13,
+    summary: 'Vertical spine edge clips through left-side child nodes',
+    severity: 'Medium',
+    source: 'User Report',
+    status: 'Fixed',
+    category: 'UX',
+  },
 ];
 
 export const metaDerived: DerivedMetric[] = [
-  { label: 'Churn Rate', value: '0.41', detail: 'Building > refactoring', color: '#34d399' },
-  { label: 'Codex Success', value: '95%', detail: '21/22 tasks', color: '#34d399' },
-  { label: 'Cycle Time', value: '0.74h', detail: 'Per merged PR', color: '#22d3ee' },
-  { label: 'Decisions', value: '4.5', detail: 'Per session avg', color: '#22d3ee' },
-  { label: 'Bug Rate', value: '0.57', detail: 'Per PR merged', color: '#34d399' },
+  { label: 'Churn Rate', value: '0.24', detail: 'Polishing phase', color: '#34d399' },
+  { label: 'Codex Success', value: '97%', detail: '30/31 tasks', color: '#34d399' },
+  { label: 'Cycle Time', value: '0.62h', detail: 'Per merged PR', color: '#22d3ee' },
+  { label: 'Decisions', value: '5.0', detail: 'Per session avg', color: '#22d3ee' },
+  { label: 'Bug Rate', value: '0.43', detail: 'Per PR merged', color: '#34d399' },
 ];
 
 export const metaStack: StackEntry[] = [

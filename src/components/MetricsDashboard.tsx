@@ -12,6 +12,7 @@ interface MetricsDashboardProps {
   projectId: string;
   onJumpToChapter?: (chapterId: string) => void;
   initialTab?: MetricsTab;
+  onTabChange?: (tab: MetricsTab) => void;
 }
 
 const C = {
@@ -27,16 +28,16 @@ const TABS: Array<{ id: MetricsTab; label: string }> = [
   { id: 'sessions', label: 'Sessions' },
 ];
 
-export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview' }: MetricsDashboardProps) {
+export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview', onTabChange }: MetricsDashboardProps) {
   const [tab, setTab] = useState<MetricsTab>(initialTab);
   const [hoveredPointIndex, setHoveredPointIndex] = useState<number | null>(null);
   const [hoveredCodeSession, setHoveredCodeSession] = useState<string | null>(null);
   const [hoveredNetSession, setHoveredNetSession] = useState<string | null>(null);
-  const [hoveredSessionGroup, setHoveredSessionGroup] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; content: ReactNode } | null>(null);
   const [animateBugDonuts, setAnimateBugDonuts] = useState(false);
   const [expandedCodeRows, setExpandedCodeRows] = useState<Set<string>>(new Set());
   const [expandedNetRows, setExpandedNetRows] = useState<Set<string>>(new Set());
+  const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     setTab(initialTab);
@@ -70,12 +71,27 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
     [selected.project.chapters],
   );
 
+  const sessionFocusMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    selected.sessions.forEach((session) => {
+      map[session.session] = session.focus;
+    });
+    return map;
+  }, [selected.sessions]);
+
+  const sessionDateMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    selected.codeVolume.forEach((entry) => {
+      map[entry.session] = entry.date;
+    });
+    return map;
+  }, [selected.codeVolume]);
+
   const totalPRs = selected.sessions.reduce((sum, item) => sum + item.prs, 0);
   const totalHours = selected.sessions.reduce((sum, item) => sum + item.duration, 0);
   const currentLoc = selected.codeVolume[selected.codeVolume.length - 1]?.total ?? 0;
   const totalAdded = selected.codeVolume.reduce((sum, item) => sum + item.added, 0);
   const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);
-  const maxSessionMetric = Math.max(...selected.sessions.map((item) => Math.max(item.prs, item.decisions, item.deadEnds)), 1);
   const firstDate = selected.codeVolume[0]?.date ?? selected.dateRange.start;
   const lastDate = selected.codeVolume[selected.codeVolume.length - 1]?.date ?? selected.dateRange.end;
   const timelineRange = `${firstDate} – ${lastDate}/26`;
@@ -227,11 +243,12 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
       const ratioY = chartYMax > 0 ? entry.total / chartYMax : 0;
       return {
         ...entry,
+        focus: sessionFocusMap[entry.session] ?? '',
         x: chartDims.left + ratioX * chartInnerWidth,
         y: chartDims.top + (1 - ratioY) * chartInnerHeight,
       };
     }),
-    [chartInnerHeight, chartInnerWidth, chartYMax, selected.codeVolume],
+    [chartInnerHeight, chartInnerWidth, chartYMax, selected.codeVolume, sessionFocusMap],
   );
 
   const smoothLinePath = useMemo(() => {
@@ -260,8 +277,104 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   }, [chartPoints, smoothLinePath]);
 
   const hoveredPoint = hoveredPointIndex === null ? null : chartPoints[hoveredPointIndex];
-  const sessionChartMaxHeight = 180;
-  const scaleSessionBarHeight = (value: number) => value === 0 ? 0 : Math.max(6, (value / maxSessionMetric) * sessionChartMaxHeight);
+
+  const formatShortDate = (dateStr: string) => {
+    const [month = '', day = ''] = dateStr.split(' ');
+    return `${month} ${day}`.trim();
+  };
+
+  const formatSessionDate = (dateStr: string) => {
+    if (!dateStr.includes(' ')) return dateStr;
+    const [month = '', day = ''] = dateStr.split(' ');
+    return `${month} ${day}/26`.trim();
+  };
+
+  const sessionActivityPoints = useMemo(() => {
+    const dims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
+    const innerWidth = dims.width - dims.left - dims.right;
+    const innerHeight = dims.height - dims.top - dims.bottom;
+    const yTicks = 4;
+    const maxMetric = Math.max(...selected.sessions.map((item) => Math.max(item.prs, item.decisions, item.deadEnds)), 1);
+    const raw = maxMetric / yTicks || 1;
+    const mag = 10 ** Math.floor(Math.log10(raw));
+    const step = Math.max(1, Math.ceil(raw / mag) * mag);
+    const yMax = step * yTicks;
+
+    const points = selected.sessions.map((entry, index) => {
+      const ratioX = selected.sessions.length > 1 ? index / (selected.sessions.length - 1) : 0;
+      const x = dims.left + ratioX * innerWidth;
+      const date = sessionDateMap[entry.session] ?? entry.session;
+      return {
+        ...entry,
+        date,
+        dateLabel: formatShortDate(date),
+        x,
+        yPrs: dims.top + (1 - (entry.prs / yMax)) * innerHeight,
+        yDecisions: dims.top + (1 - (entry.decisions / yMax)) * innerHeight,
+        yDeadEnds: dims.top + (1 - (entry.deadEnds / yMax)) * innerHeight,
+      };
+    });
+
+    return { dims, innerHeight, yTicks, step, yMax, points };
+  }, [selected.sessions, sessionDateMap]);
+
+  const buildSmoothPath = (points: Array<{ x: number; y: number }>) => {
+    if (!points.length) return '';
+    if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
+
+    let path = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 0; i < points.length - 1; i += 1) {
+      const p0 = points[Math.max(0, i - 1)];
+      const p1 = points[i];
+      const p2 = points[i + 1];
+      const p3 = points[Math.min(points.length - 1, i + 2)];
+      const cp1x = p1.x + (p2.x - p0.x) / 6;
+      const cp1y = p1.y + (p2.y - p0.y) / 6;
+      const cp2x = p2.x - (p3.x - p1.x) / 6;
+      const cp2y = p2.y - (p3.y - p1.y) / 6;
+      path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+    }
+    return path;
+  };
+
+  const sessionLines = useMemo(() => ({
+    prs: buildSmoothPath(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yPrs }))),
+    decisions: buildSmoothPath(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yDecisions }))),
+    deadEnds: buildSmoothPath(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yDeadEnds }))),
+  }), [sessionActivityPoints.points]);
+
+  const sessionsByMonth = useMemo(() => {
+    const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const groups = new Map<string, {
+      key: string;
+      label: string;
+      monthIndex: number;
+      sessions: Array<(typeof selected.sessions)[number] & { date: string; displayDate: string }>;
+      totalPRs: number;
+      totalDecisions: number;
+    }>();
+
+    selected.sessions.forEach((entry) => {
+      const date = sessionDateMap[entry.session] ?? '';
+      const [month = 'Jan'] = date.split(' ');
+      const monthIndex = monthOrder.indexOf(month);
+      const safeMonthIndex = monthIndex === -1 ? 0 : monthIndex;
+      const key = `2026-${String(safeMonthIndex + 1).padStart(2, '0')}`;
+      const label = `${month}/26`;
+      const existing = groups.get(key) ?? { key, label, monthIndex: safeMonthIndex, sessions: [], totalPRs: 0, totalDecisions: 0 };
+      existing.sessions.push({ ...entry, date, displayDate: formatSessionDate(date) });
+      existing.totalPRs += entry.prs;
+      existing.totalDecisions += entry.decisions;
+      groups.set(key, existing);
+    });
+
+    return Array.from(groups.values()).sort((a, b) => a.monthIndex - b.monthIndex);
+  }, [selected.sessions, sessionDateMap]);
+
+  useEffect(() => {
+    const latest = sessionsByMonth[sessionsByMonth.length - 1]?.key;
+    setExpandedMonths(latest ? new Set([latest]) : new Set());
+  }, [projectId, sessionsByMonth]);
 
   const bySeverity = selected.bugs.reduce<Record<string, number>>((acc, bug) => {
     acc[bug.severity] = (acc[bug.severity] ?? 0) + 1;
@@ -392,7 +505,10 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
         {TABS.map((item) => (
           <button
             key={item.id}
-            onClick={() => setTab(item.id)}
+            onClick={() => {
+              setTab(item.id);
+              onTabChange?.(item.id);
+            }}
             className="rounded-full border px-4 py-1.5 text-sm font-medium"
             style={{
               backgroundColor: tab === item.id ? `${C.cyan}22` : C.cardBg,
@@ -495,6 +611,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                           <>
                             <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{point.label}</div>
                             <div style={{ color: C.cyan, fontSize: 11 }}>{point.total.toLocaleString()} LOC</div>
+                            <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic', maxWidth: 220 }}>{point.focus}</div>
                           </>
                         ),
                       });
@@ -509,18 +626,18 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                   />
                 ))}
 
-                {chartPoints.map((point) => (
-                  <text
-                    key={`${point.session}-label`}
-                    x={point.x}
-                    y={chartDims.height - 10}
-                    textAnchor="middle"
-                    fill={C.slate}
-                    fontSize="10"
-                  >
-                    {point.label}
-                  </text>
-                ))}
+                {chartPoints.map((point, index) => {
+                  const y = index % 2 === 0 ? chartDims.height - 10 : chartDims.height - 22;
+                  const baselineY = chartDims.height - chartDims.bottom;
+                  return (
+                    <g key={`${point.session}-label`}>
+                      <line x1={point.x} y1={baselineY} x2={point.x} y2={y - 11} stroke={C.slate} strokeWidth="1" strokeOpacity="0.7" />
+                      <text x={point.x} y={y} textAnchor="middle" fill={C.slate} fontSize="10">
+                        {point.label}
+                      </text>
+                    </g>
+                  );
+                })}
               </svg>
 
             </div>
@@ -661,7 +778,33 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
 
                             <div style={{ maxHeight: isDateExpanded ? 400 : 0, overflow: 'hidden', transition: 'max-height 150ms ease' }}>
                               {dateGroup.entries.map((entry) => (
-                                <div key={entry.session} style={{ paddingLeft: 20, paddingTop: 4 }}>
+                                <div
+                                  key={entry.session}
+                                  style={{ paddingLeft: 20, paddingTop: 4 }}
+                                  onMouseEnter={(event) => {
+                                    setHoveredCodeSession(entry.session);
+                                    const focusText = sessionFocusMap[entry.session] ?? 'No focus recorded';
+                                    setTooltip({
+                                      x: event.clientX,
+                                      y: event.clientY,
+                                      content: (
+                                        <>
+                                          <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.session}</div>
+                                          <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic' }}>{focusText}</div>
+                                          <div style={{ color: C.cyan, fontSize: 11 }}>Added: {entry.added.toLocaleString()}</div>
+                                          <div style={{ color: C.rose, fontSize: 11 }}>Deleted: {entry.deleted.toLocaleString()}</div>
+                                        </>
+                                      ),
+                                    });
+                                  }}
+                                  onMouseMove={(event) => {
+                                    setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                                  }}
+                                  onMouseLeave={() => {
+                                    setHoveredCodeSession(null);
+                                    setTooltip(null);
+                                  }}
+                                >
                                   <div className="mb-1 text-[11px]" style={{ color: C.white }}>{entry.session}</div>
                                   <div className="flex gap-2">
                                     <div className="h-2 rounded" style={{ width: `${(entry.added / codeDeltaMax) * 100}%`, backgroundColor: C.cyan }} />
@@ -677,7 +820,33 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                       {row.kind === 'date' && row.dates[0].entries.length > 1 && (
                         <div style={{ paddingLeft: 20, paddingBottom: 6 }}>
                           {row.dates[0].entries.map((entry) => (
-                            <div key={entry.session} style={{ paddingTop: 4 }}>
+                            <div
+                              key={entry.session}
+                              style={{ paddingTop: 4 }}
+                              onMouseEnter={(event) => {
+                                setHoveredCodeSession(entry.session);
+                                const focusText = sessionFocusMap[entry.session] ?? 'No focus recorded';
+                                setTooltip({
+                                  x: event.clientX,
+                                  y: event.clientY,
+                                  content: (
+                                    <>
+                                      <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.session}</div>
+                                      <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic' }}>{focusText}</div>
+                                      <div style={{ color: C.cyan, fontSize: 11 }}>Added: {entry.added.toLocaleString()}</div>
+                                      <div style={{ color: C.rose, fontSize: 11 }}>Deleted: {entry.deleted.toLocaleString()}</div>
+                                    </>
+                                  ),
+                                });
+                              }}
+                              onMouseMove={(event) => {
+                                setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                              }}
+                              onMouseLeave={() => {
+                                setHoveredCodeSession(null);
+                                setTooltip(null);
+                              }}
+                            >
                               <div className="mb-1 text-[11px]" style={{ color: C.white }}>{entry.session}</div>
                               <div className="flex gap-2">
                                 <div className="h-2 rounded" style={{ width: `${(entry.added / codeDeltaMax) * 100}%`, backgroundColor: C.cyan }} />
@@ -776,78 +945,93 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
           <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
             <h3 className="mb-3 text-sm font-semibold">Session Activity</h3>
             <div style={{ position: 'relative', overflowX: 'auto', paddingBottom: 4 }}>
-              <div style={{ position: 'absolute', inset: '20px 0 28px 0', pointerEvents: 'none' }}>
-                {Array.from({ length: 5 }, (_, index) => (
-                  <div
-                    key={`session-grid-${index}`}
-                    style={{
-                      position: 'absolute',
-                      left: 0,
-                      right: 0,
-                      bottom: `${(index / 4) * sessionChartMaxHeight}px`,
-                      borderTop: `1px dashed ${C.border}`,
-                      opacity: 0.25,
-                    }}
-                  />
+              <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }}>
+                {Array.from({ length: sessionActivityPoints.yTicks + 1 }, (_, index) => {
+                  const value = index * sessionActivityPoints.step;
+                  const y = sessionActivityPoints.dims.top + sessionActivityPoints.innerHeight - (index / sessionActivityPoints.yTicks) * sessionActivityPoints.innerHeight;
+                  return (
+                    <g key={`session-activity-grid-${value}`}>
+                      <line
+                        x1={sessionActivityPoints.dims.left}
+                        y1={y}
+                        x2={sessionActivityPoints.dims.width - sessionActivityPoints.dims.right}
+                        y2={y}
+                        stroke={C.border}
+                        strokeDasharray="4 4"
+                        strokeOpacity="0.3"
+                      />
+                      <text x={sessionActivityPoints.dims.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">
+                        {value}
+                      </text>
+                    </g>
+                  );
+                })}
+
+                <path d={sessionLines.prs} fill="none" stroke={C.cyan} strokeWidth="2" />
+                <path d={sessionLines.decisions} fill="none" stroke={C.emerald} strokeWidth="2" />
+                <path d={sessionLines.deadEnds} fill="none" stroke={C.rose} strokeWidth="2" />
+
+                {sessionActivityPoints.points.map((point, index) => (
+                  <g key={`${point.session}-session-activity`}>
+                    {[
+                      { label: 'PRs', value: point.prs, y: point.yPrs, color: C.cyan },
+                      { label: 'Decisions', value: point.decisions, y: point.yDecisions, color: C.emerald },
+                      { label: 'Dead Ends', value: point.deadEnds, y: point.yDeadEnds, color: C.rose },
+                    ].map((metric) => (
+                      <circle
+                        key={`${point.session}-${metric.label}`}
+                        cx={point.x}
+                        cy={metric.y}
+                        r={hoveredPointIndex === index ? 6 : 4}
+                        fill={metric.color}
+                        onMouseEnter={(event) => {
+                          setHoveredPointIndex(index);
+                          setTooltip({
+                            x: event.clientX,
+                            y: event.clientY,
+                            content: (
+                              <>
+                                <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{point.session}</div>
+                                <div style={{ color: C.slate, fontSize: 11 }}>{point.dateLabel}</div>
+                                <div style={{ color: C.cyan, fontSize: 11 }}>PRs: {point.prs}</div>
+                                <div style={{ color: C.emerald, fontSize: 11 }}>Decisions: {point.decisions}</div>
+                                <div style={{ color: C.rose, fontSize: 11 }}>Dead Ends: {point.deadEnds}</div>
+                                <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic', maxWidth: 220 }}>{sessionFocusMap[point.session] ?? ''}</div>
+                              </>
+                            ),
+                          });
+                        }}
+                        onMouseMove={(event) => {
+                          setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                        }}
+                        onMouseLeave={() => {
+                          setHoveredPointIndex(null);
+                          setTooltip(null);
+                        }}
+                      />
+                    ))}
+                    <line
+                      x1={point.x}
+                      y1={sessionActivityPoints.dims.height - sessionActivityPoints.dims.bottom}
+                      x2={point.x}
+                      y2={(index % 2 === 0 ? sessionActivityPoints.dims.height - 10 : sessionActivityPoints.dims.height - 22) - 11}
+                      stroke={C.slate}
+                      strokeWidth="1"
+                      strokeOpacity="0.7"
+                    />
+                    <text
+                      x={point.x}
+                      y={index % 2 === 0 ? sessionActivityPoints.dims.height - 10 : sessionActivityPoints.dims.height - 22}
+                      textAnchor="middle"
+                      fill={C.slate}
+                      fontSize="10"
+                    >
+                      {point.dateLabel}
+                    </text>
+                  </g>
                 ))}
-              </div>
-              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 20, padding: '20px 0 28px', minHeight: 228, position: 'relative' }}>
-                {selected.sessions.map((entry) => (
-                  <div
-                    key={`${entry.session}-activity`}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      padding: '6px 8px',
-                      borderRadius: 8,
-                      backgroundColor: hoveredSessionGroup === entry.session ? 'rgba(15, 23, 42, 0.5)' : 'transparent',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4 }}>
-                      {[
-                        { value: entry.prs, color: C.cyan },
-                        { value: entry.decisions, color: C.emerald },
-                        { value: entry.deadEnds, color: C.rose },
-                      ].map((bar, idx) => (
-                        <div
-                          key={`${entry.session}-bar-${idx}`}
-                          onMouseEnter={(event) => {
-                            setHoveredSessionGroup(entry.session);
-                            setTooltip({
-                              x: event.clientX,
-                              y: event.clientY,
-                              content: (
-                                <>
-                                  <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.session}</div>
-                                  <div style={{ color: C.cyan, fontSize: 11 }}>PRs Merged: {entry.prs}</div>
-                                  <div style={{ color: C.emerald, fontSize: 11 }}>Decisions: {entry.decisions}</div>
-                                  <div style={{ color: C.rose, fontSize: 11 }}>Dead Ends: {entry.deadEnds}</div>
-                                </>
-                              ),
-                            });
-                          }}
-                          onMouseMove={(event) => {
-                            setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
-                          }}
-                          onMouseLeave={() => {
-                            setHoveredSessionGroup(null);
-                            setTooltip(null);
-                          }}
-                          style={{
-                            width: 20,
-                            height: scaleSessionBarHeight(bar.value),
-                            background: bar.color,
-                            borderRadius: '4px 4px 0 0',
-                            transition: 'opacity 0.15s ease',
-                          }}
-                        />
-                      ))}
-                    </div>
-                    <span style={{ fontSize: 10, color: C.muted, marginTop: 6, textAlign: 'center' }}>{entry.session}</span>
-                  </div>
-                ))}
-              </div>
+              </svg>
+
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
                 {[
                   { label: 'PRs Merged', color: C.cyan },
@@ -862,26 +1046,59 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
               </div>
             </div>
           </div>
-          <div className="grid gap-3 md:grid-cols-2">
-            {selected.sessions.map((entry) => (
-              <div key={`${entry.session}-detail`} className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-                <h4 className="text-base font-semibold">{entry.session}</h4>
-                <p className="mb-3 text-sm" style={{ color: C.cyan }}>{entry.focus}</p>
-                <div className="grid grid-cols-2 gap-2 text-xs" style={{ color: C.slate }}>
-                  <span>Duration</span><span>{entry.duration}h</span>
-                  <span>PRs</span><span>{entry.prs}</span>
-                  <span>Decisions</span><span>{entry.decisions}</span>
-                  <span>Dead Ends</span><span>{entry.deadEnds}</span>
+          <div className="space-y-3">
+            {sessionsByMonth.map((monthGroup) => {
+              const isExpanded = expandedMonths.has(monthGroup.key);
+              const firstSession = monthGroup.sessions[0]?.session ?? '';
+              const lastSession = monthGroup.sessions[monthGroup.sessions.length - 1]?.session ?? '';
+              return (
+                <div key={monthGroup.key} className="space-y-3">
+                  <button
+                    onClick={() => {
+                      setExpandedMonths((prev) => {
+                        const next = new Set(prev);
+                        if (next.has(monthGroup.key)) next.delete(monthGroup.key);
+                        else next.add(monthGroup.key);
+                        return next;
+                      });
+                    }}
+                    className="flex w-full items-center justify-between rounded-lg border px-4 py-2.5"
+                    style={{ backgroundColor: C.cardBg, borderColor: C.border }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span style={{ fontSize: 14, fontWeight: 600, color: C.white }}>{monthGroup.label}</span>
+                      <span style={{ fontSize: 12, color: C.muted }}>Sessions {firstSession}-{lastSession}</span>
+                      <span style={{ fontSize: 12, color: C.slate }}>{monthGroup.totalPRs} PRs | {monthGroup.totalDecisions} decisions</span>
+                    </div>
+                    <span style={{ color: C.muted, transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 200ms ease' }}>&#9654;</span>
+                  </button>
+                  <div
+                    className="grid gap-3 md:grid-cols-2"
+                    style={{ maxHeight: isExpanded ? 2000 : 0, overflow: 'hidden', transition: 'max-height 300ms ease' }}
+                  >
+                    {monthGroup.sessions.map((entry) => (
+                      <div key={`${entry.session}-detail`} className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
+                        <h4 className="text-base font-semibold">{entry.session} - {entry.displayDate}</h4>
+                        <p className="mb-3 text-sm" style={{ color: C.cyan }}>{entry.focus}</p>
+                        <div className="grid grid-cols-2 gap-2 text-xs" style={{ color: C.slate }}>
+                          <span>Duration</span><span>{entry.duration}h</span>
+                          <span>PRs</span><span>{entry.prs}</span>
+                          <span>Decisions</span><span>{entry.decisions}</span>
+                          <span>Dead Ends</span><span>{entry.deadEnds}</span>
+                        </div>
+                        <button
+                          onClick={() => onJumpToChapter?.(entry.chapterId)}
+                          className="mt-3 rounded-md border px-2.5 py-1 text-xs"
+                          style={{ color: C.cyan, backgroundColor: '#22d3ee1a', borderColor: '#22d3ee55' }}
+                        >
+                          🌳 View chapter: {chapterMap[entry.chapterId] ?? entry.chapterId}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <button
-                  onClick={() => onJumpToChapter?.(entry.chapterId)}
-                  className="mt-3 rounded-md border px-2.5 py-1 text-xs"
-                  style={{ color: C.cyan, backgroundColor: '#22d3ee1a', borderColor: '#22d3ee55' }}
-                >
-                  🌳 View chapter: {chapterMap[entry.chapterId] ?? entry.chapterId}
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

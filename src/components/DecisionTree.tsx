@@ -386,6 +386,7 @@ export default function DecisionTree() {
         <MetricsDashboard
           projectId={activeProject.id}
           initialTab={metricsTab}
+          onTabChange={(t) => setMetricsTab(t)}
           onJumpToChapter={(chapterId) => {
             setView('tree');
             setExpandedChapters((current) => new Set([...current, chapterId]));

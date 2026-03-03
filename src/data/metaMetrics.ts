@@ -20,6 +20,7 @@ export interface SessionEntry {
 
 export interface BugEntry {
   id: number;
+  session: string;
   summary: string;
   severity: 'Critical' | 'High' | 'Medium' | 'Low';
   source: string;
@@ -171,6 +172,7 @@ export const dateRange = { start: 'Feb 2026', end: 'Mar 2026' };
 export const metaBugs: BugEntry[] = [
   {
     id: 1,
+    session: 'Session 1',
     summary: 'Tailwind CSS not rendering \u2014 missing @tailwindcss/vite plugin',
     severity: 'High',
     source: 'Testing',
@@ -179,6 +181,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 2,
+    session: 'Session 1',
     summary: 'Auth atob crash on malformed Base64',
     severity: 'Medium',
     source: 'Code Review',
@@ -187,6 +190,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 3,
+    session: 'Session 1',
     summary: 'Auth scheme case-sensitivity rejecting valid requests',
     severity: 'Low',
     source: 'Code Review',
@@ -195,6 +199,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 4,
+    session: 'Session 2',
     summary: 'tsconfig.node.json misconfiguration',
     severity: 'Low',
     source: 'Codex Auto-Review',
@@ -203,6 +208,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 5,
+    session: 'Session 3',
     summary: 'Codex stub files breaking Cloudflare build',
     severity: 'High',
     source: 'Testing',
@@ -211,6 +217,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 6,
+    session: 'Session 3',
     summary: 'React Flow CSS layer ordering conflict with Tailwind v4',
     severity: 'Medium',
     source: 'Testing',
@@ -219,6 +226,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 7,
+    session: 'Session 3',
     summary: '@xyflow/react v12 import syntax (named vs default)',
     severity: 'Medium',
     source: 'Testing',
@@ -227,6 +235,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 8,
+    session: 'Session 5',
     summary: 'Node overlap when multiple phases expanded',
     severity: 'High',
     source: 'User Report',
@@ -235,6 +244,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 9,
+    session: 'Session 5',
     summary: 'Unicode escape sequences rendering as literal text',
     severity: 'Medium',
     source: 'User Report',
@@ -243,6 +253,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 10,
+    session: 'Session 7',
     summary: 'Codex task reverted earlier spacing fix',
     severity: 'Medium',
     source: 'User Report',
@@ -251,6 +262,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 11,
+    session: 'Session 7',
     summary: 'Node overlap when descriptions expand (fixed 60px insufficient)',
     severity: 'Medium',
     source: 'User Report',
@@ -259,6 +271,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 12,
+    session: 'Session 7',
     summary: 'Thick/doubled root-to-chapter line (smoothstep artifact)',
     severity: 'Low',
     source: 'User Report',
@@ -267,6 +280,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 13,
+    session: 'Session 8',
     summary: 'Vertical spine edge clips through left-side child nodes',
     severity: 'Medium',
     source: 'User Report',
@@ -275,6 +289,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 14,
+    session: 'Session 9',
     summary: 'Session bar chart renders 6px min bar for zero values (misleading visual)',
     severity: 'Low',
     source: 'Cowork Code Review',
@@ -283,6 +298,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 15,
+    session: 'Session 9',
     summary: 'Net Change chart includes zero-activity sessions that Lines Added filters out',
     severity: 'Low',
     source: 'Cowork Code Review',
@@ -291,6 +307,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 16,
+    session: 'Session 10',
     summary: 'Net Change label missing toLocaleString formatting',
     severity: 'Low',
     source: 'Cowork Code Review',
@@ -299,6 +316,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 17,
+    session: 'Session 11',
     summary: 'Variable shadowing: isDateExpandable redefined in nested scope',
     severity: 'Low',
     source: 'Cowork Code Review',
@@ -307,6 +325,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 18,
+    session: 'Session 12',
     summary: 'metaMetrics.ts stray line prepended — Session 12 entry placed at file start instead of sessions array',
     severity: 'High',
     source: 'Cowork Code Review',
@@ -315,6 +334,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 19,
+    session: 'Session 13',
     summary: 'StackedTreeView category filter not working — nodeMatchesFilter only checked node.type',
     severity: 'Medium',
     source: 'Cowork Code Review',
@@ -323,6 +343,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 20,
+    session: 'Session 13',
     summary: 'Duplicate summary bar + filter UI in stacked mode',
     severity: 'Medium',
     source: 'Cowork Code Review',
@@ -331,6 +352,7 @@ export const metaBugs: BugEntry[] = [
   },
   {
     id: 21,
+    session: 'Session 13',
     summary: 'formatCategory returns UX Design instead of UX/Design (missing slash)',
     severity: 'Low',
     source: 'Cowork Code Review',

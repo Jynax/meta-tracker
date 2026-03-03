@@ -20,6 +20,7 @@ export interface SessionEntry {
 
 export interface BugEntry {
   id: number;
+  session: string;
   summary: string;
   severity: 'Critical' | 'High' | 'Medium' | 'Low';
   source: string;
@@ -133,6 +134,7 @@ export const bipDateRange = {
 export const bipBugs: BugEntry[] = [
   {
     id: 1,
+    session: 'ChatGPT 4',
     summary: "Boolean 'f' globally truthy \u2014 corrupted representation data",
     severity: 'Critical',
     source: 'ChatGPT Code Review',
@@ -141,6 +143,7 @@ export const bipBugs: BugEntry[] = [
   },
   {
     id: 2,
+    session: 'Cowork 1',
     summary: 'Worker debug redirect blocking app access',
     severity: 'High',
     source: 'Cowork Audit',
@@ -149,6 +152,7 @@ export const bipBugs: BugEntry[] = [
   },
   {
     id: 3,
+    session: 'Cowork 3',
     summary: 'PR #18 merge conflict (29+ PRs behind)',
     severity: 'Medium',
     source: 'Code Review',
@@ -157,6 +161,7 @@ export const bipBugs: BugEntry[] = [
   },
   {
     id: 4,
+    session: 'Cowork 3',
     summary: 'parseAllDataSheets() possibly unused dead code',
     severity: 'Low',
     source: 'Cowork Code Review',
@@ -165,6 +170,7 @@ export const bipBugs: BugEntry[] = [
   },
   {
     id: 5,
+    session: 'Cowork 4',
     summary: "'% All' section header showing 'Women'",
     severity: 'Medium',
     source: 'User Report',
@@ -173,6 +179,7 @@ export const bipBugs: BugEntry[] = [
   },
   {
     id: 6,
+    session: 'Cowork 4',
     summary: 'Timeline renders as modal overlay (position:fixed)',
     severity: 'High',
     source: 'User Report',
@@ -181,6 +188,7 @@ export const bipBugs: BugEntry[] = [
   },
   {
     id: 7,
+    session: 'Cowork 4',
     summary: "Timeline doesn't auto-expand on view switch",
     severity: 'Medium',
     source: 'User Report',
@@ -189,6 +197,7 @@ export const bipBugs: BugEntry[] = [
   },
   {
     id: 8,
+    session: 'Cowork 4',
     summary: 'window.open() noopener severs sessionStorage',
     severity: 'High',
     source: 'Codex Auto-Review',

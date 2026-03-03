@@ -6,6 +6,7 @@ import { remnantsProject } from '../data/remnantsProject';
 import type { FilterType, NodeCategory, Project, ProjectNode } from '../types';
 import { nodeTypes } from './CustomNodes';
 import MetricsDashboard from './MetricsDashboard';
+import StackedTreeView from './StackedTreeView';
 import type { TreeNodeData } from './treeLayout';
 import { buildTreeLayout } from './treeLayout';
 
@@ -134,10 +135,12 @@ function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { o
 export default function DecisionTree() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [view, setView] = useState<'tree' | 'metrics'>('tree');
+  const [treeMode, setTreeMode] = useState<'stacked' | 'canvas'>('stacked');
   const [metricsTab, setMetricsTab] = useState<'overview' | 'code' | 'bugs' | 'sessions'>('overview');
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [activeProject, setActiveProject] = useState<Project>(bipProject);
   const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set(['ch-spark']));
+  const [expandedNode, setExpandedNode] = useState<string | null>(null);
   const [detailNodes, setDetailNodes] = useState<Set<string>>(new Set());
 
   const toggleChapter = (chapterId: string) => {
@@ -163,10 +166,12 @@ export default function DecisionTree() {
     if (project) {
       setActiveProject(project);
       setExpandedChapters(new Set([project.chapters[0]?.id].filter(Boolean)));
+      setExpandedNode(null);
       setDetailNodes(new Set());
       setFilter('all');
       setFiltersExpanded(false);
       setView('tree');
+      setTreeMode('stacked');
       setMetricsTab('overview');
     }
   };
@@ -259,6 +264,28 @@ export default function DecisionTree() {
 
       {view === 'tree' && (
         <>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+            <span style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#64748b', fontWeight: 700 }}>View:</span>
+            {(['stacked', 'canvas'] as const).map((mode) => (
+              <button
+                key={mode}
+                onClick={() => setTreeMode(mode)}
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  padding: '5px 12px',
+                  borderRadius: 8,
+                  border: `1px solid ${treeMode === mode ? '#22d3ee40' : '#334155'}`,
+                  background: treeMode === mode ? '#22d3ee20' : 'transparent',
+                  color: treeMode === mode ? '#22d3ee' : '#64748b',
+                  cursor: 'pointer',
+                }}
+              >
+                {mode === 'stacked' ? 'Stacked' : 'Canvas'}
+              </button>
+            ))}
+          </div>
+
           <div
             className="mb-4 rounded-xl border"
             style={{ backgroundColor: '#1e293b', borderColor: '#334155', padding: '14px 20px' }}
@@ -317,24 +344,37 @@ export default function DecisionTree() {
             )}
           </div>
 
-          <div
-            className="h-[calc(100vh-140px)] overflow-hidden rounded-2xl border border-slate-700"
-            style={{ height: 'calc(100vh - 140px)' }}
-          >
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              nodeTypes={enhancedNodeTypes}
-              fitView
-              fitViewOptions={{ maxZoom: 1, minZoom: 0.1, padding: 0.2 }}
-              proOptions={{ hideAttribution: true }}
-              className="bg-[#0f172a]"
-              style={{ backgroundColor: '#0f172a' }}
+          {treeMode === 'stacked' ? (
+            <StackedTreeView
+              project={activeProject}
+              filter={filter}
+              onFilterChange={(nextFilter) => setFilter(nextFilter as FilterType)}
+              expandedChapter={Array.from(expandedChapters)[0] ?? null}
+              onChapterToggle={toggleChapter}
+              expandedNode={expandedNode}
+              onNodeToggle={(id) => setExpandedNode((current) => (current === id ? null : id))}
+              highlightChapter={null}
+            />
+          ) : (
+            <div
+              className="h-[calc(100vh-140px)] overflow-hidden rounded-2xl border border-slate-700"
+              style={{ height: 'calc(100vh - 140px)' }}
             >
-              <Controls className="!bg-slate-900 !border-slate-700" />
-              <Background variant="dots" gap={18} size={1.2} color="rgba(148,163,184,0.08)" />
-            </ReactFlow>
-          </div>
+              <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                nodeTypes={enhancedNodeTypes}
+                fitView
+                fitViewOptions={{ maxZoom: 1, minZoom: 0.1, padding: 0.2 }}
+                proOptions={{ hideAttribution: true }}
+                className="bg-[#0f172a]"
+                style={{ backgroundColor: '#0f172a' }}
+              >
+                <Controls className="!bg-slate-900 !border-slate-700" />
+                <Background variant="dots" gap={18} size={1.2} color="rgba(148,163,184,0.08)" />
+              </ReactFlow>
+            </div>
+          )}
         </>
       )}
 

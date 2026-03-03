@@ -51,6 +51,7 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 10', date: 'Mar 2', label: 'Data Verification', added: 10, deleted: 10, net: 0, total: 2319 },
   { session: 'Session 11', date: 'Mar 2', label: 'Data Scrape', added: 0, deleted: 0, net: 0, total: 2319 },
   { session: 'Session 12', date: 'Mar 3', label: 'Dashboard Data Overhaul', added: 515, deleted: 117, net: 398, total: 2717 },
+  { session: 'Session 13', date: 'Mar 3', label: 'Stacked Tree View', added: 714, deleted: 74, net: 640, total: 3357 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -152,6 +153,15 @@ export const metaSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Wire Remnants, date-grouped charts, code review + 4 bugs found/fixed',
     chapterId: 'meta-ch-dashboard-data-overhaul',
+  },
+  {
+    session: 'Session 13',
+    duration: 3,
+    prs: 3,
+    decisions: 3,
+    deadEnds: 0,
+    focus: 'StackedTreeView component, stacked/canvas toggle, parity polish',
+    chapterId: 'meta-ch-stacked-tree-view',
   },
 ];
 
@@ -295,14 +305,46 @@ export const metaBugs: BugEntry[] = [
     status: 'Fixed',
     category: 'Technical',
   },
+  {
+    id: 18,
+    summary: 'metaMetrics.ts stray line prepended — Session 12 entry placed at file start instead of sessions array',
+    severity: 'High',
+    source: 'Cowork Code Review',
+    status: 'Fixed',
+    category: 'Technical',
+  },
+  {
+    id: 19,
+    summary: 'StackedTreeView category filter not working — nodeMatchesFilter only checked node.type',
+    severity: 'Medium',
+    source: 'Cowork Code Review',
+    status: 'Fixed',
+    category: 'Functional',
+  },
+  {
+    id: 20,
+    summary: 'Duplicate summary bar + filter UI in stacked mode',
+    severity: 'Medium',
+    source: 'Cowork Code Review',
+    status: 'Fixed',
+    category: 'UX',
+  },
+  {
+    id: 21,
+    summary: 'formatCategory returns UX Design instead of UX/Design (missing slash)',
+    severity: 'Low',
+    source: 'Cowork Code Review',
+    status: 'Fixed',
+    category: 'UX',
+  },
 ];
 
 export const metaDerived: DerivedMetric[] = [
-  { label: 'Churn Rate', value: '0.24', detail: 'Polishing phase', color: '#34d399' },
-  { label: 'Codex Success', value: '97%', detail: '30/31 tasks', color: '#34d399' },
-  { label: 'Cycle Time', value: '0.62h', detail: 'Per merged PR', color: '#22d3ee' },
-  { label: 'Decisions', value: '5.0', detail: 'Per session avg', color: '#22d3ee' },
-  { label: 'Bug Rate', value: '0.43', detail: 'Per PR merged', color: '#34d399' },
+  { label: 'Churn Rate', value: '0.30', detail: 'Session 13 parity refactoring', color: '#34d399' },
+  { label: 'Codex Success', value: '97%', detail: '37/38 tasks', color: '#34d399' },
+  { label: 'Cycle Time', value: '0.71h', detail: 'Per merged PR', color: '#22d3ee' },
+  { label: 'Decisions', value: '3.9', detail: 'Per session avg', color: '#22d3ee' },
+  { label: 'Bug Rate', value: '0.51', detail: 'Per PR merged', color: '#34d399' },
 ];
 
 export const metaStack: StackEntry[] = [

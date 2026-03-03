@@ -253,6 +253,38 @@ export const metaBugs: BugEntry[] = [
     status: 'Fixed',
     category: 'UX',
   },
+  {
+    id: 14,
+    summary: 'Session bar chart renders 6px min bar for zero values (misleading visual)',
+    severity: 'Low',
+    source: 'Cowork Code Review',
+    status: 'Open',
+    category: 'UX',
+  },
+  {
+    id: 15,
+    summary: 'Net Change chart includes zero-activity sessions that Lines Added filters out',
+    severity: 'Low',
+    source: 'Cowork Code Review',
+    status: 'Open',
+    category: 'Functional',
+  },
+  {
+    id: 16,
+    summary: 'Net Change label missing toLocaleString formatting',
+    severity: 'Low',
+    source: 'Cowork Code Review',
+    status: 'Fixed',
+    category: 'UX',
+  },
+  {
+    id: 17,
+    summary: 'Variable shadowing: isDateExpandable redefined in nested scope',
+    severity: 'Low',
+    source: 'Cowork Code Review',
+    status: 'Open',
+    category: 'Technical',
+  },
 ];
 
 export const metaDerived: DerivedMetric[] = [

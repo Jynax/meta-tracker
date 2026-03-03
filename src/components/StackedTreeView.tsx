@@ -25,7 +25,7 @@ const COLORS = {
   cardBg: '#1e293b',
   border: '#334155',
   white: '#f8fafc',
-  muted: '#64748b',
+  muted: '#94a3b8',
   slate: '#94a3b8',
   cyan: '#22d3ee',
   emerald: '#34d399',
@@ -36,20 +36,20 @@ const COLORS = {
 
 const CATEGORY_ORDER: NodeCategory[] = ['technical', 'functional', 'ux-design', 'process'];
 
-type FilterOption = {
-  value: FilterType;
-  label: string;
-  color: string;
-};
+// type FilterOption = {
+//   value: FilterType;
+//   label: string;
+//   color: string;
+// };
 
-const FILTER_OPTIONS: FilterOption[] = [
-  { value: 'all', label: 'All', color: COLORS.cyan },
-  { value: 'decision', label: 'Decisions', color: COLORS.emerald },
-  { value: 'dead-end', label: 'Dead Ends', color: COLORS.rose },
-  { value: 'event', label: 'Events', color: COLORS.cyan },
-  { value: 'discovery', label: 'Discoveries', color: COLORS.amber },
-  { value: 'pivot', label: 'Pivots', color: COLORS.violet },
-];
+// const FILTER_OPTIONS: FilterOption[] = [
+//   { value: 'all', label: 'All', color: COLORS.cyan },
+//   { value: 'decision', label: 'Decisions', color: COLORS.emerald },
+//   { value: 'dead-end', label: 'Dead Ends', color: COLORS.rose },
+//   { value: 'event', label: 'Events', color: COLORS.cyan },
+//   { value: 'discovery', label: 'Discoveries', color: COLORS.amber },
+//   { value: 'pivot', label: 'Pivots', color: COLORS.violet },
+// ];
 
 function getTypeColor(type: NodeType): string {
   switch (type) {
@@ -125,7 +125,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
     onJumpToSession,
   } = props;
 
-  const [showFilters, setShowFilters] = React.useState(false);
+  // const [showFilters, setShowFilters] = React.useState(false);
   const activeFilter: FilterType = filter as FilterType;
 
   const allNodes = project.chapters.flatMap((chapter) => chapter.nodes);
@@ -171,7 +171,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 10,
+                fontSize: 13,
                 fontWeight: 700,
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
@@ -211,10 +211,10 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
           border: 'none',
           background: 'transparent',
           color: 'inherit',
-          padding: 14,
+          padding: 16,
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
+          flexDirection: 'column',
+          gap: 8,
           cursor: 'pointer',
           boxShadow: isHighlighted ? `0 0 0 1px ${COLORS.cyan}30` : 'none',
           borderRadius: 12,
@@ -223,7 +223,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
         <div style={{ minWidth: 0 }}>
           <div
             style={{
-              fontSize: 9,
+              fontSize: 12,
               textTransform: 'uppercase',
               letterSpacing: '1.5px',
               color: COLORS.muted,
@@ -233,18 +233,12 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
           >
             Chapter
           </div>
-          <div style={{ fontSize: 16, fontWeight: 700, color: COLORS.white, marginBottom: 4 }}>
-            {chapter.name}
-          </div>
-          <div style={{ fontSize: 10, color: COLORS.muted }}>{`${chapter.period} · ${chapter.toolLabel}`}</div>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, marginLeft: 10 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 14, color: COLORS.slate }}>{isExpanded ? '▾' : '▸'}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+            <span style={{ fontSize: 20, fontWeight: 700, color: COLORS.white }}>{chapter.name}</span>
+            <span style={{ fontSize: 15, color: COLORS.slate }}>{isExpanded ? '\u25BC' : '\u25B6'}</span>
             <span
               style={{
-                fontSize: 10,
+                fontSize: 13,
                 color: COLORS.slate,
                 border: `1px solid ${COLORS.border}`,
                 borderRadius: 9999,
@@ -255,12 +249,18 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
               {chapter.nodes.length}
             </span>
           </div>
-          {renderCategoryBar(chapterCounts, chapter.nodes.length, false, 12, 120)}
-          <div style={{ display: 'flex', gap: 8, fontSize: 10, color: COLORS.muted, fontWeight: 600 }}>
-            <span>{chapter.nodes.length} entries</span>
-            {chapterDeadEnds > 0 && <span style={{ color: COLORS.rose }}>{chapterDeadEnds} dead ends</span>}
-            {chapterDiscoveries > 0 && <span style={{ color: COLORS.amber }}>{chapterDiscoveries} discoveries</span>}
-            {chapterPivots > 0 && <span style={{ color: COLORS.violet }}>{chapterPivots} pivots</span>}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6 }}>
+              <div style={{ display: 'flex', gap: 8, fontSize: 13, color: COLORS.muted, fontWeight: 600 }}>
+                <span>{chapter.nodes.length} entries</span>
+                {chapterDeadEnds > 0 && <span style={{ color: COLORS.rose }}>{chapterDeadEnds} dead ends</span>}
+                {chapterDiscoveries > 0 && <span style={{ color: COLORS.amber }}>{chapterDiscoveries} discoveries</span>}
+                {chapterPivots > 0 && <span style={{ color: COLORS.violet }}>{chapterPivots} pivots</span>}
+              </div>
+              {renderCategoryBar(chapterCounts, chapter.nodes.length, false, 12, 120)}
+            </div>
+
+            <div style={{ fontSize: 13, color: COLORS.muted }}>{`${chapter.period} · ${chapter.toolLabel}`}</div>
           </div>
         </div>
       </button>
@@ -274,56 +274,82 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
           background: COLORS.cardBg,
           border: `1px solid ${COLORS.border}`,
           borderRadius: 12,
-          padding: 16,
+          padding: 18,
           display: 'flex',
           flexDirection: 'column',
           gap: 10,
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-          <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>{totalEntries} entries</span>
+          <button
+            type="button"
+            onClick={() => onFilterChange('all')}
+            style={{
+              color: COLORS.white,
+              fontSize: 15,
+              fontWeight: 600,
+              border: 'none',
+              background: 'transparent',
+              cursor: 'pointer',
+              padding: 0,
+            }}
+          >
+            {totalEntries} entries
+          </button>
           <span style={{ color: COLORS.border }}>|</span>
           {deadEnds > 0 && (
-            <span
+            <button
+              type="button"
+              onClick={() => onFilterChange(activeFilter === 'dead-end' ? 'all' : 'dead-end')}
               style={{
-                fontSize: 10,
+                fontSize: 13,
                 fontWeight: 700,
                 color: COLORS.rose,
-                background: `${COLORS.rose}15`,
+                background: `${COLORS.rose}${activeFilter === 'dead-end' ? '30' : '15'}`,
                 borderRadius: 9999,
                 padding: '2px 8px',
+                border: 'none',
+                cursor: 'pointer',
               }}
             >
               {deadEnds} dead ends
-            </span>
+            </button>
           )}
           {discoveries > 0 && (
-            <span
+            <button
+              type="button"
+              onClick={() => onFilterChange(activeFilter === 'discovery' ? 'all' : 'discovery')}
               style={{
-                fontSize: 10,
+                fontSize: 13,
                 fontWeight: 700,
                 color: COLORS.amber,
-                background: `${COLORS.amber}15`,
+                background: `${COLORS.amber}${activeFilter === 'discovery' ? '30' : '15'}`,
                 borderRadius: 9999,
                 padding: '2px 8px',
+                border: 'none',
+                cursor: 'pointer',
               }}
             >
               {discoveries} discoveries
-            </span>
+            </button>
           )}
           {pivots > 0 && (
-            <span
+            <button
+              type="button"
+              onClick={() => onFilterChange(activeFilter === 'pivot' ? 'all' : 'pivot')}
               style={{
-                fontSize: 10,
+                fontSize: 13,
                 fontWeight: 700,
                 color: COLORS.violet,
-                background: `${COLORS.violet}15`,
+                background: `${COLORS.violet}${activeFilter === 'pivot' ? '30' : '15'}`,
                 borderRadius: 9999,
                 padding: '2px 8px',
+                border: 'none',
+                cursor: 'pointer',
               }}
             >
               {pivots} pivots
-            </span>
+            </button>
           )}
         </div>
 
@@ -349,13 +375,13 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                   display: 'inline-block',
                 }}
               />
-              <span style={{ fontSize: 11, color: COLORS.muted }}>{`${formatCategory(category)} (${categoryCounts[category]})`}</span>
+              <span style={{ fontSize: 14, color: COLORS.muted }}>{`${formatCategory(category)} (${categoryCounts[category]})`}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div
+      {/* <div
         style={{
           background: COLORS.cardBg,
           border: `1px solid ${COLORS.border}`,
@@ -386,7 +412,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
           {activeFilter !== 'all' && (
             <span
               style={{
-                fontSize: 10,
+                fontSize: 13,
                 fontWeight: 700,
                 color: getTypeColor(activeFilter),
                 background: `${getTypeColor(activeFilter)}20`,
@@ -414,7 +440,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                     border: `1px solid ${isActive ? `${option.color}40` : COLORS.border}`,
                     background: isActive ? `${option.color}20` : 'transparent',
                     color: isActive ? option.color : COLORS.muted,
-                    fontSize: 11,
+                    fontSize: 14,
                     fontWeight: 700,
                     padding: '6px 10px',
                     cursor: 'pointer',
@@ -426,7 +452,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
             })}
           </div>
         )}
-      </div>
+      </div> */}
 
       {project.chapters.map((chapter) => {
         const isExpanded = expandedChapter === chapter.id;
@@ -446,7 +472,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
             {renderChapterHeader(chapter)}
 
             {isExpanded && (
-              <div style={{ padding: '0 14px 14px' }}>
+              <div style={{ padding: '0 16px 16px' }}>
                 {filteredNodes.length === 0 ? (
                   <div style={{ color: COLORS.muted, fontSize: 12, padding: '8px 0 4px' }}>
                     No entries match filter
@@ -469,20 +495,20 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                           border: 'none',
                           borderLeft: `3px solid ${typeColor}`,
                           borderRadius: 8,
-                          padding: '10px 14px',
+                          padding: '12px 16px',
                           marginBottom: 6,
                           cursor: 'pointer',
                           color: COLORS.white,
                         }}
                       >
                         <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
-                          <span style={{ fontSize: 9, fontWeight: 800, color: typeColor, textTransform: 'uppercase' }}>
+                          <span style={{ fontSize: 12, fontWeight: 800, color: typeColor, textTransform: 'uppercase' }}>
                             {node.type}
                           </span>
                           {node.category && (
                             <span
                               style={{
-                                fontSize: 9,
+                                fontSize: 12,
                                 color: categoryColor,
                                 background: `${categoryColor}15`,
                                 borderRadius: 9999,
@@ -494,19 +520,19 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                             </span>
                           )}
                         </div>
-                        <div style={{ marginTop: 5, fontSize: 13, fontWeight: 700, color: COLORS.white }}>
+                        <div style={{ marginTop: 5, fontSize: 15, fontWeight: 700, color: COLORS.white }}>
                           {node.title}
                         </div>
 
                         {isNodeExpanded && (
                           <div style={{ marginTop: 8 }}>
-                            <div style={{ fontSize: 11, color: COLORS.slate, lineHeight: 1.6 }}>{node.description}</div>
+                            <div style={{ fontSize: 14, color: COLORS.slate, lineHeight: 1.6 }}>{node.description}</div>
 
                             {'chosenPath' in node && node.chosenPath && (
                               <div style={{ marginTop: 8 }}>
                                 <div
                                   style={{
-                                    fontSize: 9,
+                                    fontSize: 12,
                                     textTransform: 'uppercase',
                                     color: COLORS.muted,
                                     letterSpacing: 1.2,
@@ -515,7 +541,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                                 >
                                   Chosen Path
                                 </div>
-                                <div style={{ fontSize: 11, color: COLORS.emerald, marginTop: 2 }}>{node.chosenPath}</div>
+                                <div style={{ fontSize: 14, color: COLORS.emerald, marginTop: 2 }}>{node.chosenPath}</div>
                               </div>
                             )}
 
@@ -523,7 +549,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                               <div style={{ marginTop: 8 }}>
                                 <div
                                   style={{
-                                    fontSize: 9,
+                                    fontSize: 12,
                                     textTransform: 'uppercase',
                                     color: COLORS.muted,
                                     letterSpacing: 1.2,
@@ -537,7 +563,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                                   <div
                                     key={`${node.id}-alt-${index}`}
                                     style={{
-                                      fontSize: 10,
+                                      fontSize: 13,
                                       color: COLORS.rose,
                                       background: `${COLORS.rose}08`,
                                       borderLeft: `2px dashed ${COLORS.rose}`,
@@ -556,7 +582,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                               <div style={{ marginTop: 8 }}>
                                 <div
                                   style={{
-                                    fontSize: 9,
+                                    fontSize: 12,
                                     textTransform: 'uppercase',
                                     color: COLORS.muted,
                                     letterSpacing: 1.2,
@@ -565,7 +591,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                                 >
                                   Lesson
                                 </div>
-                                <div style={{ fontSize: 11, color: COLORS.amber, marginTop: 2, fontStyle: 'italic' }}>
+                                <div style={{ fontSize: 14, color: COLORS.amber, marginTop: 2, fontStyle: 'italic' }}>
                                   {node.lesson}
                                 </div>
                               </div>

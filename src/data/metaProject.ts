@@ -3,7 +3,7 @@ import type { Project } from '../types';
 export const metaProject: Project = {
   id: 'meta',
   name: 'Meta Tracker',
-  subtitle: 'BUILT WITH CLAUDE COWORK Â· CODEX',
+  subtitle: 'BUILT WITH CLAUDE COWORK & CODEX',
   chapters: [
     {
       id: 'meta-ch-inception',
@@ -28,7 +28,7 @@ export const metaProject: Project = {
           description:
             'Chose the same stack as BIP for consistency: Vite + React + TypeScript + Tailwind, hosted on Cloudflare Pages. JSON files in repo as data store.',
           chosenPath:
-            'Same stack as BIP â Vite + React + TypeScript + Tailwind + Cloudflare Pages',
+            'Same stack as BIP — Vite + React + TypeScript + Tailwind + Cloudflare Pages',
           alternatives: ['Different framework', 'Adding a backend with Cloudflare D1/KV'],
         },
         {
@@ -56,7 +56,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-horizontal',
       name: 'The Horizontal Era',
-      period: 'Sessions 1-3',
+      period: 'Sessions 1-3 (Feb 2026)',
       toolLabel: 'Claude, ChatGPT',
       tool: 'mixed',
       nodes: [
@@ -96,7 +96,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-layout-overhaul',
       name: 'The Layout Overhaul',
-      period: 'Sessions 4-5',
+      period: 'Sessions 4-5 (Feb 2026)',
       toolLabel: 'Claude, ChatGPT',
       tool: 'mixed',
       nodes: [
@@ -158,7 +158,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-spacing-wars',
       name: 'The Spacing Wars',
-      period: 'Session 5',
+      period: 'Session 5 (Feb 2026)',
       toolLabel: 'ChatGPT Codex',
       tool: 'chatgpt',
       nodes: [

@@ -3,12 +3,12 @@ import type { Project } from '../types';
 export const bipProject: Project = {
   id: 'bip',
   name: 'BIP: Buried in Print Reader Stats',
-  subtitle: 'BUILT WITH CHATGPT · CLAUDE COWORK · CODEX',
+  subtitle: 'BUILT WITH CHATGPT & CLAUDE COWORK & CODEX',
   chapters: [
     {
       id: 'ch-spark',
       name: 'The Spark',
-      period: 'Pre-Codex planning',
+      period: 'Pre-Codex planning (Feb 2026)',
       toolLabel: 'ChatGPT',
       tool: 'chatgpt',
       nodes: [
@@ -45,7 +45,7 @@ export const bipProject: Project = {
     {
       id: 'ch-data-wrangling',
       name: 'Data Wrangling',
-      period: 'Feb 2025 - Cowork Session 2',
+      period: 'Cowork Session 2 (Feb 2026)',
       toolLabel: 'ChatGPT, Codex, Cowork',
       tool: 'mixed',
       nodes: [
@@ -104,7 +104,7 @@ export const bipProject: Project = {
     {
       id: 'ch-first-charts',
       name: 'First Charts',
-      period: 'Early Codex sessions',
+      period: 'Early Codex sessions (Feb 2026)',
       toolLabel: 'ChatGPT',
       tool: 'chatgpt',
       nodes: [
@@ -141,7 +141,7 @@ export const bipProject: Project = {
     {
       id: 'ch-representation-engine',
       name: 'The Representation Engine',
-      period: 'Mid-project Codex sessions, Cowork (PRs #56-60)',
+      period: 'Mid-project Codex sessions, Cowork (Feb 2026)',
       toolLabel: 'ChatGPT, Codex, Cowork',
       tool: 'mixed',
       nodes: [
@@ -191,7 +191,7 @@ export const bipProject: Project = {
     {
       id: 'ch-opening-windows',
       name: 'Opening New Windows',
-      period: 'Cowork Session (PRs #57, #59, #60)',
+      period: 'Cowork Session (Feb 2026)',
       toolLabel: 'Claude, ChatGPT',
       tool: 'mixed',
       nodes: [
@@ -237,7 +237,7 @@ export const bipProject: Project = {
     {
       id: 'ch-domain-deployment',
       name: 'Domain & Deployment',
-      period: 'Early Codex sessions, Cowork Session 1',
+      period: 'Early Codex sessions, Cowork Session 1 (Feb 2026)',
       toolLabel: 'ChatGPT, Codex, Cowork',
       tool: 'mixed',
       nodes: [
@@ -280,7 +280,7 @@ export const bipProject: Project = {
     {
       id: 'ch-codex-workflow',
       name: 'The Codex Workflow',
-      period: 'All sessions',
+      period: 'Sessions 1-13 (Feb-Mar 2026)',
       toolLabel: 'ChatGPT, Codex, Cowork',
       tool: 'mixed',
       nodes: [
@@ -330,7 +330,7 @@ export const bipProject: Project = {
     {
       id: 'ch-app-decomposition',
       name: 'App.tsx Decomposition',
-      period: 'Cowork Session 3',
+      period: 'Cowork Session 3 (Feb 2026)',
       toolLabel: 'Claude, ChatGPT',
       tool: 'mixed',
       nodes: [
@@ -358,7 +358,7 @@ export const bipProject: Project = {
     {
       id: 'ch-learning-git',
       name: 'Learning Git & Local Dev',
-      period: 'ChatGPT 5.3 Codex Access Guide',
+      period: 'ChatGPT 5.3 Codex Access Guide (Feb 2026)',
       toolLabel: 'ChatGPT',
       tool: 'chatgpt',
       nodes: [
@@ -382,7 +382,7 @@ export const bipProject: Project = {
     {
       id: 'ch-published-work-tracker',
       name: 'Published Work Tracker (Deferred Feature)',
-      period: 'ChatGPT Published Work Tracker conversation (Feb 21)',
+      period: 'ChatGPT Published Work Tracker conversation (Feb 2026)',
       toolLabel: 'ChatGPT',
       tool: 'chatgpt',
       nodes: [

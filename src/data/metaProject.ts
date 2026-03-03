@@ -489,11 +489,11 @@ export const metaProject: Project = {
     },
     {
       id: 'meta-ch-stacked-tree-view',
-      title: 'The Stacked Tree View',
+      name: 'The Stacked Tree View',
+      period: 'Session 13 (Mar 2026)',
+      toolLabel: 'Claude Cowork, ChatGPT Codex',
       tool: 'mixed',
-      summary:
-        'Introduced StackedTreeView as an alternative to the React Flow canvas — a purely CSS-based, vertically-stacked chapter/card layout. Added a stacked/canvas toggle, then ran a parity polish pass fixing category filters, duplicate UI, and label mismatches.',
-      entries: [
+      nodes: [
         {
           id: 'meta-stacked-tree-component',
           type: 'decision',

@@ -487,15 +487,52 @@ export const metaProject: Project = {
         },
       ],
     },
+    {
+      id: 'meta-ch-stacked-tree-view',
+      title: 'The Stacked Tree View',
+      tool: 'mixed',
+      summary:
+        'Introduced StackedTreeView as an alternative to the React Flow canvas — a purely CSS-based, vertically-stacked chapter/card layout. Added a stacked/canvas toggle, then ran a parity polish pass fixing category filters, duplicate UI, and label mismatches.',
+      entries: [
+        {
+          id: 'meta-stacked-tree-component',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'StackedTreeView Component Created',
+          description:
+            'Created a 585-line CSS-based alternative view. Renders chapters as expandable cards with entry cards, summary bar, filter buttons, and chapter stats. Uses inline styles to avoid CSS specificity conflicts.',
+          chosenPath: 'Separate component with inline styles, no React Flow dependency',
+          alternatives: ['Accordion within DecisionTree', 'Separate route/page', 'Markdown-rendered view'],
+        },
+        {
+          id: 'meta-stacked-canvas-toggle',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Stacked/Canvas Toggle',
+          description:
+            'Added treeMode state (stacked/canvas) defaulting to stacked. Toggle buttons below the project selector. Filter state, expanded chapter, and project selection shared between modes.',
+          chosenPath: 'Inline toggle with shared state, default to stacked',
+          alternatives: ['Separate view switcher tab', 'Dropdown selector', 'localStorage preference'],
+        },
+        {
+          id: 'meta-parity-polish',
+          type: 'event',
+          category: 'technical',
+          title: 'Parity Polish Pass (3 Bugs Fixed)',
+          description:
+            'Code review and live verification found 3 parity issues: category filter not checking node.category, duplicate summary bar in stacked mode, and UX Design label missing slash. All fixed in PR #39.',
+        },
+      ],
+    },
   ],
   stats: {
     totalDays: 5,
     chatGptMessages: '250+',
-    coworkSessions: 9,
-    prsCreated: '35+',
-    codexTasks: '35+',
-    linesOfCode: '2,700+',
+    coworkSessions: 10,
+    prsCreated: '39+',
+    codexTasks: '38+',
+    linesOfCode: '3,300+',
     deadEnds: 2,
-    majorDecisions: 18,
+    majorDecisions: 21,
   },
 };

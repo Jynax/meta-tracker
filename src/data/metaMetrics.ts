@@ -1,4 +1,3 @@
-  { session: 'Session 12', duration: 3, prs: 4, decisions: 3, deadEnds: 0, focus: 'Wire Remnants, date-grouped charts, code review + 4 bugs found/fixed', chapterId: 'meta-ch-dashboard-data-overhaul' },
 export interface CodeVolumeEntry {
   session: string;
   date: string;
@@ -51,7 +50,7 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 9', date: 'Mar 2', label: 'UX Polish', added: 432, deleted: 104, net: 328, total: 2319 },
   { session: 'Session 10', date: 'Mar 2', label: 'Data Verification', added: 10, deleted: 10, net: 0, total: 2319 },
   { session: 'Session 11', date: 'Mar 2', label: 'Data Scrape', added: 0, deleted: 0, net: 0, total: 2319 },
-  { session: 'Session 12', date: 'Mar 3', label: 'S12', added: 515, deleted: 117, net: 398, total: 2717 },
+  { session: 'Session 12', date: 'Mar 3', label: 'Dashboard Data Overhaul', added: 515, deleted: 117, net: 398, total: 2717 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -144,6 +143,15 @@ export const metaSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Data scrape: BIP Pre-Cowork + Remnants bootstrap',
     chapterId: 'meta-ch-ux-polish',
+  },
+  {
+    session: 'Session 12',
+    duration: 3,
+    prs: 4,
+    decisions: 3,
+    deadEnds: 0,
+    focus: 'Wire Remnants, date-grouped charts, code review + 4 bugs found/fixed',
+    chapterId: 'meta-ch-dashboard-data-overhaul',
   },
 ];
 

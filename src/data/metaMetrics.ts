@@ -1,5 +1,6 @@
 export interface CodeVolumeEntry {
   session: string;
+  date: string;
   label: string;
   added: number;
   deleted: number;
@@ -39,16 +40,16 @@ export interface StackEntry {
 }
 
 export const metaCodeVolume: CodeVolumeEntry[] = [
-  { session: 'Session 1', label: 'Scaffold & Auth', added: 862, deleted: 6, net: 856, total: 770 },
-  { session: 'Session 2', label: 'Vertical Tree', added: 239, deleted: 265, net: -26, total: 744 },
-  { session: 'Session 3', label: 'React Flow Rebuild', added: 438, deleted: 362, net: 76, total: 820 },
-  { session: 'Session 4', label: 'Overlap & Filters', added: 157, deleted: 37, net: 120, total: 940 },
-  { session: 'Session 5', label: 'Layout Refactor', added: 202, deleted: 141, net: 61, total: 1000 },
-  { session: 'Session 7', label: 'Data Model Alignment', added: 671, deleted: 289, net: 382, total: 1382 },
-  { session: 'Session 8', label: 'Spine Fix & Dashboard', added: 650, deleted: 41, net: 609, total: 1991 },
-  { session: 'Session 9', label: 'UX Polish', added: 432, deleted: 104, net: 328, total: 2319 },
-  { session: 'Session 10', label: 'Data Verification', added: 10, deleted: 10, net: 0, total: 2319 },
-  { session: 'Session 11', label: 'Data Scrape', added: 0, deleted: 0, net: 0, total: 2319 },
+  { session: 'Session 1', date: 'Feb 26', label: 'Scaffold & Auth', added: 862, deleted: 6, net: 856, total: 770 },
+  { session: 'Session 2', date: 'Feb 26', label: 'Vertical Tree', added: 239, deleted: 265, net: -26, total: 744 },
+  { session: 'Session 3', date: 'Feb 26', label: 'React Flow Rebuild', added: 438, deleted: 362, net: 76, total: 820 },
+  { session: 'Session 4', date: 'Feb 27', label: 'Overlap & Filters', added: 157, deleted: 37, net: 120, total: 940 },
+  { session: 'Session 5', date: 'Feb 28', label: 'Layout Refactor', added: 202, deleted: 141, net: 61, total: 1000 },
+  { session: 'Session 7', date: 'Feb 28', label: 'Data Model Alignment', added: 671, deleted: 289, net: 382, total: 1382 },
+  { session: 'Session 8', date: 'Mar 2', label: 'Spine Fix & Dashboard', added: 650, deleted: 41, net: 609, total: 1991 },
+  { session: 'Session 9', date: 'Mar 2', label: 'UX Polish', added: 432, deleted: 104, net: 328, total: 2319 },
+  { session: 'Session 10', date: 'Mar 2', label: 'Data Verification', added: 10, deleted: 10, net: 0, total: 2319 },
+  { session: 'Session 11', date: 'Mar 2', label: 'Data Scrape', added: 0, deleted: 0, net: 0, total: 2319 },
 ];
 
 export const metaSessions: SessionEntry[] = [

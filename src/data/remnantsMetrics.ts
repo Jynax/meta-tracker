@@ -2,12 +2,12 @@ import type { CodeVolumeEntry, SessionEntry, BugEntry, DerivedMetric, StackEntry
 
 // --- Code Volume ---
 export const remnantsCodeVolume: CodeVolumeEntry[] = [
-  { session: 'Claude 1', label: 'Vertical Slice', added: 850, deleted: 0, net: 850, total: 850 },
-  { session: 'Claude 2', label: 'Balance & Xenoflora', added: 0, deleted: 0, net: 0, total: 850 },
-  { session: 'Claude 3', label: 'Home Base & Recovery', added: 0, deleted: 0, net: 0, total: 850 },
-  { session: 'Git Setup', label: 'Repo Init + Docs', added: 4131, deleted: 2, net: 4129, total: 4129 },
-  { session: 'Codex 1', label: 'Launcher & Deploy', added: 680, deleted: 38, net: 642, total: 4771 },
-  { session: 'Legacy Port', label: 'Source Restructure', added: 4038, deleted: 4131, net: -93, total: 4678 },
+  { session: 'Claude 1', date: 'Feb 17', label: 'Vertical Slice', added: 850, deleted: 0, net: 850, total: 850 },
+  { session: 'Claude 2', date: 'Feb 18', label: 'Balance & Xenoflora', added: 0, deleted: 0, net: 0, total: 850 },
+  { session: 'Claude 3', date: 'Feb 18', label: 'Home Base & Recovery', added: 0, deleted: 0, net: 0, total: 850 },
+  { session: 'Git Setup', date: 'Feb 19', label: 'Repo Init + Docs', added: 4131, deleted: 2, net: 4129, total: 4129 },
+  { session: 'Codex 1', date: 'Feb 21', label: 'Launcher & Deploy', added: 680, deleted: 38, net: 642, total: 4771 },
+  { session: 'Legacy Port', date: 'Feb 21', label: 'Source Restructure', added: 4038, deleted: 4131, net: -93, total: 4678 },
 ];
 
 // --- Sessions ---

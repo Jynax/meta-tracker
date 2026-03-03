@@ -3,7 +3,7 @@ import type { Project } from '../types';
 export const metaProject: Project = {
   id: 'meta',
   name: 'Meta Tracker',
-  subtitle: 'BUILT WITH CLAUDE COWORK · CODEX',
+  subtitle: 'BUILT WITH CLAUDE COWORK Â· CODEX',
   chapters: [
     {
       id: 'meta-ch-inception',
@@ -28,7 +28,7 @@ export const metaProject: Project = {
           description:
             'Chose the same stack as BIP for consistency: Vite + React + TypeScript + Tailwind, hosted on Cloudflare Pages. JSON files in repo as data store.',
           chosenPath:
-            'Same stack as BIP — Vite + React + TypeScript + Tailwind + Cloudflare Pages',
+            'Same stack as BIP â Vite + React + TypeScript + Tailwind + Cloudflare Pages',
           alternatives: ['Different framework', 'Adding a backend with Cloudflare D1/KV'],
         },
         {
@@ -439,15 +439,63 @@ export const metaProject: Project = {
         },
       ],
     },
+    {
+      id: 'meta-ch-dashboard-data-overhaul',
+      name: 'The Dashboard Data Overhaul',
+      period: 'Session 12 (Mar 2026)',
+      toolLabel: 'Claude Cowork, Codex',
+      tool: 'mixed',
+      nodes: [
+        {
+          id: 'meta-remnants-wired',
+          type: 'event',
+          category: 'technical',
+          title: 'Remnants Project Wired into UI',
+          description:
+            'Imported remnantsProject and remnantsMetrics, registered Remnants in the PROJECTS array and project selector. All three projects now selectable in both Decision Tree and Metrics Dashboard.',
+        },
+        {
+          id: 'meta-date-grouped-charts',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Date-Grouped Collapsible Chart Sessions',
+          description:
+            'Redesigned both Code tab charts to group sessions by date with expand/collapse chevrons. An 8-row cap auto-merges oldest dates into a range row to keep the chart compact.',
+          chosenPath: 'Date-grouped rows with 8-row cap and expand/collapse',
+          alternatives: ['Pagination', 'Scroll-within-card', 'Show only latest N sessions'],
+        },
+        {
+          id: 'meta-keep-both-charts',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Keep Both Code Tab Charts',
+          description:
+            'Kept both Lines Added vs Deleted and Net Change charts. They answer different questions: volume/direction of work vs whether the codebase grew or shrank.',
+          chosenPath: 'Both charts retained, both upgraded to date-grouped pattern',
+          alternatives: ['Merging into a single chart'],
+        },
+        {
+          id: 'meta-deep-code-review',
+          type: 'decision',
+          category: 'process',
+          title: 'Deep Code Review via Source Analysis',
+          description:
+            'Developed a pattern of fetching full file source via GitHub API, rendering into DOM, then running targeted JavaScript analysis. Found 4 real bugs in MetricsDashboard.tsx.',
+          lesson: 'Shallow diff-scanning misses edge case bugs. Full source analysis with targeted pattern matching catches real issues.',
+          chosenPath: 'Fetch full source, DOM render, JavaScript pattern analysis',
+          alternatives: ['Diff-only review', 'Manual line-by-line reading'],
+        },
+      ],
+    },
   ],
   stats: {
-    totalDays: 4,
+    totalDays: 5,
     chatGptMessages: '250+',
-    coworkSessions: 8,
-    prsCreated: '31+',
-    codexTasks: '31+',
-    linesOfCode: '2,300+',
+    coworkSessions: 9,
+    prsCreated: '35+',
+    codexTasks: '35+',
+    linesOfCode: '2,700+',
     deadEnds: 2,
-    majorDecisions: 15,
+    majorDecisions: 18,
   },
 };

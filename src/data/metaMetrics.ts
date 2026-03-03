@@ -47,6 +47,8 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 7', label: 'Data Model Alignment', added: 671, deleted: 289, net: 382, total: 1382 },
   { session: 'Session 8', label: 'Spine Fix & Dashboard', added: 650, deleted: 41, net: 609, total: 1991 },
   { session: 'Session 9', label: 'UX Polish', added: 432, deleted: 104, net: 328, total: 2319 },
+  { session: 'Session 10', label: 'Data Verification', added: 10, deleted: 10, net: 0, total: 2319 },
+  { session: 'Session 11', label: 'Data Scrape', added: 0, deleted: 0, net: 0, total: 2319 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -120,6 +122,24 @@ export const metaSessions: SessionEntry[] = [
     decisions: 6,
     deadEnds: 0,
     focus: 'Dashboard UX Polish',
+    chapterId: 'meta-ch-ux-polish',
+  },
+  {
+    session: 'Session 10',
+    duration: 1,
+    prs: 2,
+    decisions: 1,
+    deadEnds: 0,
+    focus: 'Data verification & fixes via GitHub API',
+    chapterId: 'meta-ch-ux-polish',
+  },
+  {
+    session: 'Session 11',
+    duration: 3,
+    prs: 4,
+    decisions: 0,
+    deadEnds: 0,
+    focus: 'Data scrape: BIP Pre-Cowork + Remnants bootstrap',
     chapterId: 'meta-ch-ux-polish',
   },
 ];

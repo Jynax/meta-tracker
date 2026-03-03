@@ -3,6 +3,8 @@ import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
 import { bipCodeVolume, bipSessions, bipBugs, bipDerived, bipStack, bipDateRange } from '../data/bipMetrics';
 import { metaCodeVolume, metaSessions, metaBugs, metaDerived, metaStack, metaDateRange } from '../data/metaMetrics';
+import { remnantsCodeVolume, remnantsSessions, remnantsBugs, remnantsDerived, remnantsStack, remnantsDateRange } from '../data/remnantsMetrics';
+import { remnantsProject } from '../data/remnantsProject';
 
 type MetricsTab = 'overview' | 'code' | 'bugs' | 'sessions';
 
@@ -46,13 +48,13 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   }, [tab]);
 
   const selected = useMemo(() => {
-    const project = projectId === 'meta' ? metaProject : bipProject;
-    const codeVolume = projectId === 'meta' ? metaCodeVolume : bipCodeVolume;
-    const sessions = projectId === 'meta' ? metaSessions : bipSessions;
-    const bugs = projectId === 'meta' ? metaBugs : bipBugs;
-    const derived = projectId === 'meta' ? metaDerived : bipDerived;
-    const stack = projectId === 'meta' ? metaStack : bipStack;
-    const dateRange = projectId === 'meta' ? metaDateRange : bipDateRange;
+    const project = projectId === 'meta' ? metaProject : projectId === 'remnants' ? remnantsProject : bipProject;
+    const codeVolume = projectId === 'meta' ? metaCodeVolume : projectId === 'remnants' ? remnantsCodeVolume : bipCodeVolume;
+    const sessions = projectId === 'meta' ? metaSessions : projectId === 'remnants' ? remnantsSessions : bipSessions;
+    const bugs = projectId === 'meta' ? metaBugs : projectId === 'remnants' ? remnantsBugs : bipBugs;
+    const derived = projectId === 'meta' ? metaDerived : projectId === 'remnants' ? remnantsDerived : bipDerived;
+    const stack = projectId === 'meta' ? metaStack : projectId === 'remnants' ? remnantsStack : bipStack;
+    const dateRange = projectId === 'meta' ? metaDateRange : projectId === 'remnants' ? remnantsDateRange : bipDateRange;
     return { project, codeVolume, sessions, bugs, derived, stack, dateRange };
   }, [projectId]);
 

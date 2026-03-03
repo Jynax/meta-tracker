@@ -1,5 +1,6 @@
 export interface CodeVolumeEntry {
   session: string;
+  date: string;
   label: string;
   added: number;
   deleted: number;
@@ -39,14 +40,14 @@ export interface StackEntry {
 }
 
 export const bipCodeVolume: CodeVolumeEntry[] = [
-  { session: 'ChatGPT 1', label: 'Scaffold & Cards', added: 1102, deleted: 89, net: 1013, total: 640 },
-  { session: 'ChatGPT 2', label: 'Refactoring', added: 146, deleted: 231, net: -85, total: 585 },
-  { session: 'ChatGPT 3', label: 'Data & Charts', added: 2230, deleted: 1043, net: 1187, total: 1330 },
-  { session: 'ChatGPT 4', label: 'Representation', added: 4287, deleted: 1534, net: 2753, total: 3066 },
-  { session: 'Cowork 1', label: 'Audit', added: 0, deleted: 0, net: 0, total: 3066 },
-  { session: 'Cowork 2', label: 'Data Wrangling', added: 275, deleted: 8, net: 267, total: 3333 },
-  { session: 'Cowork 3', label: 'Decomposition', added: 136, deleted: 570, net: -434, total: 2899 },
-  { session: 'Cowork 4', label: 'Timeline', added: 173, deleted: 38, net: 135, total: 3034 },
+  { session: 'ChatGPT 1', date: 'Feb 14', label: 'Scaffold & Cards', added: 1102, deleted: 89, net: 1013, total: 640 },
+  { session: 'ChatGPT 2', date: 'Feb 15', label: 'Refactoring', added: 146, deleted: 231, net: -85, total: 585 },
+  { session: 'ChatGPT 3', date: 'Feb 16', label: 'Data & Charts', added: 2230, deleted: 1043, net: 1187, total: 1330 },
+  { session: 'ChatGPT 4', date: 'Feb 17', label: 'Representation', added: 4287, deleted: 1534, net: 2753, total: 3066 },
+  { session: 'Cowork 1', date: 'Feb 21', label: 'Audit', added: 0, deleted: 0, net: 0, total: 3066 },
+  { session: 'Cowork 2', date: 'Feb 22', label: 'Data Wrangling', added: 275, deleted: 8, net: 267, total: 3333 },
+  { session: 'Cowork 3', date: 'Feb 25', label: 'Decomposition', added: 136, deleted: 570, net: -434, total: 2899 },
+  { session: 'Cowork 4', date: 'Feb 26', label: 'Timeline', added: 173, deleted: 38, net: 135, total: 3034 },
 ];
 
 export const bipSessions: SessionEntry[] = [

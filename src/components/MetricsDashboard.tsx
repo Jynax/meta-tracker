@@ -36,6 +36,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const [tooltip, setTooltip] = useState<{ x: number; y: number; content: ReactNode } | null>(null);
   const [animateBugDonuts, setAnimateBugDonuts] = useState(false);
   const [expandedCodeRows, setExpandedCodeRows] = useState<Set<string>>(new Set());
+  const [expandedNetRows, setExpandedNetRows] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     setTab(initialTab);
@@ -43,6 +44,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
 
   useEffect(() => {
     setExpandedCodeRows(new Set());
+    setExpandedNetRows(new Set());
   }, [projectId]);
 
   useEffect(() => {
@@ -73,7 +75,6 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const currentLoc = selected.codeVolume[selected.codeVolume.length - 1]?.total ?? 0;
   const totalAdded = selected.codeVolume.reduce((sum, item) => sum + item.added, 0);
   const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);
-  const maxNetAbs = Math.max(...selected.codeVolume.map((item) => Math.abs(item.net)), 1);
   const maxSessionMetric = Math.max(...selected.sessions.map((item) => Math.max(item.prs, item.decisions, item.deadEnds)), 1);
 
 
@@ -145,6 +146,67 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
       1,
     ),
     [codeEntriesWithActivity, codeTopRows],
+  );
+
+  const netDateGroups = useMemo(() => {
+    const grouped = new Map<string, { date: string; entries: Array<(typeof selected.codeVolume)[number]>; net: number }>();
+    selected.codeVolume.forEach((entry) => {
+      const existing = grouped.get(entry.date);
+      if (existing) {
+        existing.entries.push(entry);
+        existing.net += entry.net;
+        return;
+      }
+      grouped.set(entry.date, { date: entry.date, entries: [entry], net: entry.net });
+    });
+    return Array.from(grouped.values());
+  }, [selected.codeVolume]);
+
+  const netTopRows = useMemo(() => {
+    if (netDateGroups.length <= 8) {
+      return netDateGroups.map((group) => ({
+        kind: 'date' as const,
+        key: group.date,
+        label: group.date,
+        net: group.net,
+        dates: [group],
+      }));
+    }
+
+    const mergedDateCount = netDateGroups.length - 7;
+    const mergedDates = netDateGroups.slice(0, mergedDateCount);
+    const firstDate = mergedDates[0]?.date ?? '';
+    const lastDate = mergedDates[mergedDates.length - 1]?.date ?? '';
+    const [firstMonth, firstDay] = firstDate.split(' ');
+    const [lastMonth, lastDay] = lastDate.split(' ');
+    const rangeLabel = firstMonth === lastMonth ? `${firstMonth} ${firstDay}-${lastDay}` : `${firstDate}-${lastDate}`;
+
+    const rangeRow = {
+      kind: 'range' as const,
+      key: rangeLabel,
+      label: rangeLabel,
+      net: mergedDates.reduce((sum, date) => sum + date.net, 0),
+      dates: mergedDates,
+    };
+
+    const remainingRows = netDateGroups.slice(mergedDateCount).map((group) => ({
+      kind: 'date' as const,
+      key: group.date,
+      label: group.date,
+      net: group.net,
+      dates: [group],
+    }));
+
+    return [rangeRow, ...remainingRows];
+  }, [netDateGroups]);
+
+  const maxNetAbsGrouped = useMemo(
+    () => Math.max(
+      ...selected.codeVolume.map((item) => Math.abs(item.net)),
+      ...netTopRows.map((row) => Math.abs(row.net)),
+      1,
+    ),
+    [selected.codeVolume, netTopRows],
   );
 
   const chartDims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
@@ -572,46 +634,149 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
           <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
             <h3 className="mb-3 text-sm font-semibold">Net Change by Session</h3>
             <div className="space-y-3">
-              {selected.codeVolume.map((entry) => (
-                <div
-                  key={`${entry.session}-net`}
-                  onMouseEnter={(event) => {
-                    setHoveredNetSession(entry.session);
-                    setTooltip({
-                      x: event.clientX,
-                      y: event.clientY,
-                      content: (
-                        <>
-                          <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.session}</div>
-                          <div style={{ color: entry.net >= 0 ? C.emerald : C.rose, fontSize: 11 }}>
-                            Net: {entry.net > 0 ? '+' : ''}{entry.net.toLocaleString()}
+              {netTopRows.map((row) => {
+                const isRowExpanded = expandedNetRows.has(row.key);
+                const hasMultipleDates = row.kind === 'range' && row.dates.length > 1;
+                const isDateExpandable = row.kind === 'date' && row.dates[0].entries.length > 1;
+                const isExpandable = hasMultipleDates || isDateExpandable;
+
+                const toggleRow = () => {
+                  if (!isExpandable) return;
+                  setExpandedNetRows((prev) => {
+                    const next = new Set(prev);
+                    if (next.has(row.key)) next.delete(row.key);
+                    else next.add(row.key);
+                    return next;
+                  });
+                };
+
+                return (
+                  <div key={`${row.key}-net`} className="rounded-md" style={{ border: `1px solid ${C.border}` }}>
+                    <div
+                      onClick={toggleRow}
+                      onMouseEnter={(event) => {
+                        setHoveredNetSession(row.key);
+                        setTooltip({
+                          x: event.clientX,
+                          y: event.clientY,
+                          content: (
+                            <>
+                              <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{row.label}</div>
+                              <div style={{ color: row.net >= 0 ? C.emerald : C.rose, fontSize: 11 }}>
+                                Net: {row.net > 0 ? '+' : ''}{row.net.toLocaleString()}
+                              </div>
+                            </>
+                          ),
+                        });
+                      }}
+                      onMouseMove={(event) => {
+                        setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                      }}
+                      onMouseLeave={() => {
+                        setHoveredNetSession(null);
+                        setTooltip(null);
+                      }}
+                      style={{
+                        backgroundColor: hoveredNetSession === row.key ? 'rgba(15, 23, 42, 0.5)' : 'transparent',
+                        borderRadius: 8,
+                        padding: 8,
+                        cursor: isExpandable ? 'pointer' : 'default',
+                      }}
+                    >
+                      <div className="mb-1 flex items-center justify-between text-xs" style={{ color: C.slate }}>
+                        <div className="flex items-center gap-1">
+                          <span
+                            style={{
+                              width: 12,
+                              display: 'inline-block',
+                              transform: isExpandable && isRowExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                              transition: 'transform 150ms ease',
+                            }}
+                          >
+                            {isExpandable ? '▶' : ''}
+                          </span>
+                          <span>{row.label}</span>
+                        </div>
+                        <span>{row.net > 0 ? '+' : ''}{row.net.toLocaleString()}</span>
+                      </div>
+                      <div className="h-3 rounded" style={{ backgroundColor: '#0b1220' }}>
+                        <div className="h-3 rounded" style={{ width: `${(Math.abs(row.net) / maxNetAbsGrouped) * 100}%`, backgroundColor: row.net >= 0 ? C.emerald : C.rose }} />
+                      </div>
+                    </div>
+
+                    {row.kind === 'range' && (
+                      <div style={{ maxHeight: isRowExpanded ? 500 : 0, overflow: 'hidden', transition: 'max-height 150ms ease' }}>
+                        {row.dates.map((dateGroup) => {
+                          const dateKey = `${row.key}-${dateGroup.date}`;
+                          const isDateExpandable = dateGroup.entries.length > 1;
+                          const isDateExpanded = expandedNetRows.has(dateKey);
+
+                          const toggleDate = () => {
+                            if (!isDateExpandable) return;
+                            setExpandedNetRows((prev) => {
+                              const next = new Set(prev);
+                              if (next.has(dateKey)) next.delete(dateKey);
+                              else next.add(dateKey);
+                              return next;
+                            });
+                          };
+
+                          return (
+                            <div key={dateKey} style={{ padding: '0 8px 8px 20px' }}>
+                              <div
+                                onClick={toggleDate}
+                                style={{ cursor: isDateExpandable ? 'pointer' : 'default' }}
+                                className="mb-1 flex items-center justify-between text-xs"
+                              >
+                                <div className="flex items-center gap-1" style={{ color: C.muted }}>
+                                  <span style={{ width: 12, display: 'inline-block', transform: isDateExpandable && isDateExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 150ms ease' }}>
+                                    {isDateExpandable ? '▶' : ''}
+                                  </span>
+                                  <span>{dateGroup.date}</span>
+                                </div>
+                                <span style={{ color: C.slate }}>{dateGroup.net > 0 ? '+' : ''}{dateGroup.net.toLocaleString()}</span>
+                              </div>
+                              <div className="h-2.5 rounded" style={{ backgroundColor: '#0b1220' }}>
+                                <div className="h-2.5 rounded" style={{ width: `${(Math.abs(dateGroup.net) / maxNetAbsGrouped) * 100}%`, backgroundColor: dateGroup.net >= 0 ? C.emerald : C.rose }} />
+                              </div>
+
+                              <div style={{ maxHeight: isDateExpanded ? 300 : 0, overflow: 'hidden', transition: 'max-height 150ms ease' }}>
+                                {dateGroup.entries.map((entry) => (
+                                  <div key={`${entry.session}-nested-net`} style={{ paddingLeft: 20, paddingTop: 6 }}>
+                                    <div className="mb-1 flex justify-between text-[11px]" style={{ color: C.slate }}>
+                                      <span>{entry.session}</span>
+                                      <span>{entry.net > 0 ? '+' : ''}{entry.net.toLocaleString()}</span>
+                                    </div>
+                                    <div className="h-2 rounded" style={{ backgroundColor: '#0b1220' }}>
+                                      <div className="h-2 rounded" style={{ width: `${(Math.abs(entry.net) / maxNetAbsGrouped) * 100}%`, backgroundColor: entry.net >= 0 ? C.emerald : C.rose }} />
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {row.kind === 'date' && row.dates[0].entries.length > 1 && (
+                      <div style={{ maxHeight: isRowExpanded ? 300 : 0, overflow: 'hidden', transition: 'max-height 150ms ease', padding: '0 8px 8px 20px' }}>
+                        {row.dates[0].entries.map((entry) => (
+                          <div key={`${entry.session}-net`} style={{ paddingTop: 6 }}>
+                            <div className="mb-1 flex justify-between text-[11px]" style={{ color: C.slate }}>
+                              <span>{entry.session}</span>
+                              <span>{entry.net > 0 ? '+' : ''}{entry.net.toLocaleString()}</span>
+                            </div>
+                            <div className="h-2 rounded" style={{ backgroundColor: '#0b1220' }}>
+                              <div className="h-2 rounded" style={{ width: `${(Math.abs(entry.net) / maxNetAbsGrouped) * 100}%`, backgroundColor: entry.net >= 0 ? C.emerald : C.rose }} />
+                            </div>
                           </div>
-                        </>
-                      ),
-                    });
-                  }}
-                  onMouseMove={(event) => {
-                    setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
-                  }}
-                  onMouseLeave={() => {
-                    setHoveredNetSession(null);
-                    setTooltip(null);
-                  }}
-                  style={{
-                    backgroundColor: hoveredNetSession === entry.session ? 'rgba(15, 23, 42, 0.5)' : 'transparent',
-                    borderRadius: 8,
-                    padding: 6,
-                  }}
-                >
-                  <div className="mb-1 flex justify-between text-xs" style={{ color: C.slate }}>
-                    <span>{entry.session}</span>
-                    <span>{entry.net > 0 ? '+' : ''}{entry.net}</span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <div className="h-3 rounded" style={{ backgroundColor: '#0b1220' }}>
-                    <div className="h-3 rounded" style={{ width: `${(Math.abs(entry.net) / maxNetAbs) * 100}%`, backgroundColor: entry.net >= 0 ? C.emerald : C.rose }} />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

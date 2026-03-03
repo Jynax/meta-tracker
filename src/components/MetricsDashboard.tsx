@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, type ReactNode } from 'react';
+import { useMemo, useState, useEffect, useRef, type ReactNode } from 'react';
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
 import { bipCodeVolume, bipSessions, bipBugs, bipDerived, bipStack, bipDateRange } from '../data/bipMetrics';
@@ -16,7 +16,7 @@ interface MetricsDashboardProps {
 
 const C = {
   cyan: '#22d3ee', emerald: '#34d399', rose: '#fb7185', amber: '#fbbf24',
-  violet: '#a78bfa', slate: '#94a3b8', white: '#f8fafc', muted: '#64748b',
+  violet: '#a78bfa', slate: '#94a3b8', white: '#f8fafc', muted: '#94a3b8',
   bg: '#0f172a', cardBg: '#1e293b', border: '#334155',
 };
 
@@ -76,6 +76,9 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const totalAdded = selected.codeVolume.reduce((sum, item) => sum + item.added, 0);
   const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);
   const maxSessionMetric = Math.max(...selected.sessions.map((item) => Math.max(item.prs, item.decisions, item.deadEnds)), 1);
+  const firstDate = selected.codeVolume[0]?.date ?? selected.dateRange.start;
+  const lastDate = selected.codeVolume[selected.codeVolume.length - 1]?.date ?? selected.dateRange.end;
+  const timelineRange = `${firstDate} – ${lastDate}/26`;
 
 
   const codeEntriesWithActivity = useMemo(
@@ -276,15 +279,62 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const fixedBugs = selected.bugs.filter((bug) => bug.status.toLowerCase() === 'fixed').length;
   const openBugs = selected.bugs.length - fixedBugs;
 
-  const Card = ({ label, value, color = C.white, detail }: { label: string; value: string | number; color?: string; detail?: string }) => (
-    <div className="rounded-lg border" style={{ backgroundColor: C.cardBg, borderColor: C.border, padding: '8px 14px' }}>
-      <div className="text-xl font-bold" style={{ color }}>{value}</div>
-      <div className="text-[11px] uppercase tracking-wide" style={{ color: C.muted }}>{label}</div>
-      {detail && <div className="text-xs" style={{ color: C.muted }}>{detail}</div>}
-    </div>
-  );
+  const Card = ({ label, value, color = C.white, detail, tooltip: tooltipText }: { label: string; value: string | number; color?: string; detail?: string; tooltip?: string }) => {
+    const [showTooltip, setShowTooltip] = useState(false);
+    const showTimerRef = useRef<number | null>(null);
+    const hideTimerRef = useRef<number | null>(null);
 
-  const DonutBreakdown = ({ title, label, items }: { title: string; label: string; items: Array<{ label: string; count: number; color: string }> }) => {
+    useEffect(() => () => {
+      if (showTimerRef.current !== null) window.clearTimeout(showTimerRef.current);
+      if (hideTimerRef.current !== null) window.clearTimeout(hideTimerRef.current);
+    }, []);
+
+    const handleMouseEnter = () => {
+      if (!tooltipText) return;
+      if (hideTimerRef.current !== null) window.clearTimeout(hideTimerRef.current);
+      showTimerRef.current = window.setTimeout(() => setShowTooltip(true), 300);
+    };
+
+    const handleMouseLeave = () => {
+      if (!tooltipText) return;
+      if (showTimerRef.current !== null) window.clearTimeout(showTimerRef.current);
+      hideTimerRef.current = window.setTimeout(() => setShowTooltip(false), 200);
+    };
+
+    return (
+      <div style={{ position: 'relative' }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <div className="rounded-lg border" style={{ backgroundColor: C.cardBg, borderColor: C.border, padding: '8px 14px' }}>
+          <div className="text-xl font-bold" style={{ color }}>{value}</div>
+          <div className="text-[11px] uppercase tracking-wide" style={{ color: C.muted }}>{label}</div>
+          {detail && <div className="text-xs" style={{ color: C.muted }}>{detail}</div>}
+        </div>
+        {tooltipText && showTooltip && (
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '100%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              background: '#1e293b',
+              border: '1px solid #334155',
+              borderRadius: 8,
+              padding: '8px 12px',
+              fontSize: 11,
+              color: '#94a3b8',
+              zIndex: 50,
+              whiteSpace: 'nowrap',
+              pointerEvents: 'none',
+              marginBottom: 6,
+            }}
+          >
+            {tooltipText}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const DonutBreakdown = ({ label, items }: { label: string; items: Array<{ label: string; count: number; color: string }> }) => {
     const radius = 48;
     const circumference = 2 * Math.PI * radius;
     const total = items.reduce((sum, item) => sum + item.count, 0);
@@ -292,15 +342,15 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
     const segments = items
       .filter((item) => item.count > 0)
       .map((item, index) => {
-        const arcLength = total > 0 ? (item.count / total) * circumference : 0;
-        const offset = -accumulated;
-        accumulated += arcLength;
+        const fullArcLength = total > 0 ? (item.count / total) * circumference : 0;
+        const arcLength = Math.max(fullArcLength - 2, 0);
+        const offset = -accumulated - 1;
+        accumulated += fullArcLength;
         return { ...item, arcLength, offset, index };
       });
 
     return (
       <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-        <h3 className="mb-3 text-center text-sm font-semibold">{title}</h3>
         <div className="flex flex-col items-center justify-center">
           <svg viewBox="0 0 120 120" style={{ width: 120, height: 120 }}>
             <circle cx="60" cy="60" r={radius} fill="none" stroke={C.border} strokeWidth="14" opacity="0.3" />
@@ -319,12 +369,12 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                 style={{ transition: 'stroke-dashoffset 0.8s ease', transitionDelay: `${seg.index * 100}ms` }}
               />
             ))}
-            <text x="60" y="56" textAnchor="middle" fill={C.white} fontSize="20" fontWeight="700">{total}</text>
-            <text x="60" y="72" textAnchor="middle" fill={C.muted} fontSize="9">{label}</text>
+            <text x="60" y="56" textAnchor="middle" fill={C.muted} fontSize="12">{label}</text>
+            <text x="60" y="72" textAnchor="middle" fill={C.white} fontSize="22" fontWeight="700">{total}</text>
           </svg>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', marginTop: 10 }}>
-            {items.map((item) => (
-              <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: C.muted }}>
+            {items.filter((item) => item.count > 0).map((item) => (
+              <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: C.muted }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color }} />
                 {item.label} <span style={{ color: C.white, fontWeight: 600 }}>({item.count})</span>
               </div>
@@ -362,11 +412,24 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
             <Card label="PRs Merged" value={totalPRs} color={C.emerald} />
             <Card label="Hours" value={`${totalHours}h`} color={C.amber} />
             <Card label="Current LOC" value={currentLoc.toLocaleString()} color={C.white} />
-            <Card label="Timeline" value={`${selected.dateRange.start} – ${selected.dateRange.end}`} color={C.violet} />
+            <Card label="Timeline" value={timelineRange} color={C.violet} />
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {selected.derived.map((metric) => (
-              <Card key={metric.label} label={metric.label} value={metric.value} color={metric.color} detail={metric.detail} />
+              <Card
+                key={metric.label}
+                label={metric.label}
+                value={metric.value}
+                color={metric.color}
+                detail={metric.detail}
+                tooltip={{
+                  'Churn Rate': 'Ratio of lines deleted to lines added',
+                  'Codex Success': 'Percentage of Codex tasks that produced clean PRs',
+                  'Cycle Time': 'Average time from PR creation to merge',
+                  Decisions: 'Average decisions tracked per work session',
+                  'Bug Rate': 'Average bugs discovered per PR merged',
+                }[metric.label]}
+              />
             ))}
           </div>
           <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
@@ -482,10 +545,9 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
 
       {tab === 'code' && (
         <div className="space-y-4">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <Card label="Total Added" value={totalAdded.toLocaleString()} color={C.emerald} />
             <Card label="Total Deleted" value={totalDeleted.toLocaleString()} color={C.rose} />
-            <Card label="Net Change" value={(totalAdded - totalDeleted).toLocaleString()} color={C.cyan} />
             <Card label="Current LOC" value={currentLoc.toLocaleString()} color={C.white} />
           </div>
           <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
@@ -631,168 +693,24 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
               })}
             </div>
           </div>
-          <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-            <h3 className="mb-3 text-sm font-semibold">Net Change by Session</h3>
-            <div className="space-y-3">
-              {netTopRows.map((row) => {
-                const isRowExpanded = expandedNetRows.has(row.key);
-                const hasMultipleDates = row.kind === 'range' && row.dates.length > 1;
-                const isDateExpandable = row.kind === 'date' && row.dates[0].entries.length > 1;
-                const isExpandable = hasMultipleDates || isDateExpandable;
-
-                const toggleRow = () => {
-                  if (!isExpandable) return;
-                  setExpandedNetRows((prev) => {
-                    const next = new Set(prev);
-                    if (next.has(row.key)) next.delete(row.key);
-                    else next.add(row.key);
-                    return next;
-                  });
-                };
-
-                return (
-                  <div key={`${row.key}-net`} className="rounded-md" style={{ border: `1px solid ${C.border}` }}>
-                    <div
-                      onClick={toggleRow}
-                      onMouseEnter={(event) => {
-                        setHoveredNetSession(row.key);
-                        setTooltip({
-                          x: event.clientX,
-                          y: event.clientY,
-                          content: (
-                            <>
-                              <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{row.label}</div>
-                              <div style={{ color: row.net >= 0 ? C.emerald : C.rose, fontSize: 11 }}>
-                                Net: {row.net > 0 ? '+' : ''}{row.net.toLocaleString()}
-                              </div>
-                            </>
-                          ),
-                        });
-                      }}
-                      onMouseMove={(event) => {
-                        setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
-                      }}
-                      onMouseLeave={() => {
-                        setHoveredNetSession(null);
-                        setTooltip(null);
-                      }}
-                      style={{
-                        backgroundColor: hoveredNetSession === row.key ? 'rgba(15, 23, 42, 0.5)' : 'transparent',
-                        borderRadius: 8,
-                        padding: 8,
-                        cursor: isExpandable ? 'pointer' : 'default',
-                      }}
-                    >
-                      <div className="mb-1 flex items-center justify-between text-xs" style={{ color: C.slate }}>
-                        <div className="flex items-center gap-1">
-                          <span
-                            style={{
-                              width: 12,
-                              display: 'inline-block',
-                              transform: isExpandable && isRowExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
-                              transition: 'transform 150ms ease',
-                            }}
-                          >
-                            {isExpandable ? '▶' : ''}
-                          </span>
-                          <span>{row.label}</span>
-                        </div>
-                        <span>{row.net > 0 ? '+' : ''}{row.net.toLocaleString()}</span>
-                      </div>
-                      <div className="h-3 rounded" style={{ backgroundColor: '#0b1220' }}>
-                        <div className="h-3 rounded" style={{ width: `${(Math.abs(row.net) / maxNetAbsGrouped) * 100}%`, backgroundColor: row.net >= 0 ? C.emerald : C.rose }} />
-                      </div>
-                    </div>
-
-                    {row.kind === 'range' && (
-                      <div style={{ maxHeight: isRowExpanded ? 500 : 0, overflow: 'hidden', transition: 'max-height 150ms ease' }}>
-                        {row.dates.map((dateGroup) => {
-                          const dateKey = `${row.key}-${dateGroup.date}`;
-                          const isNestedExpandable = dateGroup.entries.length > 1;
-                          const isDateExpanded = expandedNetRows.has(dateKey);
-
-                          const toggleDate = () => {
-                            if (!isNestedExpandable) return;
-                            setExpandedNetRows((prev) => {
-                              const next = new Set(prev);
-                              if (next.has(dateKey)) next.delete(dateKey);
-                              else next.add(dateKey);
-                              return next;
-                            });
-                          };
-
-                          return (
-                            <div key={dateKey} style={{ padding: '0 8px 8px 20px' }}>
-                              <div
-                                onClick={toggleDate}
-                                style={{ cursor: isNestedExpandable ? 'pointer' : 'default' }}
-                                className="mb-1 flex items-center justify-between text-xs"
-                              >
-                                <div className="flex items-center gap-1" style={{ color: C.muted }}>
-                                  <span style={{ width: 12, display: 'inline-block', transform: isNestedExpandable && isDateExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 150ms ease' }}>
-                                    {isNestedExpandable ? '▶' : ''}
-                                  </span>
-                                  <span>{dateGroup.date}</span>
-                                </div>
-                                <span style={{ color: C.slate }}>{dateGroup.net > 0 ? '+' : ''}{dateGroup.net.toLocaleString()}</span>
-                              </div>
-                              <div className="h-2.5 rounded" style={{ backgroundColor: '#0b1220' }}>
-                                <div className="h-2.5 rounded" style={{ width: `${(Math.abs(dateGroup.net) / maxNetAbsGrouped) * 100}%`, backgroundColor: dateGroup.net >= 0 ? C.emerald : C.rose }} />
-                              </div>
-
-                              <div style={{ maxHeight: isDateExpanded ? 300 : 0, overflow: 'hidden', transition: 'max-height 150ms ease' }}>
-                                {dateGroup.entries.map((entry) => (
-                                  <div key={`${entry.session}-nested-net`} style={{ paddingLeft: 20, paddingTop: 6 }}>
-                                    <div className="mb-1 flex justify-between text-[11px]" style={{ color: C.slate }}>
-                                      <span>{entry.session}</span>
-                                      <span>{entry.net > 0 ? '+' : ''}{entry.net.toLocaleString()}</span>
-                                    </div>
-                                    <div className="h-2 rounded" style={{ backgroundColor: '#0b1220' }}>
-                                      <div className="h-2 rounded" style={{ width: `${(Math.abs(entry.net) / maxNetAbsGrouped) * 100}%`, backgroundColor: entry.net >= 0 ? C.emerald : C.rose }} />
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-
-                    {row.kind === 'date' && row.dates[0].entries.length > 1 && (
-                      <div style={{ maxHeight: isRowExpanded ? 300 : 0, overflow: 'hidden', transition: 'max-height 150ms ease', padding: '0 8px 8px 20px' }}>
-                        {row.dates[0].entries.map((entry) => (
-                          <div key={`${entry.session}-net`} style={{ paddingTop: 6 }}>
-                            <div className="mb-1 flex justify-between text-[11px]" style={{ color: C.slate }}>
-                              <span>{entry.session}</span>
-                              <span>{entry.net > 0 ? '+' : ''}{entry.net.toLocaleString()}</span>
-                            </div>
-                            <div className="h-2 rounded" style={{ backgroundColor: '#0b1220' }}>
-                              <div className="h-2 rounded" style={{ width: `${(Math.abs(entry.net) / maxNetAbsGrouped) * 100}%`, backgroundColor: entry.net >= 0 ? C.emerald : C.rose }} />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
         </div>
       )}
 
       {tab === 'bugs' && (
         <div className="space-y-4">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <Card label="Total" value={selected.bugs.length} color={C.rose} />
-            <Card label="Fixed" value={fixedBugs} color={C.emerald} />
-            <Card label="Open / Deferred" value={openBugs} color={C.amber} />
+          <div
+            className="rounded-xl border"
+            style={{ backgroundColor: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 12, padding: '10px 18px', fontSize: 14, fontWeight: 600 }}
+          >
+            <span style={{ color: C.white }}>{selected.bugs.length} total</span>
+            <span style={{ color: C.border, margin: '0 10px' }}>|</span>
+            <span style={{ color: C.emerald }}>{fixedBugs} fixed</span>
+            <span style={{ color: C.border, margin: '0 10px' }}>|</span>
+            <span style={{ color: C.amber }}>{openBugs} open/deferred</span>
           </div>
           <div className="grid gap-4 lg:grid-cols-3">
             <DonutBreakdown
-              title="By Severity"
-              label="severity"
+              label="Severity"
               items={[
                 { label: 'Critical', count: bySeverity.Critical ?? 0, color: '#ef4444' },
                 { label: 'High', count: bySeverity.High ?? 0, color: '#f97316' },
@@ -801,8 +719,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
               ]}
             />
             <DonutBreakdown
-              title="By Category"
-              label="category"
+              label="Category"
               items={[
                 { label: 'Technical', count: byCategory.Technical ?? 0, color: '#22d3ee' },
                 { label: 'Functional', count: byCategory.Functional ?? 0, color: '#34d399' },
@@ -810,8 +727,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
               ]}
             />
             <DonutBreakdown
-              title="By Source"
-              label="source"
+              label="Source"
               items={[
                 { label: 'ChatGPT Code Review', count: bySource['ChatGPT Code Review'] ?? 0, color: '#22d3ee' },
                 { label: 'Cowork Audit', count: bySource['Cowork Audit'] ?? 0, color: '#34d399' },
@@ -826,7 +742,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
             <table className="w-full border-collapse text-xs">
               <thead>
                 <tr style={{ backgroundColor: '#162136' }}>
-                  {['#', 'Summary', 'Severity', 'Category', 'Source', 'Status'].map((header) => (
+                  {['#', 'Session', 'Summary', 'Severity', 'Category', 'Source', 'Status'].map((header) => (
                     <th key={header} className="px-3 py-2 text-left font-semibold" style={{ color: C.slate }}>{header}</th>
                   ))}
                 </tr>
@@ -835,6 +751,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                 {selected.bugs.map((bug) => (
                   <tr key={bug.id} className="border-t" style={{ borderColor: C.border }}>
                     <td className="px-3 py-2">{bug.id}</td>
+                    <td className="px-3 py-2" style={{ color: C.cyan }}>{bug.session}</td>
                     <td className="px-3 py-2">{bug.summary}</td>
                     <td className="px-3 py-2" style={{ color: bug.severity === 'Critical' ? C.rose : bug.severity === 'High' ? C.amber : bug.severity === 'Medium' ? C.cyan : C.muted }}>{bug.severity}</td>
                     <td className="px-3 py-2">{bug.category}</td>

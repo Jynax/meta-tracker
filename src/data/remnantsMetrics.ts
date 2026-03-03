@@ -1,4 +1,14 @@
-import type { CodeVolumeEntry, SessionEntry, BugEntry, DerivedMetric, StackEntry } from './bipMetrics';
+import type { CodeVolumeEntry, SessionEntry, DerivedMetric, StackEntry } from './bipMetrics';
+
+export interface BugEntry {
+  id: number;
+  session: string;
+  summary: string;
+  severity: 'Critical' | 'High' | 'Medium' | 'Low';
+  source: string;
+  status: string;
+  category: 'Technical' | 'Functional' | 'UX';
+}
 
 // --- Code Volume ---
 export const remnantsCodeVolume: CodeVolumeEntry[] = [
@@ -27,10 +37,10 @@ export const remnantsDateRange = {
 
 // --- Bugs ---
 export const remnantsBugs: BugEntry[] = [
-  { id: 1, summary: 'Navigation unclear in first playtest', severity: 'Medium', source: 'Playtest', status: 'Fixed (minimap + compass)', category: 'UX' },
-  { id: 2, summary: 'Visual elements too small in Claude side panel', severity: 'Low', source: 'Playtest', status: 'Noted', category: 'UX' },
-  { id: 3, summary: 'Inventory limit (4 slots) felt too restrictive', severity: 'Medium', source: 'Playtest', status: 'By Design', category: 'UX' },
-  { id: 4, summary: 'Deploy button not responding on GitHub Pages', severity: 'High', source: 'Codex Testing', status: 'Fixed (PR #3)', category: 'Technical' },
+  { id: 1, session: 'Claude 1', summary: 'Navigation unclear in first playtest', severity: 'Medium', source: 'Playtest', status: 'Fixed (minimap + compass)', category: 'UX' },
+  { id: 2, session: 'Claude 2', summary: 'Visual elements too small in Claude side panel', severity: 'Low', source: 'Playtest', status: 'Noted', category: 'UX' },
+  { id: 3, session: 'Claude 3', summary: 'Inventory limit (4 slots) felt too restrictive', severity: 'Medium', source: 'Playtest', status: 'By Design', category: 'UX' },
+  { id: 4, session: 'Codex 1', summary: 'Deploy button not responding on GitHub Pages', severity: 'High', source: 'Codex Testing', status: 'Fixed (PR #3)', category: 'Technical' },
 ];
 
 // --- Derived Metrics ---

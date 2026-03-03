@@ -28,7 +28,7 @@ export const metaProject: Project = {
           description:
             'Chose the same stack as BIP for consistency: Vite + React + TypeScript + Tailwind, hosted on Cloudflare Pages. JSON files in repo as data store.',
           chosenPath:
-            'Same stack as BIP — Vite + React + TypeScript + Tailwind + Cloudflare Pages',
+            'Same stack as BIP â Vite + React + TypeScript + Tailwind + Cloudflare Pages',
           alternatives: ['Different framework', 'Adding a backend with Cloudflare D1/KV'],
         },
         {
@@ -524,15 +524,82 @@ export const metaProject: Project = {
         },
       ],
     },
+    {
+      id: 'meta-ch-ux-final-pass',
+      name: 'The UX Final Pass',
+      period: 'Session 14 (Mar 2026)',
+      toolLabel: 'Claude Cowork, ChatGPT Codex',
+      tool: 'mixed',
+      nodes: [
+        {
+          id: 'meta-mojibake-fix',
+          type: 'event',
+          category: 'technical',
+          title: 'Unicode Mojibake Fix (Global)',
+          description:
+            'Systematic scan of all 6 data files found corrupted UTF-8 sequences: ampersands, em-dashes. Fixed corrupted subtitles in bipProject.ts, metaProject.ts, remnantsProject.ts and bug summaries in metaMetrics.ts.',
+        },
+        {
+          id: 'meta-font-contrast-overhaul',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Font Size & Contrast Overhaul',
+          description:
+            'Applied aggressive font size bump (9->12, 10->13, 11->14, 13->15, 16->20, 20->24px) based on UX best practice research. Nothing below 12px. Changed muted text from #64748b to #94a3b8 for WCAG AA compliance.',
+          chosenPath: 'Industry-standard minimums with WCAG AA muted color',
+          alternatives: ['Conservative 1-2px bump', 'Different muted color values'],
+        },
+        {
+          id: 'meta-chapter-card-restructure',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Chapter Card Layout Restructure',
+          description:
+            'Moved expand arrow inline with title, swapped stats to left and metadata to right. Commented out filter row and made summary bar badges clickable as filter toggles.',
+          chosenPath: 'Arrow next to title, stats-left, clickable badges as filters',
+          alternatives: ['Keep filter row visible', 'Dedicated icon column for arrow'],
+        },
+        {
+          id: 'meta-dashboard-improvements',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Metrics Dashboard Improvements',
+          description:
+            'Dynamic timeline card, hover tooltips on derived metrics, Net Change card removed, bug summary cards merged inline, donut center labels enlarged with 2px accessibility separators.',
+          chosenPath: 'Simplify and clarify with native tooltip handlers',
+          alternatives: ['Keep Net Change card', 'Tooltip library dependency'],
+        },
+        {
+          id: 'meta-chart-scalability',
+          type: 'pivot',
+          category: 'ux-design',
+          title: 'Session Charts Scalability Conversion',
+          description:
+            'Replaced Session Activity grouped bars with multi-line SVG chart using bezier curves. Grouped session cards into collapsible monthly time blocks. Added staggered x-axis labels to Codebase Size chart.',
+          chosenPath: 'Line charts + monthly grouping + staggered labels',
+          alternatives: ['Horizontal scrolling bars', 'Session card pagination', 'Angled x-axis labels'],
+        },
+        {
+          id: 'meta-tab-persistence',
+          type: 'decision',
+          category: 'functional',
+          title: 'Metrics Tab State Persistence',
+          description:
+            'Added onTabChange callback from MetricsDashboard to DecisionTree so metricsTab state syncs. Returning to Metrics after View Chapter navigation restores the last-used tab.',
+          chosenPath: 'Callback prop syncing parent state',
+          alternatives: ['Visible Back to Sessions breadcrumb'],
+        },
+      ],
+    },
   ],
   stats: {
     totalDays: 5,
     chatGptMessages: '250+',
-    coworkSessions: 10,
-    prsCreated: '39+',
-    codexTasks: '38+',
-    linesOfCode: '3,300+',
+    coworkSessions: 11,
+    prsCreated: '42+',
+    codexTasks: '41+',
+    linesOfCode: '3,500+',
     deadEnds: 2,
-    majorDecisions: 21,
+    majorDecisions: 27,
   },
 };

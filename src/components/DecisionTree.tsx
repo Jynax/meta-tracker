@@ -286,63 +286,67 @@ export default function DecisionTree() {
             ))}
           </div>
 
-          <div
-            className="mb-4 rounded-xl border"
-            style={{ backgroundColor: '#1e293b', borderColor: '#334155', padding: '14px 20px' }}
-          >
-            <div className="flex flex-wrap items-center gap-2 text-sm text-slate-200">
-              <span>{projectSummary.entries} entries</span>
-              <span className="text-slate-500">|</span>
-              {projectSummary.deadEnds > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: '#fb718522', color: '#fb7185' }}>{projectSummary.deadEnds} dead ends</span>}
-              {projectSummary.discoveries > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: '#fbbf2422', color: '#fbbf24' }}>{projectSummary.discoveries} discoveries</span>}
-              {projectSummary.pivots > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: '#a78bfa22', color: '#a78bfa' }}>{projectSummary.pivots} pivots</span>}
-            </div>
-            <div className="mt-2">
-              <CategoryBar categories={projectSummary.categories} total={projectSummary.entries} />
-            </div>
-            <div className="mt-2 flex flex-wrap items-center justify-center gap-[14px] text-[10px] text-slate-300">
-              {CATEGORY_META.map((category) => (
-                <span key={category.id} className="flex items-center gap-1.5">
-                  <span className="inline-block h-2 w-2 rounded-[2px]" style={{ backgroundColor: category.color }} />
-                  {category.label} {projectSummary.categories[category.id]}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div className="mb-4 rounded-xl border border-slate-700 bg-slate-900/80 p-3">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setFiltersExpanded((current) => !current)}
-                className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm text-slate-200 transition hover:brightness-110"
+          {treeMode === 'canvas' && (
+            <>
+              <div
+                className="mb-4 rounded-xl border"
+                style={{ backgroundColor: '#1e293b', borderColor: '#334155', padding: '14px 20px' }}
               >
-                Filter
-              </button>
-              {filter !== 'all' && (
-                <span className="rounded-full bg-cyan-500/15 px-2 py-0.5 text-xs text-cyan-300">{activeFilterLabel}</span>
-              )}
-            </div>
-            {(filtersExpanded || filter !== 'all') && (
-              <div className="mt-2 flex flex-wrap items-center gap-2">
-                {FILTERS.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setFilter(item.id);
-                      setFiltersExpanded(false);
-                    }}
-                    className={`rounded-lg px-3 py-1.5 text-sm transition ${
-                      filter === item.id
-                        ? 'bg-slate-100 text-slate-950'
-                        : 'border border-slate-700 bg-slate-800 text-slate-300 hover:brightness-110'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
+                <div className="flex flex-wrap items-center gap-2 text-sm text-slate-200">
+                  <span>{projectSummary.entries} entries</span>
+                  <span className="text-slate-500">|</span>
+                  {projectSummary.deadEnds > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: '#fb718522', color: '#fb7185' }}>{projectSummary.deadEnds} dead ends</span>}
+                  {projectSummary.discoveries > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: '#fbbf2422', color: '#fbbf24' }}>{projectSummary.discoveries} discoveries</span>}
+                  {projectSummary.pivots > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: '#a78bfa22', color: '#a78bfa' }}>{projectSummary.pivots} pivots</span>}
+                </div>
+                <div className="mt-2">
+                  <CategoryBar categories={projectSummary.categories} total={projectSummary.entries} />
+                </div>
+                <div className="mt-2 flex flex-wrap items-center justify-center gap-[14px] text-[10px] text-slate-300">
+                  {CATEGORY_META.map((category) => (
+                    <span key={category.id} className="flex items-center gap-1.5">
+                      <span className="inline-block h-2 w-2 rounded-[2px]" style={{ backgroundColor: category.color }} />
+                      {category.label} {projectSummary.categories[category.id]}
+                    </span>
+                  ))}
+                </div>
               </div>
-            )}
-          </div>
+
+              <div className="mb-4 rounded-xl border border-slate-700 bg-slate-900/80 p-3">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setFiltersExpanded((current) => !current)}
+                    className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm text-slate-200 transition hover:brightness-110"
+                  >
+                    Filter
+                  </button>
+                  {filter !== 'all' && (
+                    <span className="rounded-full bg-cyan-500/15 px-2 py-0.5 text-xs text-cyan-300">{activeFilterLabel}</span>
+                  )}
+                </div>
+                {(filtersExpanded || filter !== 'all') && (
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    {FILTERS.map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          setFilter(item.id);
+                          setFiltersExpanded(false);
+                        }}
+                        className={`rounded-lg px-3 py-1.5 text-sm transition ${
+                          filter === item.id
+                            ? 'bg-slate-100 text-slate-950'
+                            : 'border border-slate-700 bg-slate-800 text-slate-300 hover:brightness-110'
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
 
           {treeMode === 'stacked' ? (
             <StackedTreeView

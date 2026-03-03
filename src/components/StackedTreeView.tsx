@@ -85,7 +85,7 @@ function getCategoryColor(category?: NodeCategory): string {
 
 function formatCategory(category: NodeCategory): string {
   if (category === 'ux-design') {
-    return 'UX Design';
+    return 'UX/Design';
   }
   return category.charAt(0).toUpperCase() + category.slice(1);
 }
@@ -106,7 +106,10 @@ function getCategoryCounts(nodes: ProjectNode[]): Record<NodeCategory, number> {
 }
 
 function nodeMatchesFilter(node: ProjectNode, filter: FilterType): boolean {
-  return filter === 'all' || node.type === filter;
+  if (filter === 'all') return true;
+  if (node.type === filter) return true;
+  if (node.category === filter) return true;
+  return false;
 }
 
 export default function StackedTreeView(props: StackedTreeViewProps) {
@@ -123,9 +126,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
   } = props;
 
   const [showFilters, setShowFilters] = React.useState(false);
-  const activeFilter: FilterType = FILTER_OPTIONS.some((option) => option.value === filter)
-    ? (filter as FilterType)
-    : 'all';
+  const activeFilter: FilterType = filter as FilterType;
 
   const allNodes = project.chapters.flatMap((chapter) => chapter.nodes);
   const totalEntries = allNodes.length;

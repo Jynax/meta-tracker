@@ -150,7 +150,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
 
   const netDateGroups = useMemo(() => {
     const grouped = new Map<string, { date: string; entries: Array<(typeof selected.codeVolume)[number]>; net: number }>();
-    selected.codeVolume.forEach((entry) => {
+    codeEntriesWithActivity.forEach((entry) => {
       const existing = grouped.get(entry.date);
       if (existing) {
         existing.entries.push(entry);
@@ -160,7 +160,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
       grouped.set(entry.date, { date: entry.date, entries: [entry], net: entry.net });
     });
     return Array.from(grouped.values());
-  }, [selected.codeVolume]);
+  }, [codeEntriesWithActivity]);
 
   const netTopRows = useMemo(() => {
     if (netDateGroups.length <= 8) {
@@ -258,7 +258,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
 
   const hoveredPoint = hoveredPointIndex === null ? null : chartPoints[hoveredPointIndex];
   const sessionChartMaxHeight = 180;
-  const scaleSessionBarHeight = (value: number) => Math.max(6, (value / maxSessionMetric) * sessionChartMaxHeight);
+  const scaleSessionBarHeight = (value: number) => value === 0 ? 0 : Math.max(6, (value / maxSessionMetric) * sessionChartMaxHeight);
 
   const bySeverity = selected.bugs.reduce<Record<string, number>>((acc, bug) => {
     acc[bug.severity] = (acc[bug.severity] ?? 0) + 1;
@@ -708,11 +708,11 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                       <div style={{ maxHeight: isRowExpanded ? 500 : 0, overflow: 'hidden', transition: 'max-height 150ms ease' }}>
                         {row.dates.map((dateGroup) => {
                           const dateKey = `${row.key}-${dateGroup.date}`;
-                          const isDateExpandable = dateGroup.entries.length > 1;
+                          const isNestedExpandable = dateGroup.entries.length > 1;
                           const isDateExpanded = expandedNetRows.has(dateKey);
 
                           const toggleDate = () => {
-                            if (!isDateExpandable) return;
+                            if (!isNestedExpandable) return;
                             setExpandedNetRows((prev) => {
                               const next = new Set(prev);
                               if (next.has(dateKey)) next.delete(dateKey);
@@ -725,12 +725,12 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                             <div key={dateKey} style={{ padding: '0 8px 8px 20px' }}>
                               <div
                                 onClick={toggleDate}
-                                style={{ cursor: isDateExpandable ? 'pointer' : 'default' }}
+                                style={{ cursor: isNestedExpandable ? 'pointer' : 'default' }}
                                 className="mb-1 flex items-center justify-between text-xs"
                               >
                                 <div className="flex items-center gap-1" style={{ color: C.muted }}>
-                                  <span style={{ width: 12, display: 'inline-block', transform: isDateExpandable && isDateExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 150ms ease' }}>
-                                    {isDateExpandable ? '▶' : ''}
+                                  <span style={{ width: 12, display: 'inline-block', transform: isNestedExpandable && isDateExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 150ms ease' }}>
+                                    {isNestedExpandable ? '▶' : ''}
                                   </span>
                                   <span>{dateGroup.date}</span>
                                 </div>

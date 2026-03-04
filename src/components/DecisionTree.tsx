@@ -1,3 +1,4 @@
+<ErrorBoundary fallbackLabel="Canvas View">
 import { useCallback, useMemo, useState } from 'react';
 import { ReactFlow, Background, Controls, Handle, Position } from '@xyflow/react';
 import { bipProject } from '../data/bipProject';
@@ -7,6 +8,7 @@ import type { FilterType, NodeCategory, Project, ProjectNode } from '../types';
 import { nodeTypes } from './CustomNodes';
 import MetricsDashboard from './MetricsDashboard';
 import ProcessWorkflow from './ProcessWorkflow';
+import ErrorBoundary from './ErrorBoundary';
 import StackedTreeView from './StackedTreeView';
 import type { TreeNodeData } from './treeLayout';
 import { buildTreeLayout } from './treeLayout';
@@ -175,7 +177,7 @@ export default function DecisionTree() {
       setDetailNodes(new Set());
       setFilter('all');
       setFiltersExpanded(false);
-      // Do NOT reset view to 'tree' if on 'process' â How We Work is project-agnostic
+      // Do NOT reset view to 'tree' if on 'process' Ã¢ÂÂ How We Work is project-agnostic
       if (view === 'metrics') {
         setView('tree');
       }
@@ -256,7 +258,7 @@ export default function DecisionTree() {
               borderBottomColor: view === 'tree' ? '#22d3ee' : 'transparent',
             }}
           >
-            ð³ Decision Tree
+            Ã°ÂÂÂ³ Decision Tree
           </button>
           <button
             onClick={() => setView('metrics')}
@@ -267,7 +269,7 @@ export default function DecisionTree() {
               borderBottomColor: view === 'metrics' ? '#22d3ee' : 'transparent',
             }}
           >
-            ð Metrics
+            Ã°ÂÂÂ Metrics
           </button>
           <button
             onClick={() => setView('process')}
@@ -278,7 +280,7 @@ export default function DecisionTree() {
               borderBottomColor: view === 'process' ? '#22d3ee' : 'transparent',
             }}
           >
-            ð How We Work
+            Ã°ÂÂÂ How We Work
           </button>
         </div>
       </header>
@@ -370,6 +372,7 @@ export default function DecisionTree() {
           )}
 
           {treeMode === 'stacked' ? (
+            <ErrorBoundary fallbackLabel="Decision Tree">
             <StackedTreeView
               project={activeProject}
               filter={filter}
@@ -380,6 +383,7 @@ export default function DecisionTree() {
               onNodeToggle={(id) => setExpandedNode((current) => (current === id ? null : id))}
               highlightChapter={null}
             />
+            </ErrorBoundary>
           ) : (
             <div
               className="h-[calc(100vh-140px)] overflow-hidden rounded-2xl border border-slate-700"
@@ -399,11 +403,13 @@ export default function DecisionTree() {
                 <Background variant="dots" gap={18} size={1.2} color="rgba(148,163,184,0.08)" />
               </ReactFlow>
             </div>
+</ErrorBoundary>
           )}
         </>
       )}
 
       {view === 'metrics' && (
+        <ErrorBoundary fallbackLabel="Metrics">
         <MetricsDashboard
           projectId={activeProject.id}
           initialTab={metricsTab}
@@ -413,9 +419,10 @@ export default function DecisionTree() {
             setExpandedChapters((current) => new Set([...current, chapterId]));
           }}
         />
+        </ErrorBoundary>
       )}
 
-      {view === 'process' && <ProcessWorkflow />}
+      {view === 'process' && <ErrorBoundary fallbackLabel="How We Work"><ProcessWorkflow /></ErrorBoundary>}
     </section>
   );
 }

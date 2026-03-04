@@ -407,7 +407,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
               cursor: 'pointer',
             }}
           >
-            Filter {showFilters ? '▾' : '▸'}
+            Filter {showFilters ? 'â¾' : 'â¸'}
           </button>
           {activeFilter !== 'all' && (
             <span

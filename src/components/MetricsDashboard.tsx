@@ -28,6 +28,78 @@ const TABS: Array<{ id: MetricsTab; label: string }> = [
   { id: 'sessions', label: 'Sessions' },
 ];
 
+function Card({ label, value, color = C.white, detail, tooltip: tooltipText }: { label: string; value: string | number; color?: string; detail?: string; tooltip?: string }) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const showTimerRef = useRef<number | null>(null);
+  const hideTimerRef = useRef<number | null>(null);
+  useEffect(() => () => {
+    if (showTimerRef.current !== null) window.clearTimeout(showTimerRef.current);
+    if (hideTimerRef.current !== null) window.clearTimeout(hideTimerRef.current);
+  }, []);
+  const handleMouseEnter = () => {
+    if (!tooltipText) return;
+    if (hideTimerRef.current !== null) window.clearTimeout(hideTimerRef.current);
+    showTimerRef.current = window.setTimeout(() => setShowTooltip(true), 300);
+  };
+  const handleMouseLeave = () => {
+    if (!tooltipText) return;
+    if (showTimerRef.current !== null) window.clearTimeout(showTimerRef.current);
+    hideTimerRef.current = window.setTimeout(() => setShowTooltip(false), 200);
+  };
+  return (
+    <div style={{ position: 'relative' }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <div className="rounded-lg border" style={{ backgroundColor: C.cardBg, borderColor: C.border, padding: '8px 14px' }}>
+        <div className="text-xl font-bold" style={{ color }}>{value}</div>
+        <div className="text-[11px] uppercase tracking-wide" style={{ color: C.muted }}>{label}</div>
+        {detail && <div className="text-xs" style={{ color: C.muted }}>{detail}</div>}
+      </div>
+      {tooltipText && showTooltip && (
+        <div style={{ position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)', background: '#1e293b', border: '1px solid #334155', borderRadius: 8, padding: '8px 12px', fontSize: 11, color: '#94a3b8', zIndex: 50, whiteSpace: 'nowrap', pointerEvents: 'none', marginBottom: 6, }} >
+          {tooltipText}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DonutBreakdown({ label, items, animate }: { label: string; items: Array<{ label: string; count: number; color: string }>; animate: boolean }) {
+  const radius = 48;
+  const circumference = 2 * Math.PI * radius;
+  const total = items.reduce((sum, item) => sum + item.count, 0);
+  let accumulated = 0;
+  const segments = items
+    .filter((item) => item.count > 0)
+    .map((item, index) => {
+      const fullArcLength = total > 0 ? (item.count / total) * circumference : 0;
+      const arcLength = Math.max(fullArcLength - 2, 0);
+      const offset = -accumulated - 1;
+      accumulated += fullArcLength;
+      return { ...item, arcLength, offset, index };
+    });
+  return (
+    <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
+      <div className="flex flex-col items-center justify-center">
+        <svg viewBox="0 0 120 120" style={{ width: 120, height: 120 }}>
+          <circle cx="60" cy="60" r={radius} fill="none" stroke={C.border} strokeWidth="14" opacity="0.3" />
+          {segments.map((seg) => (
+            <circle key={seg.label} cx="60" cy="60" r={radius} fill="none" stroke={seg.color} strokeWidth="14" strokeDasharray={`${seg.arcLength} ${Math.max(circumference - seg.arcLength, 0)}`} strokeDashoffset={animate ? seg.offset : circumference} transform="rotate(-90 60 60)" style={{ transition: 'stroke-dashoffset 0.8s ease', transitionDelay: `${seg.index * 100}ms` }} />
+          ))}
+          <text x="60" y="56" textAnchor="middle" fill={C.muted} fontSize="12">{label}</text>
+          <text x="60" y="72" textAnchor="middle" fill={C.white} fontSize="22" fontWeight="700">{total}</text>
+        </svg>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', marginTop: 10 }}>
+          {items.filter((item) => item.count > 0).map((item) => (
+            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: C.muted }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color }} />
+              {item.label} <span style={{ color: C.white, fontWeight: 600 }}>({item.count})</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview', onTabChange }: MetricsDashboardProps) {
   const [tab, setTab] = useState<MetricsTab>(initialTab);
   const [hoveredPointIndex, setHoveredPointIndex] = useState<number | null>(null);
@@ -94,7 +166,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);
   const firstDate = selected.codeVolume[0]?.date ?? selected.dateRange.start;
   const lastDate = selected.codeVolume[selected.codeVolume.length - 1]?.date ?? selected.dateRange.end;
-  const timelineRange = `${firstDate} – ${lastDate}/26`;
+  const timelineRange = `${firstDate} â ${lastDate}/26`;
 
 
   const codeEntriesWithActivity = useMemo(
@@ -392,112 +464,6 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const fixedBugs = selected.bugs.filter((bug) => bug.status.toLowerCase() === 'fixed').length;
   const openBugs = selected.bugs.length - fixedBugs;
 
-  const Card = ({ label, value, color = C.white, detail, tooltip: tooltipText }: { label: string; value: string | number; color?: string; detail?: string; tooltip?: string }) => {
-    const [showTooltip, setShowTooltip] = useState(false);
-    const showTimerRef = useRef<number | null>(null);
-    const hideTimerRef = useRef<number | null>(null);
-
-    useEffect(() => () => {
-      if (showTimerRef.current !== null) window.clearTimeout(showTimerRef.current);
-      if (hideTimerRef.current !== null) window.clearTimeout(hideTimerRef.current);
-    }, []);
-
-    const handleMouseEnter = () => {
-      if (!tooltipText) return;
-      if (hideTimerRef.current !== null) window.clearTimeout(hideTimerRef.current);
-      showTimerRef.current = window.setTimeout(() => setShowTooltip(true), 300);
-    };
-
-    const handleMouseLeave = () => {
-      if (!tooltipText) return;
-      if (showTimerRef.current !== null) window.clearTimeout(showTimerRef.current);
-      hideTimerRef.current = window.setTimeout(() => setShowTooltip(false), 200);
-    };
-
-    return (
-      <div style={{ position: 'relative' }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-        <div className="rounded-lg border" style={{ backgroundColor: C.cardBg, borderColor: C.border, padding: '8px 14px' }}>
-          <div className="text-xl font-bold" style={{ color }}>{value}</div>
-          <div className="text-[11px] uppercase tracking-wide" style={{ color: C.muted }}>{label}</div>
-          {detail && <div className="text-xs" style={{ color: C.muted }}>{detail}</div>}
-        </div>
-        {tooltipText && showTooltip && (
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '100%',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              background: '#1e293b',
-              border: '1px solid #334155',
-              borderRadius: 8,
-              padding: '8px 12px',
-              fontSize: 11,
-              color: '#94a3b8',
-              zIndex: 50,
-              whiteSpace: 'nowrap',
-              pointerEvents: 'none',
-              marginBottom: 6,
-            }}
-          >
-            {tooltipText}
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const DonutBreakdown = ({ label, items }: { label: string; items: Array<{ label: string; count: number; color: string }> }) => {
-    const radius = 48;
-    const circumference = 2 * Math.PI * radius;
-    const total = items.reduce((sum, item) => sum + item.count, 0);
-    let accumulated = 0;
-    const segments = items
-      .filter((item) => item.count > 0)
-      .map((item, index) => {
-        const fullArcLength = total > 0 ? (item.count / total) * circumference : 0;
-        const arcLength = Math.max(fullArcLength - 2, 0);
-        const offset = -accumulated - 1;
-        accumulated += fullArcLength;
-        return { ...item, arcLength, offset, index };
-      });
-
-    return (
-      <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-        <div className="flex flex-col items-center justify-center">
-          <svg viewBox="0 0 120 120" style={{ width: 120, height: 120 }}>
-            <circle cx="60" cy="60" r={radius} fill="none" stroke={C.border} strokeWidth="14" opacity="0.3" />
-            {segments.map((seg) => (
-              <circle
-                key={seg.label}
-                cx="60"
-                cy="60"
-                r={radius}
-                fill="none"
-                stroke={seg.color}
-                strokeWidth="14"
-                strokeDasharray={`${seg.arcLength} ${Math.max(circumference - seg.arcLength, 0)}`}
-                strokeDashoffset={animateBugDonuts ? seg.offset : circumference}
-                transform="rotate(-90 60 60)"
-                style={{ transition: 'stroke-dashoffset 0.8s ease', transitionDelay: `${seg.index * 100}ms` }}
-              />
-            ))}
-            <text x="60" y="56" textAnchor="middle" fill={C.muted} fontSize="12">{label}</text>
-            <text x="60" y="72" textAnchor="middle" fill={C.white} fontSize="22" fontWeight="700">{total}</text>
-          </svg>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', marginTop: 10 }}>
-            {items.filter((item) => item.count > 0).map((item) => (
-              <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: C.muted }}>
-                <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color }} />
-                {item.label} <span style={{ color: C.white, fontWeight: 600 }}>({item.count})</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <>
       <div className="rounded-2xl border p-4" style={{ backgroundColor: C.bg, borderColor: C.border }}>
@@ -728,7 +694,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                             transition: 'transform 150ms ease',
                           }}
                         >
-                          {isExpandable ? '▶' : ''}
+                          {isExpandable ? 'â¶' : ''}
                         </span>
                         <span>{row.label}</span>
                       </div>
@@ -766,7 +732,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                                     transition: 'transform 150ms ease',
                                   }}
                                 >
-                                  {isNestedExpandable ? '▶' : ''}
+                                  {isNestedExpandable ? 'â¶' : ''}
                                 </span>
                                 <span>{dateGroup.date}</span>
                               </div>
@@ -878,8 +844,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
             <span style={{ color: C.amber }}>{openBugs} open/deferred</span>
           </div>
           <div className="grid gap-4 lg:grid-cols-3">
-            <DonutBreakdown
-              label="Severity"
+            <DonutBreakdown animate={animateBugDonuts} label="Severity"
               items={[
                 { label: 'Critical', count: bySeverity.Critical ?? 0, color: '#ef4444' },
                 { label: 'High', count: bySeverity.High ?? 0, color: '#f97316' },
@@ -887,16 +852,14 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                 { label: 'Low', count: bySeverity.Low ?? 0, color: '#64748b' },
               ]}
             />
-            <DonutBreakdown
-              label="Category"
+            <DonutBreakdown animate={animateBugDonuts} label="Category"
               items={[
                 { label: 'Technical', count: byCategory.Technical ?? 0, color: '#22d3ee' },
                 { label: 'Functional', count: byCategory.Functional ?? 0, color: '#34d399' },
                 { label: 'UX', count: byCategory.UX ?? 0, color: '#fbbf24' },
               ]}
             />
-            <DonutBreakdown
-              label="Source"
+            <DonutBreakdown animate={animateBugDonuts} label="Source"
               items={[
                 { label: 'ChatGPT Code Review', count: bySource['ChatGPT Code Review'] ?? 0, color: '#22d3ee' },
                 { label: 'Cowork Audit', count: bySource['Cowork Audit'] ?? 0, color: '#34d399' },
@@ -1091,7 +1054,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                           className="mt-3 rounded-md border px-2.5 py-1 text-xs"
                           style={{ color: C.cyan, backgroundColor: '#22d3ee1a', borderColor: '#22d3ee55' }}
                         >
-                          🌳 View chapter: {chapterMap[entry.chapterId] ?? entry.chapterId}
+                          ð³ View chapter: {chapterMap[entry.chapterId] ?? entry.chapterId}
                         </button>
                       </div>
                     ))}

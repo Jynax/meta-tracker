@@ -257,7 +257,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
               {renderCategoryBar(chapterCounts, chapter.nodes.length, false, 12, 120)}
             </div>
 
-            <div style={{ fontSize: 13, color: COLORS.muted }}>{`${chapter.period} Â· ${chapter.toolLabel}`}</div>
+            <div style={{ fontSize: 13, color: COLORS.muted }}>{`${chapter.period} � ${chapter.toolLabel}`}</div>
           </div>
         </div>
       </button>
@@ -404,7 +404,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
               cursor: 'pointer',
             }}
           >
-            Filter {showFilters ? 'Ã¢ÂÂ¾' : 'Ã¢ÂÂ¸'}
+            Filter {showFilters ? '▾' : '▸'}
           </button>
           {activeFilter !== 'all' && (
             <span

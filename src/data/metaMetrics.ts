@@ -55,6 +55,7 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 13', date: 'Mar 3', label: 'Stacked Tree View', added: 714, deleted: 74, net: 640, total: 3357 },
   { session: 'Session 14', date: 'Mar 3', label: 'UX Final Pass', added: 587, deleted: 385, net: 202, total: 3559 },
   { session: 'Session 15', date: 'Mar 3', label: 'How We Work View', added: 1067, deleted: 5, net: 1062, total: 4621 },
+  { session: 'Session 16', date: 'Mar 4', label: 'Codebase Audit', added: 95, deleted: 42, net: 53, total: 4674 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -182,6 +183,15 @@ export const metaSessions: SessionEntry[] = [
     decisions: 3,
     deadEnds: 0,
     focus: 'How We Work view: ProcessWorkflow component + view switcher wiring',
+    chapterId: 'meta-ch-how-we-work',
+  },
+  {
+    session: 'Session 16',
+    duration: 3,
+    prs: 8,
+    decisions: 0,
+    deadEnds: 0,
+    focus: 'Full codebase audit, bug fixes, component extraction, ErrorBoundary, accessibility',
     chapterId: 'meta-ch-how-we-work',
   },
 ];
@@ -345,7 +355,7 @@ export const metaBugs: BugEntry[] = [
   {
     id: 18,
     session: 'Session 12',
-    summary: 'metaMetrics.ts stray line prepended  —  Session 12 entry placed at file start instead of sessions array',
+    summary: 'metaMetrics.ts stray line prepended  â  Session 12 entry placed at file start instead of sessions array',
     severity: 'High',
     source: 'Cowork Code Review',
     status: 'Fixed',
@@ -354,7 +364,7 @@ export const metaBugs: BugEntry[] = [
   {
     id: 19,
     session: 'Session 13',
-    summary: 'StackedTreeView category filter not working  —  nodeMatchesFilter only checked node.type',
+    summary: 'StackedTreeView category filter not working  â  nodeMatchesFilter only checked node.type',
     severity: 'Medium',
     source: 'Cowork Code Review',
     status: 'Fixed',
@@ -378,14 +388,59 @@ export const metaBugs: BugEntry[] = [
     status: 'Fixed',
     category: 'UX',
   },
+  {
+    id: 22,
+    session: 'Session 16',
+    summary: 'metaProject.ts ch-how-we-work used wrong property names (title/session/date instead of name/period/toolLabel)',
+    severity: 'Critical',
+    source: 'Cowork Audit',
+    status: 'Fixed',
+    category: 'Technical',
+  },
+  {
+    id: 23,
+    session: 'Session 16',
+    summary: 'Mojibake remnants in metaProject.ts, metaMetrics.ts, and StackedTreeView.tsx',
+    severity: 'High',
+    source: 'Cowork Audit',
+    status: 'Fixed',
+    category: 'Technical',
+  },
+  {
+    id: 24,
+    session: 'Session 16',
+    summary: 'Card and DonutBreakdown re-created every render (defined inside MetricsDashboard)',
+    severity: 'High',
+    source: 'Cowork Audit',
+    status: 'Fixed',
+    category: 'Technical',
+  },
+  {
+    id: 25,
+    session: 'Session 16',
+    summary: 'onJumpToSession fired on every chapter toggle instead of dedicated action',
+    severity: 'Medium',
+    source: 'Cowork Audit',
+    status: 'Fixed',
+    category: 'Functional',
+  },
+  {
+    id: 26,
+    session: 'Session 16',
+    summary: 'No ErrorBoundary components anywhere in app',
+    severity: 'High',
+    source: 'Cowork Audit',
+    status: 'Fixed',
+    category: 'Technical',
+  },
 ];
 
 export const metaDerived: DerivedMetric[] = [
-  { label: 'Churn Rate', value: '0.28', detail: 'Session 15 almost entirely additive', color: '#34d399' },
+  { label: 'Churn Rate', value: '0.28', detail: 'Session 16: audit refactors', color: '#34d399' },
   { label: 'Codex Success', value: '98%', detail: '40/41 tasks', color: '#34d399' },
-  { label: 'Cycle Time', value: '0.80h', detail: 'Per merged PR', color: '#22d3ee' },
-  { label: 'Decisions', value: '4.0', detail: 'Per session avg', color: '#22d3ee' },
-  { label: 'Bug Rate', value: '0.48', detail: 'Per PR merged', color: '#34d399' },
+  { label: 'Cycle Time', value: '0.69h', detail: 'Per merged PR', color: '#22d3ee' },
+  { label: 'Decisions', value: '3.7', detail: 'Per session avg', color: '#22d3ee' },
+  { label: 'Bug Rate', value: '0.43', detail: 'Per PR merged', color: '#34d399' },
 ];
 
 export const metaStack: StackEntry[] = [

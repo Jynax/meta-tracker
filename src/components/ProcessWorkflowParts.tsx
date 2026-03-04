@@ -194,7 +194,7 @@ const RoleCard = ({
               lineHeight: 1.5,
             }}
           >
-            <span style={{ color: `${color}80`, fontSize: 8, marginTop: 5, flexShrink: 0 }}>ÃÂ¢ÃÂÃÂ</span>
+            <span style={{ color: `${color}80`, fontSize: 8, marginTop: 5, flexShrink: 0 }}>●</span>
             {item}
           </div>
         ))}

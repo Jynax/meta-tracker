@@ -60,7 +60,7 @@ export default function ProcessWorkflow() {
             How We Work
           </h1>
           <div style={{ fontSize: 14, color: colors.muted, marginTop: 6, lineHeight: 1.6 }}>
-            Michael + Claude � Design → Brief → Build → Review → Ship
+            Michael + Claude � Describe → Plan → Build → Review → Ship
           </div>
         </div>
       </FadeIn>
@@ -220,8 +220,8 @@ export default function ProcessWorkflow() {
               <WorkflowStep number={3} text="Michael approves or redirects the approach" color={colors.cyan} />
               <WorkflowStep number={4} text="Claude builds interactive JSX prototypes for UX/design changes" color={colors.violet} tool="claude.ai" />
               <WorkflowStep number={5} text="Michael tests prototypes, gives feedback with annotated screenshots" color={colors.cyan} />
-              <WorkflowStep number={6} text="Claude writes scoped, sequenced task briefs with acceptance criteria" color={colors.violet} tool="task briefs" />
-              <WorkflowStep number={7} text="Cowork executes task briefs (or routes substantial code to Codex)" color={colors.emerald} tool="cowork" />
+              <WorkflowStep number={6} text="Claude creates task files in the project’s tasks/ folder with acceptance criteria" color={colors.violet} tool="tasks/" />
+              <WorkflowStep number={7} text="Cowork picks up queued tasks (direct edits or routes substantial code to Codex)" color={colors.emerald} tool="cowork" />
               <WorkflowStep number={8} text="Codex generates code for new components and large changes" color={colors.amber} tool="codex" />
               <WorkflowStep number={9} text="PRs created on GitHub — Michael does the final merge" color={colors.cyan} tool="github" />
               <WorkflowStep number={10} text="Cloudflare auto-deploys on merge to main" color={colors.rose} tool="cloudflare" />
@@ -495,7 +495,7 @@ export default function ProcessWorkflow() {
               </div>
               {[
                 "Design prototyping (JSX artifacts)",
-                "Planning & task brief writing",
+                "Planning & task file creation",
                 "Research & best practices",
                 "Code review for large PRs (200+ lines)",
                 "Process discussions & workflow design",
@@ -677,7 +677,7 @@ export default function ProcessWorkflow() {
           }}
         >
           <span style={{ fontSize: 12, color: colors.muted }}>
-            Last updated: March 3, 2026 � Session 13
+            Last updated: March 4, 2026 � Session 18
           </span>
           <span
             style={{

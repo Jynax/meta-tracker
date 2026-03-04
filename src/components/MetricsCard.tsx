@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const C = {
   cyan: '#22d3ee', emerald: '#34d399', rose: '#fb7185', amber: '#fbbf24',

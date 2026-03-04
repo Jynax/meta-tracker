@@ -406,6 +406,48 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
               />
             ))}
           </div>
+          {/* Work Mix */}
+          {(() => {
+            const cats = [
+              { key: 'Feature' as const, color: C.cyan },
+              { key: 'Refactor' as const, color: C.violet },
+              { key: 'Bug' as const, color: C.rose },
+              { key: 'Tooling' as const, color: C.amber },
+            ];
+            const counts = cats.map(c => ({
+              ...c,
+              count: selected.sessions.filter(s => s.workCategory === c.key).length,
+            }));
+            const total = counts.reduce((s, c) => s + c.count, 0);
+            return total > 0 ? (
+              <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
+                <h3 className="text-sm font-semibold" style={{ color: C.white }}>Work Mix</h3>
+                <div className="text-xs mb-3" style={{ color: C.muted }}>Sessions by category</div>
+                <div className="flex rounded-md overflow-hidden" style={{ height: 28 }}>
+                  {counts.filter(c => c.count > 0).map(c => (
+                    <div
+                      key={c.key}
+                      style={{
+                        width: `${(c.count / total) * 100}%`,
+                        backgroundColor: c.color,
+                        minWidth: 4,
+                        transition: 'width 0.5s ease',
+                      }}
+                    />
+                  ))}
+                </div>
+                <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 10 }}>
+                  {counts.filter(c => c.count > 0).map(c => (
+                    <div key={c.key} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: C.muted }}>
+                      <div style={{ width: 8, height: 8, borderRadius: '50%', background: c.color }} />
+                      {c.key} <span style={{ color: C.white, fontWeight: 600 }}>{c.count}</span>
+                      <span style={{ color: C.slate }}>({Math.round((c.count / total) * 100)}%)</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null;
+          })()}
           <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
             <h3 className="mb-2 text-sm font-semibold">Codebase Size Over Time</h3>
             <div className="relative">

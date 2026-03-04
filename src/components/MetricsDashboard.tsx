@@ -6,6 +6,8 @@ import { metaCodeVolume, metaSessions, metaBugs, metaDerived, metaStack, metaDat
 import { remnantsCodeVolume, remnantsSessions, remnantsBugs, remnantsDerived, remnantsStack, remnantsDateRange } from '../data/remnantsMetrics';
 import { remnantsProject } from '../data/remnantsProject';
 
+import { Card, DonutBreakdown, C } from "./MetricsCard";
+import { formatShortDate, formatSessionDate, buildSmoothPath } from "./chartUtils";
 type MetricsTab = 'overview' | 'code' | 'bugs' | 'sessions';
 
 interface MetricsDashboardProps {
@@ -15,11 +17,6 @@ interface MetricsDashboardProps {
   onTabChange?: (tab: MetricsTab) => void;
 }
 
-const C = {
-  cyan: '#22d3ee', emerald: '#34d399', rose: '#fb7185', amber: '#fbbf24',
-  violet: '#a78bfa', slate: '#94a3b8', white: '#f8fafc', muted: '#94a3b8',
-  bg: '#0f172a', cardBg: '#1e293b', border: '#334155',
-};
 
 const TABS: Array<{ id: MetricsTab; label: string }> = [
   { id: 'overview', label: 'Overview' },
@@ -28,76 +25,6 @@ const TABS: Array<{ id: MetricsTab; label: string }> = [
   { id: 'sessions', label: 'Sessions' },
 ];
 
-function Card({ label, value, color = C.white, detail, tooltip: tooltipText }: { label: string; value: string | number; color?: string; detail?: string; tooltip?: string }) {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const showTimerRef = useRef<number | null>(null);
-  const hideTimerRef = useRef<number | null>(null);
-  useEffect(() => () => {
-    if (showTimerRef.current !== null) window.clearTimeout(showTimerRef.current);
-    if (hideTimerRef.current !== null) window.clearTimeout(hideTimerRef.current);
-  }, []);
-  const handleMouseEnter = () => {
-    if (!tooltipText) return;
-    if (hideTimerRef.current !== null) window.clearTimeout(hideTimerRef.current);
-    showTimerRef.current = window.setTimeout(() => setShowTooltip(true), 300);
-  };
-  const handleMouseLeave = () => {
-    if (!tooltipText) return;
-    if (showTimerRef.current !== null) window.clearTimeout(showTimerRef.current);
-    hideTimerRef.current = window.setTimeout(() => setShowTooltip(false), 200);
-  };
-  return (
-    <div style={{ position: 'relative' }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      <div className="rounded-lg border" style={{ backgroundColor: C.cardBg, borderColor: C.border, padding: '8px 14px' }}>
-        <div className="text-xl font-bold" style={{ color }}>{value}</div>
-        <div className="text-[11px] uppercase tracking-wide" style={{ color: C.muted }}>{label}</div>
-        {detail && <div className="text-xs" style={{ color: C.muted }}>{detail}</div>}
-      </div>
-      {tooltipText && showTooltip && (
-        <div style={{ position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)', background: '#1e293b', border: '1px solid #334155', borderRadius: 8, padding: '8px 12px', fontSize: 11, color: '#94a3b8', zIndex: 50, whiteSpace: 'nowrap', pointerEvents: 'none', marginBottom: 6, }} >
-          {tooltipText}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function DonutBreakdown({ label, items, animate }: { label: string; items: Array<{ label: string; count: number; color: string }>; animate: boolean }) {
-  const radius = 48;
-  const circumference = 2 * Math.PI * radius;
-  const total = items.reduce((sum, item) => sum + item.count, 0);
-  let accumulated = 0;
-  const segments = items
-    .filter((item) => item.count > 0)
-    .map((item, index) => {
-      const fullArcLength = total > 0 ? (item.count / total) * circumference : 0;
-      const arcLength = Math.max(fullArcLength - 2, 0);
-      const offset = -accumulated - 1;
-      accumulated += fullArcLength;
-      return { ...item, arcLength, offset, index };
-    });
-  return (
-    <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-      <div className="flex flex-col items-center justify-center">
-        <svg viewBox="0 0 120 120" style={{ width: 120, height: 120 }} role="img" aria-label={`${label} breakdown chart`}>
-          <circle cx="60" cy="60" r={radius} fill="none" stroke={C.border} strokeWidth="14" opacity="0.3" />
-          {segments.map((seg) => (
-            <circle key={seg.label} cx="60" cy="60" r={radius} fill="none" stroke={seg.color} strokeWidth="14" strokeDasharray={`${seg.arcLength} ${Math.max(circumference - seg.arcLength, 0)}`} strokeDashoffset={animate ? seg.offset : circumference} transform="rotate(-90 60 60)" style={{ transition: 'stroke-dashoffset 0.8s ease', transitionDelay: `${seg.index * 100}ms` }} />
-          ))}
-          <text x="60" y="56" textAnchor="middle" fill={C.muted} fontSize="12">{label}</text>
-          <text x="60" y="72" textAnchor="middle" fill={C.white} fontSize="22" fontWeight="700">{total}</text>
-        </svg>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', marginTop: 10 }}>
-          {items.filter((item) => item.count > 0).map((item) => (
-            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: C.muted }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color }} />
-              {item.label} <span style={{ color: C.white, fontWeight: 600 }}>({item.count})</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview', onTabChange }: MetricsDashboardProps) {
@@ -166,7 +93,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);
   const firstDate = selected.codeVolume[0]?.date ?? selected.dateRange.start;
   const lastDate = selected.codeVolume[selected.codeVolume.length - 1]?.date ?? selected.dateRange.end;
-  const timelineRange = `${firstDate} Ã¢ÂÂ ${lastDate}/26`;
+  const timelineRange = `${firstDate} ÃÂ¢ÃÂÃÂ ${lastDate}/26`;
 
 
   const codeEntriesWithActivity = useMemo(
@@ -350,16 +277,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
 
   const hoveredPoint = hoveredPointIndex === null ? null : chartPoints[hoveredPointIndex];
 
-  const formatShortDate = (dateStr: string) => {
-    const [month = '', day = ''] = dateStr.split(' ');
-    return `${month} ${day}`.trim();
-  };
 
-  const formatSessionDate = (dateStr: string) => {
-    if (!dateStr.includes(' ')) return dateStr;
-    const [month = '', day = ''] = dateStr.split(' ');
-    return `${month} ${day}/26`.trim();
-  };
 
   const sessionActivityPoints = useMemo(() => {
     const dims = chartDims;
@@ -390,24 +308,6 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
     return { dims, innerHeight, yTicks, step, yMax, points };
   }, [selected.sessions, sessionDateMap]);
 
-  const buildSmoothPath = (points: Array<{ x: number; y: number }>) => {
-    if (!points.length) return '';
-    if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
-
-    let path = `M ${points[0].x} ${points[0].y}`;
-    for (let i = 0; i < points.length - 1; i += 1) {
-      const p0 = points[Math.max(0, i - 1)];
-      const p1 = points[i];
-      const p2 = points[i + 1];
-      const p3 = points[Math.min(points.length - 1, i + 2)];
-      const cp1x = p1.x + (p2.x - p0.x) / 6;
-      const cp1y = p1.y + (p2.y - p0.y) / 6;
-      const cp2x = p2.x - (p3.x - p1.x) / 6;
-      const cp2y = p2.y - (p3.y - p1.y) / 6;
-      path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
-    }
-    return path;
-  };
 
   const sessionLines = useMemo(() => ({
     prs: buildSmoothPath(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yPrs }))),
@@ -686,7 +586,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                             transition: 'transform 150ms ease',
                           }}
                         >
-                          {isExpandable ? 'Ã¢ÂÂ¶' : ''}
+                          {isExpandable ? 'ÃÂ¢ÃÂÃÂ¶' : ''}
                         </span>
                         <span>{row.label}</span>
                       </div>
@@ -724,7 +624,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                                     transition: 'transform 150ms ease',
                                   }}
                                 >
-                                  {isNestedExpandable ? 'Ã¢ÂÂ¶' : ''}
+                                  {isNestedExpandable ? 'ÃÂ¢ÃÂÃÂ¶' : ''}
                                 </span>
                                 <span>{dateGroup.date}</span>
                               </div>
@@ -1046,7 +946,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                           className="mt-3 rounded-md border px-2.5 py-1 text-xs"
                           style={{ color: C.cyan, backgroundColor: '#22d3ee1a', borderColor: '#22d3ee55' }}
                         >
-                          Ã°ÂÂÂ³ View chapter: {chapterMap[entry.chapterId] ?? entry.chapterId}
+                          ÃÂ°ÃÂÃÂÃÂ³ View chapter: {chapterMap[entry.chapterId] ?? entry.chapterId}
                         </button>
                       </div>
                     ))}

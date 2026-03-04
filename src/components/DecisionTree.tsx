@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ReactFlow, Background, Controls, Handle, Position } from '@xyflow/react';
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
@@ -148,23 +148,23 @@ export default function DecisionTree() {
   const [expandedNode, setExpandedNode] = useState<string | null>(null);
   const [detailNodes, setDetailNodes] = useState<Set<string>>(new Set());
 
-  const toggleChapter = (chapterId: string) => {
+  const toggleChapter = useCallback((chapterId: string) => {
     setExpandedChapters((current) => {
       const next = new Set(current);
       if (next.has(chapterId)) next.delete(chapterId);
       else next.add(chapterId);
       return next;
     });
-  };
+  }, []);
 
-  const toggleDetail = (nodeId: string) => {
+  const toggleDetail = useCallback((nodeId: string) => {
     setDetailNodes((current) => {
       const next = new Set(current);
       if (next.has(nodeId)) next.delete(nodeId);
       else next.add(nodeId);
       return next;
     });
-  };
+  }, []);
 
   const switchProject = (projectId: string) => {
     const project = PROJECTS.find((p) => p.id === projectId);
@@ -175,7 +175,7 @@ export default function DecisionTree() {
       setDetailNodes(new Set());
       setFilter('all');
       setFiltersExpanded(false);
-      // Do NOT reset view to 'tree' if on 'process' — How We Work is project-agnostic
+      // Do NOT reset view to 'tree' if on 'process' â How We Work is project-agnostic
       if (view === 'metrics') {
         setView('tree');
       }
@@ -256,7 +256,7 @@ export default function DecisionTree() {
               borderBottomColor: view === 'tree' ? '#22d3ee' : 'transparent',
             }}
           >
-            🌳 Decision Tree
+            ð³ Decision Tree
           </button>
           <button
             onClick={() => setView('metrics')}
@@ -267,7 +267,7 @@ export default function DecisionTree() {
               borderBottomColor: view === 'metrics' ? '#22d3ee' : 'transparent',
             }}
           >
-            📊 Metrics
+            ð Metrics
           </button>
           <button
             onClick={() => setView('process')}
@@ -278,7 +278,7 @@ export default function DecisionTree() {
               borderBottomColor: view === 'process' ? '#22d3ee' : 'transparent',
             }}
           >
-            📋 How We Work
+            ð How We Work
           </button>
         </div>
       </header>

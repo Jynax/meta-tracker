@@ -647,7 +647,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                                       y: event.clientY,
                                       content: (
                                         <>
-                                          <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.session}</div>
+                                          <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.date} 2014 {entry.label}</div>
                                           <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic' }}>{focusText}</div>
                                           <div style={{ color: C.cyan, fontSize: 11 }}>Added: {entry.added.toLocaleString()}</div>
                                           <div style={{ color: C.rose, fontSize: 11 }}>Deleted: {entry.deleted.toLocaleString()}</div>
@@ -663,7 +663,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                                     setTooltip(null);
                                   }}
                                 >
-                                  <div className="mb-1 text-[11px]" style={{ color: C.white }}>{entry.session}</div>
+                                  <div className="mb-1 text-[11px]" style={{ color: C.white }}>{entry.label}</div>
                                   <div className="flex gap-2">
                                     <div className="h-2 rounded" style={{ width: `${(entry.added / codeDeltaMax) * 100}%`, backgroundColor: C.cyan }} />
                                     <div className="h-2 rounded" style={{ width: `${(entry.deleted / codeDeltaMax) * 100}%`, backgroundColor: C.rose }} />
@@ -689,7 +689,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                                   y: event.clientY,
                                   content: (
                                     <>
-                                      <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.session}</div>
+                                      <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.date} 2014 {entry.label}</div>
                                       <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic' }}>{focusText}</div>
                                       <div style={{ color: C.cyan, fontSize: 11 }}>Added: {entry.added.toLocaleString()}</div>
                                       <div style={{ color: C.rose, fontSize: 11 }}>Deleted: {entry.deleted.toLocaleString()}</div>
@@ -705,7 +705,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                                 setTooltip(null);
                               }}
                             >
-                              <div className="mb-1 text-[11px]" style={{ color: C.white }}>{entry.session}</div>
+                              <div className="mb-1 text-[11px]" style={{ color: C.white }}>{entry.label}</div>
                               <div className="flex gap-2">
                                 <div className="h-2 rounded" style={{ width: `${(entry.added / codeDeltaMax) * 100}%`, backgroundColor: C.cyan }} />
                                 <div className="h-2 rounded" style={{ width: `${(entry.deleted / codeDeltaMax) * 100}%`, backgroundColor: C.rose }} />
@@ -775,7 +775,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                 {selected.bugs.map((bug) => (
                   <tr key={bug.id} className="border-t" style={{ borderColor: C.border }}>
                     <td className="px-3 py-2">{bug.id}</td>
-                    <td className="px-3 py-2" style={{ color: C.cyan }}>{bug.session}</td>
+                    <td className="px-3 py-2" style={{ color: C.cyan }}>{bug.date} 2014 {bug.label}</td>
                     <td className="px-3 py-2">{bug.summary}</td>
                     <td className="px-3 py-2" style={{ color: bug.severity === 'Critical' ? C.rose : bug.severity === 'High' ? C.amber : bug.severity === 'Medium' ? C.cyan : C.muted }}>{bug.severity}</td>
                     <td className="px-3 py-2">{bug.category}</td>
@@ -846,7 +846,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                             y: event.clientY,
                             content: (
                               <>
-                                <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{point.session}</div>
+                                <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{point.date} 2014 {point.label}</div>
                                 <div style={{ color: C.slate, fontSize: 11 }}>{point.dateLabel}</div>
                                 <div style={{ color: C.cyan, fontSize: 11 }}>PRs: {point.prs}</div>
                                 <div style={{ color: C.emerald, fontSize: 11 }}>Decisions: {point.decisions}</div>
@@ -922,7 +922,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                   >
                     <div className="flex items-center gap-3">
                       <span style={{ fontSize: 14, fontWeight: 600, color: C.white }}>{monthGroup.label}</span>
-                      <span style={{ fontSize: 12, color: C.muted }}>Sessions {firstSession}-{lastSession}</span>
+                      <span style={{ fontSize: 12, color: C.muted }}>{monthGroup.sessions.length} session{monthGroup.sessions.length > 1 ? 's' : ''}</span>
                       <span style={{ fontSize: 12, color: C.slate }}>{monthGroup.totalPRs} PRs | {monthGroup.totalDecisions} decisions</span>
                     </div>
                     <span style={{ color: C.muted, transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 200ms ease' }}>&#9654;</span>
@@ -933,7 +933,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                   >
                     {monthGroup.sessions.map((entry) => (
                       <div key={`${entry.session}-detail`} className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-                        <h4 className="text-base font-semibold">{entry.session} - {entry.displayDate}</h4>
+                        <h4 className="text-base font-semibold">{entry.displayDate} 2014 {entry.label}</h4>
                         <p className="mb-3 text-sm" style={{ color: C.cyan }}>{entry.focus}</p>
                         <div className="grid grid-cols-2 gap-2 text-xs" style={{ color: C.slate }}>
                           <span>Duration</span><span>{entry.duration}h</span>

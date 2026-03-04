@@ -677,7 +677,7 @@ export default function ProcessWorkflow() {
           }}
         >
           <span style={{ fontSize: 12, color: colors.muted }}>
-            Last updated: March 4, 2026 � Session 18
+            Last updated: March 4, 2026
           </span>
           <span
             style={{

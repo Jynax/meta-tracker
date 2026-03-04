@@ -3,6 +3,8 @@ import type { CodeVolumeEntry, SessionEntry, DerivedMetric, StackEntry } from '.
 export interface BugEntry {
   id: number;
   session: string;
+  date: string;
+  label: string;
   summary: string;
   severity: 'Critical' | 'High' | 'Medium' | 'Low';
   source: string;
@@ -22,11 +24,11 @@ export const remnantsCodeVolume: CodeVolumeEntry[] = [
 
 // --- Sessions ---
 export const remnantsSessions: SessionEntry[] = [
-  { session: 'Claude 1', duration: 0, prs: 0, decisions: 4, deadEnds: 0, focus: 'Vertical slice: map, combat, inventory, extraction', chapterId: 'ch-core-loop' },
-  { session: 'Claude 2', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Balance, terrain, xenoflora, zone difficulty', chapterId: 'ch-living-world' },
-  { session: 'Claude 3', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Home base, recovery system, character naming', chapterId: 'ch-the-house' },
-  { session: 'Git Setup', duration: 1, prs: 0, decisions: 1, deadEnds: 0, focus: 'Created repos, uploaded docs + code', chapterId: 'ch-repo-deployment' },
-  { session: 'Codex 1', duration: 1, prs: 3, decisions: 1, deadEnds: 0, focus: 'Launcher, README, deploy fix', chapterId: 'ch-repo-deployment' },
+  { session: 'Claude 1', date: 'Feb 17', label: 'Vertical Slice', duration: 0, prs: 0, decisions: 4, deadEnds: 0, focus: 'Vertical slice: map, combat, inventory, extraction', chapterId: 'ch-core-loop' },
+  { session: 'Claude 2', date: 'Feb 18', label: 'Balance & Xenoflora', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Balance, terrain, xenoflora, zone difficulty', chapterId: 'ch-living-world' },
+  { session: 'Claude 3', date: 'Feb 18', label: 'Home Base & Recovery', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Home base, recovery system, character naming', chapterId: 'ch-the-house' },
+  { session: 'Git Setup', date: 'Feb 19', label: 'Repo Init + Docs', duration: 1, prs: 0, decisions: 1, deadEnds: 0, focus: 'Created repos, uploaded docs + code', chapterId: 'ch-repo-deployment' },
+  { session: 'Codex 1', date: 'Feb 21', label: 'Launcher & Deploy', duration: 1, prs: 3, decisions: 1, deadEnds: 0, focus: 'Launcher, README, deploy fix', chapterId: 'ch-repo-deployment' },
 ];
 
 // --- Date Range ---
@@ -37,10 +39,10 @@ export const remnantsDateRange = {
 
 // --- Bugs ---
 export const remnantsBugs: BugEntry[] = [
-  { id: 1, session: 'Claude 1', summary: 'Navigation unclear in first playtest', severity: 'Medium', source: 'Playtest', status: 'Fixed (minimap + compass)', category: 'UX' },
-  { id: 2, session: 'Claude 2', summary: 'Visual elements too small in Claude side panel', severity: 'Low', source: 'Playtest', status: 'Noted', category: 'UX' },
-  { id: 3, session: 'Claude 3', summary: 'Inventory limit (4 slots) felt too restrictive', severity: 'Medium', source: 'Playtest', status: 'By Design', category: 'UX' },
-  { id: 4, session: 'Codex 1', summary: 'Deploy button not responding on GitHub Pages', severity: 'High', source: 'Codex Testing', status: 'Fixed (PR #3)', category: 'Technical' },
+  { id: 1, session: 'Claude 1', date: 'Feb 17', label: 'Vertical Slice', summary: 'Navigation unclear in first playtest', severity: 'Medium', source: 'Playtest', status: 'Fixed (minimap + compass)', category: 'UX' },
+  { id: 2, session: 'Claude 2', date: 'Feb 18', label: 'Balance & Xenoflora', summary: 'Visual elements too small in Claude side panel', severity: 'Low', source: 'Playtest', status: 'Noted', category: 'UX' },
+  { id: 3, session: 'Claude 3', date: 'Feb 18', label: 'Home Base & Recovery', summary: 'Inventory limit (4 slots) felt too restrictive', severity: 'Medium', source: 'Playtest', status: 'By Design', category: 'UX' },
+  { id: 4, session: 'Codex 1', date: 'Feb 21', label: 'Launcher & Deploy', summary: 'Deploy button not responding on GitHub Pages', severity: 'High', source: 'Codex Testing', status: 'Fixed (PR #3)', category: 'Technical' },
 ];
 
 // --- Derived Metrics ---
@@ -58,5 +60,6 @@ export const remnantsStack: StackEntry[] = [
   { name: 'HTML5 Canvas', cat: 'Core' },
   { name: 'JavaScript (ES6+)', cat: 'Core' },
   { name: 'Python (launcher)', cat: 'Utility' },
-  { name: 'GitHub Pages', cat: 'Build' },
+  { name: 'Cloudflare Pages', cat: 'Core' },
+  { name: 'GitHub Pages', cat: 'Core' },
 ];

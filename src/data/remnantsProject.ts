@@ -8,7 +8,7 @@ export const remnantsProject: Project = {
     {
       id: 'ch-core-loop',
       name: 'The Core Loop',
-      period: 'February 17, 2026',
+      period: 'Feb 17, 2026',
       toolLabel: 'Claude',
       tool: 'claude',
       nodes: [
@@ -57,7 +57,7 @@ export const remnantsProject: Project = {
     {
       id: 'ch-living-world',
       name: 'The Living World',
-      period: 'February 18, 2026',
+      period: 'Feb 18, 2026',
       toolLabel: 'Claude',
       tool: 'claude',
       nodes: [
@@ -96,7 +96,7 @@ export const remnantsProject: Project = {
     {
       id: 'ch-the-house',
       name: 'The House',
-      period: 'February 18, 2026',
+      period: 'Feb 18, 2026',
       toolLabel: 'Claude',
       tool: 'claude',
       nodes: [
@@ -135,7 +135,7 @@ export const remnantsProject: Project = {
     {
       id: 'ch-repo-deployment',
       name: 'Repo Setup & Deployment',
-      period: 'February 19-21, 2026',
+      period: 'Feb 19–21, 2026',
       toolLabel: 'Mixed',
       tool: 'mixed',
       nodes: [

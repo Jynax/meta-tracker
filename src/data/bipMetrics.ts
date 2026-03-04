@@ -10,6 +10,8 @@ export interface CodeVolumeEntry {
 
 export interface SessionEntry {
   session: string;
+  date: string;
+  label: string;
   duration: number;
   prs: number;
   decisions: number;
@@ -21,6 +23,8 @@ export interface SessionEntry {
 export interface BugEntry {
   id: number;
   session: string;
+  date: string;
+  label: string;
   summary: string;
   severity: 'Critical' | 'High' | 'Medium' | 'Low';
   source: string;
@@ -55,6 +59,8 @@ export const bipCodeVolume: CodeVolumeEntry[] = [
 export const bipSessions: SessionEntry[] = [
   {
     session: 'ChatGPT 1',
+    date: 'Feb 14',
+    label: 'Scaffold & Cards',
     duration: 2,
     prs: 2,
     decisions: 4,
@@ -64,6 +70,8 @@ export const bipSessions: SessionEntry[] = [
   },
   {
     session: 'ChatGPT 2',
+    date: 'Feb 15',
+    label: 'Refactoring',
     duration: 1,
     prs: 1,
     decisions: 0,
@@ -73,6 +81,8 @@ export const bipSessions: SessionEntry[] = [
   },
   {
     session: 'ChatGPT 3',
+    date: 'Feb 16',
+    label: 'Data & Charts',
     duration: 4,
     prs: 16,
     decisions: 8,
@@ -82,6 +92,8 @@ export const bipSessions: SessionEntry[] = [
   },
   {
     session: 'ChatGPT 4',
+    date: 'Feb 17',
+    label: 'Representation',
     duration: 5,
     prs: 27,
     decisions: 6,
@@ -91,6 +103,8 @@ export const bipSessions: SessionEntry[] = [
   },
   {
     session: 'Cowork 1',
+    date: 'Feb 21',
+    label: 'Audit',
     duration: 2,
     prs: 0,
     decisions: 3,
@@ -100,6 +114,8 @@ export const bipSessions: SessionEntry[] = [
   },
   {
     session: 'Cowork 2',
+    date: 'Feb 22',
+    label: 'Data Wrangling',
     duration: 3,
     prs: 1,
     decisions: 2,
@@ -109,6 +125,8 @@ export const bipSessions: SessionEntry[] = [
   },
   {
     session: 'Cowork 3',
+    date: 'Feb 25',
+    label: 'Decomposition',
     duration: 3,
     prs: 2,
     decisions: 3,
@@ -118,6 +136,8 @@ export const bipSessions: SessionEntry[] = [
   },
   {
     session: 'Cowork 4',
+    date: 'Feb 26',
+    label: 'Timeline',
     duration: 2,
     prs: 4,
     decisions: 5,
@@ -127,6 +147,8 @@ export const bipSessions: SessionEntry[] = [
   },
   {
     session: 'Cowork 13',
+    date: 'Mar 4',
+    label: 'Deep Decomposition',
     duration: 2,
     prs: 1,
     decisions: 1,
@@ -145,6 +167,8 @@ export const bipBugs: BugEntry[] = [
   {
     id: 1,
     session: 'ChatGPT 4',
+    date: 'Feb 17',
+    label: 'Representation',
     summary: "Boolean 'f' globally truthy \u2014 corrupted representation data",
     severity: 'Critical',
     source: 'ChatGPT Code Review',
@@ -154,6 +178,8 @@ export const bipBugs: BugEntry[] = [
   {
     id: 2,
     session: 'Cowork 1',
+    date: 'Feb 21',
+    label: 'Audit',
     summary: 'Worker debug redirect blocking app access',
     severity: 'High',
     source: 'Cowork Audit',
@@ -163,6 +189,8 @@ export const bipBugs: BugEntry[] = [
   {
     id: 3,
     session: 'Cowork 3',
+    date: 'Feb 25',
+    label: 'Decomposition',
     summary: 'PR #18 merge conflict (29+ PRs behind)',
     severity: 'Medium',
     source: 'Code Review',
@@ -172,6 +200,8 @@ export const bipBugs: BugEntry[] = [
   {
     id: 4,
     session: 'Cowork 3',
+    date: 'Feb 25',
+    label: 'Decomposition',
     summary: 'parseAllDataSheets() possibly unused dead code',
     severity: 'Low',
     source: 'Cowork Code Review',
@@ -181,6 +211,8 @@ export const bipBugs: BugEntry[] = [
   {
     id: 5,
     session: 'Cowork 4',
+    date: 'Feb 26',
+    label: 'Timeline',
     summary: "'% All' section header showing 'Women'",
     severity: 'Medium',
     source: 'User Report',
@@ -190,6 +222,8 @@ export const bipBugs: BugEntry[] = [
   {
     id: 6,
     session: 'Cowork 4',
+    date: 'Feb 26',
+    label: 'Timeline',
     summary: 'Timeline renders as modal overlay (position:fixed)',
     severity: 'High',
     source: 'User Report',
@@ -199,6 +233,8 @@ export const bipBugs: BugEntry[] = [
   {
     id: 7,
     session: 'Cowork 4',
+    date: 'Feb 26',
+    label: 'Timeline',
     summary: "Timeline doesn't auto-expand on view switch",
     severity: 'Medium',
     source: 'User Report',
@@ -208,6 +244,8 @@ export const bipBugs: BugEntry[] = [
   {
     id: 8,
     session: 'Cowork 4',
+    date: 'Feb 26',
+    label: 'Timeline',
     summary: 'window.open() noopener severs sessionStorage',
     severity: 'High',
     source: 'Codex Auto-Review',

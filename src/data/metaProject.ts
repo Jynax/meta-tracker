@@ -8,7 +8,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-inception',
       name: 'Inception & Architecture',
-      period: 'Session 1 (Feb 2026)',
+      period: 'Feb 26, 2026',
       toolLabel: 'Claude Cowork',
       tool: 'claude',
       nodes: [
@@ -56,7 +56,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-horizontal',
       name: 'The Horizontal Era',
-      period: 'Sessions 1-3 (Feb 2026)',
+      period: 'Feb 26, 2026',
       toolLabel: 'Claude, ChatGPT',
       tool: 'mixed',
       nodes: [
@@ -96,7 +96,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-layout-overhaul',
       name: 'The Layout Overhaul',
-      period: 'Sessions 4-5 (Feb 2026)',
+      period: 'Feb 27–28, 2026',
       toolLabel: 'Claude, ChatGPT',
       tool: 'mixed',
       nodes: [
@@ -158,7 +158,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-spacing-wars',
       name: 'The Spacing Wars',
-      period: 'Session 5 (Feb 2026)',
+      period: 'Feb 28, 2026',
       toolLabel: 'ChatGPT Codex',
       tool: 'chatgpt',
       nodes: [
@@ -208,7 +208,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-data-alignment',
       name: 'The Data Model Alignment',
-      period: 'Session 7 (Feb 2026)',
+      period: 'Feb 28, 2026',
       toolLabel: 'Claude Cowork, Codex',
       tool: 'mixed',
       nodes: [
@@ -298,7 +298,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-spine-dashboard',
       name: 'The Spine Fix & Dashboard Infrastructure',
-      period: 'Session 8 (Mar 2026)',
+      period: 'Mar 2, 2026',
       toolLabel: 'Claude Cowork, Codex',
       tool: 'mixed',
       nodes: [
@@ -373,7 +373,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-ux-polish',
       name: 'The UX Polish Pass',
-      period: 'Session 9 (Mar 2026)',
+      period: 'Mar 2, 2026',
       toolLabel: 'Claude Cowork, Codex',
       tool: 'mixed',
       nodes: [
@@ -442,7 +442,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-dashboard-data-overhaul',
       name: 'The Dashboard Data Overhaul',
-      period: 'Session 12 (Mar 2026)',
+      period: 'Mar 3, 2026',
       toolLabel: 'Claude Cowork, Codex',
       tool: 'mixed',
       nodes: [
@@ -490,7 +490,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-stacked-tree-view',
       name: 'The Stacked Tree View',
-      period: 'Session 13 (Mar 2026)',
+      period: 'Mar 3, 2026',
       toolLabel: 'Claude Cowork, ChatGPT Codex',
       tool: 'mixed',
       nodes: [
@@ -527,7 +527,7 @@ export const metaProject: Project = {
     {
       id: 'meta-ch-ux-final-pass',
       name: 'The UX Final Pass',
-      period: 'Session 14 (Mar 2026)',
+      period: 'Mar 3, 2026',
       toolLabel: 'Claude Cowork, ChatGPT Codex',
       tool: 'mixed',
       nodes: [
@@ -594,7 +594,7 @@ export const metaProject: Project = {
   {
     id: 'meta-ch-how-we-work',
     name: 'The How We Work View',
-    period: 'Session 15 (Mar 2026)',
+    period: 'Mar 3, 2026',
     toolLabel: 'Claude Cowork',
     tool: 'claude',
     nodes: [
@@ -631,7 +631,7 @@ export const metaProject: Project = {
   {
     id: 'meta-ch-process-overhaul',
     name: 'The Process Overhaul & File Decomposition',
-    period: 'Session 16 (Mar 2026)',
+    period: 'Mar 4, 2026',
     toolLabel: 'Claude Cowork',
     tool: 'claude',
     nodes: [
@@ -658,7 +658,7 @@ export const metaProject: Project = {
   {
     id: 'meta-ch-mojibake-fix',
     name: 'The Mojibake Fix',
-    period: 'Session 17 (Mar 2026)',
+    period: 'Mar 4, 2026',
     toolLabel: 'Claude Cowork',
     tool: 'claude',
     nodes: [

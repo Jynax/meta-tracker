@@ -176,7 +176,7 @@ export default function DecisionTree() {
       setDetailNodes(new Set());
       setFilter('all');
       setFiltersExpanded(false);
-      // Do NOT reset view to 'tree' if on 'process' ÃÂ¢ÃÂÃÂ How We Work is project-agnostic
+      // Do NOT reset view to 'tree' if on 'process' — How We Work is project-agnostic
       if (view === 'metrics') {
         setView('tree');
       }
@@ -257,7 +257,7 @@ export default function DecisionTree() {
               borderBottomColor: view === 'tree' ? '#22d3ee' : 'transparent',
             }}
           >
-            ÃÂ°ÃÂÃÂÃÂ³ Decision Tree
+            🌳 Decision Tree
           </button>
           <button
             onClick={() => setView('metrics')}
@@ -268,7 +268,7 @@ export default function DecisionTree() {
               borderBottomColor: view === 'metrics' ? '#22d3ee' : 'transparent',
             }}
           >
-            ÃÂ°ÃÂÃÂÃÂ Metrics
+            📊 Metrics
           </button>
           <button
             onClick={() => setView('process')}
@@ -279,7 +279,7 @@ export default function DecisionTree() {
               borderBottomColor: view === 'process' ? '#22d3ee' : 'transparent',
             }}
           >
-            ÃÂ°ÃÂÃÂÃÂ How We Work
+            📋 How We Work
           </button>
         </div>
       </header>

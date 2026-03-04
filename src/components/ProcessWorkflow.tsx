@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, ReactNode, CSSProperties } from "react";
+import { useState, useEffect, ReactNode, CSSProperties } from "react";
 
 const colors = {
   bg: "#0a0f1a",
@@ -30,14 +30,12 @@ interface FadeInProps {
 
 const FadeIn = ({ children, delay = 0, style = {} }: FadeInProps) => {
   const [visible, setVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), delay);
     return () => clearTimeout(timer);
   }, [delay]);
   return (
     <div
-      ref={ref}
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(12px)",
@@ -217,7 +215,7 @@ const RoleCard = ({
               lineHeight: 1.5,
             }}
           >
-            <span style={{ color: `${color}80`, fontSize: 8, marginTop: 5, flexShrink: 0 }}>●</span>
+            <span style={{ color: `${color}80`, fontSize: 8, marginTop: 5, flexShrink: 0 }}>â</span>
             {item}
           </div>
         ))}
@@ -385,7 +383,7 @@ export default function ProcessWorkflow() {
               fontFamily: "'JetBrains Mono', monospace",
             }}
           >
-            Meta Tracker · Process Reference
+            Meta Tracker Â· Process Reference
           </div>
           <h1
             style={{
@@ -401,7 +399,7 @@ export default function ProcessWorkflow() {
             How We Work
           </h1>
           <div style={{ fontSize: 14, color: colors.muted, marginTop: 6, lineHeight: 1.6 }}>
-            Michael + Claude · Design → Brief → Build → Review → Ship
+            Michael + Claude Â· Design â Brief â Build â Review â Ship
           </div>
         </div>
       </FadeIn>
@@ -461,14 +459,14 @@ export default function ProcessWorkflow() {
             <div style={{ display: "flex", gap: 14, marginBottom: 8, flexWrap: "wrap" }}>
               <RoleCard
                 id="michael"
-                icon="👤"
+                icon="ð¤"
                 title="Michael"
                 subtitle="Product Owner / Designer"
                 color={colors.cyan}
                 dimColor={colors.cyanDim}
                 items={[
                   "Functional & design decisions",
-                  "Priority calls — what to build, what to defer",
+                  "Priority calls â what to build, what to defer",
                   "UX review via annotated screenshots",
                   "Final merge authority (Claude never merges)",
                   "Tests on the live site, not in code",
@@ -478,7 +476,7 @@ export default function ProcessWorkflow() {
               />
               <RoleCard
                 id="claude"
-                icon="🧠"
+                icon="ð§ "
                 title="Claude"
                 subtitle="Architect / Tech Lead"
                 color={colors.violet}
@@ -500,7 +498,7 @@ export default function ProcessWorkflow() {
             <div style={{ display: "flex", gap: 14, marginBottom: 28, flexWrap: "wrap" }}>
               <RoleCard
                 id="cowork"
-                icon="🔧"
+                icon="ð§"
                 title="Cowork"
                 subtitle="Orchestration & Light Edits"
                 color={colors.emerald}
@@ -516,7 +514,7 @@ export default function ProcessWorkflow() {
               />
               <RoleCard
                 id="codex"
-                icon="💻"
+                icon="ð»"
                 title="Codex"
                 subtitle="Code Generation Engine"
                 color={colors.amber}
@@ -564,7 +562,7 @@ export default function ProcessWorkflow() {
               <WorkflowStep number={6} text="Claude writes scoped, sequenced task briefs with acceptance criteria" color={colors.violet} tool="task briefs" />
               <WorkflowStep number={7} text="Cowork executes task briefs (or routes substantial code to Codex)" color={colors.emerald} tool="cowork" />
               <WorkflowStep number={8} text="Codex generates code for new components and large changes" color={colors.amber} tool="codex" />
-              <WorkflowStep number={9} text="PRs created on GitHub — Michael does the final merge" color={colors.cyan} tool="github" />
+              <WorkflowStep number={9} text="PRs created on GitHub â Michael does the final merge" color={colors.cyan} tool="github" />
               <WorkflowStep number={10} text="Cloudflare auto-deploys on merge to main" color={colors.rose} tool="cloudflare" />
               <div
                 style={{
@@ -589,10 +587,10 @@ export default function ProcessWorkflow() {
                     flexShrink: 0,
                   }}
                 >
-                  ↻
+                  â»
                 </div>
                 <div style={{ fontSize: 13, color: colors.muted, fontStyle: "italic" }}>
-                  Michael reviews on the live site → feedback → next iteration (5–15 min cycles)
+                  Michael reviews on the live site â feedback â next iteration (5â15 min cycles)
                 </div>
               </div>
             </div>
@@ -672,7 +670,7 @@ export default function ProcessWorkflow() {
               ].map((item, i) =>
                 item === null ? (
                   <div key={i} style={{ display: "flex", alignItems: "center", padding: "0 8px" }}>
-                    <span style={{ color: colors.muted, fontSize: 16 }}>→</span>
+                    <span style={{ color: colors.muted, fontSize: 16 }}>â</span>
                   </div>
                 ) : (
                   <div
@@ -721,9 +719,9 @@ export default function ProcessWorkflow() {
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                <span style={{ fontSize: 18 }}>💻</span>
+                <span style={{ fontSize: 18 }}>ð»</span>
                 <span style={{ fontSize: 15, fontWeight: 700, color: colors.amber }}>Codex</span>
-                <span style={{ fontSize: 12, color: colors.muted }}>— Heavy lifting</span>
+                <span style={{ fontSize: 12, color: colors.muted }}>â Heavy lifting</span>
               </div>
               {[
                 "New components & major features",
@@ -743,7 +741,7 @@ export default function ProcessWorkflow() {
                     lineHeight: 1.5,
                   }}
                 >
-                  <span style={{ color: colors.amber, fontSize: 8, marginTop: 5 }}>●</span>
+                  <span style={{ color: colors.amber, fontSize: 8, marginTop: 5 }}>â</span>
                   {item}
                 </div>
               ))}
@@ -759,7 +757,7 @@ export default function ProcessWorkflow() {
                   lineHeight: 1.5,
                 }}
               >
-                ⚠ Sequential only — never run parallel tasks. Later tasks can revert earlier changes if
+                â  Sequential only â never run parallel tasks. Later tasks can revert earlier changes if
                 they branch from stale main.
               </div>
             </div>
@@ -776,9 +774,9 @@ export default function ProcessWorkflow() {
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                <span style={{ fontSize: 18 }}>🔧</span>
+                <span style={{ fontSize: 18 }}>ð§</span>
                 <span style={{ fontSize: 15, fontWeight: 700, color: colors.emerald }}>Cowork</span>
-                <span style={{ fontSize: 12, color: colors.muted }}>— Direct edits</span>
+                <span style={{ fontSize: 12, color: colors.muted }}>â Direct edits</span>
               </div>
               {[
                 "Data file updates (projects, metrics)",
@@ -798,7 +796,7 @@ export default function ProcessWorkflow() {
                     lineHeight: 1.5,
                   }}
                 >
-                  <span style={{ color: colors.emerald, fontSize: 8, marginTop: 5 }}>●</span>
+                  <span style={{ color: colors.emerald, fontSize: 8, marginTop: 5 }}>â</span>
                   {item}
                 </div>
               ))}
@@ -830,9 +828,9 @@ export default function ProcessWorkflow() {
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                <span style={{ fontSize: 18 }}>🧠</span>
+                <span style={{ fontSize: 18 }}>ð§ </span>
                 <span style={{ fontSize: 15, fontWeight: 700, color: colors.violet }}>Claude (claude.ai)</span>
-                <span style={{ fontSize: 12, color: colors.muted }}>— Design shop</span>
+                <span style={{ fontSize: 12, color: colors.muted }}>â Design shop</span>
               </div>
               {[
                 "Design prototyping (JSX artifacts)",
@@ -852,7 +850,7 @@ export default function ProcessWorkflow() {
                     lineHeight: 1.5,
                   }}
                 >
-                  <span style={{ color: colors.violet, fontSize: 8, marginTop: 5 }}>●</span>
+                  <span style={{ color: colors.violet, fontSize: 8, marginTop: 5 }}>â</span>
                   {item}
                 </div>
               ))}
@@ -911,7 +909,7 @@ export default function ProcessWorkflow() {
                   lineHeight: 1.5,
                 }}
               >
-                <span style={{ color: colors.rose, fontSize: 8, marginTop: 5 }}>●</span>
+                <span style={{ color: colors.rose, fontSize: 8, marginTop: 5 }}>â</span>
                 {item}
               </div>
             ))}
@@ -932,7 +930,7 @@ export default function ProcessWorkflow() {
               fontFamily: "'JetBrains Mono', monospace",
             }}
           >
-            Iteration patterns — what works (13 sessions learned)
+            Iteration patterns â what works (13 sessions learned)
           </div>
           <div
             style={{
@@ -955,7 +953,7 @@ export default function ProcessWorkflow() {
             <PatternCard
               number={3}
               title="The tight feedback loop"
-              description="Code change → merge → deploy → Michael tests → feedback → next change. Each cycle is 5–15 minutes."
+              description="Code change â merge â deploy â Michael tests â feedback â next change. Each cycle is 5â15 minutes."
             />
             <PatternCard
               number={4}
@@ -1018,7 +1016,7 @@ export default function ProcessWorkflow() {
           }}
         >
           <span style={{ fontSize: 12, color: colors.muted }}>
-            Last updated: March 3, 2026 · Session 13
+            Last updated: March 3, 2026 Â· Session 13
           </span>
           <span
             style={{

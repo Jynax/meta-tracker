@@ -28,7 +28,7 @@ export const metaProject: Project = {
           description:
             'Chose the same stack as BIP for consistency: Vite + React + TypeScript + Tailwind, hosted on Cloudflare Pages. JSON files in repo as data store.',
           chosenPath:
-            'Same stack as BIP Ã¢ÂÂ Vite + React + TypeScript + Tailwind + Cloudflare Pages',
+            'Same stack as BIP ÃÂ¢ÃÂÃÂ Vite + React + TypeScript + Tailwind + Cloudflare Pages',
           alternatives: ['Different framework', 'Adding a backend with Cloudflare D1/KV'],
         },
         {
@@ -590,13 +590,13 @@ export const metaProject: Project = {
           alternatives: ['Visible Back to Sessions breadcrumb'],
         },
       ],
-    },,
+    },
   {
     id: 'meta-ch-how-we-work',
     title: 'The How We Work View',
     session: 'Session 15',
     date: 'Mar 2026',
-    summary: 'Added a third view tab — How We Work — alongside Decision Tree and Metrics. A standalone ProcessWorkflow component renders an interactive process reference page.',
+    summary: 'Added a third view tab â How We Work â alongside Decision Tree and Metrics. A standalone ProcessWorkflow component renders an interactive process reference page.',
     nodes: [
       {
         id: 'meta-process-reference-view',

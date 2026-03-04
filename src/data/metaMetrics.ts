@@ -355,7 +355,7 @@ export const metaBugs: BugEntry[] = [
   {
     id: 18,
     session: 'Session 12',
-    summary: 'metaMetrics.ts stray line prepended  â  Session 12 entry placed at file start instead of sessions array',
+    summary: 'metaMetrics.ts stray line prepended  —  Session 12 entry placed at file start instead of sessions array',
     severity: 'High',
     source: 'Cowork Code Review',
     status: 'Fixed',
@@ -364,7 +364,7 @@ export const metaBugs: BugEntry[] = [
   {
     id: 19,
     session: 'Session 13',
-    summary: 'StackedTreeView category filter not working  â  nodeMatchesFilter only checked node.type',
+    summary: 'StackedTreeView category filter not working  —  nodeMatchesFilter only checked node.type',
     severity: 'Medium',
     source: 'Cowork Code Review',
     status: 'Fixed',

@@ -6,6 +6,7 @@ import { remnantsProject } from '../data/remnantsProject';
 import type { FilterType, NodeCategory, Project, ProjectNode } from '../types';
 import { nodeTypes } from './CustomNodes';
 import MetricsDashboard from './MetricsDashboard';
+import ProcessWorkflow from './ProcessWorkflow';
 import StackedTreeView from './StackedTreeView';
 import type { TreeNodeData } from './treeLayout';
 import { buildTreeLayout } from './treeLayout';
@@ -88,10 +89,12 @@ function CategoryBar({ categories, total, compact = false }: { categories: Recor
 function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { onToggleExpand?: (id: string) => void; chapterStats?: ChapterStat; onJumpToMetrics?: (tab: 'overview' | 'code' | 'bugs' | 'sessions') => void } }) {
   const isRoot = data.kind === 'root';
   const stats = data.chapterStats;
+
   return (
     <div className={`${isRoot ? 'w-64' : 'w-[280px]'} rounded-xl border border-sky-400/60 bg-slate-800/90 p-4 text-slate-100 shadow-lg transition hover:brightness-110`}>
       {!isRoot && <Handle type="target" position={Position.Top} id="top" className="!bg-sky-300" />}
       {!isRoot && <Handle type="target" position={Position.Top} id="top-right" style={{ left: 'calc(50% + 36px)' }} className="!bg-sky-300" />}
+
       <button className="w-full text-left" onClick={() => data.onToggleExpand?.(id)}>
         <div className="flex items-start justify-between gap-2">
           <div>
@@ -101,6 +104,7 @@ function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { o
           </div>
           {!isRoot && <span className="text-slate-300">{data.expanded ? String.fromCharCode(0x2212) : '+'}</span>}
         </div>
+
         {!isRoot && !data.expanded && stats && (
           <div className="mt-2 flex items-center gap-[10px] text-xs text-slate-300">
             <CategoryBar categories={stats.categories} total={stats.entries} compact />
@@ -124,6 +128,7 @@ function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { o
           </div>
         )}
       </button>
+
       <Handle type="source" position={Position.Bottom} id="bottom" className="!bg-sky-300" />
       {!isRoot && <Handle type="source" position={Position.Bottom} id="bottom-right" style={{ left: 'calc(50% + 36px)' }} className="!bg-sky-300" />}
       {!isRoot && <Handle type="source" position={Position.Right} id="right" className="!bg-sky-300" />}
@@ -134,7 +139,7 @@ function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { o
 
 export default function DecisionTree() {
   const [filter, setFilter] = useState<FilterType>('all');
-  const [view, setView] = useState<'tree' | 'metrics'>('tree');
+  const [view, setView] = useState<'tree' | 'metrics' | 'process'>('tree');
   const [treeMode, setTreeMode] = useState<'stacked' | 'canvas'>('stacked');
   const [metricsTab, setMetricsTab] = useState<'overview' | 'code' | 'bugs' | 'sessions'>('overview');
   const [filtersExpanded, setFiltersExpanded] = useState(false);
@@ -170,7 +175,10 @@ export default function DecisionTree() {
       setDetailNodes(new Set());
       setFilter('all');
       setFiltersExpanded(false);
-      setView('tree');
+      // Do NOT reset view to 'tree' if on 'process' — How We Work is project-agnostic
+      if (view === 'metrics') {
+        setView('tree');
+      }
       setTreeMode('stacked');
       setMetricsTab('overview');
     }
@@ -219,6 +227,7 @@ export default function DecisionTree() {
       <header className="mb-5 border-b border-slate-700 pb-3">
         <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{activeProject.subtitle}</p>
         <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">{activeProject.name}</h1>
+
         {PROJECTS.length > 1 && (
           <div className="mt-2 flex items-center gap-2">
             {PROJECTS.map((proj) => (
@@ -236,6 +245,7 @@ export default function DecisionTree() {
             ))}
           </div>
         )}
+
         <div className="mt-3 flex items-end gap-2">
           <button
             onClick={() => setView('tree')}
@@ -258,6 +268,17 @@ export default function DecisionTree() {
             }}
           >
             📊 Metrics
+          </button>
+          <button
+            onClick={() => setView('process')}
+            className="rounded-t-[8px] border-b-2 px-4 py-2 text-sm font-semibold"
+            style={{
+              backgroundColor: view === 'process' ? '#1e293b' : 'transparent',
+              color: view === 'process' ? '#f8fafc' : '#64748b',
+              borderBottomColor: view === 'process' ? '#22d3ee' : 'transparent',
+            }}
+          >
+            📋 How We Work
           </button>
         </div>
       </header>
@@ -393,6 +414,8 @@ export default function DecisionTree() {
           }}
         />
       )}
+
+      {view === 'process' && <ProcessWorkflow />}
     </section>
   );
 }

@@ -79,7 +79,7 @@ function DonutBreakdown({ label, items, animate }: { label: string; items: Array
   return (
     <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
       <div className="flex flex-col items-center justify-center">
-        <svg viewBox="0 0 120 120" style={{ width: 120, height: 120 }}>
+        <svg viewBox="0 0 120 120" style={{ width: 120, height: 120 }} role="img" aria-label={`${label} breakdown chart`}>
           <circle cx="60" cy="60" r={radius} fill="none" stroke={C.border} strokeWidth="14" opacity="0.3" />
           {segments.map((seg) => (
             <circle key={seg.label} cx="60" cy="60" r={radius} fill="none" stroke={seg.color} strokeWidth="14" strokeDasharray={`${seg.arcLength} ${Math.max(circumference - seg.arcLength, 0)}`} strokeDashoffset={animate ? seg.offset : circumference} transform="rotate(-90 60 60)" style={{ transition: 'stroke-dashoffset 0.8s ease', transitionDelay: `${seg.index * 100}ms` }} />
@@ -166,7 +166,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);
   const firstDate = selected.codeVolume[0]?.date ?? selected.dateRange.start;
   const lastDate = selected.codeVolume[selected.codeVolume.length - 1]?.date ?? selected.dateRange.end;
-  const timelineRange = `${firstDate} â ${lastDate}/26`;
+  const timelineRange = `${firstDate} Ã¢ÂÂ ${lastDate}/26`;
 
 
   const codeEntriesWithActivity = useMemo(
@@ -362,9 +362,9 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   };
 
   const sessionActivityPoints = useMemo(() => {
-    const dims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
-    const innerWidth = dims.width - dims.left - dims.right;
-    const innerHeight = dims.height - dims.top - dims.bottom;
+    const dims = chartDims;
+    const innerWidth = chartInnerWidth;
+    const innerHeight = chartInnerHeight;
     const yTicks = 4;
     const maxMetric = Math.max(...selected.sessions.map((item) => Math.max(item.prs, item.decisions, item.deadEnds)), 1);
     const raw = maxMetric / yTicks || 1;
@@ -448,21 +448,13 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
     setExpandedMonths(latest ? new Set([latest]) : new Set());
   }, [projectId, sessionsByMonth]);
 
-  const bySeverity = selected.bugs.reduce<Record<string, number>>((acc, bug) => {
-    acc[bug.severity] = (acc[bug.severity] ?? 0) + 1;
-    return acc;
-  }, {});
-  const byCategory = selected.bugs.reduce<Record<string, number>>((acc, bug) => {
-    acc[bug.category] = (acc[bug.category] ?? 0) + 1;
-    return acc;
-  }, {});
-  const bySource = selected.bugs.reduce<Record<string, number>>((acc, bug) => {
-    acc[bug.source] = (acc[bug.source] ?? 0) + 1;
-    return acc;
-  }, {});
-
-  const fixedBugs = selected.bugs.filter((bug) => bug.status.toLowerCase() === 'fixed').length;
-  const openBugs = selected.bugs.length - fixedBugs;
+  const { bySeverity, byCategory, bySource, fixedBugs, openBugs } = useMemo(() => {
+    const bySev = selected.bugs.reduce<Record<string, number>>((acc, bug) => { acc[bug.severity] = (acc[bug.severity] ?? 0) + 1; return acc; }, {});
+    const byCat = selected.bugs.reduce<Record<string, number>>((acc, bug) => { acc[bug.category] = (acc[bug.category] ?? 0) + 1; return acc; }, {});
+    const bySrc = selected.bugs.reduce<Record<string, number>>((acc, bug) => { acc[bug.source] = (acc[bug.source] ?? 0) + 1; return acc; }, {});
+    const fixed = selected.bugs.filter((bug) => bug.status.toLowerCase() === 'fixed').length;
+    return { bySeverity: bySev, byCategory: byCat, bySource: bySrc, fixedBugs: fixed, openBugs: selected.bugs.length - fixed };
+  }, [selected.bugs]);
 
   return (
     <>
@@ -517,7 +509,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
           <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
             <h3 className="mb-2 text-sm font-semibold">Codebase Size Over Time</h3>
             <div className="relative">
-              <svg viewBox={`0 0 ${chartDims.width} ${chartDims.height}`} style={{ width: '100%', height: 280 }}>
+              <svg viewBox={`0 0 ${chartDims.width} ${chartDims.height}`} style={{ width: '100%', height: 280 }} role="img" aria-label="Codebase size over time chart">
                 <defs>
                   <linearGradient id={`locAreaGradient-${projectId}`} x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor={C.cyan} stopOpacity="0.3" />
@@ -694,7 +686,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                             transition: 'transform 150ms ease',
                           }}
                         >
-                          {isExpandable ? 'â¶' : ''}
+                          {isExpandable ? 'Ã¢ÂÂ¶' : ''}
                         </span>
                         <span>{row.label}</span>
                       </div>
@@ -732,7 +724,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                                     transition: 'transform 150ms ease',
                                   }}
                                 >
-                                  {isNestedExpandable ? 'â¶' : ''}
+                                  {isNestedExpandable ? 'Ã¢ÂÂ¶' : ''}
                                 </span>
                                 <span>{dateGroup.date}</span>
                               </div>
@@ -908,7 +900,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
           <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
             <h3 className="mb-3 text-sm font-semibold">Session Activity</h3>
             <div style={{ position: 'relative', overflowX: 'auto', paddingBottom: 4 }}>
-              <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }}>
+              <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }} role="img" aria-label="Session activity chart">
                 {Array.from({ length: sessionActivityPoints.yTicks + 1 }, (_, index) => {
                   const value = index * sessionActivityPoints.step;
                   const y = sessionActivityPoints.dims.top + sessionActivityPoints.innerHeight - (index / sessionActivityPoints.yTicks) * sessionActivityPoints.innerHeight;
@@ -1054,7 +1046,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                           className="mt-3 rounded-md border px-2.5 py-1 text-xs"
                           style={{ color: C.cyan, backgroundColor: '#22d3ee1a', borderColor: '#22d3ee55' }}
                         >
-                          ð³ View chapter: {chapterMap[entry.chapterId] ?? entry.chapterId}
+                          Ã°ÂÂÂ³ View chapter: {chapterMap[entry.chapterId] ?? entry.chapterId}
                         </button>
                       </div>
                     ))}

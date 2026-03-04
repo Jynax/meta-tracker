@@ -56,6 +56,7 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 14', date: 'Mar 3', label: 'UX Final Pass', added: 587, deleted: 385, net: 202, total: 3559 },
   { session: 'Session 15', date: 'Mar 3', label: 'How We Work View', added: 1067, deleted: 5, net: 1062, total: 4621 },
   { session: 'Session 16', date: 'Mar 4', label: 'Codebase Audit', added: 95, deleted: 42, net: 53, total: 4674 },
+  { session: 'Session 17', date: 'Mar 4', label: 'Mojibake Fix', added: 53, deleted: 53, net: 0, total: 4674 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -193,6 +194,15 @@ export const metaSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Full codebase audit, bug fixes, component extraction, ErrorBoundary, accessibility',
     chapterId: 'meta-ch-how-we-work',
+  },
+  {
+    session: 'Session 17',
+    duration: 1,
+    prs: 6,
+    decisions: 1,
+    deadEnds: 0,
+    focus: 'Fixed 53 triple-encoded UTF-8 mojibake across 6 files. Iterative decoder, 6 API commits.',
+    chapterId: 'meta-ch-mojibake-fix',
   },
 ];
 
@@ -436,9 +446,9 @@ export const metaBugs: BugEntry[] = [
 ];
 
 export const metaDerived: DerivedMetric[] = [
-  { label: 'Churn Rate', value: '0.28', detail: 'Session 16: audit refactors', color: '#34d399' },
+  { label: 'Churn Rate', value: '0.33', detail: 'Session 17: character fixes', color: '#34d399' },
   { label: 'Codex Success', value: '98%', detail: '40/41 tasks', color: '#34d399' },
-  { label: 'Cycle Time', value: '0.69h', detail: 'Per merged PR', color: '#22d3ee' },
+  { label: 'Cycle Time', value: '0.78h', detail: 'Per merged PR', color: '#22d3ee' },
   { label: 'Decisions', value: '3.7', detail: 'Per session avg', color: '#22d3ee' },
   { label: 'Bug Rate', value: '0.43', detail: 'Per PR merged', color: '#34d399' },
 ];

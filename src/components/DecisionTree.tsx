@@ -1,4 +1,3 @@
-<ErrorBoundary fallbackLabel="Canvas View">
 import { useCallback, useMemo, useState } from 'react';
 import { ReactFlow, Background, Controls, Handle, Position } from '@xyflow/react';
 import { bipProject } from '../data/bipProject';
@@ -177,7 +176,7 @@ export default function DecisionTree() {
       setDetailNodes(new Set());
       setFilter('all');
       setFiltersExpanded(false);
-      // Do NOT reset view to 'tree' if on 'process' Ã¢ÂÂ How We Work is project-agnostic
+      // Do NOT reset view to 'tree' if on 'process' ÃÂ¢ÃÂÃÂ How We Work is project-agnostic
       if (view === 'metrics') {
         setView('tree');
       }
@@ -258,7 +257,7 @@ export default function DecisionTree() {
               borderBottomColor: view === 'tree' ? '#22d3ee' : 'transparent',
             }}
           >
-            Ã°ÂÂÂ³ Decision Tree
+            ÃÂ°ÃÂÃÂÃÂ³ Decision Tree
           </button>
           <button
             onClick={() => setView('metrics')}
@@ -269,7 +268,7 @@ export default function DecisionTree() {
               borderBottomColor: view === 'metrics' ? '#22d3ee' : 'transparent',
             }}
           >
-            Ã°ÂÂÂ Metrics
+            ÃÂ°ÃÂÃÂÃÂ Metrics
           </button>
           <button
             onClick={() => setView('process')}
@@ -280,7 +279,7 @@ export default function DecisionTree() {
               borderBottomColor: view === 'process' ? '#22d3ee' : 'transparent',
             }}
           >
-            Ã°ÂÂÂ How We Work
+            ÃÂ°ÃÂÃÂÃÂ How We Work
           </button>
         </div>
       </header>
@@ -403,7 +402,6 @@ export default function DecisionTree() {
                 <Background variant="dots" gap={18} size={1.2} color="rgba(148,163,184,0.08)" />
               </ReactFlow>
             </div>
-</ErrorBoundary>
           )}
         </>
       )}

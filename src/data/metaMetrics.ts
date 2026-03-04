@@ -1,3 +1,5 @@
+export type WorkCategory = 'Feature' | 'Refactor' | 'Bug' | 'Tooling';
+
 export interface CodeVolumeEntry {
   session: string;
   date: string;
@@ -18,6 +20,7 @@ export interface SessionEntry {
   deadEnds: number;
   focus: string;
   chapterId: string;
+  workCategory: WorkCategory;
 }
 
 export interface BugEntry {
@@ -64,22 +67,22 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
 ];
 
 export const metaSessions: SessionEntry[] = [
-  { session: 'Session 1', date: 'Feb 26', label: 'Scaffold & Auth', duration: 3, prs: 4, decisions: 3, deadEnds: 0, focus: 'Scaffold, deploy, auth setup', chapterId: 'meta-ch-inception' },
-  { session: 'Session 2', date: 'Feb 26', label: 'Vertical Tree', duration: 2, prs: 2, decisions: 4, deadEnds: 0, focus: 'Vertical tree exploration', chapterId: 'meta-ch-horizontal' },
-  { session: 'Session 3', date: 'Feb 26', label: 'React Flow Rebuild', duration: 3, prs: 4, decisions: 5, deadEnds: 1, focus: 'React Flow rebuild', chapterId: 'meta-ch-horizontal' },
-  { session: 'Session 4', date: 'Feb 27', label: 'Overlap & Filters', duration: 2, prs: 3, decisions: 3, deadEnds: 0, focus: 'Overlap fix, category filter', chapterId: 'meta-ch-layout-overhaul' },
-  { session: 'Session 5', date: 'Feb 28', label: 'Layout Refactor', duration: 3, prs: 4, decisions: 4, deadEnds: 2, focus: 'Vertical layout, spacing tuning', chapterId: 'meta-ch-spacing-wars' },
-  { session: 'Session 7', date: 'Feb 28', label: 'Data Model Alignment', duration: 3, prs: 5, decisions: 8, deadEnds: 0, focus: 'Type system, multi-project, alternating layout', chapterId: 'meta-ch-data-alignment' },
-  { session: 'Session 8', date: 'Mar 2', label: 'Spine Fix & Dashboard', duration: 3, prs: 4, decisions: 7, deadEnds: 0, focus: 'Spine fix, dashboard infrastructure', chapterId: 'meta-ch-spine-dashboard' },
-  { session: 'Session 9', date: 'Mar 2', label: 'UX Polish', duration: 2, prs: 5, decisions: 6, deadEnds: 0, focus: 'Dashboard UX Polish', chapterId: 'meta-ch-ux-polish' },
-  { session: 'Session 10', date: 'Mar 2', label: 'Data Verification', duration: 1, prs: 2, decisions: 1, deadEnds: 0, focus: 'Data verification & fixes via GitHub API', chapterId: 'meta-ch-ux-polish' },
-  { session: 'Session 11', date: 'Mar 2', label: 'Data Scrape', duration: 3, prs: 4, decisions: 0, deadEnds: 0, focus: 'Data scrape: BIP Pre-Cowork + Remnants bootstrap', chapterId: 'meta-ch-ux-polish' },
-  { session: 'Session 12', date: 'Mar 3', label: 'Dashboard Data Overhaul', duration: 3, prs: 4, decisions: 3, deadEnds: 0, focus: 'Wire Remnants, date-grouped charts, code review + 4 bugs found/fixed', chapterId: 'meta-ch-dashboard-data-overhaul' },
-  { session: 'Session 13', date: 'Mar 3', label: 'Stacked Tree View', duration: 3, prs: 3, decisions: 3, deadEnds: 0, focus: 'StackedTreeView component, stacked/canvas toggle, parity polish', chapterId: 'meta-ch-stacked-tree-view' },
-  { session: 'Session 14', date: 'Mar 3', label: 'UX Final Pass', duration: 3, prs: 3, decisions: 6, deadEnds: 0, focus: 'UX Final Pass: fonts, layout, charts, scalability', chapterId: 'meta-ch-ux-final-pass' },
-  { session: 'Session 15', date: 'Mar 3', label: 'How We Work View', duration: 3, prs: 0, decisions: 3, deadEnds: 0, focus: 'How We Work view: ProcessWorkflow component + view switcher wiring', chapterId: 'meta-ch-how-we-work' },
-  { session: 'Session 16', date: 'Mar 4', label: 'Codebase Audit', duration: 3, prs: 8, decisions: 0, deadEnds: 0, focus: 'Full codebase audit, bug fixes, component extraction, ErrorBoundary, accessibility', chapterId: 'meta-ch-how-we-work' },
-  { session: 'Session 17', date: 'Mar 4', label: 'Mojibake Fix', duration: 1, prs: 6, decisions: 1, deadEnds: 0, focus: 'Fixed 53 triple-encoded UTF-8 mojibake across 6 files. Iterative decoder, 6 API commits.', chapterId: 'meta-ch-mojibake-fix' },
+  { session: 'Session 1', date: 'Feb 26', label: 'Scaffold & Auth', duration: 3, prs: 4, decisions: 3, deadEnds: 0, focus: 'Scaffold, deploy, auth setup', chapterId: 'meta-ch-inception', workCategory: 'Feature' },
+  { session: 'Session 2', date: 'Feb 26', label: 'Vertical Tree', duration: 2, prs: 2, decisions: 4, deadEnds: 0, focus: 'Vertical tree exploration', chapterId: 'meta-ch-horizontal', workCategory: 'Feature' },
+  { session: 'Session 3', date: 'Feb 26', label: 'React Flow Rebuild', duration: 3, prs: 4, decisions: 5, deadEnds: 1, focus: 'React Flow rebuild', chapterId: 'meta-ch-horizontal', workCategory: 'Refactor' },
+  { session: 'Session 4', date: 'Feb 27', label: 'Overlap & Filters', duration: 2, prs: 3, decisions: 3, deadEnds: 0, focus: 'Overlap fix, category filter', chapterId: 'meta-ch-layout-overhaul', workCategory: 'Feature' },
+  { session: 'Session 5', date: 'Feb 28', label: 'Layout Refactor', duration: 3, prs: 4, decisions: 4, deadEnds: 2, focus: 'Vertical layout, spacing tuning', chapterId: 'meta-ch-spacing-wars', workCategory: 'Refactor' },
+  { session: 'Session 7', date: 'Feb 28', label: 'Data Model Alignment', duration: 3, prs: 5, decisions: 8, deadEnds: 0, focus: 'Type system, multi-project, alternating layout', chapterId: 'meta-ch-data-alignment', workCategory: 'Refactor' },
+  { session: 'Session 8', date: 'Mar 2', label: 'Spine Fix & Dashboard', duration: 3, prs: 4, decisions: 7, deadEnds: 0, focus: 'Spine fix, dashboard infrastructure', chapterId: 'meta-ch-spine-dashboard', workCategory: 'Bug' },
+  { session: 'Session 9', date: 'Mar 2', label: 'UX Polish', duration: 2, prs: 5, decisions: 6, deadEnds: 0, focus: 'Dashboard UX Polish', chapterId: 'meta-ch-ux-polish', workCategory: 'Feature' },
+  { session: 'Session 10', date: 'Mar 2', label: 'Data Verification', duration: 1, prs: 2, decisions: 1, deadEnds: 0, focus: 'Data verification & fixes via GitHub API', chapterId: 'meta-ch-ux-polish', workCategory: 'Bug' },
+  { session: 'Session 11', date: 'Mar 2', label: 'Data Scrape', duration: 3, prs: 4, decisions: 0, deadEnds: 0, focus: 'Data scrape: BIP Pre-Cowork + Remnants bootstrap', chapterId: 'meta-ch-ux-polish', workCategory: 'Feature' },
+  { session: 'Session 12', date: 'Mar 3', label: 'Dashboard Data Overhaul', duration: 3, prs: 4, decisions: 3, deadEnds: 0, focus: 'Wire Remnants, date-grouped charts, code review + 4 bugs found/fixed', chapterId: 'meta-ch-dashboard-data-overhaul', workCategory: 'Refactor' },
+  { session: 'Session 13', date: 'Mar 3', label: 'Stacked Tree View', duration: 3, prs: 3, decisions: 3, deadEnds: 0, focus: 'StackedTreeView component, stacked/canvas toggle, parity polish', chapterId: 'meta-ch-stacked-tree-view', workCategory: 'Feature' },
+  { session: 'Session 14', date: 'Mar 3', label: 'UX Final Pass', duration: 3, prs: 3, decisions: 6, deadEnds: 0, focus: 'UX Final Pass: fonts, layout, charts, scalability', chapterId: 'meta-ch-ux-final-pass', workCategory: 'Feature' },
+  { session: 'Session 15', date: 'Mar 3', label: 'How We Work View', duration: 3, prs: 0, decisions: 3, deadEnds: 0, focus: 'How We Work view: ProcessWorkflow component + view switcher wiring', chapterId: 'meta-ch-how-we-work', workCategory: 'Feature' },
+  { session: 'Session 16', date: 'Mar 4', label: 'Codebase Audit', duration: 3, prs: 8, decisions: 0, deadEnds: 0, focus: 'Full codebase audit, bug fixes, component extraction, ErrorBoundary, accessibility', chapterId: 'meta-ch-how-we-work', workCategory: 'Tooling' },
+  { session: 'Session 17', date: 'Mar 4', label: 'Mojibake Fix', duration: 1, prs: 6, decisions: 1, deadEnds: 0, focus: 'Fixed 53 triple-encoded UTF-8 mojibake across 6 files. Iterative decoder, 6 API commits.', chapterId: 'meta-ch-mojibake-fix', workCategory: 'Bug' },
 ];
 
 export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };

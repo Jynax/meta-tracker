@@ -24,11 +24,11 @@ export const remnantsCodeVolume: CodeVolumeEntry[] = [
 
 // --- Sessions ---
 export const remnantsSessions: SessionEntry[] = [
-  { session: 'Claude 1', date: 'Feb 17', label: 'Vertical Slice', duration: 0, prs: 0, decisions: 4, deadEnds: 0, focus: 'Vertical slice: map, combat, inventory, extraction', chapterId: 'ch-core-loop' },
-  { session: 'Claude 2', date: 'Feb 18', label: 'Balance & Xenoflora', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Balance, terrain, xenoflora, zone difficulty', chapterId: 'ch-living-world' },
-  { session: 'Claude 3', date: 'Feb 18', label: 'Home Base & Recovery', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Home base, recovery system, character naming', chapterId: 'ch-the-house' },
-  { session: 'Git Setup', date: 'Feb 19', label: 'Repo Init + Docs', duration: 1, prs: 0, decisions: 1, deadEnds: 0, focus: 'Created repos, uploaded docs + code', chapterId: 'ch-repo-deployment' },
-  { session: 'Codex 1', date: 'Feb 21', label: 'Launcher & Deploy', duration: 1, prs: 3, decisions: 1, deadEnds: 0, focus: 'Launcher, README, deploy fix', chapterId: 'ch-repo-deployment' },
+  { session: 'Claude 1', date: 'Feb 17', label: 'Vertical Slice', duration: 0, prs: 0, decisions: 4, deadEnds: 0, focus: 'Vertical slice: map, combat, inventory, extraction', chapterId: 'ch-core-loop', workCategory: 'Feature' },
+  { session: 'Claude 2', date: 'Feb 18', label: 'Balance & Xenoflora', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Balance, terrain, xenoflora, zone difficulty', chapterId: 'ch-living-world', workCategory: 'Feature' },
+  { session: 'Claude 3', date: 'Feb 18', label: 'Home Base & Recovery', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Home base, recovery system, character naming', chapterId: 'ch-the-house', workCategory: 'Feature' },
+  { session: 'Git Setup', date: 'Feb 19', label: 'Repo Init + Docs', duration: 1, prs: 0, decisions: 1, deadEnds: 0, focus: 'Created repos, uploaded docs + code', chapterId: 'ch-repo-deployment', workCategory: 'Tooling' },
+  { session: 'Codex 1', date: 'Feb 21', label: 'Launcher & Deploy', duration: 1, prs: 3, decisions: 1, deadEnds: 0, focus: 'Launcher, README, deploy fix', chapterId: 'ch-repo-deployment', workCategory: 'Tooling' },
 ];
 
 // --- Date Range ---

@@ -1,3 +1,5 @@
+export type WorkCategory = 'Feature' | 'Refactor' | 'Bug' | 'Tooling';
+
 export interface CodeVolumeEntry {
   session: string;
   date: string;
@@ -18,6 +20,7 @@ export interface SessionEntry {
   deadEnds: number;
   focus: string;
   chapterId: string;
+  workCategory: WorkCategory;
 }
 
 export interface BugEntry {
@@ -67,6 +70,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Initial Scaffold & Card Exports',
     chapterId: 'bip-spark',
+    workCategory: 'Feature',
   },
   {
     session: 'ChatGPT 2',
@@ -78,6 +82,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Refactoring & Cleanup',
     chapterId: 'bip-spark',
+    workCategory: 'Refactor',
   },
   {
     session: 'ChatGPT 3',
@@ -89,6 +94,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Data Pipeline, Charts & Normalization',
     chapterId: 'bip-wrangling',
+    workCategory: 'Feature',
   },
   {
     session: 'ChatGPT 4',
@@ -100,6 +106,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Representation Engine & Polish',
     chapterId: 'bip-repr',
+    workCategory: 'Feature',
   },
   {
     session: 'Cowork 1',
@@ -111,6 +118,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 1,
     focus: 'Audit & Worker Fix',
     chapterId: 'bip-deploy',
+    workCategory: 'Tooling',
   },
   {
     session: 'Cowork 2',
@@ -122,6 +130,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Multi-Sheet Ingestion',
     chapterId: 'bip-wrangling',
+    workCategory: 'Feature',
   },
   {
     session: 'Cowork 3',
@@ -133,6 +142,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 1,
     focus: 'App.tsx Decomposition',
     chapterId: 'bip-decomp',
+    workCategory: 'Refactor',
   },
   {
     session: 'Cowork 4',
@@ -144,6 +154,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 2,
     focus: 'Timeline & Fixes',
     chapterId: 'bip-windows',
+    workCategory: 'Feature',
   },
   {
     session: 'Cowork 13',
@@ -155,6 +166,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Deep App.tsx Decomposition',
     chapterId: 'bip-decomp',
+    workCategory: 'Refactor',
   },
 ];
 

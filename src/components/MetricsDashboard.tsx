@@ -15,6 +15,7 @@ interface MetricsDashboardProps {
   onJumpToChapter?: (chapterId: string) => void;
   initialTab?: MetricsTab;
   onTabChange?: (tab: MetricsTab) => void;
+}
 
 
 const TABS: Array<{ id: MetricsTab; label: string }> = [
@@ -23,6 +24,7 @@ const TABS: Array<{ id: MetricsTab; label: string }> = [
   { id: 'bugs', label: 'Bugs' },
   { id: 'sessions', label: 'Sessions' },
 ];
+
 
 
 export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview', onTabChange }: MetricsDashboardProps) {
@@ -91,7 +93,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);
   const firstDate = selected.codeVolume[0]?.date ?? selected.dateRange.start;
   const lastDate = selected.codeVolume[selected.codeVolume.length - 1]?.date ?? selected.dateRange.end;
-  const timelineRange = `${firstDate} ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ ${lastDate}/26`;
+  const timelineRange = `${firstDate} ÃÂ¢ÃÂÃÂ ${lastDate}/26`;
 
 
   const codeEntriesWithActivity = useMemo(
@@ -584,7 +586,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                             transition: 'transform 150ms ease',
                           }}
                         >
-                          {isExpandable ? 'ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¶' : ''}
+                          {isExpandable ? 'ÃÂ¢ÃÂÃÂ¶' : ''}
                         </span>
                         <span>{row.label}</span>
                       </div>
@@ -622,7 +624,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                                     transition: 'transform 150ms ease',
                                   }}
                                 >
-                                  {isNestedExpandable ? 'ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¶' : ''}
+                                  {isNestedExpandable ? 'ÃÂ¢ÃÂÃÂ¶' : ''}
                                 </span>
                                 <span>{dateGroup.date}</span>
                               </div>
@@ -944,7 +946,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                           className="mt-3 rounded-md border px-2.5 py-1 text-xs"
                           style={{ color: C.cyan, backgroundColor: '#22d3ee1a', borderColor: '#22d3ee55' }}
                         >
-                          ÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂ³ View chapter: {chapterMap[entry.chapterId] ?? entry.chapterId}
+                          ÃÂ°ÃÂÃÂÃÂ³ View chapter: {chapterMap[entry.chapterId] ?? entry.chapterId}
                         </button>
                       </div>
                     ))}

@@ -76,5 +76,6 @@ function DonutBreakdown({ label, items, animate }: { label: string; items: Array
       </div>
     </div>
   );
+}
 
 export { Card, DonutBreakdown, C };

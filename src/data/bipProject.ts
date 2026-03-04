@@ -353,6 +353,16 @@ export const bipProject: Project = {
           chosenPath: 'Extract 5 components: types/readingLog.ts, FileUploadSection, FilterPanel, StatsPanel, DataTable',
           alternatives: ['Full decomposition in one pass', 'Leaving it as-is'],
         },
+        {
+          id: 'bip-deep-decomposition',
+          type: 'decision',
+          category: 'technical',
+          title: 'Deep Decomposition (PR #61)',
+          description: 'App.tsx still ~2,800 lines after PR #50. Claude Cowork extracted 2 utility modules (columnDetection.ts, statsAndFormatting.ts) and 5 components (ChartsSection, BookCardPanel, YearSummaryPanel, DataMappingPanel, ReadyState). Reduced to ~1,540 lines. +1,797/-1,380 across 8 files. Pure refactor — zero visual changes.',
+          lesson: 'For large refactors with complex internal dependencies, having the AI hold the full file in context and extract iteratively beats splitting across multiple tasks.',
+          chosenPath: 'Cowork end-to-end extraction with iterative build-verify after each step',
+          alternatives: ['Using Codex for extraction', 'Extracting fewer pieces'],
+        },
       ],
     },
     {
@@ -399,11 +409,11 @@ export const bipProject: Project = {
   stats: {
     totalDays: 400,
     chatGptMessages: '1000+',
-    coworkSessions: 4,
-    prsCreated: '60+',
+    coworkSessions: 13,
+    prsCreated: '61+',
     codexTasks: '40+',
-    linesOfCode: '8,000+',
+    linesOfCode: '9,500+',
     deadEnds: 5,
-    majorDecisions: 15,
+    majorDecisions: 16,
   },
 };

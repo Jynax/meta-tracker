@@ -49,6 +49,7 @@ export const bipCodeVolume: CodeVolumeEntry[] = [
   { session: 'Cowork 2', date: 'Feb 22', label: 'Data Wrangling', added: 275, deleted: 8, net: 267, total: 3333 },
   { session: 'Cowork 3', date: 'Feb 25', label: 'Decomposition', added: 136, deleted: 570, net: -434, total: 2899 },
   { session: 'Cowork 4', date: 'Feb 26', label: 'Timeline', added: 173, deleted: 38, net: 135, total: 3034 },
+  { session: 'Cowork 13', date: 'Mar 4', label: 'Deep Decomposition', added: 1797, deleted: 1380, net: 417, total: 3451 },
 ];
 
 export const bipSessions: SessionEntry[] = [
@@ -124,11 +125,20 @@ export const bipSessions: SessionEntry[] = [
     focus: 'Timeline & Fixes',
     chapterId: 'bip-windows',
   },
+  {
+    session: 'Cowork 13',
+    duration: 2,
+    prs: 1,
+    decisions: 1,
+    deadEnds: 0,
+    focus: 'Deep App.tsx Decomposition',
+    chapterId: 'bip-decomp',
+  },
 ];
 
 export const bipDateRange = {
   start: 'Feb 2026',
-  end: 'Feb 2026',
+  end: 'Mar 2026',
 };
 
 export const bipBugs: BugEntry[] = [

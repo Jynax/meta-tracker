@@ -647,7 +647,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                                       y: event.clientY,
                                       content: (
                                         <>
-                                          <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.date} 2014 {entry.label}</div>
+                                          <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.date} — {entry.label}</div>
                                           <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic' }}>{focusText}</div>
                                           <div style={{ color: C.cyan, fontSize: 11 }}>Added: {entry.added.toLocaleString()}</div>
                                           <div style={{ color: C.rose, fontSize: 11 }}>Deleted: {entry.deleted.toLocaleString()}</div>
@@ -689,7 +689,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                                   y: event.clientY,
                                   content: (
                                     <>
-                                      <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.date} 2014 {entry.label}</div>
+                                      <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.date} — {entry.label}</div>
                                       <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic' }}>{focusText}</div>
                                       <div style={{ color: C.cyan, fontSize: 11 }}>Added: {entry.added.toLocaleString()}</div>
                                       <div style={{ color: C.rose, fontSize: 11 }}>Deleted: {entry.deleted.toLocaleString()}</div>
@@ -775,7 +775,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                 {selected.bugs.map((bug) => (
                   <tr key={bug.id} className="border-t" style={{ borderColor: C.border }}>
                     <td className="px-3 py-2">{bug.id}</td>
-                    <td className="px-3 py-2" style={{ color: C.cyan }}>{bug.date} 2014 {bug.label}</td>
+                    <td className="px-3 py-2" style={{ color: C.cyan }}>{bug.date} — {bug.label}</td>
                     <td className="px-3 py-2">{bug.summary}</td>
                     <td className="px-3 py-2" style={{ color: bug.severity === 'Critical' ? C.rose : bug.severity === 'High' ? C.amber : bug.severity === 'Medium' ? C.cyan : C.muted }}>{bug.severity}</td>
                     <td className="px-3 py-2">{bug.category}</td>
@@ -846,7 +846,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                             y: event.clientY,
                             content: (
                               <>
-                                <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{point.date} 2014 {point.label}</div>
+                                <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{point.date} — {point.label}</div>
                                 <div style={{ color: C.slate, fontSize: 11 }}>{point.dateLabel}</div>
                                 <div style={{ color: C.cyan, fontSize: 11 }}>PRs: {point.prs}</div>
                                 <div style={{ color: C.emerald, fontSize: 11 }}>Decisions: {point.decisions}</div>
@@ -933,7 +933,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                   >
                     {monthGroup.sessions.map((entry) => (
                       <div key={`${entry.session}-detail`} className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-                        <h4 className="text-base font-semibold">{entry.displayDate} 2014 {entry.label}</h4>
+                        <h4 className="text-base font-semibold">{entry.displayDate} — {entry.label}</h4>
                         <p className="mb-3 text-sm" style={{ color: C.cyan }}>{entry.focus}</p>
                         <div className="grid grid-cols-2 gap-2 text-xs" style={{ color: C.slate }}>
                           <span>Duration</span><span>{entry.duration}h</span>

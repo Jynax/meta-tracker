@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { colors } from "./processWorkflowData";
+import { colors, processHistory } from "./processWorkflowData";
 import { FadeIn, Arrow, FlowArrow, RoleCard, StepNumber, WorkflowStep, DocCard, PatternCard } from "./ProcessWorkflowParts";
 import type { TabItem } from "./ProcessWorkflowParts";
 
@@ -11,6 +11,7 @@ export default function ProcessWorkflow() {
     { id: "workflow", label: "Workflow" },
     { id: "routing", label: "Task Routing" },
     { id: "patterns", label: "Patterns" },
+    { id: "history", label: "History" },
   ];
 
   return (
@@ -662,6 +663,139 @@ export default function ProcessWorkflow() {
         </FadeIn>
       )}
 
+
+      {/* === HISTORY TAB === */}
+      {activeTab === "history" && (
+        <FadeIn delay={100}>
+          <div
+            style={{
+              fontSize: 12,
+              letterSpacing: 2,
+              color: colors.muted,
+              textTransform: "uppercase",
+              marginBottom: 16,
+              fontFamily: "'JetBrains Mono', monospace",
+            }}
+          >
+            Process changelog — how our workflow evolved
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {processHistory.map((entry, i) => (
+              <FadeIn key={i} delay={100 + i * 60}>
+                <div
+                  style={{
+                    background: colors.cardBg,
+                    border: `1px solid ${colors.border}`,
+                    borderRadius: 12,
+                    padding: "20px 24px",
+                    position: "relative",
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: 3,
+                      background: `linear-gradient(90deg, ${colors.violet}, ${colors.violet}00)`,
+                      opacity: 0.5,
+                    }}
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: 12,
+                    }}
+                  >
+                    <div style={{ fontSize: 14, fontWeight: 700, color: colors.text }}>
+                      {entry.title}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: colors.muted,
+                        fontFamily: "'JetBrains Mono', monospace",
+                        letterSpacing: 0.5,
+                      }}
+                    >
+                      {entry.date} · {entry.session}
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+                    <div
+                      style={{
+                        flex: 1,
+                        background: `${colors.rose}08`,
+                        border: `1px solid ${colors.rose}20`,
+                        borderRadius: 8,
+                        padding: "10px 14px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: 10,
+                          letterSpacing: 1.5,
+                          color: colors.rose,
+                          textTransform: "uppercase",
+                          marginBottom: 6,
+                          fontFamily: "'JetBrains Mono', monospace",
+                        }}
+                      >
+                        Before
+                      </div>
+                      <div style={{ fontSize: 12, color: colors.muted, lineHeight: 1.5 }}>
+                        {entry.before}
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        flex: 1,
+                        background: `${colors.emerald}08`,
+                        border: `1px solid ${colors.emerald}20`,
+                        borderRadius: 8,
+                        padding: "10px 14px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: 10,
+                          letterSpacing: 1.5,
+                          color: colors.emerald,
+                          textTransform: "uppercase",
+                          marginBottom: 6,
+                          fontFamily: "'JetBrains Mono', monospace",
+                        }}
+                      >
+                        After
+                      </div>
+                      <div style={{ fontSize: 12, color: colors.muted, lineHeight: 1.5 }}>
+                        {entry.after}
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: colors.slate,
+                      lineHeight: 1.6,
+                      borderTop: `1px solid ${colors.border}`,
+                      paddingTop: 10,
+                    }}
+                  >
+                    <span style={{ color: colors.violet, fontWeight: 600 }}>Why: </span>
+                    {entry.rationale}
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </FadeIn>
+      )}
+
       {/* Footer */}
       <FadeIn delay={600}>
         <div
@@ -677,7 +811,7 @@ export default function ProcessWorkflow() {
           }}
         >
           <span style={{ fontSize: 12, color: colors.muted }}>
-            Last updated: March 4, 2026
+            Last updated: March 5, 2026
           </span>
           <span
             style={{

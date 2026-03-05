@@ -57,6 +57,7 @@ export const bipCodeVolume: CodeVolumeEntry[] = [
   { session: 'Cowork 3', date: 'Feb 25', label: 'Decomposition', added: 136, deleted: 570, net: -434, total: 2899 },
   { session: 'Cowork 4', date: 'Feb 26', label: 'Timeline', added: 173, deleted: 38, net: 135, total: 3034 },
   { session: 'Cowork 13', date: 'Mar 4', label: 'Deep Decomposition', added: 1797, deleted: 1380, net: 417, total: 3451 },
+  { session: 'Claude Code 2', date: 'Mar 5', label: 'State Extraction', added: 1470, deleted: 1124, net: 346, total: 3797 },
 ];
 
 export const bipSessions: SessionEntry[] = [
@@ -168,6 +169,18 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'bip-decomp',
     workCategory: 'Refactor',
   },
+  {
+    session: 'Claude Code 2',
+    date: 'Mar 5',
+    label: 'State Extraction',
+    duration: 3,
+    prs: 2,
+    decisions: 4,
+    deadEnds: 0,
+    focus: 'ThemeContext + 5 Hooks + ErrorBoundary',
+    chapterId: 'ch-state-extraction',
+    workCategory: 'Refactor',
+  },
 ];
 
 export const bipDateRange = {
@@ -264,14 +277,47 @@ export const bipBugs: BugEntry[] = [
     status: 'Fixed',
     category: 'Technical',
   },
+  {
+    id: 9,
+    session: 'Claude Code 2',
+    date: 'Mar 5',
+    label: 'State Extraction',
+    summary: 'Book ID format duplicated in 3 locations (drift risk)',
+    severity: 'Low',
+    source: 'Code Review',
+    status: 'Queued',
+    category: 'Technical',
+  },
+  {
+    id: 10,
+    session: 'Claude Code 2',
+    date: 'Mar 5',
+    label: 'State Extraction',
+    summary: 'Dead resetBook logic in useFileUpload (~10 lines)',
+    severity: 'Low',
+    source: 'Code Review',
+    status: 'Queued',
+    category: 'Technical',
+  },
+  {
+    id: 11,
+    session: 'Claude Code 2',
+    date: 'Mar 5',
+    label: 'State Extraction',
+    summary: 'Double resetMonths call in onYearScopeChange',
+    severity: 'Low',
+    source: 'Code Review',
+    status: 'Queued',
+    category: 'Technical',
+  },
 ];
 
 export const bipDerived: DerivedMetric[] = [
-  { label: 'Churn Rate', value: '0.49', detail: 'Includes heavy refactoring', color: '#a78bfa' },
+  { label: 'Churn Rate', value: '0.53', detail: 'Includes heavy refactoring', color: '#a78bfa' },
   { label: 'Codex Success', value: '88%', detail: '7/8 Cowork-era PRs', color: '#34d399' },
-  { label: 'Cycle Time', value: '0.38h', detail: 'Per merged PR (all eras)', color: '#34d399' },
-  { label: 'Decisions', value: '3.88', detail: 'Per session avg', color: '#22d3ee' },
-  { label: 'Bug Rate', value: '0.15', detail: 'Per PR merged', color: '#fbbf24' },
+  { label: 'Cycle Time', value: '0.36h', detail: 'Per merged PR (all eras)', color: '#34d399' },
+  { label: 'Decisions', value: '3.73', detail: 'Per session avg', color: '#22d3ee' },
+  { label: 'Bug Rate', value: '0.17', detail: 'Per PR merged', color: '#fbbf24' },
 ];
 
 export const bipStack: StackEntry[] = [

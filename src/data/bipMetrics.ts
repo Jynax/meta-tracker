@@ -1,3 +1,5 @@
+export type SessionTool = 'Claude Code' | 'Codex' | 'Cowork' | 'Mixed';
+
 export type WorkCategory = 'Feature' | 'Refactor' | 'Bug' | 'Tooling';
 
 export interface CodeVolumeEntry {
@@ -21,6 +23,8 @@ export interface SessionEntry {
   focus: string;
   chapterId: string;
   workCategory: WorkCategory;
+  tool: SessionTool;
+  taskCount: number;
 }
 
 export interface BugEntry {
@@ -71,7 +75,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Initial Scaffold & Card Exports',
     chapterId: 'bip-spark',
-    workCategory: 'Feature',
+    workCategory: 'Feature', tool: 'Cowork', taskCount: 1
   },
   {
     session: 'ChatGPT 2',
@@ -83,7 +87,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Refactoring & Cleanup',
     chapterId: 'bip-spark',
-    workCategory: 'Refactor',
+    workCategory: 'Refactor', tool: 'Cowork', taskCount: 1,
   },
   {
     session: 'ChatGPT 3',
@@ -95,7 +99,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Data Pipeline, Charts & Normalization',
     chapterId: 'bip-wrangling',
-    workCategory: 'Feature',
+    workCategory: 'Feature', tool: 'Cowork', taskCount: 1,
   },
   {
     session: 'ChatGPT 4',
@@ -107,7 +111,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Representation Engine & Polish',
     chapterId: 'bip-repr',
-    workCategory: 'Feature',
+    workCategory: 'Feature', tool: 'Cowork', taskCount: 1,
   },
   {
     session: 'Cowork 1',
@@ -119,7 +123,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 1,
     focus: 'Audit & Worker Fix',
     chapterId: 'bip-deploy',
-    workCategory: 'Tooling',
+    workCategory: 'Tooling', tool: 'Cowork', taskCount: 2,
   },
   {
     session: 'Cowork 2',
@@ -131,7 +135,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Multi-Sheet Ingestion',
     chapterId: 'bip-wrangling',
-    workCategory: 'Feature',
+    workCategory: 'Feature', tool: 'Cowork', taskCount: 1,
   },
   {
     session: 'Cowork 3',
@@ -143,7 +147,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 1,
     focus: 'App.tsx Decomposition',
     chapterId: 'bip-decomp',
-    workCategory: 'Refactor',
+    workCategory: 'Refactor', tool: 'Cowork', taskCount: 2,
   },
   {
     session: 'Cowork 4',
@@ -155,7 +159,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 2,
     focus: 'Timeline & Fixes',
     chapterId: 'bip-windows',
-    workCategory: 'Feature',
+    workCategory: 'Feature', tool: 'Cowork', taskCount: 2,
   },
   {
     session: 'Cowork 13',
@@ -167,7 +171,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Deep App.tsx Decomposition',
     chapterId: 'bip-decomp',
-    workCategory: 'Refactor',
+    workCategory: 'Refactor', tool: 'Cowork', taskCount: 1,
   },
   {
     session: 'Claude Code 2',
@@ -179,7 +183,7 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'ThemeContext + 5 Hooks + ErrorBoundary',
     chapterId: 'ch-state-extraction',
-    workCategory: 'Refactor',
+    workCategory: 'Refactor', tool: 'Claude Code', taskCount: 3,
   },
 ];
 

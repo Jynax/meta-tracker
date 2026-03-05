@@ -64,6 +64,9 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 15', date: 'Mar 3', label: 'How We Work View', added: 1067, deleted: 5, net: 1062, total: 4621 },
   { session: 'Session 16', date: 'Mar 4', label: 'Codebase Audit', added: 95, deleted: 42, net: 53, total: 4674 },
   { session: 'Session 17', date: 'Mar 4', label: 'Mojibake Fix', added: 53, deleted: 53, net: 0, total: 4674 },
+  { session: 'Session 18', date: 'Mar 4', label: 'How We Work Content', added: 20, deleted: 20, net: 0, total: 4674 },
+  { session: 'Session 19', date: 'Mar 4', label: 'Date-Based Labels', added: 218, deleted: 509, net: 0, total: 4674 },
+  { session: 'Session 20', date: 'Mar 4', label: 'Bugs + UX Batch', added: 125, deleted: 35, net: 81, total: 4797 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -83,6 +86,9 @@ export const metaSessions: SessionEntry[] = [
   { session: 'Session 15', date: 'Mar 3', label: 'How We Work View', duration: 3, prs: 0, decisions: 3, deadEnds: 0, focus: 'How We Work view: ProcessWorkflow component + view switcher wiring', chapterId: 'meta-ch-how-we-work', workCategory: 'Feature' },
   { session: 'Session 16', date: 'Mar 4', label: 'Codebase Audit', duration: 3, prs: 8, decisions: 0, deadEnds: 0, focus: 'Full codebase audit, bug fixes, component extraction, ErrorBoundary, accessibility', chapterId: 'meta-ch-how-we-work', workCategory: 'Tooling' },
   { session: 'Session 17', date: 'Mar 4', label: 'Mojibake Fix', duration: 1, prs: 6, decisions: 1, deadEnds: 0, focus: 'Fixed 53 triple-encoded UTF-8 mojibake across 6 files. Iterative decoder, 6 API commits.', chapterId: 'meta-ch-mojibake-fix', workCategory: 'Bug' },
+  { session: 'Session 18', date: 'Mar 4', label: 'How We Work Content', duration: 1, prs: 0, decisions: 1, deadEnds: 0, focus: 'Updated ProcessWorkflow.tsx for task-based workflow. 1 API commit.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling' },
+  { session: 'Session 19', date: 'Mar 4', label: 'Date-Based Labels', duration: 2, prs: 0, decisions: 1, deadEnds: 0, focus: 'Replaced session-number labels with date + descriptor format across all views. 2 API commits.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Refactor' },
+  { session: 'Session 20', date: 'Mar 4', label: 'Bugs + UX Batch', duration: 2, prs: 0, decisions: 0, deadEnds: 0, focus: '5 tasks via Claude Code CLI: workCategory data, Work Mix chart, Bugs table overhaul, donut polish, reverse chron order.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Feature' },
 ];
 
 export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };

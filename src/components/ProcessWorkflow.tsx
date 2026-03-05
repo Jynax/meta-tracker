@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { colors, processHistory } from "./processWorkflowData";
-import { FadeIn, Arrow, FlowArrow, RoleCard, StepNumber, WorkflowStep, DocCard, PatternCard } from "./ProcessWorkflowParts";
+import { FadeIn, RoleCard, WorkflowStep, DocCard, PatternCard } from "./ProcessWorkflowParts";
 import type { TabItem } from "./ProcessWorkflowParts";
 import { User, Brain, Terminal, Monitor } from "lucide-react";
 

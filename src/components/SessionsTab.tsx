@@ -1,11 +1,10 @@
 import { useMemo, useState, useEffect, type ReactNode } from 'react';
 import { Card, C } from './MetricsCard';
 import { formatShortDate, formatSessionDate, buildSmoothPath } from './chartUtils';
-import type { SessionEntry, CodeVolumeEntry } from '../data/metaMetrics';
+import type { SessionEntry } from '../data/metaMetrics';
 
 interface SessionsTabProps {
   sessions: SessionEntry[];
-  codeVolume: CodeVolumeEntry[];
   totalPRs: number;
   totalHours: number;
   projectId: string;
@@ -19,7 +18,7 @@ interface SessionsTabProps {
 }
 
 export default function SessionsTab({
-  sessions, codeVolume, totalPRs, totalHours, projectId,
+  sessions, totalPRs, totalHours, projectId,
   sessionFocusMap, sessionDateMap, chapterMap,
   onJumpToChapter, hoveredPointIndex, setHoveredPointIndex, setTooltip,
 }: SessionsTabProps) {

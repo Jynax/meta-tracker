@@ -35,7 +35,7 @@ interface ArrowProps {
   dashed?: boolean;
 }
 
-const Arrow = ({ from, to, color = colors.muted, label = "", dashed = false }: ArrowProps) => {
+const Arrow = ({ color = colors.muted, label = "", dashed = false }: ArrowProps) => {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 0, margin: "2px 0" }}>
       <div

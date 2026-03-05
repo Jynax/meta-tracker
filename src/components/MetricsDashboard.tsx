@@ -341,11 +341,11 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
       groups.set(key, existing);
     });
 
-    return Array.from(groups.values()).sort((a, b) => a.monthIndex - b.monthIndex);
+    return Array.from(groups.values()).sort((a, b) => b.monthIndex - a.monthIndex).map(g => ({ ...g, sessions: [...g.sessions].reverse() }));
   }, [selected.sessions, sessionDateMap]);
 
   useEffect(() => {
-    const latest = sessionsByMonth[sessionsByMonth.length - 1]?.key;
+    const latest = sessionsByMonth[0]?.key;
     setExpandedMonths(latest ? new Set([latest]) : new Set());
   }, [projectId, sessionsByMonth]);
 

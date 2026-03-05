@@ -451,7 +451,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
         )}
       </div> */}
 
-      {project.chapters.map((chapter) => {
+      {[...project.chapters].reverse().map((chapter) => {
         const isExpanded = expandedChapter === chapter.id;
         const filteredNodes = chapter.nodes.filter((node) => nodeMatchesFilter(node, activeFilter));
 

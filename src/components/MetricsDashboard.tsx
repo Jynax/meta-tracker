@@ -101,6 +101,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
         {tab === 'overview' && (
           <OverviewTab
             sessions={selected.sessions}
+            codeVolume={selected.codeVolume}
             derived={selected.derived}
             stack={selected.stack}
             totalPRs={totalPRs}
@@ -117,6 +118,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
 
         {tab === 'code' && (
           <CodeTab
+            codeVolume={selected.codeVolume}
             totalAdded={totalAdded}
             totalDeleted={totalDeleted}
             currentLoc={currentLoc}

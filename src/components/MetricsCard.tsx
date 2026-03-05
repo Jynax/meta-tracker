@@ -41,7 +41,7 @@ function Card({ label, value, color = C.white, detail, tooltip: tooltipText }: {
 }
 
 function DonutBreakdown({ label, items, animate }: { label: string; items: Array<{ label: string; count: number; color: string }>; animate: boolean }) {
-  const radius = 48;
+  const radius = 58;
   const circumference = 2 * Math.PI * radius;
   const total = items.reduce((sum, item) => sum + item.count, 0);
   let accumulated = 0;
@@ -57,18 +57,18 @@ function DonutBreakdown({ label, items, animate }: { label: string; items: Array
   return (
     <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
       <div className="flex flex-col items-center justify-center">
-        <svg viewBox="0 0 120 120" style={{ width: 120, height: 120 }} role="img" aria-label={`${label} breakdown chart`}>
-          <circle cx="60" cy="60" r={radius} fill="none" stroke={C.border} strokeWidth="14" opacity="0.3" />
+        <svg viewBox="0 0 148 148" style={{ width: 148, height: 148 }} role="img" aria-label={`${label} breakdown chart`}>
+          <circle cx="74" cy="74" r={radius} fill="none" stroke={C.border} strokeWidth="16" opacity="0.3" />
           {segments.map((seg) => (
-            <circle key={seg.label} cx="60" cy="60" r={radius} fill="none" stroke={seg.color} strokeWidth="14" strokeDasharray={`${seg.arcLength} ${Math.max(circumference - seg.arcLength, 0)}`} strokeDashoffset={animate ? seg.offset : circumference} transform="rotate(-90 60 60)" style={{ transition: 'stroke-dashoffset 0.8s ease', transitionDelay: `${seg.index * 100}ms` }} />
+            <circle key={seg.label} cx="74" cy="74" r={radius} fill="none" stroke={seg.color} strokeWidth="16" strokeDasharray={`${seg.arcLength} ${Math.max(circumference - seg.arcLength, 0)}`} strokeDashoffset={animate ? seg.offset : circumference} transform="rotate(-90 74 74)" style={{ transition: 'stroke-dashoffset 0.8s ease', transitionDelay: `${seg.index * 100}ms` }} />
           ))}
-          <text x="60" y="56" textAnchor="middle" fill={C.muted} fontSize="12">{label}</text>
-          <text x="60" y="72" textAnchor="middle" fill={C.white} fontSize="22" fontWeight="700">{total}</text>
+          <text x="74" y="68" textAnchor="middle" fill={C.muted} fontSize="14">{label}</text>
+          <text x="74" y="88" textAnchor="middle" fill={C.white} fontSize="26" fontWeight="700">{total}</text>
         </svg>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', marginTop: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, auto)', gap: '4px 14px', justifyContent: 'center', marginTop: 10 }}>
           {items.filter((item) => item.count > 0).map((item) => (
-            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: C.muted }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color }} />
+            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: C.muted }}>
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: item.color, flexShrink: 0 }} />
               {item.label} <span style={{ color: C.white, fontWeight: 600 }}>({item.count})</span>
             </div>
           ))}

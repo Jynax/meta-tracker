@@ -146,7 +146,7 @@ export default function DecisionTree() {
   const [metricsTab, setMetricsTab] = useState<'overview' | 'code' | 'bugs' | 'sessions'>('overview');
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [activeProject, setActiveProject] = useState<Project>(bipProject);
-  const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set(['ch-spark']));
+  const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set());
   const [expandedNode, setExpandedNode] = useState<string | null>(null);
   const [detailNodes, setDetailNodes] = useState<Set<string>>(new Set());
 
@@ -172,7 +172,7 @@ export default function DecisionTree() {
     const project = PROJECTS.find((p) => p.id === projectId);
     if (project) {
       setActiveProject(project);
-      setExpandedChapters(new Set([project.chapters[0]?.id].filter(Boolean)));
+      setExpandedChapters(new Set());
       setExpandedNode(null);
       setDetailNodes(new Set());
       setFilter('all');
@@ -374,7 +374,7 @@ export default function DecisionTree() {
               project={activeProject}
               filter={filter}
               onFilterChange={(nextFilter) => setFilter(nextFilter as FilterType)}
-              expandedChapter={Array.from(expandedChapters)[0] ?? null}
+              expandedChapters={expandedChapters}
               onChapterToggle={toggleChapter}
               expandedNode={expandedNode}
               onNodeToggle={(id) => setExpandedNode((current) => (current === id ? null : id))}

@@ -56,19 +56,19 @@ function DonutBreakdown({ label, items, animate }: { label: string; items: Array
     });
   return (
     <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-      <div className="flex flex-col items-center justify-center">
-        <svg viewBox="0 0 148 148" style={{ width: 148, height: 148 }} role="img" aria-label={`${label} breakdown chart`}>
-          <circle cx="74" cy="74" r={radius} fill="none" stroke={C.border} strokeWidth="16" opacity="0.3" />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <svg viewBox="0 0 160 160" style={{ width: 160, height: 160, flexShrink: 0 }} role="img" aria-label={`${label} breakdown chart`}>
+          <circle cx="80" cy="80" r={radius} fill="none" stroke={C.border} strokeWidth="16" opacity="0.3" />
           {segments.map((seg) => (
-            <circle key={seg.label} cx="74" cy="74" r={radius} fill="none" stroke={seg.color} strokeWidth="16" strokeDasharray={`${seg.arcLength} ${Math.max(circumference - seg.arcLength, 0)}`} strokeDashoffset={animate ? seg.offset : circumference} transform="rotate(-90 74 74)" style={{ transition: 'stroke-dashoffset 0.8s ease', transitionDelay: `${seg.index * 100}ms` }} />
+            <circle key={seg.label} cx="80" cy="80" r={radius} fill="none" stroke={seg.color} strokeWidth="16" strokeDasharray={`${seg.arcLength} ${Math.max(circumference - seg.arcLength, 0)}`} strokeDashoffset={animate ? seg.offset : circumference} transform="rotate(-90 80 80)" style={{ transition: 'stroke-dashoffset 0.8s ease', transitionDelay: `${seg.index * 100}ms` }} />
           ))}
-          <text x="74" y="68" textAnchor="middle" fill={C.muted} fontSize="14">{label}</text>
-          <text x="74" y="88" textAnchor="middle" fill={C.white} fontSize="26" fontWeight="700">{total}</text>
+          <text x="80" y="72" textAnchor="middle" fill={C.muted} fontSize="13">{label}</text>
+          <text x="80" y="98" textAnchor="middle" fill={C.white} fontSize="28" fontWeight="700">{total}</text>
         </svg>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, auto)', gap: '4px 14px', justifyContent: 'center', marginTop: 10 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {items.filter((item) => item.count > 0).map((item) => (
-            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: C.muted }}>
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: item.color, flexShrink: 0 }} />
+            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: C.muted, whiteSpace: 'nowrap' }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color, flexShrink: 0 }} />
               {item.label} <span style={{ color: C.white, fontWeight: 600 }}>({item.count})</span>
             </div>
           ))}

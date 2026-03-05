@@ -64,6 +64,7 @@ export interface Project {
   id: string;
   name: string;
   subtitle: string;
+  url?: string;
   chapters: Chapter[];
   stats: ProjectStats;
 }

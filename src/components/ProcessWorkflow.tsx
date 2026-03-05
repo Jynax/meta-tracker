@@ -2,6 +2,7 @@ import { useState } from "react";
 import { colors, processHistory } from "./processWorkflowData";
 import { FadeIn, Arrow, FlowArrow, RoleCard, StepNumber, WorkflowStep, DocCard, PatternCard } from "./ProcessWorkflowParts";
 import type { TabItem } from "./ProcessWorkflowParts";
+import { User, Brain, Terminal, Monitor } from "lucide-react";
 
 export default function ProcessWorkflow() {
   const [hoveredRole, setHoveredRole] = useState<string | null>(null);
@@ -45,7 +46,7 @@ export default function ProcessWorkflow() {
               fontFamily: "'JetBrains Mono', monospace",
             }}
           >
-            Meta Tracker � Process Reference
+            Meta Tracker — Process Reference
           </div>
           <h1
             style={{
@@ -61,7 +62,7 @@ export default function ProcessWorkflow() {
             How We Work
           </h1>
           <div style={{ fontSize: 14, color: colors.muted, marginTop: 6, lineHeight: 1.6 }}>
-            Michael + Claude � Describe → Plan → Build → Review → Ship
+            Michael + Claude — Describe → Plan → Build → Review → Ship
           </div>
         </div>
       </FadeIn>
@@ -121,7 +122,7 @@ export default function ProcessWorkflow() {
             <div style={{ display: "flex", gap: 14, marginBottom: 8, flexWrap: "wrap" }}>
               <RoleCard
                 id="michael"
-                icon="👤"
+                icon={<User size={20} color={colors.cyan} />}
                 title="Michael"
                 subtitle="Product Owner / Designer"
                 color={colors.cyan}
@@ -138,7 +139,7 @@ export default function ProcessWorkflow() {
               />
               <RoleCard
                 id="claude"
-                icon="🧠"
+                icon={<Brain size={20} color={colors.violet} />}
                 title="Claude"
                 subtitle="Architect / Tech Lead"
                 color={colors.violet}
@@ -147,7 +148,7 @@ export default function ProcessWorkflow() {
                   "Technical decisions & architecture",
                   "Design prototyping (JSX artifacts)",
                   "Research & best practices",
-                  "Task briefs for Cowork & Codex",
+                  "Task briefs for Claude Code & Codex",
                   "Code review & quality checks",
                 ]}
                 hoveredRole={hoveredRole}
@@ -159,32 +160,32 @@ export default function ProcessWorkflow() {
           <FadeIn delay={250}>
             <div style={{ display: "flex", gap: 14, marginBottom: 28, flexWrap: "wrap" }}>
               <RoleCard
-                id="cowork"
-                icon="🔧"
-                title="Cowork"
-                subtitle="Orchestration & Light Edits"
+                id="claude-code"
+                icon={<Terminal size={20} color={colors.emerald} />}
+                title="Claude Code"
+                subtitle="Terminal Agent"
                 color={colors.emerald}
                 dimColor={colors.emeraldDim}
                 items={[
-                  "Multi-file edits & UX polish",
+                  "Direct file edits & git operations",
+                  "PR creation and branch management",
                   "Data file updates & constants",
-                  "Config changes & documentation",
-                  "Browser automation for Codex submission",
+                  "Sequential tasks — never parallel",
                 ]}
                 hoveredRole={hoveredRole}
                 setHoveredRole={setHoveredRole}
               />
               <RoleCard
                 id="codex"
-                icon="💻"
+                icon={<Monitor size={20} color={colors.amber} />}
                 title="Codex"
-                subtitle="Code Generation Engine"
+                subtitle="Heavy Lift / Overflow"
                 color={colors.amber}
                 dimColor={colors.amberDim}
                 items={[
-                  "New components & features",
-                  "Substantial refactors (50+ lines)",
-                  "Multi-file logic changes",
+                  "New components & features from scratch",
+                  "Large multi-file refactors (200+ lines)",
+                  "Token-limit overflow from Claude Code",
                   "Sequential tasks only (never parallel)",
                 ]}
                 hoveredRole={hoveredRole}
@@ -217,15 +218,15 @@ export default function ProcessWorkflow() {
               }}
             >
               <WorkflowStep number={1} text="Michael describes what he wants (natural language, often dictated)" color={colors.cyan} tool="claude.ai" />
-              <WorkflowStep number={2} text="Claude asks clarifying questions if needed, then proposes a technical approach" color={colors.violet} tool="claude.ai" />
-              <WorkflowStep number={3} text="Michael approves or redirects the approach" color={colors.cyan} />
-              <WorkflowStep number={4} text="Claude builds interactive JSX prototypes for UX/design changes" color={colors.violet} tool="claude.ai" />
+              <WorkflowStep number={2} text="Claude asks clarifying questions if needed, proposes approach" color={colors.violet} tool="claude.ai" />
+              <WorkflowStep number={3} text="Michael approves or redirects" color={colors.cyan} />
+              <WorkflowStep number={4} text="Claude builds JSX prototypes for UX/design changes" color={colors.violet} tool="claude.ai" />
               <WorkflowStep number={5} text="Michael tests prototypes, gives feedback with annotated screenshots" color={colors.cyan} />
-              <WorkflowStep number={6} text="Claude creates task files in the project’s tasks/ folder with acceptance criteria" color={colors.violet} tool="tasks/" />
-              <WorkflowStep number={7} text="Cowork picks up queued tasks (direct edits or routes substantial code to Codex)" color={colors.emerald} tool="cowork" />
-              <WorkflowStep number={8} text="Codex generates code for new components and large changes" color={colors.amber} tool="codex" />
-              <WorkflowStep number={9} text="PRs created on GitHub — Michael does the final merge" color={colors.cyan} tool="github" />
-              <WorkflowStep number={10} text="Cloudflare auto-deploys on merge to main" color={colors.rose} tool="cloudflare" />
+              <WorkflowStep number={6} text="Claude writes task files for implementation" color={colors.violet} tool="claude.ai" />
+              <WorkflowStep number={7} text="Claude Code executes the task (edits, commits, pushes)" color={colors.emerald} tool="claude-code" />
+              <WorkflowStep number={8} text="Claude Code creates PR on GitHub" color={colors.emerald} tool="claude-code" />
+              <WorkflowStep number={9} text="Michael reviews and merges the PR" color={colors.cyan} tool="github" />
+              <WorkflowStep number={10} text="Cloudflare auto-deploys" color={colors.rose} tool="cloudflare" />
               <div
                 style={{
                   marginTop: 16,
@@ -252,7 +253,7 @@ export default function ProcessWorkflow() {
                   ↻
                 </div>
                 <div style={{ fontSize: 13, color: colors.muted, fontStyle: "italic" }}>
-                  Michael reviews on the live site → feedback → next iteration (5–15 min cycles)
+                  Michael reviews on the live site → feedback → next iteration
                 </div>
               </div>
             </div>
@@ -369,6 +370,49 @@ export default function ProcessWorkflow() {
           </div>
 
           <div style={{ display: "flex", gap: 14, marginBottom: 28, flexWrap: "wrap" }}>
+            {/* Claude Code */}
+            <div
+              style={{
+                flex: 1,
+                minWidth: 280,
+                background: colors.cardBg,
+                border: `1px solid ${colors.border}`,
+                borderLeft: `3px solid ${colors.emerald}`,
+                borderRadius: 12,
+                padding: "22px 24px",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                <Terminal size={18} color={colors.emerald} />
+                <div>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: colors.emerald }}>Claude Code</span>
+                  <span style={{ fontSize: 12, color: colors.muted, marginLeft: 8 }}>— Build shop</span>
+                </div>
+              </div>
+              {[
+                "All direct file edits",
+                "Data files, constants, config",
+                "Single & multi-file changes (~200 lines)",
+                "Git operations: commits, branches, PRs",
+                "Documentation updates",
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  style={{
+                    fontSize: 12,
+                    color: colors.slate,
+                    padding: "5px 0",
+                    display: "flex",
+                    gap: 8,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  <span style={{ color: colors.emerald, fontSize: 8, marginTop: 5 }}>●</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+
             {/* Codex */}
             <div
               style={{
@@ -376,21 +420,24 @@ export default function ProcessWorkflow() {
                 minWidth: 280,
                 background: colors.cardBg,
                 border: `1px solid ${colors.border}`,
+                borderLeft: `3px solid ${colors.amber}`,
                 borderRadius: 12,
                 padding: "22px 24px",
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                <span style={{ fontSize: 18 }}>💻</span>
-                <span style={{ fontSize: 15, fontWeight: 700, color: colors.amber }}>Codex</span>
-                <span style={{ fontSize: 12, color: colors.muted }}>— Heavy lifting</span>
+                <Monitor size={18} color={colors.amber} />
+                <div>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: colors.amber }}>Codex</span>
+                  <span style={{ fontSize: 12, color: colors.muted, marginLeft: 8 }}>— Heavy lift / overflow</span>
+                </div>
               </div>
               {[
-                "New components & major features",
-                "Multi-file changes (50+ lines)",
-                "Changes needing a local build to verify",
-                "Complex logic, state management rewrites",
-                "Dependency additions, build config changes",
+                "New components from scratch (200+ lines)",
+                "Large multi-file refactors",
+                "Complex scaffolding tasks",
+                "Token-limit overflow from Claude Code",
+                "Sequential only — never parallel",
               ].map((item, i) => (
                 <div
                   key={i}
@@ -419,62 +466,7 @@ export default function ProcessWorkflow() {
                   lineHeight: 1.5,
                 }}
               >
-                ⚠ Sequential only — never run parallel tasks. Later tasks can revert earlier changes if
-                they branch from stale main.
-              </div>
-            </div>
-
-            {/* Cowork */}
-            <div
-              style={{
-                flex: 1,
-                minWidth: 280,
-                background: colors.cardBg,
-                border: `1px solid ${colors.border}`,
-                borderRadius: 12,
-                padding: "22px 24px",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                <span style={{ fontSize: 18 }}>🔧</span>
-                <span style={{ fontSize: 15, fontWeight: 700, color: colors.emerald }}>Cowork</span>
-                <span style={{ fontSize: 12, color: colors.muted }}>— Direct edits</span>
-              </div>
-              {[
-                "Data file updates (projects, metrics)",
-                "Constant tweaks (spacing, colors, labels)",
-                "Config changes (vite.config, tsconfig)",
-                "Documentation and README updates",
-                "Single-file edits under ~20 lines",
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  style={{
-                    fontSize: 12,
-                    color: colors.slate,
-                    padding: "5px 0",
-                    display: "flex",
-                    gap: 8,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  <span style={{ color: colors.emerald, fontSize: 8, marginTop: 5 }}>●</span>
-                  {item}
-                </div>
-              ))}
-              <div
-                style={{
-                  marginTop: 14,
-                  padding: "10px 14px",
-                  background: `${colors.emerald}08`,
-                  borderRadius: 8,
-                  border: `1px solid ${colors.emerald}20`,
-                  fontSize: 12,
-                  color: colors.emerald,
-                  lineHeight: 1.5,
-                }}
-              >
-                Principle: Don't route a 3-line constant change through a full Codex task.
+                ⚠ Sequential only — later tasks can revert earlier changes if they branch from stale main.
               </div>
             </div>
 
@@ -485,21 +477,24 @@ export default function ProcessWorkflow() {
                 minWidth: 280,
                 background: colors.cardBg,
                 border: `1px solid ${colors.border}`,
+                borderLeft: `3px solid ${colors.violet}`,
                 borderRadius: 12,
                 padding: "22px 24px",
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                <span style={{ fontSize: 18 }}>🧠</span>
-                <span style={{ fontSize: 15, fontWeight: 700, color: colors.violet }}>Claude (claude.ai)</span>
-                <span style={{ fontSize: 12, color: colors.muted }}>— Design shop</span>
+                <Brain size={18} color={colors.violet} />
+                <div>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: colors.violet }}>Claude.ai</span>
+                  <span style={{ fontSize: 12, color: colors.muted, marginLeft: 8 }}>— Design shop</span>
+                </div>
               </div>
               {[
-                "Design prototyping (JSX artifacts)",
                 "Planning & task file creation",
+                "JSX design prototypes",
+                "Code review for large/risky PRs",
                 "Research & best practices",
-                "Code review for large PRs (200+ lines)",
-                "Process discussions & workflow design",
+                "Process decisions & workflow design",
               ].map((item, i) => (
                 <div
                   key={i}
@@ -516,21 +511,24 @@ export default function ProcessWorkflow() {
                   {item}
                 </div>
               ))}
-              <div
-                style={{
-                  marginTop: 14,
-                  padding: "10px 14px",
-                  background: `${colors.violet}08`,
-                  borderRadius: 8,
-                  border: `1px solid ${colors.violet}20`,
-                  fontSize: 12,
-                  color: colors.violet,
-                  lineHeight: 1.5,
-                }}
-              >
-                Claude.ai is the design shop. Cowork is the build shop. Keep them separate.
-              </div>
             </div>
+          </div>
+
+          {/* Principle callout */}
+          <div
+            style={{
+              background: `${colors.violet}08`,
+              border: `1px solid ${colors.violet}30`,
+              borderRadius: 12,
+              padding: "16px 22px",
+              marginBottom: 28,
+              fontSize: 13,
+              color: colors.text,
+              lineHeight: 1.6,
+              fontStyle: "italic",
+            }}
+          >
+            "Claude.ai is the design shop. Claude Code is the build shop. Codex is the heavy lifter when needed."
           </div>
 
           {/* Escalation Guide */}
@@ -592,7 +590,7 @@ export default function ProcessWorkflow() {
               fontFamily: "'JetBrains Mono', monospace",
             }}
           >
-            Iteration patterns — what works (13 sessions learned)
+            Iteration patterns — what works (22 sessions learned)
           </div>
           <div
             style={{
@@ -624,7 +622,7 @@ export default function ProcessWorkflow() {
             />
             <PatternCard
               number={5}
-              title="Prototype in claude.ai, build in Cowork"
+              title="Prototype in claude.ai, build in Claude Code"
               description="Design decisions get explored interactively with JSX prototypes before implementation begins."
             />
             <PatternCard
@@ -634,8 +632,8 @@ export default function ProcessWorkflow() {
             />
             <PatternCard
               number={7}
-              title="Route tasks to the right tool"
-              description="Codex for heavy code gen, Cowork for light edits, claude.ai for design and planning."
+              title="Claude Code for speed, Codex for scale"
+              description="Claude Code handles most tasks directly. When a task is too large for a single session, break it into a Codex task."
             />
             <PatternCard
               number={8}
@@ -644,7 +642,7 @@ export default function ProcessWorkflow() {
             />
             <PatternCard
               number={9}
-              title="Sequential Codex tasks only"
+              title="Sequential tasks only"
               description="Never run parallel tasks. Later tasks can revert earlier changes if they branch from stale main."
             />
             <PatternCard
@@ -821,7 +819,7 @@ export default function ProcessWorkflow() {
               letterSpacing: 0.5,
             }}
           >
-            Built with Claude Cowork & Codex
+            Built with Claude Code & Codex
           </span>
         </div>
       </FadeIn>

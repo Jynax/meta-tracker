@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode, CSSProperties } from "react";
+import { useState, useEffect, type ReactNode, type CSSProperties } from "react";
 import { colors } from "./processWorkflowData";
 
 interface FadeInProps {
@@ -120,7 +120,7 @@ const FlowArrow = ({ color = colors.muted, label = "", direction = "down" }: Flo
 };
 
 interface RoleCardProps {
-  icon: string;
+  icon: ReactNode;
   title: string;
   subtitle: string;
   color: string;

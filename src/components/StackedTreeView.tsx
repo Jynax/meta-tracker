@@ -121,7 +121,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
     expandedNode,
     onNodeToggle,
     highlightChapter,
-    onJumpToSession,
+
   } = props;
 
   // const [showFilters, setShowFilters] = React.useState(false);

@@ -18,7 +18,6 @@ export default function CodeTab({
   sessionFocusMap, hoveredCodeSession, setHoveredCodeSession, setTooltip,
 }: CodeTabProps) {
   const [expandedCodeRows, setExpandedCodeRows] = useState<Set<string>>(new Set());
-  const [expandedNetRows, setExpandedNetRows] = useState<Set<string>>(new Set());
 
   const codeEntriesWithActivity = useMemo(
     () => codeVolume.filter((entry) => entry.added > 0 || entry.deleted > 0),
@@ -90,57 +89,6 @@ export default function CodeTab({
     [codeEntriesWithActivity, codeTopRows],
   );
 
-  const netDateGroups = useMemo(() => {
-    const grouped = new Map<string, { date: string; entries: Array<(typeof codeVolume)[number]>; net: number }>();
-    codeEntriesWithActivity.forEach((entry) => {
-      const existing = grouped.get(entry.date);
-      if (existing) {
-        existing.entries.push(entry);
-        existing.net += entry.net;
-        return;
-      }
-      grouped.set(entry.date, { date: entry.date, entries: [entry], net: entry.net });
-    });
-    return Array.from(grouped.values());
-  }, [codeEntriesWithActivity]);
-
-  const netTopRows = useMemo(() => {
-    if (netDateGroups.length <= 8) {
-      return [...netDateGroups].reverse().map((group) => ({
-        kind: 'date' as const,
-        key: group.date,
-        label: group.date,
-        net: group.net,
-        dates: [group],
-      }));
-    }
-
-    const mergedDateCount = netDateGroups.length - 7;
-    const mergedDates = netDateGroups.slice(0, mergedDateCount);
-    const firstDate = mergedDates[0]?.date ?? '';
-    const lastDate = mergedDates[mergedDates.length - 1]?.date ?? '';
-    const [firstMonth, firstDay] = firstDate.split(' ');
-    const [lastMonth, lastDay] = lastDate.split(' ');
-    const rangeLabel = firstMonth === lastMonth ? `${firstMonth} ${firstDay}-${lastDay}` : `${firstDate}-${lastDate}`;
-
-    const rangeRow = {
-      kind: 'range' as const,
-      key: rangeLabel,
-      label: rangeLabel,
-      net: mergedDates.reduce((sum, date) => sum + date.net, 0),
-      dates: [...mergedDates].reverse(),
-    };
-
-    const remainingRows = [...netDateGroups.slice(mergedDateCount)].reverse().map((group) => ({
-      kind: 'date' as const,
-      key: group.date,
-      label: group.date,
-      net: group.net,
-      dates: [group],
-    }));
-
-    return [...remainingRows, rangeRow];
-  }, [netDateGroups]);
 
   const renderCodeRow = (row: (typeof codeTopRows)[number]) => {
     const isRowExpanded = expandedCodeRows.has(row.key);

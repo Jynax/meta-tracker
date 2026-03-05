@@ -677,11 +677,11 @@ export const metaProject: Project = {
   stats: {
     totalDays: 7,
     chatGptMessages: '250+',
-    coworkSessions: 20,
-    prsCreated: '94+',
+    coworkSessions: 22,
+    prsCreated: '102+',
     codexTasks: '41+',
-    linesOfCode: '4,797+',
+    linesOfCode: '5,797+',
     deadEnds: 3,
-    majorDecisions: 61,
+    majorDecisions: 64,
   },
 };

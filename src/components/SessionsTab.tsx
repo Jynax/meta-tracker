@@ -23,27 +23,66 @@ export default function SessionsTab({
   onJumpToChapter, hoveredPointIndex, setHoveredPointIndex, setTooltip,
 }: SessionsTabProps) {
   const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set());
+  const [chartView, setChartView] = useState<'daily' | 'weekly'>('weekly');
 
   const chartDims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
   const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
   const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
 
+  const weeklyData = useMemo(() => {
+    const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+    const getWeekStart = (dateStr: string) => {
+      const [month = 'Jan', day = '1'] = dateStr.split(' ');
+      const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
+      d.setDate(d.getDate() - d.getDay());
+      return d;
+    };
+    const weeks = new Map<string, { weekLabel: string; prs: number; decisions: number; deadEnds: number; sessionCount: number }>();
+    sessions.forEach((entry) => {
+      const date = sessionDateMap[entry.session] ?? entry.session;
+      const weekStart = getWeekStart(date);
+      const key = weekStart.toISOString().slice(0, 10);
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const weekLabel = monthNames[weekStart.getMonth()] + ' ' + weekStart.getDate();
+      const existing = weeks.get(key) ?? { weekLabel, prs: 0, decisions: 0, deadEnds: 0, sessionCount: 0 };
+      existing.prs += entry.prs;
+      existing.decisions += entry.decisions;
+      existing.deadEnds += entry.deadEnds;
+      existing.sessionCount += 1;
+      weeks.set(key, existing);
+    });
+    return Array.from(weeks.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([, v]) => v);
+  }, [sessions, sessionDateMap]);
+
   const sessionActivityPoints = useMemo(() => {
     const yTicks = 4;
-    const maxMetric = Math.max(...sessions.map((item) => Math.max(item.prs, item.decisions, item.deadEnds)), 1);
+
+    const dataSource = chartView === 'weekly'
+      ? weeklyData.map((w) => ({
+          session: w.weekLabel,
+          label: w.sessionCount + ' session' + (w.sessionCount > 1 ? 's' : ''),
+          date: w.weekLabel,
+          prs: w.prs,
+          decisions: w.decisions,
+          deadEnds: w.deadEnds,
+        }))
+      : sessions.map((entry) => ({
+          ...entry,
+          date: sessionDateMap[entry.session] ?? entry.session,
+        }));
+
+    const maxMetric = Math.max(...dataSource.map((item) => Math.max(item.prs, item.decisions, item.deadEnds)), 1);
     const raw = maxMetric / yTicks || 1;
     const mag = 10 ** Math.floor(Math.log10(raw));
     const step = Math.max(1, Math.ceil(raw / mag) * mag);
     const yMax = step * yTicks;
 
-    const points = sessions.map((entry, index) => {
-      const ratioX = sessions.length > 1 ? index / (sessions.length - 1) : 0;
+    const points = dataSource.map((entry, index) => {
+      const ratioX = dataSource.length > 1 ? index / (dataSource.length - 1) : 0;
       const x = chartDims.left + ratioX * chartInnerWidth;
-      const date = sessionDateMap[entry.session] ?? entry.session;
       return {
         ...entry,
-        date,
-        dateLabel: formatShortDate(date),
+        dateLabel: chartView === 'weekly' ? entry.date : formatShortDate(entry.date),
         x,
         yPrs: chartDims.top + (1 - (entry.prs / yMax)) * chartInnerHeight,
         yDecisions: chartDims.top + (1 - (entry.decisions / yMax)) * chartInnerHeight,
@@ -52,7 +91,7 @@ export default function SessionsTab({
     });
 
     return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points };
-  }, [sessions, sessionDateMap]);
+  }, [sessions, sessionDateMap, chartView, weeklyData]);
 
   const sessionLines = useMemo(() => ({
     prs: buildSmoothPath(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yPrs }))),
@@ -103,7 +142,21 @@ export default function SessionsTab({
       </div>
 
       <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-        <h3 className="mb-3 text-sm font-semibold">Session Activity</h3>
+        <div className="mb-3 flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Session Activity</h3>
+          <div className="flex rounded-md border overflow-hidden" style={{ borderColor: C.border }}>
+            <button
+              onClick={() => setChartView('weekly')}
+              className="px-3 py-1 text-xs font-medium transition-colors"
+              style={{ backgroundColor: chartView === 'weekly' ? C.cyan + '22' : 'transparent', color: chartView === 'weekly' ? C.cyan : C.slate, borderRight: '1px solid ' + C.border }}
+            >Weekly</button>
+            <button
+              onClick={() => setChartView('daily')}
+              className="px-3 py-1 text-xs font-medium transition-colors"
+              style={{ backgroundColor: chartView === 'daily' ? C.cyan + '22' : 'transparent', color: chartView === 'daily' ? C.cyan : C.slate }}
+            >Daily</button>
+          </div>
+        </div>
         <div style={{ position: 'relative', overflowX: 'auto', paddingBottom: 4 }}>
           <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }} role="img" aria-label="Session activity chart">
             {Array.from({ length: sessionActivityPoints.yTicks + 1 }, (_, index) => {
@@ -140,12 +193,12 @@ export default function SessionsTab({
                         x: event.clientX, y: event.clientY,
                         content: (
                           <>
-                            <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{point.date} — {point.label}</div>
+                            <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{chartView === 'weekly' ? `Week of ${point.date}` : `${point.date} — ${point.label}`}</div>
                             <div style={{ color: C.slate, fontSize: 11 }}>{point.dateLabel}</div>
                             <div style={{ color: C.cyan, fontSize: 11 }}>PRs: {point.prs}</div>
                             <div style={{ color: C.emerald, fontSize: 11 }}>Decisions: {point.decisions}</div>
                             <div style={{ color: C.rose, fontSize: 11 }}>Dead Ends: {point.deadEnds}</div>
-                            <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic', maxWidth: 220 }}>{sessionFocusMap[point.session] ?? ''}</div>
+                            {chartView === 'daily' && <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic', maxWidth: 220 }}>{sessionFocusMap[point.session] ?? ''}</div>}
                           </>
                         ),
                       });

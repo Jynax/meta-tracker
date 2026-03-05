@@ -71,6 +71,14 @@ export default function OverviewTab({
   }, [chartPoints, smoothLinePath]);
 
   const hoveredPoint = hoveredPointIndex === null ? null : chartPoints[hoveredPointIndex];
+  const milestoneFlags = useMemo(
+    () => codeVolume.map((entry, index) => {
+      if (index === 0 || index === codeVolume.length - 1) return true;
+      const prev = codeVolume[index - 1].total;
+      return entry.total - prev >= 500;
+    }),
+    [codeVolume],
+  );
 
   const cats: Array<{ key: WorkCategory; color: string }> = [
     { key: 'Feature', color: C.cyan },
@@ -179,12 +187,18 @@ export default function OverviewTab({
                 fill={C.cyan}
                 onMouseEnter={(event) => {
                   setHoveredPointIndex(index);
+                  const delta = index > 0 ? point.total - codeVolume[index - 1].total : 0;
                   setTooltip({
                     x: event.clientX, y: event.clientY,
                     content: (
                       <>
                         <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{point.label}</div>
                         <div style={{ color: C.cyan, fontSize: 11 }}>{point.total.toLocaleString()} LOC</div>
+                        {index > 0 && (
+                          <div style={{ color: delta >= 0 ? C.emerald : C.rose, fontSize: 11 }}>
+                            {delta >= 0 ? '+' : ''}{delta.toLocaleString()} lines
+                          </div>
+                        )}
                         <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic', maxWidth: 220 }}>{point.focus}</div>
                       </>
                     ),
@@ -198,7 +212,9 @@ export default function OverviewTab({
             ))}
 
             {chartPoints.map((point, index) => {
-              const y = index % 2 === 0 ? chartDims.height - 10 : chartDims.height - 22;
+              if (!milestoneFlags[index]) return null;
+              const milestoneIndex = milestoneFlags.slice(0, index + 1).filter(Boolean).length - 1;
+              const y = milestoneIndex % 2 === 0 ? chartDims.height - 10 : chartDims.height - 22;
               const baselineY = chartDims.height - chartDims.bottom;
               return (
                 <g key={`${point.session}-label`}>

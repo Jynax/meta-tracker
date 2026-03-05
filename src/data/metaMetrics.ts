@@ -74,6 +74,8 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 22', date: 'Mar 5', label: 'Deploy Fix + Data Cleanup', added: 249, deleted: 41, net: 208, total: 5005 },
   { session: 'Session 23', date: 'Mar 5', label: 'How We Work Rewrite + UX', added: 128, deleted: 141, net: -13, total: 5797 },
   { session: 'Session 24', date: 'Mar 5', label: 'Code Health + ESLint', added: 988, deleted: 996, net: -8, total: 5691 },
+  { session: 'Session 25', date: 'Mar 5', label: 'Chart Scaling + Tool Tracking', added: 245, deleted: 50, net: 195, total: 6083 },
+  { session: 'Session 26', date: 'Mar 5', label: 'Bugs + UX Batch 2', added: 77, deleted: 55, net: 22, total: 6105 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -99,6 +101,8 @@ export const metaSessions: SessionEntry[] = [
   { session: 'Session 22', date: 'Mar 5', label: 'Deploy Fix + Data Cleanup', duration: 3, prs: 5, decisions: 2, deadEnds: 0, focus: 'Fixed failed deploys, established all-PRs workflow, PR count true-up, Session 16 data fix, History tab for How We Work.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 3 },
   { session: 'Session 23', date: 'Mar 5', label: 'How We Work Rewrite + UX', duration: 2, prs: 3, decisions: 1, deadEnds: 0, focus: '5 tasks via Claude Code: How We Work rewrite (Cowork→Claude Code), Lucide icons, stacked tree collapse/multi-open, pills visual-only, reverse chron audit.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Feature', tool: 'Claude Code', taskCount: 5 },
   { session: 'Session 24', date: 'Mar 5', label: 'Code Health + ESLint', duration: 2, prs: 3, decisions: 1, deadEnds: 0, focus: 'MetricsDashboard decomposed into 4 tab components (1071→176 LOC). ESLint + Prettier setup with lint fixes. Bug fix for prop removal regression.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 3 },
+  { session: 'Session 25', date: 'Mar 5', label: 'Chart Scaling + Tool Tracking', duration: 2, prs: 2, decisions: 0, deadEnds: 0, focus: 'Chart scaling (milestone labels, weekly toggle) and session tool tracking (tool field, badges, Avg Task Time chart). PRs #57-58.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Feature', tool: 'Claude Code', taskCount: 2 },
+  { session: 'Session 26', date: 'Mar 5', label: 'Bugs + UX Batch 2', duration: 2, prs: 2, decisions: 1, deadEnds: 0, focus: '5 tasks batched: fix weekly chart grouping, remove Dead Ends line, donut layout overhaul, default project, live app links. Follow-up fix for chart grouping and per-tool lines. PRs #59-60.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Bug', tool: 'Claude Code', taskCount: 5 },
 ];
 
 export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };
@@ -131,6 +135,7 @@ export const metaBugs: BugEntry[] = [
   { id: 25, session: 'Session 16', date: 'Mar 4', label: 'Codebase Audit', summary: 'onJumpToSession fired on every chapter toggle instead of dedicated action', severity: 'Medium', source: 'Cowork Audit', status: 'Fixed', category: 'Functional' },
   { id: 26, session: 'Session 16', date: 'Mar 4', label: 'Codebase Audit', summary: 'No ErrorBoundary components anywhere in app', severity: 'High', source: 'Cowork Audit', status: 'Fixed', category: 'Technical' },
   { id: 27, session: 'Session 24', date: 'Mar 5', label: 'Code Health + ESLint', summary: 'ESLint fix PR accidentally removed codeVolume prop from OverviewTab and CodeTab — Metrics view crashed on all projects', severity: 'High', source: 'User Report', status: 'Fixed', category: 'Technical' },
+  { id: 28, session: 'Session 25', date: 'Mar 5', label: 'Chart Scaling + Tool Tracking', summary: 'Weekly chart view showed only 2 data points (calendar weeks) — appeared cumulative. Changed to per-date grouping.', severity: 'Medium', source: 'User Report', status: 'Fixed', category: 'UX' },
 ];
 
 export const metaDerived: DerivedMetric[] = [

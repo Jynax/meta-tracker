@@ -12,7 +12,7 @@ interface StackedTreeViewProps {
   project: Project;
   filter: string;
   onFilterChange: (filter: string) => void;
-  expandedChapter: string | null;
+  expandedChapters: Set<string>;
   onChapterToggle: (chapterId: string) => void;
   expandedNode: string | null;
   onNodeToggle: (nodeId: string) => void;
@@ -116,8 +116,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
   const {
     project,
     filter,
-    onFilterChange,
-    expandedChapter,
+    expandedChapters,
     onChapterToggle,
     expandedNode,
     onNodeToggle,
@@ -193,7 +192,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
     const chapterDeadEnds = chapter.nodes.filter((node) => node.type === 'dead-end').length;
     const chapterDiscoveries = chapter.nodes.filter((node) => node.type === 'discovery').length;
     const chapterPivots = chapter.nodes.filter((node) => node.type === 'pivot').length;
-    const isExpanded = expandedChapter === chapter.id;
+    const isExpanded = expandedChapters.has(chapter.id);
     const isHighlighted = highlightChapter === chapter.id;
 
     return (
@@ -278,75 +277,57 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-          <button
-            type="button"
-            onClick={() => onFilterChange('all')}
+          <span
             style={{
               color: COLORS.white,
               fontSize: 15,
               fontWeight: 600,
-              border: 'none',
-              background: 'transparent',
-              cursor: 'pointer',
-              padding: 0,
             }}
           >
             {totalEntries} entries
-          </button>
+          </span>
           <span style={{ color: COLORS.border }}>|</span>
           {deadEnds > 0 && (
-            <button
-              type="button"
-              onClick={() => onFilterChange(activeFilter === 'dead-end' ? 'all' : 'dead-end')}
+            <span
               style={{
                 fontSize: 13,
                 fontWeight: 700,
                 color: COLORS.rose,
-                background: `${COLORS.rose}${activeFilter === 'dead-end' ? '30' : '15'}`,
+                background: `${COLORS.rose}15`,
                 borderRadius: 9999,
                 padding: '2px 8px',
-                border: 'none',
-                cursor: 'pointer',
               }}
             >
               {deadEnds} dead ends
-            </button>
+            </span>
           )}
           {discoveries > 0 && (
-            <button
-              type="button"
-              onClick={() => onFilterChange(activeFilter === 'discovery' ? 'all' : 'discovery')}
+            <span
               style={{
                 fontSize: 13,
                 fontWeight: 700,
                 color: COLORS.amber,
-                background: `${COLORS.amber}${activeFilter === 'discovery' ? '30' : '15'}`,
+                background: `${COLORS.amber}15`,
                 borderRadius: 9999,
                 padding: '2px 8px',
-                border: 'none',
-                cursor: 'pointer',
               }}
             >
               {discoveries} discoveries
-            </button>
+            </span>
           )}
           {pivots > 0 && (
-            <button
-              type="button"
-              onClick={() => onFilterChange(activeFilter === 'pivot' ? 'all' : 'pivot')}
+            <span
               style={{
                 fontSize: 13,
                 fontWeight: 700,
                 color: COLORS.violet,
-                background: `${COLORS.violet}${activeFilter === 'pivot' ? '30' : '15'}`,
+                background: `${COLORS.violet}15`,
                 borderRadius: 9999,
                 padding: '2px 8px',
-                border: 'none',
-                cursor: 'pointer',
               }}
             >
               {pivots} pivots
-            </button>
+            </span>
           )}
         </div>
 
@@ -452,7 +433,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
       </div> */}
 
       {[...project.chapters].reverse().map((chapter) => {
-        const isExpanded = expandedChapter === chapter.id;
+        const isExpanded = expandedChapters.has(chapter.id);
         const filteredNodes = chapter.nodes.filter((node) => nodeMatchesFilter(node, activeFilter));
 
         return (

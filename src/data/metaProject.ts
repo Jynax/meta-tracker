@@ -3,7 +3,7 @@ import type { Project } from '../types';
 export const metaProject: Project = {
   id: 'meta',
   name: 'Meta Tracker',
-  subtitle: 'BUILT WITH CLAUDE COWORK & CODEX',
+  subtitle: 'BUILT WITH CLAUDE CODE & CODEX',
   chapters: [
     {
       id: 'meta-ch-inception',

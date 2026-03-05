@@ -119,7 +119,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
 
   const codeTopRows = useMemo(() => {
     if (dateGroups.length <= 8) {
-      return dateGroups.map((group) => ({
+      return [...dateGroups].reverse().map((group) => ({
         kind: 'date' as const,
         key: group.date,
         label: group.date,
@@ -143,10 +143,10 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
       label: rangeLabel,
       added: mergedDates.reduce((sum, date) => sum + date.added, 0),
       deleted: mergedDates.reduce((sum, date) => sum + date.deleted, 0),
-      dates: mergedDates,
+      dates: [...mergedDates].reverse(),
     };
 
-    const remainingRows = dateGroups.slice(mergedDateCount).map((group) => ({
+    const remainingRows = [...dateGroups.slice(mergedDateCount)].reverse().map((group) => ({
       kind: 'date' as const,
       key: group.date,
       label: group.date,
@@ -155,7 +155,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
       dates: [group],
     }));
 
-    return [rangeRow, ...remainingRows];
+    return [...remainingRows, rangeRow];
   }, [dateGroups]);
 
   const codeDeltaMax = useMemo(
@@ -183,7 +183,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
 
   const netTopRows = useMemo(() => {
     if (netDateGroups.length <= 8) {
-      return netDateGroups.map((group) => ({
+      return [...netDateGroups].reverse().map((group) => ({
         kind: 'date' as const,
         key: group.date,
         label: group.date,
@@ -205,10 +205,10 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
       key: rangeLabel,
       label: rangeLabel,
       net: mergedDates.reduce((sum, date) => sum + date.net, 0),
-      dates: mergedDates,
+      dates: [...mergedDates].reverse(),
     };
 
-    const remainingRows = netDateGroups.slice(mergedDateCount).map((group) => ({
+    const remainingRows = [...netDateGroups.slice(mergedDateCount)].reverse().map((group) => ({
       kind: 'date' as const,
       key: group.date,
       label: group.date,
@@ -216,7 +216,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
       dates: [group],
     }));
 
-    return [rangeRow, ...remainingRows];
+    return [...remainingRows, rangeRow];
   }, [netDateGroups]);
 
   const maxNetAbsGrouped = useMemo(

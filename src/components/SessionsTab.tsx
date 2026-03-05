@@ -36,40 +36,34 @@ export default function SessionsTab({
   const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
   const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
 
-  const weeklyData = useMemo(() => {
+  const dailyData = useMemo(() => {
     const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
-    const getWeekStart = (dateStr: string) => {
-      const [month = 'Jan', day = '1'] = dateStr.split(' ');
-      const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
-      d.setDate(d.getDate() - d.getDay());
-      return d;
-    };
-    const weeks = new Map<string, { weekLabel: string; prs: number; decisions: number; sessionCount: number }>();
+    const days = new Map<string, { dayLabel: string; prs: number; decisions: number; sessionCount: number }>();
     sessions.forEach((entry) => {
       const date = sessionDateMap[entry.session] ?? entry.session;
-      const weekStart = getWeekStart(date);
-      const key = weekStart.toISOString().slice(0, 10);
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const weekLabel = monthNames[weekStart.getMonth()] + ' ' + weekStart.getDate();
-      const existing = weeks.get(key) ?? { weekLabel, prs: 0, decisions: 0, sessionCount: 0 };
+      const [month = 'Jan', day = '1'] = date.split(' ');
+      const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
+      const key = d.toISOString().slice(0, 10);
+      const dayLabel = month + ' ' + parseInt(day, 10);
+      const existing = days.get(key) ?? { dayLabel, prs: 0, decisions: 0, sessionCount: 0 };
       existing.prs += entry.prs;
       existing.decisions += entry.decisions;
       existing.sessionCount += 1;
-      weeks.set(key, existing);
+      days.set(key, existing);
     });
-    return Array.from(weeks.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([, v]) => v);
+    return Array.from(days.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([, v]) => v);
   }, [sessions, sessionDateMap]);
 
   const sessionActivityPoints = useMemo(() => {
     const yTicks = 4;
 
     const dataSource = chartView === 'weekly'
-      ? weeklyData.map((w) => ({
-          session: w.weekLabel,
-          label: w.sessionCount + ' session' + (w.sessionCount > 1 ? 's' : ''),
-          date: w.weekLabel,
-          prs: w.prs,
-          decisions: w.decisions,
+      ? dailyData.map((d) => ({
+          session: d.dayLabel,
+          label: d.sessionCount + ' session' + (d.sessionCount > 1 ? 's' : ''),
+          date: d.dayLabel,
+          prs: d.prs,
+          decisions: d.decisions,
           deadEnds: 0,
         }))
       : sessions.map((entry) => ({
@@ -96,7 +90,7 @@ export default function SessionsTab({
     });
 
     return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points };
-  }, [sessions, sessionDateMap, chartView, weeklyData]);
+  }, [sessions, sessionDateMap, chartView, dailyData]);
 
 
   const avgTaskTimePoints = useMemo(() => {
@@ -129,9 +123,19 @@ export default function SessionsTab({
     return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points };
   }, [sessions, sessionDateMap]);
 
-  const avgTaskTimePath = useMemo(() => {
-    if (!avgTaskTimePoints) return '';
-    return buildSmoothPath(avgTaskTimePoints.points.map(p => ({ x: p.x, y: p.y })));
+  const avgTaskTimePaths = useMemo(() => {
+    if (!avgTaskTimePoints) return {};
+    const byTool: Record<string, Array<{ x: number; y: number }>> = {};
+    avgTaskTimePoints.points.forEach(p => {
+      const tool = p.tool as string;
+      if (!byTool[tool]) byTool[tool] = [];
+      byTool[tool].push({ x: p.x, y: p.y });
+    });
+    const paths: Record<string, string> = {};
+    for (const [tool, pts] of Object.entries(byTool)) {
+      paths[tool] = buildSmoothPath(pts);
+    }
+    return paths;
   }, [avgTaskTimePoints]);
 
   const sessionLines = useMemo(() => {
@@ -194,12 +198,12 @@ export default function SessionsTab({
               onClick={() => setChartView('weekly')}
               className="px-3 py-1 text-xs font-medium transition-colors"
               style={{ backgroundColor: chartView === 'weekly' ? C.cyan + '22' : 'transparent', color: chartView === 'weekly' ? C.cyan : C.slate, borderRight: '1px solid ' + C.border }}
-            >Weekly</button>
+            >By Day</button>
             <button
               onClick={() => setChartView('daily')}
               className="px-3 py-1 text-xs font-medium transition-colors"
               style={{ backgroundColor: chartView === 'daily' ? C.cyan + '22' : 'transparent', color: chartView === 'daily' ? C.cyan : C.slate }}
-            >Daily</button>
+            >By Session</button>
           </div>
         </div>
         <div style={{ position: 'relative', overflowX: 'auto', paddingBottom: 4 }}>
@@ -236,7 +240,7 @@ export default function SessionsTab({
                         x: event.clientX, y: event.clientY,
                         content: (
                           <>
-                            <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{chartView === 'weekly' ? `Week of ${point.date}` : `${point.date} — ${point.label}`}</div>
+                            <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{chartView === 'weekly' ? `${point.date} (${point.label})` : `${point.date} — ${point.label}`}</div>
                             <div style={{ color: C.slate, fontSize: 11 }}>{point.dateLabel}</div>
                             <div style={{ color: C.cyan, fontSize: 11 }}>PRs: {point.prs}</div>
                             <div style={{ color: C.emerald, fontSize: 11 }}>Decisions: {point.decisions}</div>
@@ -301,7 +305,9 @@ export default function SessionsTab({
               );
             })}
 
-            <path d={avgTaskTimePath} fill="none" stroke={C.violet} strokeWidth="2" />
+            {Object.entries(avgTaskTimePaths).map(([tool, d]) => (
+              <path key={tool} d={d} fill="none" stroke={toolColors[tool as SessionTool] ?? C.violet} strokeWidth="2" strokeOpacity="0.6" />
+            ))}
 
             {avgTaskTimePoints.points.map((point, index) => (
               <circle

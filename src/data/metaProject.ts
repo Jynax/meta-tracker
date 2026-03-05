@@ -675,13 +675,13 @@ export const metaProject: Project = {
   },
 ],
   stats: {
-    totalDays: 5,
+    totalDays: 7,
     chatGptMessages: '250+',
-    coworkSessions: 14,
-    prsCreated: '42+',
+    coworkSessions: 19,
+    prsCreated: '57+',
     codexTasks: '41+',
-    linesOfCode: '4,674+',
+    linesOfCode: '4,797+',
     deadEnds: 2,
-    majorDecisions: 32,
+    majorDecisions: 34,
   },
 };

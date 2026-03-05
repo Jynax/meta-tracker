@@ -4,6 +4,7 @@ export const bipProject: Project = {
   id: 'bip',
   name: 'BIP: Buried in Print Reader Stats',
   subtitle: 'BUILT WITH CHATGPT & CLAUDE COWORK & CODEX',
+  url: 'https://buriedinprint.com',
   chapters: [
     {
       id: 'ch-spark',

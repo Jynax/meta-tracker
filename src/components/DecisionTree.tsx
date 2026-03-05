@@ -11,6 +11,7 @@ import ErrorBoundary from './ErrorBoundary';
 import StackedTreeView from './StackedTreeView';
 import type { TreeNodeData } from './treeLayout';
 import { buildTreeLayout } from './treeLayout';
+import { ExternalLink } from 'lucide-react';
 
 const FILTERS: Array<{ id: FilterType; label: string }> = [
   { id: 'all', label: 'All' },
@@ -145,7 +146,7 @@ export default function DecisionTree() {
   const [treeMode, setTreeMode] = useState<'stacked' | 'canvas'>('stacked');
   const [metricsTab, setMetricsTab] = useState<'overview' | 'code' | 'bugs' | 'sessions'>('overview');
   const [filtersExpanded, setFiltersExpanded] = useState(false);
-  const [activeProject, setActiveProject] = useState<Project>(bipProject);
+  const [activeProject, setActiveProject] = useState<Project>(metaProject);
   const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set());
   const [expandedNode, setExpandedNode] = useState<string | null>(null);
   const [detailNodes, setDetailNodes] = useState<Set<string>>(new Set());
@@ -227,7 +228,21 @@ export default function DecisionTree() {
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{activeProject.subtitle}</p>
-            <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">{activeProject.name}</h1>
+            <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">
+              {activeProject.name}
+              {activeProject.url && (
+                <a
+                  href={activeProject.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-3 inline-flex items-center align-middle rounded-md px-2 py-1 text-xs font-medium transition hover:brightness-125"
+                  style={{ backgroundColor: '#22d3ee15', color: '#22d3ee', border: '1px solid #22d3ee33', verticalAlign: 'middle' }}
+                >
+                  <ExternalLink size={12} className="mr-1" />
+                  Visit App
+                </a>
+              )}
+            </h1>
           </div>
           <button
             onClick={() => setShowHowWeWork(true)}

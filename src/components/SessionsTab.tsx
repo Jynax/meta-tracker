@@ -44,17 +44,16 @@ export default function SessionsTab({
       d.setDate(d.getDate() - d.getDay());
       return d;
     };
-    const weeks = new Map<string, { weekLabel: string; prs: number; decisions: number; deadEnds: number; sessionCount: number }>();
+    const weeks = new Map<string, { weekLabel: string; prs: number; decisions: number; sessionCount: number }>();
     sessions.forEach((entry) => {
       const date = sessionDateMap[entry.session] ?? entry.session;
       const weekStart = getWeekStart(date);
       const key = weekStart.toISOString().slice(0, 10);
       const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const weekLabel = monthNames[weekStart.getMonth()] + ' ' + weekStart.getDate();
-      const existing = weeks.get(key) ?? { weekLabel, prs: 0, decisions: 0, deadEnds: 0, sessionCount: 0 };
+      const existing = weeks.get(key) ?? { weekLabel, prs: 0, decisions: 0, sessionCount: 0 };
       existing.prs += entry.prs;
       existing.decisions += entry.decisions;
-      existing.deadEnds += entry.deadEnds;
       existing.sessionCount += 1;
       weeks.set(key, existing);
     });
@@ -71,14 +70,14 @@ export default function SessionsTab({
           date: w.weekLabel,
           prs: w.prs,
           decisions: w.decisions,
-          deadEnds: w.deadEnds,
+          deadEnds: 0,
         }))
       : sessions.map((entry) => ({
           ...entry,
           date: sessionDateMap[entry.session] ?? entry.session,
         }));
 
-    const maxMetric = Math.max(...dataSource.map((item) => Math.max(item.prs, item.decisions, item.deadEnds)), 1);
+    const maxMetric = Math.max(...dataSource.map((item) => Math.max(item.prs, item.decisions)), 1);
     const raw = maxMetric / yTicks || 1;
     const mag = 10 ** Math.floor(Math.log10(raw));
     const step = Math.max(1, Math.ceil(raw / mag) * mag);
@@ -93,7 +92,6 @@ export default function SessionsTab({
         x,
         yPrs: chartDims.top + (1 - (entry.prs / yMax)) * chartInnerHeight,
         yDecisions: chartDims.top + (1 - (entry.decisions / yMax)) * chartInnerHeight,
-        yDeadEnds: chartDims.top + (1 - (entry.deadEnds / yMax)) * chartInnerHeight,
       };
     });
 
@@ -136,11 +134,15 @@ export default function SessionsTab({
     return buildSmoothPath(avgTaskTimePoints.points.map(p => ({ x: p.x, y: p.y })));
   }, [avgTaskTimePoints]);
 
-  const sessionLines = useMemo(() => ({
-    prs: buildSmoothPath(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yPrs }))),
-    decisions: buildSmoothPath(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yDecisions }))),
-    deadEnds: buildSmoothPath(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yDeadEnds }))),
-  }), [sessionActivityPoints.points]);
+  const sessionLines = useMemo(() => {
+    const pathBuilder = chartView === 'weekly'
+      ? (pts) => pts.length ? 'M ' + pts.map(p => p.x + ' ' + p.y).join(' L ') : ''
+      : buildSmoothPath;
+    return {
+      prs: pathBuilder(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yPrs }))),
+      decisions: pathBuilder(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yDecisions }))),
+    };
+  }, [sessionActivityPoints.points, chartView]);
 
   const sessionsByMonth = useMemo(() => {
     const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -215,14 +217,12 @@ export default function SessionsTab({
 
             <path d={sessionLines.prs} fill="none" stroke={C.cyan} strokeWidth="2" />
             <path d={sessionLines.decisions} fill="none" stroke={C.emerald} strokeWidth="2" />
-            <path d={sessionLines.deadEnds} fill="none" stroke={C.rose} strokeWidth="2" />
 
             {sessionActivityPoints.points.map((point, index) => (
               <g key={`${point.session}-session-activity`}>
                 {[
                   { label: 'PRs', value: point.prs, y: point.yPrs, color: C.cyan },
                   { label: 'Decisions', value: point.decisions, y: point.yDecisions, color: C.emerald },
-                  { label: 'Dead Ends', value: point.deadEnds, y: point.yDeadEnds, color: C.rose },
                 ].map((metric) => (
                   <circle
                     key={`${point.session}-${metric.label}`}
@@ -240,7 +240,6 @@ export default function SessionsTab({
                             <div style={{ color: C.slate, fontSize: 11 }}>{point.dateLabel}</div>
                             <div style={{ color: C.cyan, fontSize: 11 }}>PRs: {point.prs}</div>
                             <div style={{ color: C.emerald, fontSize: 11 }}>Decisions: {point.decisions}</div>
-                            <div style={{ color: C.rose, fontSize: 11 }}>Dead Ends: {point.deadEnds}</div>
                             {chartView === 'daily' && <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic', maxWidth: 220 }}>{sessionFocusMap[point.session] ?? ''}</div>}
                           </>
                         ),
@@ -274,7 +273,6 @@ export default function SessionsTab({
             {[
               { label: 'PRs Merged', color: C.cyan },
               { label: 'Decisions', color: C.emerald },
-              { label: 'Dead Ends', color: C.rose },
             ].map((item) => (
               <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: C.slate }}>
                 <span style={{ width: 10, height: 10, borderRadius: 2, backgroundColor: item.color }} />

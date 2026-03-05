@@ -140,7 +140,8 @@ function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { o
 
 export default function DecisionTree() {
   const [filter, setFilter] = useState<FilterType>('all');
-  const [view, setView] = useState<'tree' | 'metrics' | 'process'>('tree');
+  const [view, setView] = useState<'tree' | 'metrics'>('tree');
+  const [showHowWeWork, setShowHowWeWork] = useState(false);
   const [treeMode, setTreeMode] = useState<'stacked' | 'canvas'>('stacked');
   const [metricsTab, setMetricsTab] = useState<'overview' | 'code' | 'bugs' | 'sessions'>('overview');
   const [filtersExpanded, setFiltersExpanded] = useState(false);
@@ -176,10 +177,7 @@ export default function DecisionTree() {
       setDetailNodes(new Set());
       setFilter('all');
       setFiltersExpanded(false);
-      // Do NOT reset view to 'tree' if on 'process' — How We Work is project-agnostic
-      if (view === 'metrics') {
-        setView('tree');
-      }
+      setView('tree');
       setTreeMode('stacked');
       setMetricsTab('overview');
     }
@@ -226,8 +224,19 @@ export default function DecisionTree() {
   return (
     <section className="mx-auto max-w-[1800px] px-4 py-8 text-slate-100 sm:px-8">
       <header className="mb-5 border-b border-slate-700 pb-3">
-        <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{activeProject.subtitle}</p>
-        <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">{activeProject.name}</h1>
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{activeProject.subtitle}</p>
+            <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">{activeProject.name}</h1>
+          </div>
+          <button
+            onClick={() => setShowHowWeWork(true)}
+            className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition hover:brightness-125"
+            style={{ borderColor: '#334155', backgroundColor: '#1e293b', color: '#94a3b8' }}
+          >
+            ℹ️ How We Work
+          </button>
+        </div>
 
         {PROJECTS.length > 1 && (
           <div className="mt-2 flex items-center gap-2">
@@ -269,17 +278,6 @@ export default function DecisionTree() {
             }}
           >
             📊 Metrics
-          </button>
-          <button
-            onClick={() => setView('process')}
-            className="rounded-t-[8px] border-b-2 px-4 py-2 text-sm font-semibold"
-            style={{
-              backgroundColor: view === 'process' ? '#1e293b' : 'transparent',
-              color: view === 'process' ? '#f8fafc' : '#64748b',
-              borderBottomColor: view === 'process' ? '#22d3ee' : 'transparent',
-            }}
-          >
-            📋 How We Work
           </button>
         </div>
       </header>
@@ -420,7 +418,22 @@ export default function DecisionTree() {
         </ErrorBoundary>
       )}
 
-      {view === 'process' && <ErrorBoundary fallbackLabel="How We Work"><ProcessWorkflow /></ErrorBoundary>}
+      {showHowWeWork && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 100, backgroundColor: '#0f172a', overflowY: 'auto' }}>
+          <div className="mx-auto max-w-[1800px] px-4 py-6 sm:px-8">
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => setShowHowWeWork(false)}
+                className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition hover:brightness-125"
+                style={{ borderColor: '#334155', backgroundColor: '#1e293b', color: '#94a3b8' }}
+              >
+                ✕ Close
+              </button>
+            </div>
+            <ErrorBoundary fallbackLabel="How We Work"><ProcessWorkflow /></ErrorBoundary>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

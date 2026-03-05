@@ -37,6 +37,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const [expandedCodeRows, setExpandedCodeRows] = useState<Set<string>>(new Set());
   const [expandedNetRows, setExpandedNetRows] = useState<Set<string>>(new Set());
   const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set());
+  const [expandedBugSessions, setExpandedBugSessions] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     setTab(initialTab);
@@ -355,6 +356,23 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
     const fixed = selected.bugs.filter((bug) => bug.status.toLowerCase() === 'fixed').length;
     return { bySeverity: bySev, byCategory: byCat, bySource: bySrc, fixedBugs: fixed, openBugs: selected.bugs.length - fixed };
   }, [selected.bugs]);
+
+  const bugsBySession = useMemo(() => {
+    const groups = new Map<string, { key: string; label: string; date: string; bugs: typeof selected.bugs }>();
+    selected.bugs.forEach((bug) => {
+      const key = bug.session;
+      const existing = groups.get(key) ?? { key, label: bug.label, date: bug.date, bugs: [] };
+      existing.bugs.push(bug);
+      groups.set(key, existing);
+    });
+    return Array.from(groups.values()).reverse();
+  }, [selected.bugs]);
+
+  useEffect(() => {
+    if (bugsBySession.length > 0) {
+      setExpandedBugSessions(new Set([bugsBySession[0].key]));
+    }
+  }, [projectId, bugsBySession]);
 
   return (
     <>
@@ -804,29 +822,59 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
               ]}
             />
           </div>
-          <div className="overflow-x-auto rounded-xl border" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-            <table className="w-full border-collapse text-xs">
-              <thead>
-                <tr style={{ backgroundColor: '#162136' }}>
-                  {['#', 'Session', 'Summary', 'Severity', 'Category', 'Source', 'Status'].map((header) => (
-                    <th key={header} className="px-3 py-2 text-left font-semibold" style={{ color: C.slate }}>{header}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {selected.bugs.map((bug) => (
-                  <tr key={bug.id} className="border-t" style={{ borderColor: C.border }}>
-                    <td className="px-3 py-2">{bug.id}</td>
-                    <td className="px-3 py-2" style={{ color: C.cyan }}>{bug.date} — {bug.label}</td>
-                    <td className="px-3 py-2">{bug.summary}</td>
-                    <td className="px-3 py-2" style={{ color: bug.severity === 'Critical' ? C.rose : bug.severity === 'High' ? C.amber : bug.severity === 'Medium' ? C.cyan : C.muted }}>{bug.severity}</td>
-                    <td className="px-3 py-2">{bug.category}</td>
-                    <td className="px-3 py-2">{bug.source}</td>
-                    <td className="px-3 py-2" style={{ color: bug.status.toLowerCase() === 'fixed' ? C.emerald : C.amber }}>{bug.status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="space-y-2">
+            {bugsBySession.map((group) => {
+              const isExpanded = expandedBugSessions.has(group.key);
+              const fixedInGroup = group.bugs.filter(b => b.status.toLowerCase() === 'fixed').length;
+              return (
+                <div key={group.key} className="rounded-xl border" style={{ backgroundColor: C.cardBg, borderColor: C.border, overflow: 'hidden' }}>
+                  <button
+                    onClick={() => {
+                      setExpandedBugSessions((prev) => {
+                        const next = new Set(prev);
+                        if (next.has(group.key)) next.delete(group.key);
+                        else next.add(group.key);
+                        return next;
+                      });
+                    }}
+                    className="flex w-full items-center justify-between px-4 py-2.5"
+                    style={{ backgroundColor: C.cardBg }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span style={{ fontSize: 14, fontWeight: 600, color: C.white }}>{group.date} — {group.label}</span>
+                      <span style={{ fontSize: 12, color: C.muted }}>{group.bugs.length} bug{group.bugs.length > 1 ? 's' : ''}</span>
+                      <span style={{ fontSize: 12, color: C.slate }}>{fixedInGroup} fixed</span>
+                    </div>
+                    <span style={{ color: C.muted, transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 200ms ease' }}>&#9654;</span>
+                  </button>
+                  <div style={{ maxHeight: isExpanded ? 2000 : 0, overflow: 'hidden', transition: 'max-height 300ms ease' }}>
+                    <table className="w-full border-collapse text-xs">
+                      <thead>
+                        <tr style={{ backgroundColor: '#162136' }}>
+                          {['#', 'Date', 'Summary', 'Decision', 'Severity', 'Category', 'Source', 'Status'].map((header) => (
+                            <th key={header} className="px-3 py-2 text-left font-semibold" style={{ color: C.slate }}>{header}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {group.bugs.map((bug) => (
+                          <tr key={bug.id} className="border-t" style={{ borderColor: C.border }}>
+                            <td className="px-3 py-2">{bug.id}</td>
+                            <td className="px-3 py-2" style={{ color: C.cyan }}>{bug.date}</td>
+                            <td className="px-3 py-2">{bug.summary}</td>
+                            <td className="px-3 py-2" style={{ color: C.muted }}>—</td>
+                            <td className="px-3 py-2" style={{ color: bug.severity === 'Critical' ? C.rose : bug.severity === 'High' ? C.amber : bug.severity === 'Medium' ? C.cyan : C.muted }}>{bug.severity}</td>
+                            <td className="px-3 py-2">{bug.category}</td>
+                            <td className="px-3 py-2">{bug.source}</td>
+                            <td className="px-3 py-2" style={{ color: bug.status.toLowerCase() === 'fixed' ? C.emerald : C.amber }}>{bug.status}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect, type ReactNode } from 'react';
 import { Card, C } from './MetricsCard';
 import { formatShortDate, formatSessionDate, buildSmoothPath } from './chartUtils';
-import type { SessionEntry } from '../data/metaMetrics';
+import type { SessionEntry, SessionTool } from '../data/metaMetrics';
 
 interface SessionsTabProps {
   sessions: SessionEntry[];
@@ -25,6 +25,13 @@ export default function SessionsTab({
   const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set());
   const [chartView, setChartView] = useState<'daily' | 'weekly'>('weekly');
 
+
+  const toolColors: Record<SessionTool, string> = {
+    'Claude Code': C.emerald,
+    'Codex': C.amber,
+    'Cowork': C.slate,
+    'Mixed': C.violet,
+  };
   const chartDims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
   const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
   const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
@@ -92,6 +99,42 @@ export default function SessionsTab({
 
     return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points };
   }, [sessions, sessionDateMap, chartView, weeklyData]);
+
+
+  const avgTaskTimePoints = useMemo(() => {
+    const validSessions = sessions.filter(s => s.taskCount > 0);
+    if (!validSessions.length) return null;
+    const yTicks = 4;
+    const avgTimes = validSessions.map(s => (s.duration * 60) / s.taskCount);
+    const maxTime = Math.max(...avgTimes, 1);
+    const raw = maxTime / yTicks || 1;
+    const mag = 10 ** Math.floor(Math.log10(raw));
+    const step = Math.max(1, Math.ceil(raw / mag) * mag);
+    const yMax = step * yTicks;
+
+    const points = validSessions.map((entry, index) => {
+      const avgMin = (entry.duration * 60) / entry.taskCount;
+      const ratioX = validSessions.length > 1 ? index / (validSessions.length - 1) : 0;
+      const x = chartDims.left + ratioX * chartInnerWidth;
+      const date = sessionDateMap[entry.session] ?? entry.session;
+      return {
+        ...entry,
+        date,
+        dateLabel: formatShortDate(date),
+        avgMin: Math.round(avgMin),
+        tool: entry.tool,
+        x,
+        y: chartDims.top + (1 - (avgMin / yMax)) * chartInnerHeight,
+      };
+    });
+
+    return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points };
+  }, [sessions, sessionDateMap]);
+
+  const avgTaskTimePath = useMemo(() => {
+    if (!avgTaskTimePoints) return '';
+    return buildSmoothPath(avgTaskTimePoints.points.map(p => ({ x: p.x, y: p.y })));
+  }, [avgTaskTimePoints]);
 
   const sessionLines = useMemo(() => ({
     prs: buildSmoothPath(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yPrs }))),
@@ -242,6 +285,78 @@ export default function SessionsTab({
         </div>
       </div>
 
+
+      {avgTaskTimePoints && (
+      <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
+        <h3 className="text-sm font-semibold">Avg Task Time</h3>
+        <div className="text-xs mb-3" style={{ color: C.muted }}>Minutes per task by session</div>
+        <div style={{ position: 'relative', overflowX: 'auto', paddingBottom: 4 }}>
+          <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }} role="img" aria-label="Average task time chart">
+            {Array.from({ length: avgTaskTimePoints.yTicks + 1 }, (_, index) => {
+              const value = index * avgTaskTimePoints.step;
+              const y = avgTaskTimePoints.dims.top + avgTaskTimePoints.innerHeight - (index / avgTaskTimePoints.yTicks) * avgTaskTimePoints.innerHeight;
+              return (
+                <g key={`avg-task-grid-${value}`}>
+                  <line x1={avgTaskTimePoints.dims.left} y1={y} x2={avgTaskTimePoints.dims.width - avgTaskTimePoints.dims.right} y2={y} stroke={C.border} strokeDasharray="4 4" strokeOpacity="0.3" />
+                  <text x={avgTaskTimePoints.dims.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">{value}m</text>
+                </g>
+              );
+            })}
+
+            <path d={avgTaskTimePath} fill="none" stroke={C.violet} strokeWidth="2" />
+
+            {avgTaskTimePoints.points.map((point, index) => (
+              <circle
+                key={`avg-${point.session}-${index}`}
+                cx={point.x}
+                cy={point.y}
+                r={hoveredPointIndex === index + 10000 ? 6 : 4}
+                fill={toolColors[point.tool as SessionTool]}
+                onMouseEnter={(event) => {
+                  setHoveredPointIndex(index + 10000);
+                  setTooltip({
+                    x: event.clientX, y: event.clientY,
+                    content: (
+                      <>
+                        <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{point.date} — {point.label}</div>
+                        <div style={{ color: C.violet, fontSize: 11 }}>{point.avgMin} min/task</div>
+                        <div style={{ color: C.slate, fontSize: 11 }}>{point.taskCount} tasks in {point.duration}h</div>
+                        <div style={{ color: toolColors[point.tool as SessionTool], fontSize: 11 }}>{point.tool}</div>
+                      </>
+                    ),
+                  });
+                }}
+                onMouseMove={(event) => {
+                  setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                }}
+                onMouseLeave={() => { setHoveredPointIndex(null); setTooltip(null); }}
+              />
+            ))}
+
+            {avgTaskTimePoints.points.map((point, index) => (
+              <text
+                key={`avg-label-${index}`}
+                x={point.x}
+                y={index % 2 === 0 ? avgTaskTimePoints.dims.height - 10 : avgTaskTimePoints.dims.height - 22}
+                textAnchor="middle" fill={C.slate} fontSize="10"
+              >
+                {point.dateLabel}
+              </text>
+            ))}
+          </svg>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+            {Object.entries(toolColors).filter(([tool]) => avgTaskTimePoints.points.some(p => p.tool === tool)).map(([tool, color]) => (
+              <div key={tool} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: C.slate }}>
+                <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: color }} />
+                {tool}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      )}
+
       <div className="space-y-3">
         {sessionsByMonth.map((monthGroup) => {
           const isExpanded = expandedMonths.has(monthGroup.key);
@@ -272,7 +387,10 @@ export default function SessionsTab({
               >
                 {monthGroup.sessions.map((entry) => (
                   <div key={`${entry.session}-detail`} className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-                    <h4 className="text-base font-semibold">{entry.displayDate} — {entry.label}</h4>
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-base font-semibold">{entry.displayDate} — {entry.label}</h4>
+                      <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: toolColors[entry.tool as SessionTool] + '22', color: toolColors[entry.tool as SessionTool] }}>{entry.tool}</span>
+                    </div>
                     <p className="mb-3 text-sm" style={{ color: C.cyan }}>{entry.focus}</p>
                     <div className="grid grid-cols-2 gap-2 text-xs" style={{ color: C.slate }}>
                       <span>Duration</span><span>{entry.duration}h</span>

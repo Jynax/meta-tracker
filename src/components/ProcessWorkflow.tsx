@@ -650,11 +650,16 @@ export default function ProcessWorkflow() {
               title="Parity checks for alternative views"
               description="When adding a second view of the same data, verify filters, labels, and formatting match everywhere."
             />
+            <PatternCard
+              number={11}
+              title="Living docs replace passoff chains"
+              description="STATUS.md is always current. Tasks live in queues. No versioned handoff docs — the living docs are the context bridge."
+            />
             <div style={{ borderBottom: "none" }}>
               <PatternCard
-                number={11}
-                title="Living docs replace passoff chains"
-                description="STATUS.md is always current. Tasks live in queues. No versioned handoff docs — the living docs are the context bridge."
+                number={12}
+                title="Research before implementing"
+                description="Don’t default to the first approach. Research best-in-class patterns, check what leading tools do, and verify the stack doesn’t already solve it — before writing code."
               />
             </div>
           </div>

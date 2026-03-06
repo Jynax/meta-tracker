@@ -111,6 +111,7 @@ export default function CodeTab({
         <button
           type="button"
           onClick={toggleRow}
+          className="w-full text-left"
           onMouseEnter={(event) => {
             setHoveredCodeSession(row.key);
             setTooltip({

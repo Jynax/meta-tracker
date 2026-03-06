@@ -88,7 +88,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
               }}
               className="rounded-full border px-4 py-1.5 text-sm font-medium"
               style={{
-                backgroundColor: tab === item.id ? `${C.cyan}22` : C.cardBg,
+                backgroundColor: tab === item.id ? 'color-mix(in srgb, var(--theme-cyan) 13%, transparent)' : C.cardBg,
                 borderColor: tab === item.id ? C.cyan : C.border,
                 color: tab === item.id ? C.cyan : C.slate,
               }}

@@ -261,11 +261,12 @@ export default function DecisionTree() {
         </div>
 
         {PROJECTS.length > 1 && (
-          <div className="mt-2 flex items-center gap-2">
+          <nav aria-label="Project switcher" className="mt-2 flex items-center gap-2">
             {PROJECTS.map((proj) => (
               <button
                 key={proj.id}
                 onClick={() => switchProject(proj.id)}
+                aria-current={activeProject.id === proj.id ? 'page' : undefined}
                 className={`rounded-lg px-3 py-1.5 text-sm transition ${
                   activeProject.id === proj.id
                     ? 'bg-slate-100 text-slate-950'
@@ -275,12 +276,13 @@ export default function DecisionTree() {
                 {proj.name}
               </button>
             ))}
-          </div>
+          </nav>
         )}
 
-        <div className="mt-3 flex items-end gap-2">
+        <nav aria-label="View switcher" className="mt-3 flex items-end gap-2">
           <button
             onClick={() => setView('tree')}
+            aria-current={view === 'tree' ? 'page' : undefined}
             className="rounded-t-[8px] border-b-2 px-4 py-2 text-sm font-semibold"
             style={{
               backgroundColor: view === 'tree' ? 'var(--theme-card-bg)' : 'transparent',
@@ -292,6 +294,7 @@ export default function DecisionTree() {
           </button>
           <button
             onClick={() => setView('metrics')}
+            aria-current={view === 'metrics' ? 'page' : undefined}
             className="rounded-t-[8px] border-b-2 px-4 py-2 text-sm font-semibold"
             style={{
               backgroundColor: view === 'metrics' ? 'var(--theme-card-bg)' : 'transparent',
@@ -301,7 +304,7 @@ export default function DecisionTree() {
           >
             📊 Metrics
           </button>
-        </div>
+        </nav>
       </header>
 
       {view === 'tree' && (

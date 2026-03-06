@@ -108,7 +108,8 @@ export default function CodeTab({
 
     return (
       <div key={row.key} className="rounded-md" style={{ border: `1px solid ${C.border}` }}>
-        <div
+        <button
+          type="button"
           onClick={toggleRow}
           onMouseEnter={(event) => {
             setHoveredCodeSession(row.key);
@@ -143,7 +144,7 @@ export default function CodeTab({
             <div className="h-3 rounded" style={{ width: `${(row.added / codeDeltaMax) * 100}%`, backgroundColor: C.cyan }} />
             <div className="h-3 rounded" style={{ width: `${(row.deleted / codeDeltaMax) * 100}%`, backgroundColor: C.rose }} />
           </div>
-        </div>
+        </button>
 
         <div style={{ maxHeight: isRowExpanded ? 500 : 0, overflow: 'hidden', transition: 'max-height 150ms ease' }}>
           {row.kind === 'range' && row.dates.map((dateGroup) => {
@@ -151,7 +152,8 @@ export default function CodeTab({
             const isNestedExpandable = dateGroup.entries.length > 1;
             return (
               <div key={dateGroup.date} style={{ paddingLeft: 20, paddingBottom: 4 }}>
-                <div
+                <button
+                  type="button"
                   onClick={() => {
                     if (!isNestedExpandable) return;
                     setExpandedCodeRows((prev) => {
@@ -161,7 +163,7 @@ export default function CodeTab({
                       return next;
                     });
                   }}
-                  className="pt-1"
+                  className="w-full text-left pt-1"
                   style={{ cursor: isNestedExpandable ? 'pointer' : 'default' }}
                 >
                   <div className="mb-1 flex items-center gap-1 text-xs" style={{ color: C.muted }}>
@@ -174,7 +176,7 @@ export default function CodeTab({
                     <div className="h-2.5 rounded" style={{ width: `${(dateGroup.added / codeDeltaMax) * 100}%`, backgroundColor: C.cyan }} />
                     <div className="h-2.5 rounded" style={{ width: `${(dateGroup.deleted / codeDeltaMax) * 100}%`, backgroundColor: C.rose }} />
                   </div>
-                </div>
+                </button>
 
                 <div style={{ maxHeight: isDateExpanded ? 400 : 0, overflow: 'hidden', transition: 'max-height 150ms ease' }}>
                   {dateGroup.entries.map((entry) => (

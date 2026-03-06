@@ -4,7 +4,6 @@ export const metaProject: Project = {
   id: 'meta',
   name: 'Meta Tracker',
   subtitle: 'BUILT WITH CLAUDE CODE & CODEX',
-  url: 'https://meta.jynaxxapps.com',
   chapters: [
     {
       id: 'meta-ch-inception',

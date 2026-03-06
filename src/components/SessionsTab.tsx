@@ -197,12 +197,12 @@ export default function SessionsTab({
             <button
               onClick={() => setChartView('weekly')}
               className="px-3 py-1 text-xs font-medium transition-colors"
-              style={{ backgroundColor: chartView === 'weekly' ? C.cyan + '22' : 'transparent', color: chartView === 'weekly' ? C.cyan : C.slate, borderRight: '1px solid ' + C.border }}
+              style={{ backgroundColor: chartView === 'weekly' ? 'color-mix(in srgb, var(--theme-cyan) 13%, transparent)' : 'transparent', color: chartView === 'weekly' ? C.cyan : C.slate, borderRight: `1px solid ${C.border}` }}
             >By Day</button>
             <button
               onClick={() => setChartView('daily')}
               className="px-3 py-1 text-xs font-medium transition-colors"
-              style={{ backgroundColor: chartView === 'daily' ? C.cyan + '22' : 'transparent', color: chartView === 'daily' ? C.cyan : C.slate }}
+              style={{ backgroundColor: chartView === 'daily' ? 'color-mix(in srgb, var(--theme-cyan) 13%, transparent)' : 'transparent', color: chartView === 'daily' ? C.cyan : C.slate }}
             >By Session</button>
           </div>
         </div>
@@ -393,7 +393,7 @@ export default function SessionsTab({
                   <div key={`${entry.session}-detail`} className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
                     <div className="flex items-center justify-between">
                       <h4 className="text-base font-semibold">{entry.displayDate} — {entry.label}</h4>
-                      <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: toolColors[entry.tool as SessionTool] + '22', color: toolColors[entry.tool as SessionTool] }}>{entry.tool}</span>
+                      <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `color-mix(in srgb, ${toolColors[entry.tool as SessionTool]} 13%, transparent)`, color: toolColors[entry.tool as SessionTool] }}>{entry.tool}</span>
                     </div>
                     <p className="mb-3 text-sm" style={{ color: C.cyan }}>{entry.focus}</p>
                     <div className="grid grid-cols-2 gap-2 text-xs" style={{ color: C.slate }}>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { C } from './MetricsCard';
 import {
   Project,
   Chapter,
@@ -20,19 +21,7 @@ interface StackedTreeViewProps {
   onJumpToSession?: (session: string) => void;
 }
 
-const COLORS = {
-  bg: '#0f172a',
-  cardBg: '#1e293b',
-  border: '#334155',
-  white: '#f8fafc',
-  muted: '#94a3b8',
-  slate: '#94a3b8',
-  cyan: '#22d3ee',
-  emerald: '#34d399',
-  rose: '#fb7185',
-  amber: '#fbbf24',
-  violet: '#a78bfa',
-};
+const COLORS = C;
 
 const CATEGORY_ORDER: NodeCategory[] = ['technical', 'functional', 'ux-design', 'process'];
 

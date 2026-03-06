@@ -405,7 +405,7 @@ export default function SessionsTab({
                     <button
                       onClick={() => onJumpToChapter?.(entry.chapterId)}
                       className="mt-3 rounded-md border px-2.5 py-1 text-xs"
-                      style={{ color: C.cyan, backgroundColor: '#22d3ee1a', borderColor: '#22d3ee55' }}
+                      style={{ color: C.cyan, backgroundColor: 'var(--theme-accent-10)', borderColor: 'var(--theme-accent-33)' }}
                     >
                       {'\uD83C\uDF33'} View chapter: {chapterMap[entry.chapterId] ?? entry.chapterId}
                     </button>

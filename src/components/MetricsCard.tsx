@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 
 const C = {
-  cyan: '#22d3ee', emerald: '#34d399', rose: '#fb7185', amber: '#fbbf24',
-  violet: '#a78bfa', slate: '#94a3b8', white: '#f8fafc', muted: '#94a3b8',
-  bg: '#0f172a', cardBg: '#1e293b', border: '#334155',
+  cyan: 'var(--theme-cyan)', emerald: 'var(--theme-emerald)', rose: 'var(--theme-rose)', amber: 'var(--theme-amber)',
+  violet: 'var(--theme-violet)', slate: 'var(--theme-text-secondary)', white: 'var(--theme-text-primary)', muted: 'var(--theme-text-secondary)',
+  bg: 'var(--theme-bg)', cardBg: 'var(--theme-card-bg)', border: 'var(--theme-border)',
 };
 
 function Card({ label, value, color = C.white, detail, tooltip: tooltipText }: { label: string; value: string | number; color?: string; detail?: string; tooltip?: string }) {
@@ -32,7 +32,7 @@ function Card({ label, value, color = C.white, detail, tooltip: tooltipText }: {
         {detail && <div className="text-xs" style={{ color: C.muted }}>{detail}</div>}
       </div>
       {tooltipText && showTooltip && (
-        <div style={{ position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)', background: '#1e293b', border: '1px solid #334155', borderRadius: 8, padding: '8px 12px', fontSize: 11, color: '#94a3b8', zIndex: 50, whiteSpace: 'nowrap', pointerEvents: 'none', marginBottom: 6, }} >
+        <div style={{ position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)', background: 'var(--theme-card-bg)', border: '1px solid var(--theme-border)', borderRadius: 8, padding: '8px 12px', fontSize: 11, color: 'var(--theme-text-secondary)', zIndex: 50, whiteSpace: 'nowrap', pointerEvents: 'none', marginBottom: 6, }} >
           {tooltipText}
         </div>
       )}

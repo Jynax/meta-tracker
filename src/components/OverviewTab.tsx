@@ -233,7 +233,7 @@ export default function OverviewTab({
           {stack.map((item) => {
             const dot = item.cat === 'Core' ? C.cyan : item.cat === 'UI' ? C.emerald : item.cat === 'Build' ? C.amber : C.violet;
             return (
-              <div key={`${item.name}-${item.cat}`} className="flex items-center gap-2 rounded-full border px-3 py-1 text-xs" style={{ borderColor: C.border, backgroundColor: '#111b30' }}>
+              <div key={`${item.name}-${item.cat}`} className="flex items-center gap-2 rounded-full border px-3 py-1 text-xs" style={{ borderColor: C.border, backgroundColor: 'var(--theme-bg)' }}>
                 <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: dot }} />
                 <span>{item.name}</span>
                 <span style={{ color: C.muted }}>({item.cat})</span>

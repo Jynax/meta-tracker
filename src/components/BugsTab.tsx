@@ -59,25 +59,25 @@ export default function BugsTab({ bugs, projectId }: BugsTabProps) {
           items={[
             { label: 'Critical', count: bySeverity.Critical ?? 0, color: '#ef4444' },
             { label: 'High', count: bySeverity.High ?? 0, color: '#f97316' },
-            { label: 'Medium', count: bySeverity.Medium ?? 0, color: '#fbbf24' },
-            { label: 'Low', count: bySeverity.Low ?? 0, color: '#64748b' },
+            { label: 'Medium', count: bySeverity.Medium ?? 0, color: C.amber },
+            { label: 'Low', count: bySeverity.Low ?? 0, color: C.muted },
           ]}
         />
         <DonutBreakdown animate={animateBugDonuts} label="Category"
           items={[
-            { label: 'Technical', count: byCategory.Technical ?? 0, color: '#22d3ee' },
-            { label: 'Functional', count: byCategory.Functional ?? 0, color: '#34d399' },
-            { label: 'UX', count: byCategory.UX ?? 0, color: '#fbbf24' },
+            { label: 'Technical', count: byCategory.Technical ?? 0, color: C.cyan },
+            { label: 'Functional', count: byCategory.Functional ?? 0, color: C.emerald },
+            { label: 'UX', count: byCategory.UX ?? 0, color: C.amber },
           ]}
         />
         <DonutBreakdown animate={animateBugDonuts} label="Source"
           items={[
-            { label: 'ChatGPT Code Review', count: bySource['ChatGPT Code Review'] ?? 0, color: '#22d3ee' },
-            { label: 'Cowork Audit', count: bySource['Cowork Audit'] ?? 0, color: '#34d399' },
-            { label: 'Code Review', count: bySource['Code Review'] ?? 0, color: '#a78bfa' },
-            { label: 'Cowork Code Review', count: bySource['Cowork Code Review'] ?? 0, color: '#fbbf24' },
-            { label: 'User Report', count: bySource['User Report'] ?? 0, color: '#fb7185' },
-            { label: 'Codex Auto-Review', count: bySource['Codex Auto-Review'] ?? 0, color: '#64748b' },
+            { label: 'ChatGPT Code Review', count: bySource['ChatGPT Code Review'] ?? 0, color: C.cyan },
+            { label: 'Cowork Audit', count: bySource['Cowork Audit'] ?? 0, color: C.emerald },
+            { label: 'Code Review', count: bySource['Code Review'] ?? 0, color: C.violet },
+            { label: 'Cowork Code Review', count: bySource['Cowork Code Review'] ?? 0, color: C.amber },
+            { label: 'User Report', count: bySource['User Report'] ?? 0, color: C.rose },
+            { label: 'Codex Auto-Review', count: bySource['Codex Auto-Review'] ?? 0, color: C.muted },
           ]}
         />
       </div>

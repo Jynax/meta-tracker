@@ -1,0 +1,64 @@
+/* Security Compass Theme */
+
+:root {
+  --theme-bg: #0f172a;
+  --theme-card-bg: #1e293b;
+  --theme-border: #334155;
+  --theme-text-primary: #f8fafc;
+  --theme-text-secondary: #94a3b8;
+  --theme-text-muted: #64748b;
+  --theme-cyan: #22d3ee;
+  --theme-emerald: #34d399;
+  --theme-rose: #fb7185;
+  --theme-amber: #fbbf24;
+  --theme-violet: #a78bfa;
+
+  --theme-accent-10: #22d3ee1a;
+  --theme-accent-15: #22d3ee26;
+  --theme-accent-20: #22d3ee33;
+  --theme-accent-33: #22d3ee55;
+  --theme-accent-40: #22d3ee66;
+}
+
+[data-theme="sc"] {
+  --theme-bg: #0F1929;
+  --theme-card-bg: #162032;
+  --theme-border: #2A3F5F;
+  --theme-text-primary: #F0F4F8;
+  --theme-text-secondary: #9BAEC8;
+  --theme-text-muted: #64748B;
+
+  --theme-cyan: #F26522;
+  --theme-emerald: #22C55E;
+  --theme-rose: #EF4444;
+  --theme-amber: #F59E0B;
+  --theme-violet: #a78bfa;
+
+  --theme-accent-10: rgba(242, 101, 34, 0.10);
+  --theme-accent-15: rgba(242, 101, 34, 0.15);
+  --theme-accent-20: rgba(242, 101, 34, 0.20);
+  --theme-accent-33: rgba(242, 101, 34, 0.33);
+  --theme-accent-40: rgba(242, 101, 34, 0.40);
+
+  --color-slate-950: #0A1220;
+  --color-slate-900: #0F1929;
+  --color-slate-800: #162032;
+  --color-slate-700: #1E2D44;
+  --color-slate-600: #2A3F5F;
+  --color-slate-500: #3B5278;
+  --color-slate-400: #9BAEC8;
+  --color-slate-300: #B8C9DE;
+  --color-slate-200: #F0F4F8;
+  --color-slate-100: #F0F4F8;
+
+  --color-cyan-300: #F59E0B;
+  --color-cyan-400: #F26522;
+  --color-cyan-500: #F26522;
+
+  background-color: var(--theme-bg);
+  color: var(--theme-text-primary);
+}
+
+html {
+  transition: background-color 150ms ease, color 150ms ease;
+}

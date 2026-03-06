@@ -1,7 +1,16 @@
 @import '@xyflow/react/dist/style.css' layer(base);
 @import "tailwindcss";
+@import "./styles/sc-theme.css";
 
 body {
-  background-color: #0f172a;
-  color: #e2e8f0;
+  background-color: var(--theme-bg);
+  color: var(--theme-text-primary);
+}
+
+/* Accessibility: focus-visible ring for all interactive elements */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 2px;
 }

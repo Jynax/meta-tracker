@@ -12,6 +12,9 @@ import StackedTreeView from './StackedTreeView';
 import type { TreeNodeData } from './treeLayout';
 import { buildTreeLayout } from './treeLayout';
 import { ExternalLink } from 'lucide-react';
+import { useTheme } from '../hooks/useTheme';
+import { ThemeToggleButton } from './ThemeToggleButton';
+import { C } from './MetricsCard';
 
 const FILTERS: Array<{ id: FilterType; label: string }> = [
   { id: 'all', label: 'All' },
@@ -29,10 +32,10 @@ const FILTERS: Array<{ id: FilterType; label: string }> = [
 const PROJECTS = [bipProject, metaProject, remnantsProject];
 
 const CATEGORY_META: Array<{ id: NodeCategory; label: string; color: string }> = [
-  { id: 'technical', label: 'Technical', color: '#22d3ee' },
-  { id: 'functional', label: 'Functional', color: '#34d399' },
-  { id: 'ux-design', label: 'UX/Design', color: '#fbbf24' },
-  { id: 'process', label: 'Process', color: '#a78bfa' },
+  { id: 'technical', label: 'Technical', color: 'var(--theme-cyan)' },
+  { id: 'functional', label: 'Functional', color: 'var(--theme-emerald)' },
+  { id: 'ux-design', label: 'UX/Design', color: 'var(--theme-amber)' },
+  { id: 'process', label: 'Process', color: 'var(--theme-violet)' },
 ];
 
 type ChapterStat = {
@@ -63,7 +66,7 @@ function CategoryBar({ categories, total, compact = false }: { categories: Recor
   return (
     <div
       className="flex overflow-hidden rounded-full"
-      style={{ height: compact ? 12 : 24, width: compact ? 120 : '100%', backgroundColor: '#0f172a' }}
+      style={{ height: compact ? 12 : 24, width: compact ? 120 : '100%', backgroundColor: 'var(--theme-bg)' }}
     >
       {visibleCategories.map((category, idx) => {
         const count = categories[category.id];
@@ -76,8 +79,8 @@ function CategoryBar({ categories, total, compact = false }: { categories: Recor
             style={{
               width: `${widthPercent}%`,
               backgroundColor: category.color,
-              color: '#0f172a',
-              borderRight: idx < visibleCategories.length - 1 ? '2px solid #0f172a' : 'none',
+              color: 'var(--theme-bg)',
+              borderRight: idx < visibleCategories.length - 1 ? '2px solid var(--theme-bg)' : 'none',
             }}
           >
             {!compact && widthPercent > 12 ? `${category.label} (${count})` : null}
@@ -111,14 +114,14 @@ function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { o
           <div className="mt-2 flex items-center gap-[10px] text-xs text-slate-300">
             <CategoryBar categories={stats.categories} total={stats.entries} compact />
             <span>{stats.entries} entries</span>
-            {stats.deadEnds > 0 && <span style={{ color: '#fb7185' }}>{stats.deadEnds} dead ends</span>}
-            {stats.discoveries > 0 && <span style={{ color: '#fbbf24' }}>{stats.discoveries} discoveries</span>}
-            {stats.pivots > 0 && <span style={{ color: '#a78bfa' }}>{stats.pivots} pivots</span>}
+            {stats.deadEnds > 0 && <span style={{ color: 'var(--theme-rose)' }}>{stats.deadEnds} dead ends</span>}
+            {stats.discoveries > 0 && <span style={{ color: 'var(--theme-amber)' }}>{stats.discoveries} discoveries</span>}
+            {stats.pivots > 0 && <span style={{ color: 'var(--theme-violet)' }}>{stats.pivots} pivots</span>}
             {stats.bugs > 0 && (
               <button
                 type="button"
                 className="underline decoration-dotted"
-                style={{ color: '#fb7185' }}
+                style={{ color: 'var(--theme-rose)' }}
                 onClick={(event) => {
                   event.stopPropagation();
                   data.onJumpToMetrics?.('bugs');
@@ -140,6 +143,7 @@ function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { o
 }
 
 export default function DecisionTree() {
+  const { theme, toggleTheme } = useTheme();
   const [filter, setFilter] = useState<FilterType>('all');
   const [view, setView] = useState<'tree' | 'metrics'>('tree');
   const [showHowWeWork, setShowHowWeWork] = useState(false);
@@ -236,7 +240,7 @@ export default function DecisionTree() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="ml-3 inline-flex items-center align-middle rounded-md px-2 py-1 text-xs font-medium transition hover:brightness-125"
-                  style={{ backgroundColor: '#22d3ee15', color: '#22d3ee', border: '1px solid #22d3ee33', verticalAlign: 'middle' }}
+                  style={{ backgroundColor: 'var(--theme-accent-10)', color: 'var(--theme-cyan)', border: '1px solid var(--theme-accent-20)', verticalAlign: 'middle' }}
                 >
                   <ExternalLink size={12} className="mr-1" />
                   Visit App
@@ -244,13 +248,16 @@ export default function DecisionTree() {
               )}
             </h1>
           </div>
-          <button
-            onClick={() => setShowHowWeWork(true)}
-            className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition hover:brightness-125"
-            style={{ borderColor: '#334155', backgroundColor: '#1e293b', color: '#94a3b8' }}
-          >
-            ℹ️ How We Work
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggleButton theme={theme} onToggle={toggleTheme} />
+            <button
+              onClick={() => setShowHowWeWork(true)}
+              className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition hover:brightness-125"
+              style={{ borderColor: 'var(--theme-border)', backgroundColor: 'var(--theme-card-bg)', color: 'var(--theme-text-secondary)' }}
+            >
+              ℹ️ How We Work
+            </button>
+          </div>
         </div>
 
         {PROJECTS.length > 1 && (
@@ -276,9 +283,9 @@ export default function DecisionTree() {
             onClick={() => setView('tree')}
             className="rounded-t-[8px] border-b-2 px-4 py-2 text-sm font-semibold"
             style={{
-              backgroundColor: view === 'tree' ? '#1e293b' : 'transparent',
-              color: view === 'tree' ? '#f8fafc' : '#64748b',
-              borderBottomColor: view === 'tree' ? '#22d3ee' : 'transparent',
+              backgroundColor: view === 'tree' ? 'var(--theme-card-bg)' : 'transparent',
+              color: view === 'tree' ? 'var(--theme-text-primary)' : 'var(--theme-text-muted)',
+              borderBottomColor: view === 'tree' ? 'var(--theme-cyan)' : 'transparent',
             }}
           >
             🌳 Decision Tree
@@ -287,9 +294,9 @@ export default function DecisionTree() {
             onClick={() => setView('metrics')}
             className="rounded-t-[8px] border-b-2 px-4 py-2 text-sm font-semibold"
             style={{
-              backgroundColor: view === 'metrics' ? '#1e293b' : 'transparent',
-              color: view === 'metrics' ? '#f8fafc' : '#64748b',
-              borderBottomColor: view === 'metrics' ? '#22d3ee' : 'transparent',
+              backgroundColor: view === 'metrics' ? 'var(--theme-card-bg)' : 'transparent',
+              color: view === 'metrics' ? 'var(--theme-text-primary)' : 'var(--theme-text-muted)',
+              borderBottomColor: view === 'metrics' ? 'var(--theme-cyan)' : 'transparent',
             }}
           >
             📊 Metrics
@@ -300,7 +307,7 @@ export default function DecisionTree() {
       {view === 'tree' && (
         <>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-            <span style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#64748b', fontWeight: 700 }}>View:</span>
+            <span style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--theme-text-muted)', fontWeight: 700 }}>View:</span>
             {(['stacked', 'canvas'] as const).map((mode) => (
               <button
                 key={mode}
@@ -310,9 +317,9 @@ export default function DecisionTree() {
                   fontWeight: 600,
                   padding: '5px 12px',
                   borderRadius: 8,
-                  border: `1px solid ${treeMode === mode ? '#22d3ee40' : '#334155'}`,
-                  background: treeMode === mode ? '#22d3ee20' : 'transparent',
-                  color: treeMode === mode ? '#22d3ee' : '#64748b',
+                  border: `1px solid ${treeMode === mode ? 'var(--theme-accent-40)' : 'var(--theme-border)'}`,
+                  background: treeMode === mode ? 'var(--theme-accent-20)' : 'transparent',
+                  color: treeMode === mode ? 'var(--theme-cyan)' : 'var(--theme-text-muted)',
                   cursor: 'pointer',
                 }}
               >
@@ -325,14 +332,14 @@ export default function DecisionTree() {
             <>
               <div
                 className="mb-4 rounded-xl border"
-                style={{ backgroundColor: '#1e293b', borderColor: '#334155', padding: '14px 20px' }}
+                style={{ backgroundColor: 'var(--theme-card-bg)', borderColor: 'var(--theme-border)', padding: '14px 20px' }}
               >
                 <div className="flex flex-wrap items-center gap-2 text-sm text-slate-200">
                   <span>{projectSummary.entries} entries</span>
                   <span className="text-slate-500">|</span>
-                  {projectSummary.deadEnds > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: '#fb718522', color: '#fb7185' }}>{projectSummary.deadEnds} dead ends</span>}
-                  {projectSummary.discoveries > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: '#fbbf2422', color: '#fbbf24' }}>{projectSummary.discoveries} discoveries</span>}
-                  {projectSummary.pivots > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: '#a78bfa22', color: '#a78bfa' }}>{projectSummary.pivots} pivots</span>}
+                  {projectSummary.deadEnds > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: 'var(--theme-rose)', opacity: 0.15, color: 'var(--theme-rose)' }}>{projectSummary.deadEnds} dead ends</span>}
+                  {projectSummary.discoveries > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: 'color-mix(in srgb, var(--theme-amber) 13%, transparent)', color: 'var(--theme-amber)' }}>{projectSummary.discoveries} discoveries</span>}
+                  {projectSummary.pivots > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: 'color-mix(in srgb, var(--theme-violet) 13%, transparent)', color: 'var(--theme-violet)' }}>{projectSummary.pivots} pivots</span>}
                 </div>
                 <div className="mt-2">
                   <CategoryBar categories={projectSummary.categories} total={projectSummary.entries} />
@@ -409,7 +416,7 @@ export default function DecisionTree() {
                 fitViewOptions={{ maxZoom: 1, minZoom: 0.1, padding: 0.2 }}
                 proOptions={{ hideAttribution: true }}
                 className="bg-[#0f172a]"
-                style={{ backgroundColor: '#0f172a' }}
+                style={{ backgroundColor: 'var(--theme-bg)' }}
               >
                 <Controls className="!bg-slate-900 !border-slate-700" />
                 <Background variant="dots" gap={18} size={1.2} color="rgba(148,163,184,0.08)" />
@@ -434,13 +441,13 @@ export default function DecisionTree() {
       )}
 
       {showHowWeWork && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 100, backgroundColor: '#0f172a', overflowY: 'auto' }}>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 100, backgroundColor: 'var(--theme-bg)', overflowY: 'auto' }}>
           <div className="mx-auto max-w-[1800px] px-4 py-6 sm:px-8">
             <div className="flex justify-end mb-4">
               <button
                 onClick={() => setShowHowWeWork(false)}
                 className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition hover:brightness-125"
-                style={{ borderColor: '#334155', backgroundColor: '#1e293b', color: '#94a3b8' }}
+                style={{ borderColor: 'var(--theme-border)', backgroundColor: 'var(--theme-card-bg)', color: 'var(--theme-text-secondary)' }}
               >
                 ✕ Close
               </button>

@@ -33,6 +33,7 @@ export interface ProcessHistoryEntry {
   after: string;
   rationale: string;
   session: string;
+  sessionNumber: number;
 }
 
 export const processHistory: ProcessHistoryEntry[] = [
@@ -43,6 +44,7 @@ export const processHistory: ProcessHistoryEntry[] = [
     after: 'Claude Code CLI handles all of the above directly from the terminal — no browser needed, no container crashes, no login loops',
     rationale: 'Claude Code proved dramatically faster and more reliable. Fewer moving parts, direct git access, and no browser automation overhead made it the clear replacement.',
     session: 'Session 22',
+    sessionNumber: 22,
   },
   {
     date: 'Mar 5, 2026',
@@ -51,6 +53,7 @@ export const processHistory: ProcessHistoryEntry[] = [
     after: 'Every code change goes through a PR — no direct commits to main',
     rationale: 'Direct commits caused failed deploys to go unnoticed and made PR metrics inaccurate. PRs give better visibility, safety, and tracking.',
     session: 'Session 22',
+    sessionNumber: 22,
   },
   {
     date: 'Mar 5, 2026',
@@ -59,6 +62,7 @@ export const processHistory: ProcessHistoryEntry[] = [
     after: 'Claude Code CLI added — direct repo access, no browser needed',
     rationale: 'Claude Code can clone repos, run builds locally, push branches, and create PRs without browser automation overhead. Faster for batch tasks.',
     session: 'Session 20',
+    sessionNumber: 20,
   },
   {
     date: 'Mar 4, 2026',
@@ -67,6 +71,7 @@ export const processHistory: ProcessHistoryEntry[] = [
     after: 'Living docs per project: STATUS.md (current state), tasks/ folder (work queue), decisions.md (history), metrics.md (quantitative). START HERE.md as universal entry point.',
     rationale: 'The passoff chain grew unwieldy (16 sessions). Living docs stay current without growing linearly. Any tool can read STATUS.md and pick up where the last left off.',
     session: 'Session 16',
+    sessionNumber: 16,
   },
   {
     date: 'Mar 4, 2026',
@@ -75,6 +80,7 @@ export const processHistory: ProcessHistoryEntry[] = [
     after: 'Individual task .md files in tasks/ folder with status, dependencies, acceptance criteria. Task index for at-a-glance view.',
     rationale: 'Tasks are atomic, trackable, and can be assigned to different tools (Claude Code, Codex). Dependencies and parallel safety are explicit.',
     session: 'Session 16',
+    sessionNumber: 16,
   },
   {
     date: 'Mar 4, 2026',
@@ -83,6 +89,7 @@ export const processHistory: ProcessHistoryEntry[] = [
     after: 'Labels show "Date — Descriptor" (e.g. "Feb 26 — Scaffold & Auth")',
     rationale: 'Session numbers were meaningless to anyone who wasn\'t tracking them. Dates and descriptors make the timeline self-explanatory.',
     session: 'Session 19',
+    sessionNumber: 19,
   },
   {
     date: 'Mar 3, 2026',
@@ -91,6 +98,7 @@ export const processHistory: ProcessHistoryEntry[] = [
     after: 'Dedicated "How We Work" view in the app with Workflow, Task Routing, and Patterns tabs',
     rationale: 'Makes the development process visible and browsable alongside the project data. Useful as onboarding for any new tool or session.',
     session: 'Session 15',
+    sessionNumber: 15,
   },
 ];
 

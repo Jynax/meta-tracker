@@ -14,3 +14,26 @@ a:focus-visible,
   outline: 2px solid #22d3ee;
   outline-offset: 2px;
 }
+
+/* Time Machine slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #a78bfa;
+  cursor: pointer;
+  border: 2px solid #131b2e;
+  box-shadow: 0 0 6px rgba(167, 139, 250, 0.4);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #a78bfa;
+  cursor: pointer;
+  border: 2px solid #131b2e;
+  box-shadow: 0 0 6px rgba(167, 139, 250, 0.4);
+}

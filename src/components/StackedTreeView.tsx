@@ -154,7 +154,8 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
               style={{
                 width: `${percentage}%`,
                 minWidth: 0,
-                background: `${getCategoryColor(category)}cc`,
+                background: getCategoryColor(category),
+                opacity: 0.8,
                 color: COLORS.white,
                 display: 'flex',
                 alignItems: 'center',
@@ -201,7 +202,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
           flexDirection: 'column',
           gap: 8,
           cursor: 'pointer',
-          boxShadow: isHighlighted ? `0 0 0 1px ${COLORS.cyan}30` : 'none',
+          boxShadow: isHighlighted ? `0 0 0 1px color-mix(in srgb, ${COLORS.cyan} 19%, transparent)` : 'none',
           borderRadius: 12,
         }}
       >
@@ -282,7 +283,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                 fontSize: 13,
                 fontWeight: 700,
                 color: COLORS.rose,
-                background: `${COLORS.rose}15`,
+                background: `color-mix(in srgb, ${COLORS.rose} 8%, transparent)`,
                 borderRadius: 9999,
                 padding: '2px 8px',
               }}
@@ -296,7 +297,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                 fontSize: 13,
                 fontWeight: 700,
                 color: COLORS.amber,
-                background: `${COLORS.amber}15`,
+                background: `color-mix(in srgb, ${COLORS.amber} 8%, transparent)`,
                 borderRadius: 9999,
                 padding: '2px 8px',
               }}
@@ -310,7 +311,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                 fontSize: 13,
                 fontWeight: 700,
                 color: COLORS.violet,
-                background: `${COLORS.violet}15`,
+                background: `color-mix(in srgb, ${COLORS.violet} 8%, transparent)`,
                 borderRadius: 9999,
                 padding: '2px 8px',
               }}
@@ -477,7 +478,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                               style={{
                                 fontSize: 12,
                                 color: categoryColor,
-                                background: `${categoryColor}15`,
+                                background: `color-mix(in srgb, ${categoryColor} 8%, transparent)`,
                                 borderRadius: 9999,
                                 padding: '2px 7px',
                                 fontWeight: 700,
@@ -532,7 +533,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                                     style={{
                                       fontSize: 13,
                                       color: COLORS.rose,
-                                      background: `${COLORS.rose}08`,
+                                      background: `color-mix(in srgb, ${COLORS.rose} 3%, transparent)`,
                                       borderLeft: `2px dashed ${COLORS.rose}`,
                                       padding: '4px 8px',
                                       marginBottom: 4,

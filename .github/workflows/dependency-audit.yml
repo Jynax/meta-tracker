@@ -1,0 +1,87 @@
+name: Weekly Dependency Audit
+
+on:
+  schedule:
+    # Every Monday at 9:00 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Run npm audit
+        id: audit
+        run: |
+          npm audit --json > audit.json || true
+
+          HIGH=$(jq '.metadata.vulnerabilities.high // 0' audit.json)
+          CRITICAL=$(jq '.metadata.vulnerabilities.critical // 0' audit.json)
+          TOTAL=$(jq '.metadata.vulnerabilities.total // 0' audit.json)
+
+          echo "high=$HIGH" >> "$GITHUB_OUTPUT"
+          echo "critical=$CRITICAL" >> "$GITHUB_OUTPUT"
+          echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
+
+          npm audit --audit-level=none 2>&1 > audit-report.txt || true
+
+      - name: Run npm outdated
+        run: |
+          {
+            echo '## Outdated Packages'
+            echo ''
+            echo '```'
+            npm outdated 2>&1 || true
+            echo '```'
+          } > outdated-report.txt
+
+      - name: Build summary
+        run: |
+          {
+            echo "## Dependency Audit — $(date -u +%Y-%m-%d)"
+            echo ""
+            echo "| Severity | Count |"
+            echo "|----------|-------|"
+            echo "| Critical | ${{ steps.audit.outputs.critical }} |"
+            echo "| High     | ${{ steps.audit.outputs.high }} |"
+            echo "| Total    | ${{ steps.audit.outputs.total }} |"
+            echo ""
+            echo "### npm audit report"
+            echo ""
+            echo '```'
+            cat audit-report.txt
+            echo '```'
+            echo ""
+            cat outdated-report.txt
+          } > summary.md
+
+          cat summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create or update issue if high/critical found
+        if: ${{ steps.audit.outputs.high != '0' || steps.audit.outputs.critical != '0' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create security --color D93F0B --description "Security vulnerabilities" 2>/dev/null || true
+
+          EXISTING=$(gh issue list             --label "security"             --state open             --search "Dependency Audit"             --json number             --jq 'length')
+
+          if [ "$EXISTING" -gt 0 ]; then
+            ISSUE_NUM=$(gh issue list               --label "security"               --state open               --search "Dependency Audit"               --json number               --jq '.[0].number')
+            gh issue comment "$ISSUE_NUM" --body-file summary.md
+          else
+            gh issue create               --title "Dependency Audit: ${{ steps.audit.outputs.critical }} critical, ${{ steps.audit.outputs.high }} high vulnerabilities"               --body-file summary.md               --label "security"
+          fi

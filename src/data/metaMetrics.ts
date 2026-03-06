@@ -79,6 +79,7 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 27', date: 'Mar 6', label: 'Security Audit + Hardening', added: 7, deleted: 0, net: 7, total: 6112 },
   { session: 'Session 28', date: 'Mar 6', label: 'SC Theme Toggle', added: 199, deleted: 68, net: 131, total: 6243 },
   { session: 'Session 29', date: 'Mar 6', label: 'Accessibility + Link Fixes', added: 18, deleted: 13, net: 5, total: 6248 },
+  { session: 'Session 30', date: 'Mar 6', label: 'Time Machine + Bugfixes', added: 306, deleted: 25, net: 281, total: 6529 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -109,6 +110,7 @@ export const metaSessions: SessionEntry[] = [
   { session: 'Session 27', date: 'Mar 6', label: 'Security Audit + Hardening', duration: 1, prs: 3, decisions: 1, deadEnds: 0, focus: 'Full security audit across all 3 projects (Task #17). Security headers added (Task #39). BIP link attributes fixed.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 2 },
   { session: 'Session 28', date: 'Mar 6', label: 'SC Theme Toggle', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'CSS custom properties theme system, SC dark theme toggle. 3 new files, 7 modified. PR #66.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Feature', tool: 'Claude Code', taskCount: 1 },
   { session: 'Session 29', date: 'Mar 6', label: 'Accessibility + Link Fixes', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'Accessibility pass: landmarks, nav, aria-current, button conversions. Fixed project app links. PR #67.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 2 },
+  { session: 'Session 30', date: 'Mar 6', label: 'Time Machine + Bugfixes', duration: 2, prs: 2, decisions: 0, deadEnds: 0, focus: 'Time Machine toggle on History tab (Task #10, PR #70). Fix category bar + parent date bar regressions from SC theme (Task #43, PR #71).', chapterId: 'meta-ch-process-overhaul', workCategory: 'Feature', tool: 'Claude Code', taskCount: 2 },
 ];
 
 export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };
@@ -147,9 +149,9 @@ export const metaBugs: BugEntry[] = [
 export const metaDerived: DerivedMetric[] = [
   { label: 'Churn Rate', value: '0.33', detail: 'Session 17: character fixes', color: '#34d399' },
   { label: 'Codex Success', value: '98%', detail: '40/41 tasks', color: '#34d399' },
-  { label: 'Cycle Time', value: '0.78h', detail: 'Per merged PR', color: '#22d3ee' },
+  { label: 'Cycle Time', value: '0.76h', detail: 'Per merged PR', color: '#22d3ee' },
   { label: 'Decisions', value: '3.7', detail: 'Per session avg', color: '#22d3ee' },
-  { label: 'Bug Rate', value: '0.43', detail: 'Per PR merged', color: '#34d399' },
+  { label: 'Bug Rate', value: '0.41', detail: 'Per PR merged', color: '#34d399' },
 ];
 
 export const metaStack: StackEntry[] = [

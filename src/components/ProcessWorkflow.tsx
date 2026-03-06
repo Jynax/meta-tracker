@@ -3,10 +3,12 @@ import { colors, processHistory } from "./processWorkflowData";
 import { FadeIn, RoleCard, WorkflowStep, DocCard, PatternCard } from "./ProcessWorkflowParts";
 import type { TabItem } from "./ProcessWorkflowParts";
 import { User, Brain, Terminal, Monitor } from "lucide-react";
+import TimeMachine from "./TimeMachine";
 
 export default function ProcessWorkflow() {
   const [hoveredRole, setHoveredRole] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("workflow");
+  const [historyView, setHistoryView] = useState<"changelog" | "timemachine">("changelog");
 
   const tabs: TabItem[] = [
     { id: "workflow", label: "Workflow" },
@@ -670,18 +672,57 @@ export default function ProcessWorkflow() {
       {/* === HISTORY TAB === */}
       {activeTab === "history" && (
         <FadeIn delay={100}>
-          <div
-            style={{
-              fontSize: 12,
-              letterSpacing: 2,
-              color: colors.muted,
-              textTransform: "uppercase",
-              marginBottom: 16,
-              fontFamily: "'JetBrains Mono', monospace",
-            }}
-          >
-            Process changelog — how our workflow evolved
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+            <div
+              style={{
+                fontSize: 12,
+                letterSpacing: 2,
+                color: colors.muted,
+                textTransform: "uppercase",
+                fontFamily: "'JetBrains Mono', monospace",
+              }}
+            >
+              {historyView === "changelog" ? "Process changelog — how our workflow evolved" : "Time machine — see the workflow at any point"}
+            </div>
+            <div style={{ display: "flex", gap: 4 }}>
+              <button
+                onClick={() => setHistoryView("changelog")}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: 6,
+                  border: `1px solid ${historyView === "changelog" ? colors.violet + "60" : colors.border}`,
+                  background: historyView === "changelog" ? `${colors.violet}15` : "transparent",
+                  color: historyView === "changelog" ? colors.violet : colors.muted,
+                  fontSize: 11,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                Changelog
+              </button>
+              <button
+                onClick={() => setHistoryView("timemachine")}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: 6,
+                  border: `1px solid ${historyView === "timemachine" ? colors.violet + "60" : colors.border}`,
+                  background: historyView === "timemachine" ? `${colors.violet}15` : "transparent",
+                  color: historyView === "timemachine" ? colors.violet : colors.muted,
+                  fontSize: 11,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                Time Machine
+              </button>
+            </div>
           </div>
+
+          {historyView === "timemachine" ? (
+            <TimeMachine />
+          ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {processHistory.map((entry, i) => (
               <FadeIn key={i} delay={100 + i * 60}>
@@ -796,6 +837,7 @@ export default function ProcessWorkflow() {
               </FadeIn>
             ))}
           </div>
+          )}
         </FadeIn>
       )}
 

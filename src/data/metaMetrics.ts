@@ -144,6 +144,8 @@ export const metaBugs: BugEntry[] = [
   { id: 26, session: 'Session 16', date: 'Mar 4', label: 'Codebase Audit', summary: 'No ErrorBoundary components anywhere in app', severity: 'High', source: 'Cowork Audit', status: 'Fixed', category: 'Technical' },
   { id: 27, session: 'Session 24', date: 'Mar 5', label: 'Code Health + ESLint', summary: 'ESLint fix PR accidentally removed codeVolume prop from OverviewTab and CodeTab — Metrics view crashed on all projects', severity: 'High', source: 'User Report', status: 'Fixed', category: 'Technical' },
   { id: 28, session: 'Session 25', date: 'Mar 5', label: 'Chart Scaling + Tool Tracking', summary: 'Weekly chart view showed only 2 data points (calendar weeks) — appeared cumulative. Changed to per-date grouping.', severity: 'Medium', source: 'User Report', status: 'Fixed', category: 'UX' },
+  { id: 29, session: 'Session 30', date: 'Mar 6', label: 'Time Machine + Bugfixes', summary: 'Category bars invisible in Decision Tree under SC theme — hex-alpha concat on CSS custom properties produced invalid CSS values. Fixed with color-mix().', severity: 'Medium', source: 'User Report', status: 'Fixed', category: 'UX' },
+  { id: 30, session: 'Session 30', date: 'Mar 6', label: 'Time Machine + Bugfixes', summary: 'Parent date bars squished in Code tab — accessibility pass converted div to button but dropped w-full class.', severity: 'Low', source: 'User Report', status: 'Fixed', category: 'UX' },
 ];
 
 export const metaDerived: DerivedMetric[] = [
@@ -151,7 +153,7 @@ export const metaDerived: DerivedMetric[] = [
   { label: 'Codex Success', value: '98%', detail: '40/41 tasks', color: '#34d399' },
   { label: 'Cycle Time', value: '0.76h', detail: 'Per merged PR', color: '#22d3ee' },
   { label: 'Decisions', value: '3.7', detail: 'Per session avg', color: '#22d3ee' },
-  { label: 'Bug Rate', value: '0.41', detail: 'Per PR merged', color: '#34d399' },
+  { label: 'Bug Rate', value: '0.42', detail: '30 bugs / 71 PRs', color: '#34d399' },
 ];
 
 export const metaStack: StackEntry[] = [

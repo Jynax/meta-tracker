@@ -3,6 +3,8 @@ import { ReactFlow, Background, Controls, Handle, Position } from '@xyflow/react
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
 import { remnantsProject } from '../data/remnantsProject';
+import { itemBGoneProject } from '../data/itemBGoneProject';
+import { vulnBankProject } from '../data/vulnBankProject';
 import type { FilterType, NodeCategory, Project, ProjectNode } from '../types';
 import { nodeTypes } from './CustomNodes';
 import MetricsDashboard from './MetricsDashboard';
@@ -29,7 +31,7 @@ const FILTERS: Array<{ id: FilterType; label: string }> = [
   { id: 'process', label: 'Process' },
 ];
 
-const PROJECTS = [bipProject, metaProject, remnantsProject];
+const PROJECTS = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject];
 
 const CATEGORY_META: Array<{ id: NodeCategory; label: string; color: string }> = [
   { id: 'technical', label: 'Technical', color: 'var(--theme-cyan)' },

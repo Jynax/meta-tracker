@@ -1,0 +1,201 @@
+import type { Project } from '../types';
+
+export const itemBGoneProject: Project = {
+  id: 'item-b-gone',
+  name: 'Item-B-Gone',
+  subtitle: 'BUILT WITH CLAUDE CODE',
+  url: 'https://ibg.jynaxxapps.com',
+  projectType: 'addon',
+  currentPhase: 'Review',
+  chapters: [
+    {
+      id: 'ibg-ch-research',
+      name: 'Research & Foundation',
+      period: 'Mar 6\u20137, 2026',
+      toolLabel: 'Claude Code',
+      tool: 'claude',
+      nodes: [
+        {
+          id: 'ibg-standalone-addon',
+          type: 'decision',
+          category: 'technical',
+          title: 'Standalone Addon with Optional Integrations',
+          description:
+            'Build as standalone addon, not a plugin for ATT/Altoholic/BetterBags. Neither ATT nor Altoholic expose plugin APIs. OptionalDeps pattern gives integration benefits without limiting user reach.',
+          chosenPath: 'Standalone addon with OptionalDeps for ATT, DataStore',
+          alternatives: ['BetterBags plugin', 'ATT plugin', 'Altoholic plugin'],
+        },
+        {
+          id: 'ibg-three-tier-detection',
+          type: 'decision',
+          category: 'technical',
+          title: 'Three-Tier Detection Architecture',
+          description:
+            'Tier 1 (WoW API only) \u2192 Tier 2 (ATT enhanced) \u2192 Tier 3 (DataStore cross-character). Each tier works independently; higher tiers add richer detection. Future-proofs for when Michael drops ATT.',
+          chosenPath: 'Three independent detection tiers',
+          alternatives: ['Single-source detection', 'ATT-required dependency'],
+        },
+        {
+          id: 'ibg-zone-restricted',
+          type: 'decision',
+          category: 'functional',
+          title: 'Zone-Restricted Items \u2014 No Level Comparison',
+          description:
+            'Flag all zone-restricted items as safe to delete without comparing against character level. The zone restriction itself is the signal, not whether you have outleveled the zone.',
+          chosenPath: 'Zone restriction = safe to delete, no level check',
+          alternatives: ['Compare item zone level to character level'],
+        },
+        {
+          id: 'ibg-keep-category',
+          type: 'decision',
+          category: 'functional',
+          title: '\u201cKeep\u201d Category for Cost/Turn-in Items',
+          description:
+            'Add a \u201cKeep!\u201d tooltip flag for items that are part of a turn-in chain for mounts, pets, toys, achievements. Show progress (e.g., \u201c6/10 collected\u201d). If reward already collected, flip to \u201cSafe to delete.\u201d',
+          chosenPath: 'Keep flag with progress tracking via ATT itemIDAsCost',
+          alternatives: ['Ignore cost items', 'Flag all cost items as safe'],
+        },
+        {
+          id: 'ibg-separate-dashboard',
+          type: 'decision',
+          category: 'technical',
+          title: 'Separate Web Dashboard Project',
+          description:
+            'Build a separate web app that reads SavedVariables and displays a browsable dashboard of flagged items per character. WoW addons cannot write files \u2014 need an external tool to parse Lua \u2192 JSON.',
+          chosenPath: 'Standalone static web app with Node.js Lua parser',
+          alternatives: ['In-addon UI only', 'Desktop Electron app'],
+        },
+        {
+          id: 'ibg-over-track-metrics',
+          type: 'decision',
+          category: 'process',
+          title: 'Over-Track Metrics Now, Refine Later',
+          description:
+            'Capture all session metrics (research, decisions, questions resolved) even though Meta Tracker does not yet have a home for non-code work. Better to have the data and decide what to display than to lose it.',
+          chosenPath: 'Track everything locally, surface later',
+          alternatives: ['Only track code sessions', 'Wait for Meta Tracker support'],
+        },
+      ],
+    },
+    {
+      id: 'ibg-ch-first-build',
+      name: 'First Build',
+      period: 'Mar 7, 2026',
+      toolLabel: 'Claude Code',
+      tool: 'claude',
+      nodes: [
+        {
+          id: 'ibg-confidence-model',
+          type: 'decision',
+          category: 'technical',
+          title: 'Confidence Model for Detection Verdicts',
+          description:
+            'Multi-source confidence model: 2+ sources agree = \u201cConfirmed\u201d (bright green), single source = \u201cLikely\u201d (yellow-green), inference only = \u201cPossible\u201d (muted yellow). \u201cKeep\u201d always overrides \u201csafe\u201d regardless of confidence.',
+          chosenPath: 'Three-level confidence with keep-always-wins rule',
+          alternatives: ['Binary safe/unsafe', 'Single-source verdicts'],
+        },
+        {
+          id: 'ibg-external-data-sources',
+          type: 'decision',
+          category: 'technical',
+          title: 'Wowhead + Blizzard API as External Data Sources',
+          description:
+            'Node.js fetch tool pulls item data from Wowhead XML API and optionally Blizzard Game Data API, generating a static Data.lua lookup table shipped with the addon. WoW addons cannot make HTTP requests at runtime.',
+          chosenPath: 'Pre-fetched static Data.lua from Wowhead + Blizzard APIs',
+          alternatives: ['Runtime-only detection', 'Manual item database'],
+        },
+        {
+          id: 'ibg-dashboard-critical-path',
+          type: 'decision',
+          category: 'process',
+          title: 'Web Dashboard Is Next Critical Path',
+          description:
+            'Prioritize the web dashboard over further addon detection tuning. Cannot effectively iterate on detection accuracy by hovering over items one at a time in-game. Michael needs to see all flagged items laid out by category/character.',
+          chosenPath: 'Dashboard first, then detection tuning',
+          alternatives: ['Continue addon-only iteration'],
+        },
+        {
+          id: 'ibg-midnight-bank-tabs',
+          type: 'decision',
+          category: 'technical',
+          title: 'Midnight Bank Tab IDs (Not Legacy Bag IDs)',
+          description:
+            'Use bank tab IDs 6-11 (CharacterBankTab_1-6) for scanning, not legacy bag IDs (-1, 5-11). War Within completely reworked the bank from bags to tabs. Warband bank (12-16) excluded for now.',
+          lesson: 'Always verify API contracts against current expansion \u2014 legacy docs can be wrong.',
+          chosenPath: 'Tab-based bank IDs 6-11',
+          alternatives: ['Legacy bag-based IDs -1, 5-11'],
+        },
+        {
+          id: 'ibg-dashboard-hosting',
+          type: 'decision',
+          category: 'technical',
+          title: 'Dashboard Hosted with Auto-Sync',
+          description:
+            'Host dashboard on Cloudflare Pages (ibg.jynaxxapps.com). Commit data.json to repo so the live site always shows latest data. Auto-sync via sync.js file watcher on SavedVariables change.',
+          chosenPath: 'Cloudflare Pages + committed data.json + file watcher sync',
+          alternatives: ['Manual drag-and-drop upload', 'Local-only dashboard'],
+        },
+        {
+          id: 'ibg-token-cleanup',
+          type: 'decision',
+          category: 'process',
+          title: 'Cloudflare Token Cleanup',
+          description:
+            'Deleted all existing Cloudflare API tokens (including suspicious auto-generated \u201cAgent Lee\u201d token with broad permissions) and created a single fresh token scoped to Pages Edit + DNS Edit.',
+          lesson: 'Audit API tokens regularly \u2014 auto-generated tokens can have overly broad permissions.',
+          chosenPath: 'Fresh minimal-scope token',
+          alternatives: ['Keep existing tokens'],
+        },
+      ],
+    },
+    {
+      id: 'ibg-ch-dashboard-detection',
+      name: 'Dashboard & Detection',
+      period: 'Mar 7, 2026',
+      toolLabel: 'Claude Code',
+      tool: 'claude',
+      nodes: [
+        {
+          id: 'ibg-item-class-detection',
+          type: 'decision',
+          category: 'technical',
+          title: 'Item Class Detection for Keep Categories',
+          description:
+            'CheckItemClass() uses WoW item classification (classID, subClassID, quality) to flag items as \u201ckeep\u201d before external data sources. Covers crafting reagents, recipes, legendaries, toys, companion pets, holiday items, and currency-like items.',
+          chosenPath: 'WoW API item class + subclass detection',
+          alternatives: ['External-only detection', 'Manual category lists'],
+        },
+        {
+          id: 'ibg-wowhead-integration',
+          type: 'decision',
+          category: 'ux-design',
+          title: 'Wowhead Integration for Dashboard',
+          description:
+            'Embed Wowhead tooltip script and link every item to its Wowhead page. Use iconizeLinks to show actual WoW item icons inline with names. Zero backend cost.',
+          chosenPath: 'Wowhead tooltip script + iconized links',
+          alternatives: ['Raw item IDs only', 'Custom icon hosting'],
+        },
+        {
+          id: 'ibg-escape-code-cleanup',
+          type: 'decision',
+          category: 'technical',
+          title: 'Clean WoW Escape Codes in Dashboard Display',
+          description:
+            'cleanReason() strips WoW hyperlink escape codes and color codes from reason text before display. Also strips meaningless \u201c0/0\u201d ATT progress data.',
+          chosenPath: 'Regex-based escape code stripping in cleanReason()',
+          alternatives: ['Display raw ATT output', 'Parse WoW links into clickable elements'],
+        },
+      ],
+    },
+  ],
+  stats: {
+    totalDays: 3,
+    chatGptMessages: '0',
+    coworkSessions: 0,
+    prsCreated: '5',
+    codexTasks: '0',
+    linesOfCode: '~10,234',
+    deadEnds: 0,
+    majorDecisions: 15,
+  },
+};

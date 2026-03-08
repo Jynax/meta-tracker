@@ -60,11 +60,16 @@ export interface ProjectStats {
   majorDecisions: number;
 }
 
+export type ProjectType = 'web-app' | 'addon' | 'game' | 'tool' | 'extension' | 'joint';
+export type ProjectPhase = 'Research' | 'Spec' | 'Build' | 'Review' | 'Shipped';
+
 export interface Project {
   id: string;
   name: string;
   subtitle: string;
   url?: string;
+  projectType?: ProjectType;
+  currentPhase?: ProjectPhase;
   chapters: Chapter[];
   stats: ProjectStats;
 }

@@ -4,6 +4,8 @@ export const metaProject: Project = {
   id: 'meta',
   name: 'Meta Tracker',
   subtitle: 'BUILT WITH CLAUDE CODE & CODEX',
+  projectType: 'web-app',
+  currentPhase: 'Review',
   chapters: [
     {
       id: 'meta-ch-inception',

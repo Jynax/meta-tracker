@@ -24,7 +24,7 @@ export const remnantsCodeVolume: CodeVolumeEntry[] = [
 
 // --- Sessions ---
 export const remnantsSessions: SessionEntry[] = [
-  { session: 'Claude 1', date: 'Feb 17', label: 'Vertical Slice', duration: 0, prs: 0, decisions: 4, deadEnds: 0, focus: 'Vertical slice: map, combat, inventory, extraction', chapterId: 'ch-core-loop', workCategory: 'Feature', tool: 'Cowork', taskCount: 1, phase: 'Build', driver: 'collaborative' }, // REVIEW: phase could be Spec (conversational design session, no PRs, duration 0)
+  { session: 'Claude 1', date: 'Feb 17', label: 'Vertical Slice', duration: 0, prs: 0, decisions: 4, deadEnds: 0, focus: 'Vertical slice: map, combat, inventory, extraction', chapterId: 'ch-core-loop', workCategory: 'Feature', tool: 'Cowork', taskCount: 1, phase: 'Spec', driver: 'collaborative' },
   { session: 'Claude 2', date: 'Feb 18', label: 'Balance & Xenoflora', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Balance, terrain, xenoflora, zone difficulty', chapterId: 'ch-living-world', workCategory: 'Feature', tool: 'Cowork', taskCount: 1, phase: 'Spec', driver: 'collaborative' },
   { session: 'Claude 3', date: 'Feb 18', label: 'Home Base & Recovery', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Home base, recovery system, character naming', chapterId: 'ch-the-house', workCategory: 'Feature', tool: 'Cowork', taskCount: 1, phase: 'Spec', driver: 'collaborative' },
   { session: 'Git Setup', date: 'Feb 19', label: 'Repo Init + Docs', duration: 1, prs: 0, decisions: 1, deadEnds: 0, focus: 'Created repos, uploaded docs + code', chapterId: 'ch-repo-deployment', workCategory: 'Tooling', tool: 'Cowork', taskCount: 1, phase: 'Build', driver: 'ai' },

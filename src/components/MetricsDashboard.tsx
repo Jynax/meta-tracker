@@ -5,6 +5,10 @@ import { bipCodeVolume, bipSessions, bipBugs, bipDerived, bipStack, bipDateRange
 import { metaCodeVolume, metaSessions, metaBugs, metaDerived, metaStack, metaDateRange } from '../data/metaMetrics';
 import { remnantsCodeVolume, remnantsSessions, remnantsBugs, remnantsDerived, remnantsStack, remnantsDateRange } from '../data/remnantsMetrics';
 import { remnantsProject } from '../data/remnantsProject';
+import { itemBGoneProject } from '../data/itemBGoneProject';
+import { ibgCodeVolume, ibgSessions, ibgBugs, ibgDerived, ibgStack, ibgDateRange } from '../data/itemBGoneMetrics';
+import { vulnBankProject } from '../data/vulnBankProject';
+import { vbCodeVolume, vbSessions, vbBugs, vbDerived, vbStack, vbDateRange } from '../data/vulnBankMetrics';
 
 import { C } from "./MetricsCard";
 import OverviewTab from './OverviewTab';
@@ -39,13 +43,13 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   }, [initialTab]);
 
   const selected = useMemo(() => {
-    const project = projectId === 'meta' ? metaProject : projectId === 'remnants' ? remnantsProject : bipProject;
-    const codeVolume = projectId === 'meta' ? metaCodeVolume : projectId === 'remnants' ? remnantsCodeVolume : bipCodeVolume;
-    const sessions = projectId === 'meta' ? metaSessions : projectId === 'remnants' ? remnantsSessions : bipSessions;
-    const bugs = projectId === 'meta' ? metaBugs : projectId === 'remnants' ? remnantsBugs : bipBugs;
-    const derived = projectId === 'meta' ? metaDerived : projectId === 'remnants' ? remnantsDerived : bipDerived;
-    const stack = projectId === 'meta' ? metaStack : projectId === 'remnants' ? remnantsStack : bipStack;
-    const dateRange = projectId === 'meta' ? metaDateRange : projectId === 'remnants' ? remnantsDateRange : bipDateRange;
+    const project = projectId === 'meta' ? metaProject : projectId === 'remnants' ? remnantsProject : projectId === 'item-b-gone' ? itemBGoneProject : projectId === 'vuln-bank' ? vulnBankProject : bipProject;
+    const codeVolume = projectId === 'meta' ? metaCodeVolume : projectId === 'remnants' ? remnantsCodeVolume : projectId === 'item-b-gone' ? ibgCodeVolume : projectId === 'vuln-bank' ? vbCodeVolume : bipCodeVolume;
+    const sessions = projectId === 'meta' ? metaSessions : projectId === 'remnants' ? remnantsSessions : projectId === 'item-b-gone' ? ibgSessions : projectId === 'vuln-bank' ? vbSessions : bipSessions;
+    const bugs = projectId === 'meta' ? metaBugs : projectId === 'remnants' ? remnantsBugs : projectId === 'item-b-gone' ? ibgBugs : projectId === 'vuln-bank' ? vbBugs : bipBugs;
+    const derived = projectId === 'meta' ? metaDerived : projectId === 'remnants' ? remnantsDerived : projectId === 'item-b-gone' ? ibgDerived : projectId === 'vuln-bank' ? vbDerived : bipDerived;
+    const stack = projectId === 'meta' ? metaStack : projectId === 'remnants' ? remnantsStack : projectId === 'item-b-gone' ? ibgStack : projectId === 'vuln-bank' ? vbStack : bipStack;
+    const dateRange = projectId === 'meta' ? metaDateRange : projectId === 'remnants' ? remnantsDateRange : projectId === 'item-b-gone' ? ibgDateRange : projectId === 'vuln-bank' ? vbDateRange : bipDateRange;
     return { project, codeVolume, sessions, bugs, derived, stack, dateRange };
   }, [projectId]);
 

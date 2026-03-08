@@ -5,6 +5,8 @@ export const remnantsProject: Project = {
   name: 'Remnants: Survival Extraction Game',
   subtitle: 'BUILT WITH CLAUDE & CHATGPT CODEX',
   url: 'https://remnants.jynaxxapps.com',
+  projectType: 'game',
+  currentPhase: 'Research',
   chapters: [
     {
       id: 'ch-core-loop',

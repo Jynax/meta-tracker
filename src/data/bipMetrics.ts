@@ -1,6 +1,6 @@
 export type SessionTool = 'Claude Code' | 'Codex' | 'Cowork' | 'Mixed';
 
-export type WorkCategory = 'Feature' | 'Refactor' | 'Bug' | 'Tooling';
+export type WorkCategory = 'Feature' | 'Refactor' | 'Bug' | 'Tooling' | 'Scripting' | 'Data' | 'Local-Tooling' | 'Planning';
 
 export interface CodeVolumeEntry {
   session: string;
@@ -11,6 +11,10 @@ export interface CodeVolumeEntry {
   net: number;
   total: number;
 }
+
+export type SessionPhase = 'Research' | 'Spec' | 'Build' | 'Review';
+export type SessionDriver = 'human' | 'ai' | 'collaborative';
+export type SessionOperator = 'michael' | 'hrpatel' | 'joint';
 
 export interface SessionEntry {
   session: string;
@@ -25,6 +29,9 @@ export interface SessionEntry {
   workCategory: WorkCategory;
   tool: SessionTool;
   taskCount: number;
+  phase?: SessionPhase;
+  driver?: SessionDriver;
+  operator?: SessionOperator;
 }
 
 export interface BugEntry {
@@ -80,7 +87,9 @@ export const bipSessions: SessionEntry[] = [
     deadEnds: 0,
     focus: 'Initial Scaffold & Card Exports',
     chapterId: 'bip-spark',
-    workCategory: 'Feature', tool: 'Cowork', taskCount: 1
+    workCategory: 'Feature', tool: 'Cowork', taskCount: 1,
+    phase: 'Build',
+    driver: 'collaborative',
   },
   {
     session: 'ChatGPT 2',
@@ -93,6 +102,8 @@ export const bipSessions: SessionEntry[] = [
     focus: 'Refactoring & Cleanup',
     chapterId: 'bip-spark',
     workCategory: 'Refactor', tool: 'Cowork', taskCount: 1,
+    phase: 'Build',
+    driver: 'collaborative',
   },
   {
     session: 'ChatGPT 3',
@@ -105,6 +116,8 @@ export const bipSessions: SessionEntry[] = [
     focus: 'Data Pipeline, Charts & Normalization',
     chapterId: 'bip-wrangling',
     workCategory: 'Feature', tool: 'Cowork', taskCount: 1,
+    phase: 'Build',
+    driver: 'collaborative',
   },
   {
     session: 'ChatGPT 4',
@@ -117,6 +130,8 @@ export const bipSessions: SessionEntry[] = [
     focus: 'Representation Engine & Polish',
     chapterId: 'bip-repr',
     workCategory: 'Feature', tool: 'Cowork', taskCount: 1,
+    phase: 'Build',
+    driver: 'collaborative',
   },
   {
     session: 'Cowork 1',
@@ -129,6 +144,8 @@ export const bipSessions: SessionEntry[] = [
     focus: 'Audit & Worker Fix',
     chapterId: 'bip-deploy',
     workCategory: 'Tooling', tool: 'Cowork', taskCount: 2,
+    phase: 'Review',
+    driver: 'ai',
   },
   {
     session: 'Cowork 2',
@@ -141,6 +158,8 @@ export const bipSessions: SessionEntry[] = [
     focus: 'Multi-Sheet Ingestion',
     chapterId: 'bip-wrangling',
     workCategory: 'Feature', tool: 'Cowork', taskCount: 1,
+    phase: 'Build',
+    driver: 'ai',
   },
   {
     session: 'Cowork 3',
@@ -153,6 +172,8 @@ export const bipSessions: SessionEntry[] = [
     focus: 'App.tsx Decomposition',
     chapterId: 'bip-decomp',
     workCategory: 'Refactor', tool: 'Cowork', taskCount: 2,
+    phase: 'Build',
+    driver: 'ai',
   },
   {
     session: 'Cowork 4',
@@ -165,6 +186,8 @@ export const bipSessions: SessionEntry[] = [
     focus: 'Timeline & Fixes',
     chapterId: 'bip-windows',
     workCategory: 'Feature', tool: 'Cowork', taskCount: 2,
+    phase: 'Build',
+    driver: 'ai',
   },
   {
     session: 'Cowork 13',
@@ -177,6 +200,8 @@ export const bipSessions: SessionEntry[] = [
     focus: 'Deep App.tsx Decomposition',
     chapterId: 'bip-decomp',
     workCategory: 'Refactor', tool: 'Cowork', taskCount: 1,
+    phase: 'Build',
+    driver: 'ai',
   },
   {
     session: 'Claude Code 2',
@@ -189,6 +214,8 @@ export const bipSessions: SessionEntry[] = [
     focus: 'ThemeContext + 5 Hooks + ErrorBoundary',
     chapterId: 'ch-state-extraction',
     workCategory: 'Refactor', tool: 'Claude Code', taskCount: 3,
+    phase: 'Build',
+    driver: 'ai',
   },
   {
     session: 'Claude Code 4',
@@ -201,6 +228,8 @@ export const bipSessions: SessionEntry[] = [
     focus: 'BIP Auto-Cleaning + Bug Fixes #08-12',
     chapterId: 'ch-messy-ingestion',
     workCategory: 'Feature', tool: 'Claude Code', taskCount: 2,
+    phase: 'Build',
+    driver: 'ai',
   },
   {
     session: 'Claude Code 5',
@@ -213,6 +242,8 @@ export const bipSessions: SessionEntry[] = [
     focus: 'React.memo, Export Cleaned File, Code Review & Cleanup',
     chapterId: 'ch-perf-review',
     workCategory: 'Refactor', tool: 'Claude Code', taskCount: 3,
+    phase: 'Review',
+    driver: 'ai',
   },
 ];
 

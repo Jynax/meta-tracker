@@ -1,4 +1,10 @@
 import { useMemo, type ReactNode } from 'react';
+import { bipProject } from '../data/bipProject';
+import { metaProject } from '../data/metaProject';
+import { remnantsProject } from '../data/remnantsProject';
+import { itemBGoneProject } from '../data/itemBGoneProject';
+import { vulnBankProject } from '../data/vulnBankProject';
+import type { ProjectPhase } from '../types';
 import { Card, C } from './MetricsCard';
 import type { CodeVolumeEntry, SessionEntry, DerivedMetric, StackEntry, WorkCategory } from '../data/metaMetrics';
 
@@ -16,12 +22,15 @@ interface OverviewTabProps {
   hoveredPointIndex: number | null;
   setHoveredPointIndex: (index: number | null) => void;
   setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
+  onProjectChange?: (projectId: string) => void;
+  activeProjectId?: string;
 }
 
 export default function OverviewTab({
   sessions, codeVolume, derived, stack,
   totalPRs, totalHours, currentLoc, timelineRange, projectId,
   sessionFocusMap, hoveredPointIndex, setHoveredPointIndex, setTooltip,
+  onProjectChange, activeProjectId,
 }: OverviewTabProps) {
   const chartDims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
   const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
@@ -242,6 +251,82 @@ export default function OverviewTab({
           })}
         </div>
       </div>
+
+      {/* Cross-project Phase View */}
+      <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
+        <h3 className="mb-1 text-sm font-semibold" style={{ color: C.white }}>Project Phases</h3>
+        <div className="text-xs mb-3" style={{ color: C.muted }}>All projects at a glance</div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {[bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject].map((proj) => {
+            const phase = proj.currentPhase ?? 'Research';
+            const phaseColors: Record<ProjectPhase, string> = {
+              Research: '#60a5fa',
+              Spec: C.violet,
+              Build: C.amber,
+              Review: '#fb923c',
+              Shipped: C.emerald,
+            };
+            const phaseOrder: ProjectPhase[] = ['Research', 'Spec', 'Build', 'Review', 'Shipped'];
+            const phaseIndex = phaseOrder.indexOf(phase);
+            const typeLabels: Record<string, string> = {
+              'web-app': 'Web App',
+              game: 'Game',
+              addon: 'Addon',
+              joint: 'Joint',
+              tool: 'Tool',
+              extension: 'Extension',
+            };
+            const isActive = activeProjectId === proj.id;
+            return (
+              <button
+                key={proj.id}
+                onClick={() => onProjectChange?.(proj.id)}
+                className="rounded-xl border p-3 text-left transition hover:brightness-110"
+                style={{
+                  backgroundColor: isActive ? 'color-mix(in srgb, var(--theme-cyan) 6%, var(--theme-card-bg))' : C.bg,
+                  borderColor: isActive ? C.cyan : C.border,
+                  cursor: 'pointer',
+                }}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-semibold" style={{ color: C.white }}>{proj.name}</span>
+                  {proj.projectType && (
+                    <span
+                      className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                      style={{ backgroundColor: 'color-mix(in srgb, var(--theme-text-secondary) 10%, transparent)', color: C.muted }}
+                    >
+                      {typeLabels[proj.projectType] ?? proj.projectType}
+                    </span>
+                  )}
+                </div>
+                <div
+                  className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold mb-2"
+                  style={{
+                    backgroundColor: `color-mix(in srgb, ${phaseColors[phase]} 13%, transparent)`,
+                    color: phaseColors[phase],
+                  }}
+                >
+                  {phase}
+                </div>
+                <div className="flex gap-0.5 rounded-full overflow-hidden" style={{ height: 4 }}>
+                  {phaseOrder.map((p, i) => (
+                    <div
+                      key={p}
+                      style={{
+                        flex: 1,
+                        backgroundColor: i <= phaseIndex ? phaseColors[phase] : C.border,
+                        opacity: i <= phaseIndex ? 0.8 : 0.3,
+                        transition: 'background-color 0.3s ease',
+                      }}
+                    />
+                  ))}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
+

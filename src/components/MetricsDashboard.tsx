@@ -32,7 +32,7 @@ const TABS: Array<{ id: MetricsTab; label: string }> = [
   { id: 'sessions', label: 'Sessions' },
 ];
 
-export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview', onTabChange }: MetricsDashboardProps) {
+export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview', onTabChange, onProjectChange }: MetricsDashboardProps) {
   const [tab, setTab] = useState<MetricsTab>(initialTab);
   const [hoveredPointIndex, setHoveredPointIndex] = useState<number | null>(null);
   const [hoveredCodeSession, setHoveredCodeSession] = useState<string | null>(null);

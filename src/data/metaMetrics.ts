@@ -83,6 +83,8 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
 ];
 
 export const metaSessions: SessionEntry[] = [
+  { session: 'Pre-Tracking A', date: 'Mar 2', label: 'Decisions & Metrics Template Design', duration: 0, prs: 0, decisions: 0, deadEnds: 0, focus: 'Decisions & metrics template design', chapterId: 'meta-ch-inception', workCategory: 'Planning', tool: 'Cowork', taskCount: 0, phase: 'Spec', driver: 'collaborative' }, // APPROXIMATE — early session, pre-formal tracking
+  { session: 'Pre-Tracking B', date: 'Mar 2', label: 'Metrics Dashboard & Workflow Design', duration: 0, prs: 0, decisions: 0, deadEnds: 0, focus: 'Metrics dashboard & workflow design', chapterId: 'meta-ch-inception', workCategory: 'Planning', tool: 'Cowork', taskCount: 0, phase: 'Spec', driver: 'collaborative' }, // APPROXIMATE — early session, pre-formal tracking
   { session: 'Session 1', date: 'Feb 26', label: 'Scaffold & Auth', duration: 3, prs: 4, decisions: 3, deadEnds: 0, focus: 'Scaffold, deploy, auth setup', chapterId: 'meta-ch-inception', workCategory: 'Feature', tool: 'Cowork', taskCount: 4, phase: 'Build', driver: 'ai' },
   { session: 'Session 2', date: 'Feb 26', label: 'Vertical Tree', duration: 2, prs: 2, decisions: 4, deadEnds: 0, focus: 'Vertical tree exploration', chapterId: 'meta-ch-horizontal', workCategory: 'Feature', tool: 'Cowork', taskCount: 2, phase: 'Build', driver: 'ai' },
   { session: 'Session 3', date: 'Feb 26', label: 'React Flow Rebuild', duration: 3, prs: 4, decisions: 5, deadEnds: 1, focus: 'React Flow rebuild', chapterId: 'meta-ch-horizontal', workCategory: 'Refactor', tool: 'Cowork', taskCount: 4, phase: 'Build', driver: 'ai' },

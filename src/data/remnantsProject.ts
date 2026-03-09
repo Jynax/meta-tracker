@@ -3,7 +3,7 @@ import type { Project } from '../types';
 export const remnantsProject: Project = {
   id: 'remnants',
   name: 'Remnants: Survival Extraction Game',
-  subtitle: 'BUILT WITH CLAUDE & CHATGPT CODEX',
+  subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE & CHATGPT CODEX',
   url: 'https://remnants.jynaxxapps.com',
   projectType: 'game',
   currentPhase: 'Research',

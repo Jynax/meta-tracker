@@ -3,7 +3,7 @@ import type { Project } from '../types';
 export const bipProject: Project = {
   id: 'bip',
   name: 'BIP: Buried in Print Reader Stats',
-  subtitle: 'BUILT WITH CHATGPT & CLAUDE COWORK & CODEX',
+  subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CHATGPT & CLAUDE COWORK & CODEX',
   url: 'https://bip.jynaxxapps.com',
   projectType: 'web-app',
   currentPhase: 'Shipped',

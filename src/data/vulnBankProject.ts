@@ -3,7 +3,7 @@ import type { Project } from '../types';
 export const vulnBankProject: Project = {
   id: 'vuln-bank',
   name: 'Vuln Bank',
-  subtitle: 'BUILT WITH CLAUDE CODE & CURSOR',
+  subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE CODE & CURSOR',
   projectType: 'joint',
   currentPhase: 'Spec',
   chapters: [

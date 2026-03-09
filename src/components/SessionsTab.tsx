@@ -40,7 +40,7 @@ export default function SessionsTab({
     const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
     const days = new Map<string, { dayLabel: string; prs: number; decisions: number; sessionCount: number }>();
     sessions.forEach((entry) => {
-      const date = sessionDateMap[entry.session] ?? entry.session;
+      const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
       const [month = 'Jan', day = '1'] = date.split(' ');
       const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
       const key = d.toISOString().slice(0, 10);
@@ -108,7 +108,7 @@ export default function SessionsTab({
       const avgMin = (entry.duration * 60) / entry.taskCount;
       const ratioX = validSessions.length > 1 ? index / (validSessions.length - 1) : 0;
       const x = chartDims.left + ratioX * chartInnerWidth;
-      const date = sessionDateMap[entry.session] ?? entry.session;
+      const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
       return {
         ...entry,
         date,

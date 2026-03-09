@@ -24,6 +24,7 @@ export const remnantsCodeVolume: CodeVolumeEntry[] = [
 
 // --- Sessions ---
 export const remnantsSessions: SessionEntry[] = [
+  { session: 'Pre-Tracking', date: 'Feb 17', label: 'Remnants — World & Scope Definition', duration: 0, prs: 0, decisions: 0, deadEnds: 0, focus: 'World & scope definition — 20yr concept, first formal documentation session', chapterId: 'ch-core-loop', workCategory: 'Planning', tool: 'Cowork', taskCount: 0, phase: 'Research', driver: 'human' }, // APPROXIMATE — 20yr concept, first formal documentation session
   { session: 'Claude 1', date: 'Feb 17', label: 'Vertical Slice', duration: 0, prs: 0, decisions: 4, deadEnds: 0, focus: 'Vertical slice: map, combat, inventory, extraction', chapterId: 'ch-core-loop', workCategory: 'Feature', tool: 'Cowork', taskCount: 1, phase: 'Spec', driver: 'collaborative' },
   { session: 'Claude 2', date: 'Feb 18', label: 'Balance & Xenoflora', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Balance, terrain, xenoflora, zone difficulty', chapterId: 'ch-living-world', workCategory: 'Feature', tool: 'Cowork', taskCount: 1, phase: 'Spec', driver: 'collaborative' },
   { session: 'Claude 3', date: 'Feb 18', label: 'Home Base & Recovery', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Home base, recovery system, character naming', chapterId: 'ch-the-house', workCategory: 'Feature', tool: 'Cowork', taskCount: 1, phase: 'Spec', driver: 'collaborative' },

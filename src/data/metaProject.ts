@@ -3,7 +3,7 @@ import type { Project } from '../types';
 export const metaProject: Project = {
   id: 'meta',
   name: 'Meta Tracker',
-  subtitle: 'BUILT WITH CLAUDE CODE & CODEX',
+  subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE CODE & CODEX',
   projectType: 'web-app',
   currentPhase: 'Review',
   chapters: [

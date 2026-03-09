@@ -77,6 +77,8 @@ export const bipCodeVolume: CodeVolumeEntry[] = [
 ];
 
 export const bipSessions: SessionEntry[] = [
+  // PENDING: Early planning sessions from ChatGPT export (Jan-Feb 2026)
+  // See Task #49: Parse ChatGPT Export for BIP Sessions
   {
     session: 'ChatGPT 1',
     date: 'Feb 14',

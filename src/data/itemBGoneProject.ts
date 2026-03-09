@@ -3,7 +3,7 @@ import type { Project } from '../types';
 export const itemBGoneProject: Project = {
   id: 'item-b-gone',
   name: 'Item-B-Gone',
-  subtitle: 'BUILT WITH CLAUDE CODE',
+  subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE CODE',
   url: 'https://ibg.jynaxxapps.com',
   projectType: 'addon',
   currentPhase: 'Review',

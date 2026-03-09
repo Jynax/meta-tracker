@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { ReactFlow, Background, Controls, Handle, Position } from '@xyflow/react';
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
@@ -15,7 +15,6 @@ import type { TreeNodeData } from './treeLayout';
 import { buildTreeLayout } from './treeLayout';
 import { ExternalLink } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
-import { ThemeToggleButton } from './ThemeToggleButton';
 import { C } from './MetricsCard';
 
 const FILTERS: Array<{ id: FilterType; label: string }> = [
@@ -146,6 +145,20 @@ function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { o
 
 export default function DecisionTree() {
   const { theme, toggleTheme } = useTheme();
+  const [easterEggToast, setEasterEggToast] = useState<string | null>(null);
+  const tapCountRef = useRef(0);
+  const tapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleSubtitleTap = useCallback(() => {
+    tapCountRef.current += 1;
+    if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
+    tapTimerRef.current = setTimeout(() => { tapCountRef.current = 0; }, 800);
+    if (tapCountRef.current >= 5) {
+      tapCountRef.current = 0;
+      toggleTheme();
+      setEasterEggToast(theme === 'sc' ? 'Default theme restored' : 'SC Mode activated');
+      setTimeout(() => setEasterEggToast(null), 2000);
+    }
+  }, [theme, toggleTheme]);
   const [filter, setFilter] = useState<FilterType>('all');
   const [view, setView] = useState<'tree' | 'metrics'>('tree');
   const [showHowWeWork, setShowHowWeWork] = useState(false);
@@ -233,7 +246,7 @@ export default function DecisionTree() {
       <header className="mb-5 border-b border-slate-700 pb-3">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{activeProject.subtitle}</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400 cursor-default select-none" onClick={handleSubtitleTap}>{activeProject.subtitle}</p>
             <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">
               {activeProject.name}
               {activeProject.url && (
@@ -251,7 +264,6 @@ export default function DecisionTree() {
             </h1>
           </div>
           <div className="flex items-center gap-2">
-            <ThemeToggleButton theme={theme} onToggle={toggleTheme} />
             <button
               onClick={() => setShowHowWeWork(true)}
               className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition hover:brightness-125"
@@ -459,6 +471,18 @@ export default function DecisionTree() {
             </div>
             <ErrorBoundary fallbackLabel="How We Work"><ProcessWorkflow /></ErrorBoundary>
           </div>
+        </div>
+      )}
+          {easterEggToast && (
+        <div
+          className="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-lg px-4 py-2 text-sm font-semibold shadow-lg transition-opacity"
+          style={{
+            backgroundColor: theme === 'sc' ? 'var(--theme-cyan)' : 'var(--theme-card-bg)',
+            color: theme === 'sc' ? '#fff' : 'var(--theme-text-primary)',
+            border: '1px solid var(--theme-border)',
+          }}
+        >
+          {easterEggToast}
         </div>
       )}
     </section>

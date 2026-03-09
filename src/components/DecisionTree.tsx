@@ -6,6 +6,12 @@ import { remnantsProject } from '../data/remnantsProject';
 import { itemBGoneProject } from '../data/itemBGoneProject';
 import { vulnBankProject } from '../data/vulnBankProject';
 import type { FilterType, NodeCategory, Project, ProjectNode } from '../types';
+import type { SessionEntry, SessionPhase } from '../data/metaMetrics';
+import { bipSessions } from '../data/bipMetrics';
+import { metaSessions } from '../data/metaMetrics';
+import { remnantsSessions } from '../data/remnantsMetrics';
+import { ibgSessions } from '../data/itemBGoneMetrics';
+import { vbSessions } from '../data/vulnBankMetrics';
 import { nodeTypes } from './CustomNodes';
 import MetricsDashboard from './MetricsDashboard';
 import ProcessWorkflow from './ProcessWorkflow';
@@ -204,6 +210,28 @@ export default function DecisionTree() {
   };
 
   const activeFilterLabel = FILTERS.find((item) => item.id === filter)?.label;
+
+  const activeSessionsForTree = useMemo(() => {
+    const sessionMap: Record<string, SessionEntry[]> = {
+      bip: bipSessions,
+      meta: metaSessions,
+      remnants: remnantsSessions,
+      'item-b-gone': ibgSessions,
+      'vuln-bank': vbSessions,
+    };
+    return sessionMap[activeProject.id] ?? [];
+  }, [activeProject.id]);
+
+  const chapterPhaseMap = useMemo(() => {
+    const map: Record<string, SessionPhase> = {};
+    activeSessionsForTree.forEach((s) => {
+      if (s.phase && s.chapterId) {
+        // Use the last session's phase as representative for the chapter
+        map[s.chapterId] = s.phase;
+      }
+    });
+    return map;
+  }, [activeSessionsForTree]);
 
   const projectSummary = useMemo(() => {
     const chapterStats = Object.fromEntries(activeProject.chapters.map((chapter) => [chapter.id, getChapterStats(chapter.nodes)]));
@@ -418,6 +446,7 @@ export default function DecisionTree() {
               expandedNode={expandedNode}
               onNodeToggle={(id) => setExpandedNode((current) => (current === id ? null : id))}
               highlightChapter={null}
+              chapterPhaseMap={chapterPhaseMap}
             />
             </ErrorBoundary>
           ) : (
@@ -453,6 +482,7 @@ export default function DecisionTree() {
             setView('tree');
             setExpandedChapters((current) => new Set([...current, chapterId]));
           }}
+          onProjectChange={switchProject}
         />
         </ErrorBoundary>
       )}

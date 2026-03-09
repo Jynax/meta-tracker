@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect, type ReactNode } from 'react';
 import { Card, C } from './MetricsCard';
 import { formatShortDate, formatSessionDate, buildSmoothPath } from './chartUtils';
-import type { SessionEntry, SessionTool } from '../data/metaMetrics';
+import type { SessionEntry, SessionTool, SessionDriver } from '../data/metaMetrics';
 
 interface SessionsTabProps {
   sessions: SessionEntry[];
@@ -137,6 +137,48 @@ export default function SessionsTab({
     }
     return paths;
   }, [avgTaskTimePoints]);
+
+  const driverColors: Record<SessionDriver, string> = {
+    human: C.cyan,
+    ai: C.emerald,
+    collaborative: C.violet,
+  };
+
+  const driverChartData = useMemo(() => {
+    const drivers: SessionDriver[] = ['human', 'ai', 'collaborative'];
+    const driverTotals: Record<SessionDriver, number> = { human: 0, ai: 0, collaborative: 0 };
+
+    // Group sessions by date to create bars
+    const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+    const dayGroups = new Map<string, { dayLabel: string; counts: Record<SessionDriver, number> }>();
+
+    sessions.forEach((entry) => {
+      const driver = entry.driver;
+      if (!driver) return;
+      driverTotals[driver] = (driverTotals[driver] ?? 0) + 1;
+      const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
+      const [month = 'Jan', day = '1'] = date.split(' ');
+      const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
+      const key = d.toISOString().slice(0, 10);
+      const dayLabel = month + ' ' + parseInt(day, 10);
+      const existing = dayGroups.get(key) ?? { dayLabel, counts: { human: 0, ai: 0, collaborative: 0 } };
+      existing.counts[driver] = (existing.counts[driver] ?? 0) + 1;
+      dayGroups.set(key, existing);
+    });
+
+    const bars = Array.from(dayGroups.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([, v]) => v);
+
+    const maxStack = bars.length > 0 ? Math.max(...bars.map(b => drivers.reduce((s, d) => s + b.counts[d], 0))) : 0;
+    const yTicks = 4;
+    const raw = (maxStack / yTicks) || 1;
+    const mag = 10 ** Math.floor(Math.log10(raw));
+    const step = Math.max(1, Math.ceil(raw / mag) * mag);
+    const yMax = step * yTicks;
+
+    return { drivers, driverTotals, bars, yTicks, step, yMax };
+  }, [sessions, sessionDateMap]);
 
   const sessionLines = useMemo(() => {
     const pathBuilder = chartView === 'weekly'
@@ -361,6 +403,104 @@ export default function SessionsTab({
       </div>
       )}
 
+      {/* Driver Breakdown */}
+      {driverChartData.bars.length > 0 && (
+      <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
+        <h3 className="text-sm font-semibold" style={{ color: C.white }}>Driver Breakdown</h3>
+        <div className="text-xs mb-2" style={{ color: C.muted }}>Who drove the work in each session</div>
+        <div className="flex flex-wrap gap-2 mb-3">
+          {driverChartData.drivers.filter(d => driverChartData.driverTotals[d] > 0).map(d => (
+            <span
+              key={d}
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium"
+              style={{
+                backgroundColor: `color-mix(in srgb, ${driverColors[d]} 13%, transparent)`,
+                color: driverColors[d],
+              }}
+            >
+              <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: driverColors[d], display: 'inline-block' }} />
+              {d.charAt(0).toUpperCase() + d.slice(1)} {driverChartData.driverTotals[d]}
+            </span>
+          ))}
+        </div>
+        <div style={{ position: 'relative', overflowX: 'auto', paddingBottom: 4 }}>
+          <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }} role="img" aria-label="Driver breakdown chart">
+            {Array.from({ length: driverChartData.yTicks + 1 }, (_, index) => {
+              const value = index * driverChartData.step;
+              const y = chartDims.top + chartInnerHeight - (index / driverChartData.yTicks) * chartInnerHeight;
+              return (
+                <g key={`driver-grid-${value}`}>
+                  <line x1={chartDims.left} y1={y} x2={chartDims.width - chartDims.right} y2={y} stroke={C.border} strokeDasharray="4 4" strokeOpacity="0.3" />
+                  <text x={chartDims.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">{value}</text>
+                </g>
+              );
+            })}
+
+            {driverChartData.bars.map((bar, barIndex) => {
+              const barWidth = driverChartData.bars.length > 1
+                ? (chartInnerWidth / driverChartData.bars.length) * 0.7
+                : 40;
+              const barGap = driverChartData.bars.length > 1
+                ? chartInnerWidth / driverChartData.bars.length
+                : 40;
+              const barX = chartDims.left + barIndex * barGap + (barGap - barWidth) / 2;
+              const baseline = chartDims.top + chartInnerHeight;
+              let stackY = baseline;
+
+              return (
+                <g key={`driver-bar-${barIndex}`}>
+                  {driverChartData.drivers.map(d => {
+                    const count = bar.counts[d];
+                    if (count === 0) return null;
+                    const h = (count / driverChartData.yMax) * chartInnerHeight;
+                    stackY -= h;
+                    return (
+                      <rect
+                        key={d}
+                        x={barX}
+                        y={stackY}
+                        width={barWidth}
+                        height={h}
+                        rx={2}
+                        fill={driverColors[d]}
+                        opacity={0.8}
+                        onMouseEnter={(event) => {
+                          setTooltip({
+                            x: event.clientX, y: event.clientY,
+                            content: (
+                              <>
+                                <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{bar.dayLabel}</div>
+                                {driverChartData.drivers.filter(dd => bar.counts[dd] > 0).map(dd => (
+                                  <div key={dd} style={{ color: driverColors[dd], fontSize: 11 }}>
+                                    {dd.charAt(0).toUpperCase() + dd.slice(1)}: {bar.counts[dd]}
+                                  </div>
+                                ))}
+                              </>
+                            ),
+                          });
+                        }}
+                        onMouseMove={(event) => {
+                          setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                        }}
+                        onMouseLeave={() => setTooltip(null)}
+                      />
+                    );
+                  })}
+                  <text
+                    x={barX + barWidth / 2}
+                    y={barIndex % 2 === 0 ? chartDims.height - 10 : chartDims.height - 22}
+                    textAnchor="middle" fill={C.slate} fontSize="10"
+                  >
+                    {bar.dayLabel}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+      </div>
+      )}
+
       <div className="space-y-3">
         {sessionsByMonth.map((monthGroup) => {
           const isExpanded = expandedMonths.has(monthGroup.key);
@@ -393,7 +533,15 @@ export default function SessionsTab({
                   <div key={`${entry.session}-detail`} className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
                     <div className="flex items-center justify-between">
                       <h4 className="text-base font-semibold">{entry.displayDate} — {entry.label}</h4>
-                      <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `color-mix(in srgb, ${toolColors[entry.tool as SessionTool]} 13%, transparent)`, color: toolColors[entry.tool as SessionTool] }}>{entry.tool}</span>
+                      <div className="flex items-center gap-1.5">
+                        {entry.phase && (() => {
+                          const phaseColors: Record<string, string> = { Research: '#60a5fa', Spec: C.violet, Build: C.amber, Review: '#fb923c', Shipped: C.emerald };
+                          return (
+                            <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `color-mix(in srgb, ${phaseColors[entry.phase] ?? C.slate} 13%, transparent)`, color: phaseColors[entry.phase] ?? C.slate }}>{entry.phase}</span>
+                          );
+                        })()}
+                        <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `color-mix(in srgb, ${toolColors[entry.tool as SessionTool]} 13%, transparent)`, color: toolColors[entry.tool as SessionTool] }}>{entry.tool}</span>
+                      </div>
                     </div>
                     <p className="mb-3 text-sm" style={{ color: C.cyan }}>{entry.focus}</p>
                     <div className="grid grid-cols-2 gap-2 text-xs" style={{ color: C.slate }}>

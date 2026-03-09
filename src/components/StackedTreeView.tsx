@@ -23,6 +23,14 @@ interface StackedTreeViewProps {
 
 const COLORS = C;
 
+const PHASE_COLORS: Record<string, string> = {
+  Research: '#60a5fa',
+  Spec: COLORS.violet,
+  Build: COLORS.amber,
+  Review: '#fb923c',
+  Shipped: COLORS.emerald,
+};
+
 const CATEGORY_ORDER: NodeCategory[] = ['technical', 'functional', 'ux-design', 'process'];
 
 // type FilterOption = {
@@ -111,6 +119,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
     onNodeToggle,
     highlightChapter,
 
+    chapterPhaseMap,
   } = props;
 
   // const [showFilters, setShowFilters] = React.useState(false);
@@ -234,7 +243,23 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
               {renderCategoryBar(chapterCounts, chapter.nodes.length, false, 12, 120)}
             </div>
 
-            <div style={{ fontSize: 13, color: COLORS.muted }}>{`${chapter.period} � ${chapter.toolLabel}`}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 13, color: COLORS.muted }}>{`${chapter.period} \u00b7 ${chapter.toolLabel}`}</span>
+              {chapterPhaseMap?.[chapter.id] && (
+                <span
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: PHASE_COLORS[chapterPhaseMap[chapter.id]] ?? COLORS.slate,
+                    background: `color-mix(in srgb, ${PHASE_COLORS[chapterPhaseMap[chapter.id]] ?? COLORS.slate} 10%, transparent)`,
+                    borderRadius: 9999,
+                    padding: '1px 8px',
+                  }}
+                >
+                  {chapterPhaseMap[chapter.id]}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </button>

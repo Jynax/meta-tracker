@@ -40,15 +40,60 @@ export const vulnBankProject: Project = {
         },
       ],
     },
+    {
+      id: 'vb-ch-solving-coordination-gaps',
+      name: 'Solving Coordination Gaps',
+      period: 'Mar 9, 2026',
+      toolLabel: 'Claude Code',
+      tool: 'claude',
+      nodes: [
+        {
+          id: 'vb-repo-migration',
+          type: 'decision',
+          category: 'process',
+          title: 'Repo Migration — Remove Fork Association',
+          description:
+            'hrpatel/vuln-bank was a fork of Commando-X/vuln-bank. Git tooling (gh) auto-created PRs against the upstream repo, leaking work to a public project. Deleted the fork and recreated as standalone.',
+          chosenPath: 'Delete the fork, recreate as a standalone repo, re-push all content',
+          alternatives: [
+            'Remove upstream remote only (does not fix GitHub fork association)',
+            'Keep the fork and be careful (too error-prone)',
+          ],
+        },
+        {
+          id: 'vb-github-issues-coordination',
+          type: 'decision',
+          category: 'process',
+          title: 'GitHub Issues Replace Task Index',
+          description:
+            'Cursor identified that tasks/index.md is broken as a coordination mechanism — both models edit it on branches, so neither can see the other\'s claims until merged. Replaced with GitHub Issues: branch-independent, atomic assignment, native dependencies and sub-issues, timestamped comments for cross-model signaling.',
+          chosenPath: 'GitHub Issues as the full coordination system with labels, sub-issues, and dependency tracking',
+          alternatives: [
+            'Exempt tasks/index.md from no-direct-push rule',
+            'Draft PR on claim as secondary signal',
+            'Hybrid: Issues for status, task files for specs',
+            'Keep current system, rely on verbal operator coordination',
+          ],
+        },
+        {
+          id: 'vb-issues-poc-validation',
+          type: 'event',
+          category: 'process',
+          title: 'POC Validation — GitHub Issues Coordination',
+          description:
+            'Built test chain (parent #7, sub-issues #8-10) validating all features: labels, sub-issues with progress roll-up, dependencies via blocked_by API, atomic claiming, cross-model signaling via comments. Key finding: closing a blocker does not auto-flip downstream labels — manual step required.',
+        },
+      ],
+    },
   ],
   stats: {
-    totalDays: 1,
+    totalDays: 4,
     chatGptMessages: '0',
     coworkSessions: 0,
-    prsCreated: '2',
+    prsCreated: '5',
     codexTasks: '0',
-    linesOfCode: '629',
+    linesOfCode: '1175',
     deadEnds: 0,
-    majorDecisions: 2,
+    majorDecisions: 5,
   },
 };

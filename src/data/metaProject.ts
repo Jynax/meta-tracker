@@ -675,15 +675,316 @@ export const metaProject: Project = {
       },
     ],
   },
+  {
+    id: 'meta-ch-cli-migration',
+    name: 'The CLI Migration',
+    period: 'Mar 4, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    nodes: [
+      {
+        id: 'meta-cli-experiment',
+        type: 'decision',
+        category: 'process',
+        title: 'Claude Code CLI as Primary Tool',
+        description:
+          'Tested Claude Code CLI on two small tasks (workCategory data + Work Mix chart). Both completed cleanly with direct commits — no browser automation needed. First evidence that CLI and Cowork can coexist.',
+        chosenPath: 'Claude Code CLI for direct code changes',
+        alternatives: ['Continue using Cowork for all tasks', 'Use Codex for chart work'],
+      },
+      {
+        id: 'meta-work-mix-chart',
+        type: 'decision',
+        category: 'functional',
+        title: 'Work Mix Stacked Bar Chart',
+        description:
+          'Added workCategory field to all 30 sessions across 3 data files, then built a horizontal stacked bar chart on the Overview tab showing Feature/Refactor/Bug/Tooling distribution.',
+        chosenPath: 'Horizontal stacked bar with legend (counts + percentages)',
+        alternatives: ['Pie chart', 'Separate per-category line charts'],
+      },
+      {
+        id: 'meta-bugs-tab-restructure',
+        type: 'decision',
+        category: 'ux-design',
+        title: 'Bugs Tab Restructured',
+        description:
+          'Restructured Bugs tab from flat list to collapsible session groups with reverse chronological order. Added Date and Decision columns. Donut charts enlarged with 2-column legend grid.',
+        chosenPath: 'Collapsible session groups with summary counts',
+        alternatives: ['Paginated flat list', 'Filterable table'],
+      },
+      {
+        id: 'meta-how-we-work-overlay',
+        type: 'decision',
+        category: 'ux-design',
+        title: 'How We Work Moved to Overlay',
+        description:
+          'Moved How We Work from the tab bar to an info button overlay in the top-right header. Full-page overlay with close button, freeing up the main tab bar for project-specific views.',
+        chosenPath: 'Header info button with full-page overlay',
+        alternatives: ['Keep as tab', 'Side panel', 'Dropdown menu'],
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-all-prs-workflow',
+    name: 'The All-PRs Workflow',
+    period: 'Mar 5, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    nodes: [
+      {
+        id: 'meta-all-prs-policy',
+        type: 'decision',
+        category: 'process',
+        title: 'All Code Changes Go Through PRs',
+        description:
+          'Sessions 17-20 used direct commits to main. Session 20 had two failed Cloudflare deploys that went unnoticed. Established that every code change must go through a PR for deploy visibility, metrics accuracy, and rollback ability.',
+        chosenPath: 'Mandatory PRs for all code changes',
+        alternatives: ['Allow direct commits for small changes', 'PRs only for large changes'],
+        lesson: 'The overhead of creating a PR is minimal; the cost of a silent deploy failure is not.',
+      },
+      {
+        id: 'meta-review-cadence',
+        type: 'decision',
+        category: 'process',
+        title: 'Review Cadence After Every 2-3 Merges',
+        description:
+          'Failed deploys in Session 20 were not caught until Session 22. Established a standing review cadence: deploy check, data integrity, build verify, bug logging after every 2-3 merges.',
+        chosenPath: 'Lightweight review pass every 2-3 merges',
+        alternatives: ['Review only at session end', 'No fixed cadence'],
+      },
+      {
+        id: 'meta-cowork-retired',
+        type: 'pivot',
+        category: 'process',
+        title: 'Cowork Retired, Claude Code Promoted',
+        description:
+          'After Sessions 20 and 22, Claude Code CLI proved dramatically faster and more reliable than Cowork browser automation. Formally retired Cowork — rewrote all How We Work content, added Lucide icons, updated all four tabs.',
+        chosenPath: 'Full retirement of Cowork, Claude Code as primary tool',
+        alternatives: ['Keep Cowork as fallback', 'Run both tools in parallel'],
+        lesson: 'Fewer moving parts wins. Direct git access beats browser automation.',
+      },
+      {
+        id: 'meta-data-push-cadence',
+        type: 'decision',
+        category: 'process',
+        title: 'Data Push Cadence — Natural Breakpoints',
+        description:
+          'Decided on natural breakpoints for data pushes to the live app: after 3-4 tasks, end of session, before team conversations, or on demand. Code PRs merge immediately; data pushes are batched.',
+        chosenPath: 'Natural breakpoints over rigid schedules',
+        alternatives: ['Time-based (daily)', 'Fixed task count', 'Push with every PR'],
+      },
+      {
+        id: 'meta-stacked-tree-ux',
+        type: 'decision',
+        category: 'ux-design',
+        title: 'Stacked Tree — Default Collapsed + Multi-Open',
+        description:
+          'Changed Stacked Tree to start with all chapters collapsed (previously first expanded by default). Allowed multiple chapters open simultaneously instead of accordion behavior. Decision type pills made visual-only — no longer act as filters.',
+        chosenPath: 'All collapsed, multi-open, visual-only pills',
+        alternatives: ['Keep accordion behavior', 'First chapter expanded by default'],
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-engineering-foundation',
+    name: 'The Engineering Foundation',
+    period: 'Mar 5, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    nodes: [
+      {
+        id: 'meta-metrics-decomposition',
+        type: 'decision',
+        category: 'technical',
+        title: 'MetricsDashboard Decomposed into Tab Components',
+        description:
+          'Split MetricsDashboard.tsx (1,071 LOC) into a 176-line shell plus 4 tab components: OverviewTab, CodeTab, BugsTab, SessionsTab. Also extracted MetricsCard.tsx and chartUtils.ts as shared utilities.',
+        chosenPath: 'One component per tab + shared utilities',
+        alternatives: ['Deeper split (one file per chart)', 'Keep monolithic with sections'],
+      },
+      {
+        id: 'meta-eslint-prettier',
+        type: 'decision',
+        category: 'technical',
+        title: 'ESLint + Prettier Configuration',
+        description:
+          'Added ESLint 9 flat config with react-hooks, jsx-a11y, react-refresh plugins, plus Prettier. Fixed all lint errors including unused imports and dead code. Bug #27: lint fix accidentally removed a prop, crashing Metrics view.',
+        chosenPath: 'ESLint 9 flat config + Prettier + auto-fix',
+        alternatives: ['Biome (all-in-one)', 'ESLint only without Prettier'],
+        lesson: 'Always verify the app still works after an auto-fix pass — linters can remove code that looks unused but is actually needed.',
+      },
+      {
+        id: 'meta-chart-scaling',
+        type: 'decision',
+        category: 'ux-design',
+        title: 'Chart Scaling — Milestones, Deltas, Toggle',
+        description:
+          'Added milestone-only x-axis labels (500+ LOC threshold) to Codebase Size chart, delta display in tooltips, and a Weekly/Daily toggle on the Session Activity chart with weekly aggregation.',
+        chosenPath: 'Milestone labels + delta tooltips + weekly aggregation toggle',
+        alternatives: ['Show every session on x-axis', 'Fixed weekly-only view'],
+      },
+      {
+        id: 'meta-session-tool-tracking',
+        type: 'decision',
+        category: 'functional',
+        title: 'Session Tool Tracking + Avg Task Time',
+        description:
+          'Added tool and taskCount fields to SessionEntry. Backfilled all 37 sessions across 3 data files with tool labels (Cowork, Codex, Claude Code, Mixed). Added tool badges on session cards and a new Avg Task Time chart on the Sessions tab.',
+        chosenPath: 'Tool + taskCount fields with per-tool trend lines',
+        alternatives: ['Tool tracking at task level only', 'Single combined trend line'],
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-bug-sweep',
+    name: 'The Bug Sweep & Security Hardening',
+    period: 'Mar 5-6, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    nodes: [
+      {
+        id: 'meta-weekly-chart-fix',
+        type: 'event',
+        category: 'technical',
+        title: 'Weekly Chart Bug Fix (Bug #28)',
+        description:
+          'Weekly chart view showed only 2 data points due to calendar-week grouping — appeared cumulative. Fixed by switching to per-date aggregation. Also removed Dead Ends line from Session Activity chart.',
+      },
+      {
+        id: 'meta-ux-batch-polish',
+        type: 'decision',
+        category: 'ux-design',
+        title: 'UX Batch Polish — Defaults and Links',
+        description:
+          'Set Meta Tracker as default landing project instead of BIP. Added "Visit App" external links to project headers. Fixed donut chart spacing with legend moved to right side. Split Avg Task Time into separate per-tool trend lines.',
+        chosenPath: 'Meta Tracker as default, external links in header, per-tool trends',
+        alternatives: ['Remember last project in localStorage', 'Single combined trend'],
+      },
+      {
+        id: 'meta-security-audit',
+        type: 'decision',
+        category: 'technical',
+        title: 'Security Audit Across All Projects',
+        description:
+          'Full security audit across all 3 projects. Found no unsafe code patterns, no hardcoded secrets, no XSS vectors. Only gap: missing HTTP security headers on all Cloudflare Pages deployments.',
+        chosenPath: 'Comprehensive audit before hardening',
+        alternatives: ['Header-only check', 'Third-party scanning tool'],
+      },
+      {
+        id: 'meta-security-headers',
+        type: 'decision',
+        category: 'technical',
+        title: 'Security Headers via _headers File',
+        description:
+          'Added public/_headers files to all 3 projects with CSP, X-Frame-Options, HSTS, X-Content-Type-Options, Referrer-Policy, and Permissions-Policy. Version-controlled and auto-deployed.',
+        chosenPath: 'Static _headers file in repo (version-controlled)',
+        alternatives: ['Cloudflare Transform Rules', 'Cloudflare Workers for header injection'],
+        lesson: 'The simplest deployment method (static file) beats dashboard configuration for reproducibility.',
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-sc-theme-a11y',
+    name: 'The SC Theme & Accessibility',
+    period: 'Mar 6, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    nodes: [
+      {
+        id: 'meta-css-custom-properties',
+        type: 'decision',
+        category: 'technical',
+        title: 'CSS Custom Properties Theme System',
+        description:
+          'Replaced ~40 hardcoded hex color values across 7 component files with CSS custom properties (--theme-*). SC theme remaps slate backgrounds to deep navy, cyan accents to orange, and overrides Tailwind v4 color scale tokens via [data-theme="sc"]. Theme persists via localStorage.',
+        chosenPath: 'CSS custom properties with data-theme attribute',
+        alternatives: ['Tailwind dark mode class', 'CSS-in-JS theme provider', 'Separate CSS files per theme'],
+      },
+      {
+        id: 'meta-sc-theme-toggle',
+        type: 'event',
+        category: 'functional',
+        title: 'SC Theme Toggle Shipped',
+        description:
+          'Added visible "SC Mode" button with Compass icon in header. 3 new files created: sc-theme.css, useTheme.ts, ThemeToggleButton.tsx. SC dark theme applies navy backgrounds with orange accents — a tribute to Security Compass.',
+      },
+      {
+        id: 'meta-accessibility-pass',
+        type: 'decision',
+        category: 'ux-design',
+        title: 'Accessibility Pass — Semantic HTML + Keyboard Nav',
+        description:
+          'Added semantic HTML landmarks (<main>, <nav aria-label>), aria-current on active buttons, converted 2 interactive divs to buttons in CodeTab, and added focus-visible ring styling. Fixed project app links (BIP wrong URL, Meta self-link removed, Remnants link added).',
+        chosenPath: 'Semantic landmarks + aria attributes + keyboard focus styling',
+        alternatives: ['Full WCAG AA audit with external tooling', 'Accessibility plugin'],
+      },
+      {
+        id: 'meta-sc-theme-regressions',
+        type: 'dead-end',
+        category: 'technical',
+        title: 'SC Theme Regressions (Bugs #29-30)',
+        description:
+          'Category bars became invisible under SC theme — hex-alpha concatenation on CSS custom properties produced invalid CSS. Parent date bars in Code tab squished after accessibility pass dropped w-full class. Both caught in review cadence and fixed.',
+        failureReason: 'color-mix() needed instead of string concatenation for CSS variable alpha blending.',
+        lesson: 'CSS custom properties cannot be concatenated with hex alpha — use color-mix(in srgb, var(--color) N%, transparent) instead.',
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-time-machine-data-model',
+    name: 'The Time Machine & Data Model',
+    period: 'Mar 6-8, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    nodes: [
+      {
+        id: 'meta-time-machine',
+        type: 'decision',
+        category: 'functional',
+        title: 'Time Machine Feature on History Tab',
+        description:
+          'Added an interactive slider across session milestones (S15-S22) showing workflow state snapshots at each point. Expandable cards with rationale for each change. New TimeMachine.tsx component (~214 LOC) with sessionNumber field added to history data.',
+        chosenPath: 'Slider-based timeline with expandable snapshot cards',
+        alternatives: ['Side-by-side comparison view', 'Animated timeline', 'Diff-based view'],
+      },
+      {
+        id: 'meta-data-model-extension',
+        type: 'decision',
+        category: 'technical',
+        title: 'Data Model Extension — Phase 1',
+        description:
+          'Extended Project type with projectType and currentPhase fields. Extended SessionEntry with phase, driver, operator fields. Expanded WorkCategory with Scripting, Data, Local-Tooling, Planning. Backfilled all 45 sessions across 3 projects.',
+        chosenPath: 'Optional fields on existing types + full backfill',
+        alternatives: ['New separate types', 'Breaking change with migration script'],
+      },
+      {
+        id: 'meta-new-projects-onboarding',
+        type: 'event',
+        category: 'functional',
+        title: 'Item-B-Gone & Vuln Bank Added to Tracker',
+        description:
+          'Created 4 new data files (itemBGoneProject.ts, itemBGoneMetrics.ts, vulnBankProject.ts, vulnBankMetrics.ts). Item-B-Gone: 3 chapters, 15 decisions, 5 sessions. Vuln Bank: 1 chapter, 2 decisions, 1 session. Both wired into project switcher and metrics dashboard.',
+      },
+      {
+        id: 'meta-five-projects-tracked',
+        type: 'discovery',
+        category: 'process',
+        title: 'Five Projects Tracked — Portfolio Milestone',
+        description:
+          'With Item-B-Gone and Vuln Bank added, Meta Tracker now tracks 5 projects spanning web apps, game addons, and joint collaborations. The data model supports different project types and phases, making it a true portfolio tracker rather than a single-project tool.',
+        lesson: 'Building for one project but designing for many paid off — the data model scaled cleanly.',
+      },
+    ],
+  },
 ],
   stats: {
-    totalDays: 7,
+    totalDays: 12,
     chatGptMessages: '250+',
-    coworkSessions: 22,
-    prsCreated: '102+',
+    coworkSessions: 32,
+    prsCreated: '79+',
     codexTasks: '41+',
-    linesOfCode: '5,797+',
-    deadEnds: 3,
-    majorDecisions: 64,
+    linesOfCode: '6,900+',
+    deadEnds: 4,
+    majorDecisions: 88,
   },
 };

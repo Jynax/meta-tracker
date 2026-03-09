@@ -207,18 +207,6 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
         }}
       >
         <div style={{ minWidth: 0 }}>
-          <div
-            style={{
-              fontSize: 12,
-              textTransform: 'uppercase',
-              letterSpacing: '1.5px',
-              color: COLORS.muted,
-              marginBottom: 4,
-              fontWeight: 700,
-            }}
-          >
-            Chapter
-          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
             <span style={{ fontSize: 20, fontWeight: 700, color: COLORS.white }}>{chapter.name}</span>
             <span style={{ fontSize: 15, color: COLORS.slate }}>{isExpanded ? '\u25BC' : '\u25B6'}</span>

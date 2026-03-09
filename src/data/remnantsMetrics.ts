@@ -14,6 +14,7 @@ export interface BugEntry {
 
 // --- Code Volume ---
 export const remnantsCodeVolume: CodeVolumeEntry[] = [
+  { session: 'Pre-Tracking', date: 'Feb 17', label: 'Remnants — World & Scope Definition', added: 0, deleted: 0, net: 0, total: 0 },
   { session: 'Claude 1', date: 'Feb 17', label: 'Vertical Slice', added: 850, deleted: 0, net: 850, total: 850 },
   { session: 'Claude 2', date: 'Feb 18', label: 'Balance & Xenoflora', added: 0, deleted: 0, net: 0, total: 850 },
   { session: 'Claude 3', date: 'Feb 18', label: 'Home Base & Recovery', added: 0, deleted: 0, net: 0, total: 850 },

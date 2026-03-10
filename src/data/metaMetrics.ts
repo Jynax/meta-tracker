@@ -83,6 +83,10 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 29', date: 'Mar 6', label: 'Accessibility + Link Fixes', added: 18, deleted: 13, net: 5, total: 6248 },
   { session: 'Session 30', date: 'Mar 6', label: 'Time Machine + Bugfixes', added: 306, deleted: 25, net: 281, total: 6529 },
   { session: 'Session 31', date: 'Mar 8', label: 'Data Model + New Projects', added: 406, deleted: 45, net: 361, total: 6890 },
+  { session: 'Session 32', date: 'Mar 9', label: 'Batch Update + Phase 3', added: 646, deleted: 34, net: 612, total: 7502 },
+  { session: 'Session 34', date: 'Mar 10', label: 'ChatGPT Audit + VB Data', added: 126, deleted: 29, net: 97, total: 7599 },
+  { session: 'Session 35', date: 'Mar 10', label: 'Playwright Setup', added: 350, deleted: 1, net: 0, total: 7599 },
+  { session: 'Session 37', date: 'Mar 10', label: 'Playwright Deep Tests', added: 686, deleted: 32, net: 33, total: 7632 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -117,6 +121,10 @@ export const metaSessions: SessionEntry[] = [
   { session: 'Session 29', date: 'Mar 6', label: 'Accessibility + Link Fixes', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'Accessibility pass: landmarks, nav, aria-current, button conversions. Fixed project app links. PR #67.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 2, phase: 'Review', driver: 'ai' },
   { session: 'Session 30', date: 'Mar 6', label: 'Time Machine + Bugfixes', duration: 2, prs: 2, decisions: 0, deadEnds: 0, focus: 'Time Machine toggle on History tab (Task #10, PR #70). Fix category bar + parent date bar regressions from SC theme (Task #43, PR #71).', chapterId: 'meta-ch-process-overhaul', workCategory: 'Feature', tool: 'Claude Code', taskCount: 2, phase: 'Build', driver: 'ai' },
   { session: 'Session 31', date: 'Mar 8', label: 'Data Model + New Projects', duration: 1, prs: 3, decisions: 0, deadEnds: 0, focus: 'Phase 1 data model extension (projectType, currentPhase, phase, driver, operator, expanded workCategory). Phase 2: Item-B-Gone + Vuln Bank projects added. PRs #75-77.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Data', tool: 'Claude Code', taskCount: 2, phase: 'Build', driver: 'ai' },
+  { session: 'Session 32', date: 'Mar 9', label: 'Batch Update + Phase 3', duration: 2, prs: 4, decisions: 2, deadEnds: 0, focus: 'Designer credit, planning session backfill, metrics crash fix (Bug #31), decision tree updates + SC Easter egg, Phase 3 cross-project visuals. PRs #78-81.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Feature', tool: 'Claude Code', taskCount: 7, phase: 'Build', driver: 'ai' },
+  { session: 'Session 34', date: 'Mar 10', label: 'ChatGPT Audit + VB Data', duration: 1, prs: 3, decisions: 0, deadEnds: 0, focus: 'ChatGPT export audit (86 conversations parsed, tool attribution fixed, ChatGPT 5 session added). Vuln Bank data syncs (Sessions 2-5). PRs #82-84.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Data', tool: 'Claude Code', taskCount: 1, phase: 'Review', driver: 'ai' },
+  { session: 'Session 35', date: 'Mar 10', label: 'Playwright Setup', duration: 1, prs: 1, decisions: 1, deadEnds: 0, focus: 'Playwright e2e testing framework with Chromium. 27 baseline tests across 4 spec files covering navigation, decision tree, metrics, data integrity. PR #85.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 1, phase: 'Review', driver: 'ai' },
+  { session: 'Session 37', date: 'Mar 10', label: 'Playwright Deep Tests', duration: 2, prs: 2, decisions: 0, deadEnds: 0, focus: '54 deep Playwright tests (27→81 total) across 5 spec files. Stacked tree interactions, all 4 metrics tabs, canvas view, How We Work overlay, regression guards. Fixed BIP duplicate React key warning. VB Session 8 sync. PRs #86-87.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 4, phase: 'Review', driver: 'ai' },
 ];
 
 export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };
@@ -158,9 +166,9 @@ export const metaBugs: BugEntry[] = [
 export const metaDerived: DerivedMetric[] = [
   { label: 'Churn Rate', value: '0.33', detail: 'Session 17: character fixes', color: '#34d399' },
   { label: 'Codex Success', value: '98%', detail: '40/41 tasks', color: '#34d399' },
-  { label: 'Cycle Time', value: '0.76h', detail: 'Per merged PR', color: '#22d3ee' },
-  { label: 'Decisions', value: '3.7', detail: 'Per session avg', color: '#22d3ee' },
-  { label: 'Bug Rate', value: '0.42', detail: '30 bugs / 71 PRs', color: '#34d399' },
+  { label: 'Cycle Time', value: '0.77h', detail: 'Per merged PR', color: '#22d3ee' },
+  { label: 'Decisions', value: '3.4', detail: 'Per session avg', color: '#22d3ee' },
+  { label: 'Bug Rate', value: '0.36', detail: '31 bugs / 87 PRs', color: '#34d399' },
 ];
 
 export const metaStack: StackEntry[] = [

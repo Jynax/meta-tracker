@@ -189,7 +189,7 @@ export default function OverviewTab({
 
             {chartPoints.map((point, index) => (
               <circle
-                key={point.session}
+                key={`${point.session}-${index}`}
                 cx={point.x}
                 cy={point.y}
                 r={hoveredPointIndex === index ? 6 : 4}
@@ -226,7 +226,7 @@ export default function OverviewTab({
               const y = milestoneIndex % 2 === 0 ? chartDims.height - 10 : chartDims.height - 22;
               const baselineY = chartDims.height - chartDims.bottom;
               return (
-                <g key={`${point.session}-label`}>
+                <g key={`${point.session}-${index}-label`}>
                   <line x1={point.x} y1={baselineY} x2={point.x} y2={y - 11} stroke={C.slate} strokeWidth="1" strokeOpacity="0.7" />
                   <text x={point.x} y={y} textAnchor="middle" fill={C.slate} fontSize="10">{point.label}</text>
                 </g>

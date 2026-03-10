@@ -7,7 +7,7 @@ const IGNORED_PATTERNS = [
   /Download the React DevTools/,
   /React does not recognize/,
   /Failed to load resource.*favicon/,
-  /Encountered two children with the same key/, // Known issue: duplicate session keys in BIP data
+  /Encountered two children with the same key/, // Fixed in OverviewTab (index-based keys) — kept as safety net
 ];
 
 function isIgnoredError(text: string): boolean {

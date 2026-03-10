@@ -5,6 +5,8 @@ test.describe('Navigation & Layout', () => {
     await page.goto('/');
   });
 
+  // === Baseline tests ===
+
   test('app loads with Meta Tracker as default project', async ({ page }) => {
     const heading = page.locator('h1');
     await expect(heading).toContainText('Meta Tracker');
@@ -35,7 +37,6 @@ test.describe('Navigation & Layout', () => {
   });
 
   test('How We Work button opens overlay', async ({ page }) => {
-    // Target the header button specifically (not the chapter card with similar name)
     await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
     const closeButton = page.getByRole('button', { name: /Close/ });
     await expect(closeButton).toBeVisible();
@@ -45,5 +46,115 @@ test.describe('Navigation & Layout', () => {
     await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
     await page.getByRole('button', { name: /Close/ }).click();
     await expect(page.locator('h1')).toContainText('Meta Tracker');
+  });
+
+  // === Task #56: How We Work Overlay Deep Tests ===
+
+  test('How We Work overlay shows heading', async ({ page }) => {
+    await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
+    await page.waitForTimeout(300);
+
+    const heading = page.locator('h1:has-text("How We Work")');
+    await expect(heading).toBeVisible();
+  });
+
+  test('How We Work overlay has four tabs', async ({ page }) => {
+    await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
+    await page.waitForTimeout(300);
+
+    await expect(page.getByRole('button', { name: 'Workflow', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Task Routing', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Patterns', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'History', exact: true })).toBeVisible();
+  });
+
+  test('How We Work Workflow tab shows role cards', async ({ page }) => {
+    await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
+    await page.waitForTimeout(300);
+
+    await expect(page.locator('text="Michael"').first()).toBeVisible();
+    await expect(page.locator('text="Claude"').first()).toBeVisible();
+    await expect(page.locator('text="Claude Code"').first()).toBeVisible();
+    await expect(page.locator('text="Codex"').first()).toBeVisible();
+  });
+
+  test('How We Work Task Routing tab shows tool descriptions', async ({ page }) => {
+    await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
+    await page.waitForTimeout(300);
+
+    await page.getByRole('button', { name: 'Task Routing', exact: true }).click();
+    await page.waitForTimeout(200);
+
+    await expect(page.locator('text=/Build shop/')).toBeVisible();
+  });
+
+  test('How We Work Patterns tab shows numbered patterns', async ({ page }) => {
+    await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
+    await page.waitForTimeout(300);
+
+    await page.getByRole('button', { name: 'Patterns', exact: true }).click();
+    await page.waitForTimeout(200);
+
+    await expect(page.locator('text="Small, targeted PRs"')).toBeVisible();
+  });
+
+  test('How We Work History tab shows Changelog and Time Machine toggle', async ({ page }) => {
+    await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
+    await page.waitForTimeout(300);
+
+    await page.getByRole('button', { name: 'History', exact: true }).click();
+    await page.waitForTimeout(200);
+
+    await expect(page.getByRole('button', { name: 'Changelog', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Time Machine', exact: true })).toBeVisible();
+  });
+
+  test('How We Work Time Machine shows slider control', async ({ page }) => {
+    await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
+    await page.waitForTimeout(300);
+
+    await page.getByRole('button', { name: 'History', exact: true }).click();
+    await page.waitForTimeout(200);
+
+    await page.getByRole('button', { name: 'Time Machine', exact: true }).click();
+    await page.waitForTimeout(300);
+
+    const slider = page.locator('input[aria-label="Time machine session slider"]');
+    await expect(slider).toBeVisible();
+  });
+
+  test('How We Work Time Machine slider shows snapshot items', async ({ page }) => {
+    await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
+    await page.waitForTimeout(300);
+
+    await page.getByRole('button', { name: 'History', exact: true }).click();
+    await page.waitForTimeout(200);
+
+    await page.getByRole('button', { name: 'Time Machine', exact: true }).click();
+    await page.waitForTimeout(300);
+
+    const changesText = page.locator('text=/\\d+ of \\d+ changes applied/');
+    await expect(changesText).toBeVisible();
+  });
+
+  test('How We Work Time Machine snapshot items are expandable', async ({ page }) => {
+    await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
+    await page.waitForTimeout(300);
+
+    await page.getByRole('button', { name: 'History', exact: true }).click();
+    await page.waitForTimeout(200);
+
+    await page.getByRole('button', { name: 'Time Machine', exact: true }).click();
+    await page.waitForTimeout(500);
+
+    // Snapshot items are buttons with area titles — use force click since FadeIn overlay may intercept
+    const snapshotItems = page.locator('button[style*="width: 100%"]');
+    if (await snapshotItems.count() > 0) {
+      await snapshotItems.first().click({ force: true });
+      await page.waitForTimeout(300);
+
+      const stateLabel = page.locator('text=/Current State|State/');
+      await expect(stateLabel.first()).toBeVisible();
+    }
   });
 });

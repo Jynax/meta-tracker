@@ -5,7 +5,7 @@ export const vulnBankProject: Project = {
   name: 'Vuln Bank',
   subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE CODE & CURSOR',
   projectType: 'joint',
-  currentPhase: 'Spec',
+  currentPhase: 'Build',
   chapters: [
     {
       id: 'vb-ch-getting-organized',
@@ -114,15 +114,38 @@ export const vulnBankProject: Project = {
         },
       ],
     },
+    {
+      id: 'vb-ch-first-code-fixes',
+      name: 'First Code Fixes',
+      period: 'Mar 10, 2026',
+      toolLabel: 'Claude Code',
+      tool: 'claude',
+      nodes: [
+        {
+          id: 'vb-split-metrics-closeout',
+          type: 'decision',
+          category: 'process',
+          title: 'Split Metrics Files + Session Close-Out',
+          description:
+            'Introduced separate metrics files per model (metrics-claude.md, metrics-cursor.md) to eliminate merge conflicts. Claude Code is the merger — combines both into metrics.md and syncs to Meta Tracker. Added session close-out checklist to START HERE.md.',
+          chosenPath: 'Separate write files per model, single merger (Claude Code)',
+          alternatives: [
+            'Shared metrics.md with merge conflict risk',
+            'Metrics only in Meta Tracker (no repo copy)',
+            'Each model pushes to Meta Tracker independently',
+          ],
+        },
+      ],
+    },
   ],
   stats: {
     totalDays: 5,
     chatGptMessages: '0',
     coworkSessions: 0,
-    prsCreated: '6',
+    prsCreated: '9',
     codexTasks: '0',
-    linesOfCode: '956',
+    linesOfCode: '1114',
     deadEnds: 0,
-    majorDecisions: 7,
+    majorDecisions: 8,
   },
 };

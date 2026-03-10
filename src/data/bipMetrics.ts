@@ -13,7 +13,7 @@ export interface CodeVolumeEntry {
 }
 
 export type SessionPhase = 'Research' | 'Spec' | 'Build' | 'Review';
-export type SessionDriver = 'human' | 'ai' | 'collaborative';
+export type SessionDriver = 'human' | 'human-only' | 'agent-led' | 'collaborative';
 export type SessionOperator = 'michael' | 'hrpatel' | 'joint';
 
 export interface SessionEntry {
@@ -161,7 +161,7 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'bip-deploy',
     workCategory: 'Tooling', tool: 'Cowork', taskCount: 2,
     phase: 'Review',
-    driver: 'ai',
+    driver: 'agent-led',
   },
   {
     session: 'Cowork 2',
@@ -175,7 +175,7 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'bip-wrangling',
     workCategory: 'Feature', tool: 'Cowork', taskCount: 1,
     phase: 'Build',
-    driver: 'ai',
+    driver: 'agent-led',
   },
   {
     session: 'Cowork 3',
@@ -189,7 +189,7 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'bip-decomp',
     workCategory: 'Refactor', tool: 'Cowork', taskCount: 2,
     phase: 'Build',
-    driver: 'ai',
+    driver: 'agent-led',
   },
   {
     session: 'Cowork 4',
@@ -203,7 +203,7 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'bip-windows',
     workCategory: 'Feature', tool: 'Cowork', taskCount: 2,
     phase: 'Build',
-    driver: 'ai',
+    driver: 'agent-led',
   },
   {
     session: 'Cowork 13',
@@ -217,7 +217,7 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'bip-decomp',
     workCategory: 'Refactor', tool: 'Cowork', taskCount: 1,
     phase: 'Build',
-    driver: 'ai',
+    driver: 'agent-led',
   },
   {
     session: 'Claude Code 2',
@@ -231,7 +231,7 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'ch-state-extraction',
     workCategory: 'Refactor', tool: 'Claude Code', taskCount: 3,
     phase: 'Build',
-    driver: 'ai',
+    driver: 'agent-led',
   },
   {
     session: 'Claude Code 4',
@@ -245,7 +245,7 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'ch-messy-ingestion',
     workCategory: 'Feature', tool: 'Claude Code', taskCount: 2,
     phase: 'Build',
-    driver: 'ai',
+    driver: 'agent-led',
   },
   {
     session: 'Claude Code 5',
@@ -259,7 +259,7 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'ch-perf-review',
     workCategory: 'Refactor', tool: 'Claude Code', taskCount: 3,
     phase: 'Review',
-    driver: 'ai',
+    driver: 'agent-led',
   },
 ];
 

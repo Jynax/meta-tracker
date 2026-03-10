@@ -142,10 +142,10 @@ export const vulnBankProject: Project = {
     totalDays: 5,
     chatGptMessages: '0',
     coworkSessions: 0,
-    prsCreated: '9',
+    prsCreated: '13',
     codexTasks: '0',
-    linesOfCode: '1114',
+    linesOfCode: '1166',
     deadEnds: 0,
-    majorDecisions: 8,
+    majorDecisions: 9,
   },
 };

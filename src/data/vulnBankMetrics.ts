@@ -7,6 +7,8 @@ export const vbCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 6', date: 'Mar 10', label: 'DRY Entry Points + Workflow Changes', added: 39, deleted: 88, net: -49, total: 956 },
   { session: 'Session 7', date: 'Mar 10', label: 'Rebase Checklist + Workflow', added: 50, deleted: 10, net: 40, total: 996 },
   { session: 'Session 8', date: 'Mar 10', label: 'Bug Fixes + Session Close-Out', added: 159, deleted: 41, net: 118, total: 1114 },
+  { session: 'Session 8 (Cursor)', date: 'Mar 10', label: 'SDElements Profile + Assumptions', added: 46, deleted: 0, net: 46, total: 1160 },
+  { session: 'Session 9', date: 'Mar 10', label: 'Bugs + Docker Modernization', added: 24, deleted: 18, net: 6, total: 1166 },
 ];
 
 export const vbSessions: SessionEntry[] = [
@@ -18,6 +20,8 @@ export const vbSessions: SessionEntry[] = [
   { session: 'Session 6', date: 'Mar 10', label: 'DRY Entry Points + Workflow Changes', duration: 0, prs: 1, decisions: 2, deadEnds: 0, focus: 'DRY entry points, created-by labels, codebase audit, 26 issues created', chapterId: 'vb-ch-workflow-refinements', workCategory: 'Planning', tool: 'Claude Code', taskCount: 0, phase: 'Spec', driver: 'collaborative', operator: 'michael' },
   { session: 'Session 7', date: 'Mar 10', label: 'Rebase Checklist + Workflow', duration: 0, prs: 1, decisions: 0, deadEnds: 0, focus: 'Issue #49: rebase-on-main in checklist, close issue only when PR merged', chapterId: 'vb-ch-workflow-refinements', workCategory: 'Planning', tool: 'Cursor', taskCount: 1, phase: 'Spec', driver: 'agent-led', operator: 'hrpatel' },
   { session: 'Session 8', date: 'Mar 10', label: 'Bug Fixes + Session Close-Out', duration: 0, prs: 3, decisions: 1, deadEnds: 0, focus: 'Fixed 4 bugs (#21, #22, #26, #36), Meta Tracker sync, session close-out workflow (#55)', chapterId: 'vb-ch-first-code-fixes', workCategory: 'Bug', tool: 'Claude Code', taskCount: 6, phase: 'Build', driver: 'collaborative', operator: 'michael' },
+  { session: 'Session 8 (Cursor)', date: 'Mar 10', label: 'SDElements Profile + Assumptions', duration: 0, prs: 1, decisions: 0, deadEnds: 0, focus: 'SDElements Django profile (P5), survey bias analysis (auth/encryption/compliance), profile doc', chapterId: 'vb-ch-first-code-fixes', workCategory: 'Planning', tool: 'Cursor', taskCount: 0, phase: 'Spec', driver: 'agent-led', operator: 'hrpatel' },
+  { session: 'Session 9', date: 'Mar 10', label: 'Bugs + Docker Modernization', duration: 0.5, prs: 2, decisions: 1, deadEnds: 0, focus: 'Bare exception fix (#37), stale index refs (#15), Docker modernization (#23, #25, #39), closed #52 #16, metrics merge', chapterId: 'vb-ch-first-code-fixes', workCategory: 'Bug', tool: 'Claude Code', taskCount: 7, phase: 'Build', driver: 'agent-led', operator: 'michael' },
 ];
 
 export const vbDateRange = { start: 'Mar 2026', end: 'Mar 2026' };
@@ -27,19 +31,20 @@ export const vbBugs: BugEntry[] = [
   { id: 22, session: 'Session 8', date: 'Mar 10', label: 'Dead SQLite Code', summary: 'Three API endpoints in auth.py used sqlite3 but app runs PostgreSQL — endpoints would crash at runtime', severity: 'High', source: 'Codebase audit', status: 'Fixed (PR #53)', category: 'Technical' },
   { id: 26, session: 'Session 8', date: 'Mar 10', label: 'Upload Permissions', summary: 'Dockerfile set chmod 777 on static/uploads — overly permissive, not an intentional vulnerability', severity: 'Low', source: 'Codebase audit', status: 'Fixed (PR #53)', category: 'Technical' },
   { id: 36, session: 'Session 8', date: 'Mar 10', label: 'Debug Print Statements', summary: 'Login handler printed usernames, SQL queries, and JWT tokens to stdout — development artifacts, not intentional vulns', severity: 'Medium', source: 'Codebase audit', status: 'Fixed (PR #53)', category: 'Technical' },
+  { id: 37, session: 'Session 9', date: 'Mar 10', label: 'Bare Exception Handlers', summary: 'Two bare except: handlers in app.py silently swallowed all exceptions including KeyboardInterrupt and SystemExit', severity: 'Low', source: 'Codebase audit', status: 'Fixed (PR #102)', category: 'Technical' },
 ];
 
 export const vbDerived: DerivedMetric[] = [
   { label: 'Models Active', value: '2', detail: 'Claude Code + Cursor', color: '#22d3ee' },
-  { label: 'Decisions', value: '8', detail: 'Workflow (2) + Coordination (3) + Refinements (3)', color: '#8b5cf6' },
-  { label: 'Sessions', value: '8', detail: 'Spec (7) + Build (1)', color: '#f59e0b' },
-  { label: 'PRs Created', value: '9', detail: '7 Claude Code + 2 Cursor', color: '#10b981' },
+  { label: 'Decisions', value: '9', detail: 'Workflow (2) + Coordination (3) + Refinements (3) + Build (1)', color: '#8b5cf6' },
+  { label: 'Sessions', value: '10', detail: 'Spec (7) + Build (3)', color: '#f59e0b' },
+  { label: 'PRs Created', value: '13', detail: '10 Claude Code + 3 Cursor', color: '#10b981' },
 ];
 
 export const vbStack: StackEntry[] = [
-  { name: 'Python', cat: 'Core' },
-  { name: 'Flask', cat: 'Core' },
-  { name: 'SQLite', cat: 'Core' },
-  { name: 'Docker', cat: 'Build' },
+  { name: 'Python 3.12', cat: 'Core' },
+  { name: 'Flask 2.0.1', cat: 'Core' },
+  { name: 'PostgreSQL 16', cat: 'Core' },
+  { name: 'Docker Compose V2', cat: 'Build' },
   { name: 'HTML/CSS/JS', cat: 'UI' },
 ];

@@ -56,7 +56,7 @@ function DonutBreakdown({ label, items, animate }: { label: string; items: Array
     });
   return (
     <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
         <svg viewBox="0 0 160 160" style={{ width: 160, height: 160, flexShrink: 0 }} role="img" aria-label={`${label} breakdown chart`}>
           <circle cx="80" cy="80" r={radius} fill="none" stroke={C.border} strokeWidth="16" opacity="0.3" />
           {segments.map((seg) => (
@@ -65,9 +65,9 @@ function DonutBreakdown({ label, items, animate }: { label: string; items: Array
           <text x="80" y="72" textAnchor="middle" fill={C.muted} fontSize="13">{label}</text>
           <text x="80" y="98" textAnchor="middle" fill={C.white} fontSize="28" fontWeight="700">{total}</text>
         </svg>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8 }}>
           {items.filter((item) => item.count > 0).map((item) => (
-            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: C.muted, whiteSpace: 'nowrap' }}>
+            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: C.muted, whiteSpace: 'nowrap' }}>
               <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color, flexShrink: 0 }} />
               {item.label} <span style={{ color: C.white, fontWeight: 600 }}>({item.count})</span>
             </div>

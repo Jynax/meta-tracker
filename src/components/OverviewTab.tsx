@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
 import { remnantsProject } from '../data/remnantsProject';
@@ -32,6 +32,7 @@ export default function OverviewTab({
   sessionFocusMap, hoveredPointIndex, setHoveredPointIndex, setTooltip,
   onProjectChange, activeProjectId,
 }: OverviewTabProps) {
+  const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const chartDims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
   const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
   const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
@@ -128,6 +129,18 @@ export default function OverviewTab({
           />
         ))}
       </div>
+
+      {(() => {
+        const researchSessions = sessions.filter(s => s.phase === 'Research');
+        if (researchSessions.length === 0) return null;
+        const labels = researchSessions.map(s => s.label).slice(0, 3).join(', ');
+        const detail = researchSessions.length > 3 ? labels + '...' : labels;
+        return (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            <Card label="Research Sessions" value={researchSessions.length} color="#8b5cf6" detail={detail} />
+          </div>
+        );
+      })()}
 
       {workMixTotal > 0 && (
         <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
@@ -278,15 +291,16 @@ export default function OverviewTab({
             };
             const isActive = activeProjectId === proj.id;
             return (
-              <button
+              <div
                 key={proj.id}
-                onClick={() => onProjectChange?.(proj.id)}
-                className="rounded-xl border p-3 text-left transition hover:brightness-110"
+                className="rounded-xl border p-3 text-left transition group"
                 style={{
                   backgroundColor: isActive ? 'color-mix(in srgb, var(--theme-cyan) 6%, var(--theme-card-bg))' : C.bg,
                   borderColor: isActive ? C.cyan : C.border,
-                  cursor: 'pointer',
+                  position: 'relative',
                 }}
+                onMouseEnter={() => setHoveredProject(proj.id)}
+                onMouseLeave={() => setHoveredProject(null)}
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-semibold" style={{ color: C.white }}>{proj.name}</span>
@@ -321,7 +335,17 @@ export default function OverviewTab({
                     />
                   ))}
                 </div>
-              </button>
+                {hoveredProject === proj.id && (
+                  <div style={{
+                    position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)',
+                    background: 'var(--theme-card-bg)', border: '1px solid var(--theme-border)',
+                    borderRadius: 8, padding: '8px 12px', fontSize: 11, color: 'var(--theme-text-secondary)',
+                    zIndex: 50, whiteSpace: 'nowrap', pointerEvents: 'none', marginBottom: 6,
+                  }}>
+                    {proj.name} — {phase} · {proj.projectType ? typeLabels[proj.projectType] ?? proj.projectType : 'Project'}
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>

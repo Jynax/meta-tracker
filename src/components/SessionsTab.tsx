@@ -139,14 +139,21 @@ export default function SessionsTab({
   }, [avgTaskTimePoints]);
 
   const driverColors: Record<SessionDriver, string> = {
-    human: C.cyan,
-    ai: C.emerald,
+    'human-only': C.cyan,
+    'agent-led': C.emerald,
     collaborative: C.violet,
+    human: C.cyan,
+  };
+  const driverLabels: Record<SessionDriver, string> = {
+    'human-only': 'Human Only',
+    'agent-led': 'Agent-Led',
+    collaborative: 'Collaborative',
+    human: 'Human',
   };
 
   const driverChartData = useMemo(() => {
-    const drivers: SessionDriver[] = ['human', 'ai', 'collaborative'];
-    const driverTotals: Record<SessionDriver, number> = { human: 0, ai: 0, collaborative: 0 };
+    const drivers: SessionDriver[] = ['human-only', 'agent-led', 'collaborative', 'human'];
+    const driverTotals: Record<SessionDriver, number> = { 'human-only': 0, 'agent-led': 0, collaborative: 0, human: 0 };
 
     // Group sessions by date to create bars
     const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
@@ -419,7 +426,7 @@ export default function SessionsTab({
               }}
             >
               <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: driverColors[d], display: 'inline-block' }} />
-              {d.charAt(0).toUpperCase() + d.slice(1)} {driverChartData.driverTotals[d]}
+              {driverLabels[d]} {driverChartData.driverTotals[d]}
             </span>
           ))}
         </div>

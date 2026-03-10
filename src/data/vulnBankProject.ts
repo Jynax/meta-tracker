@@ -85,15 +85,44 @@ export const vulnBankProject: Project = {
         },
       ],
     },
+    {
+      id: 'vb-ch-workflow-refinements',
+      name: 'Workflow Refinements',
+      period: 'Mar 10, 2026',
+      toolLabel: 'Claude Code',
+      tool: 'claude',
+      nodes: [
+        {
+          id: 'vb-dry-entry-points',
+          type: 'decision',
+          category: 'process',
+          title: 'DRY Up Entry Points',
+          description:
+            'Slimmed CLAUDE.md and .cursorrules to ~33 lines each, moving all shared rules into .workflow/START HERE.md. Each model-specific file now only contains branch prefix, labels, and a pointer to shared docs.',
+          chosenPath: 'Centralize rules in START HERE.md, keep entry points model-specific and minimal',
+          alternatives: ['Keep duplicated rules in both files', 'Single shared config with model flags'],
+        },
+        {
+          id: 'vb-created-by-labels',
+          type: 'decision',
+          category: 'process',
+          title: 'Created-By Labels for Issue Attribution',
+          description:
+            'Added created-by:claude-code and created-by:cursor labels to GitHub Issues so the origin of each issue is visible at a glance, independent of who is assigned to work on it.',
+          chosenPath: 'Dedicated created-by labels per model',
+          alternatives: ['Use issue body text for attribution', 'No attribution tracking'],
+        },
+      ],
+    },
   ],
   stats: {
-    totalDays: 4,
+    totalDays: 5,
     chatGptMessages: '0',
     coworkSessions: 0,
-    prsCreated: '5',
+    prsCreated: '6',
     codexTasks: '0',
-    linesOfCode: '1175',
+    linesOfCode: '956',
     deadEnds: 0,
-    majorDecisions: 5,
+    majorDecisions: 7,
   },
 };

@@ -7,6 +7,14 @@ export const bipProject: Project = {
   url: 'https://bip.jynaxxapps.com',
   projectType: 'web-app',
   currentPhase: 'Shipped',
+  milestones: [
+    {
+      label: 'v1.0 Stable',
+      date: 'Mar 11, 2026',
+      session: 'Claude Code 6',
+      description: 'Feature-complete with 52 e2e tests and CI. 75 PRs, ~5,000 LOC. Pausing active development.',
+    },
+  ],
   chapters: [
     {
       id: 'ch-spark',
@@ -458,11 +466,11 @@ export const bipProject: Project = {
   stats: {
     totalDays: 400,
     chatGptMessages: '1000+',
-    coworkSessions: 14,
-    prsCreated: '63+',
+    coworkSessions: 15,
+    prsCreated: '75+',
     codexTasks: '40+',
-    linesOfCode: '10,900+',
+    linesOfCode: '5,044',
     deadEnds: 5,
-    majorDecisions: 20,
+    majorDecisions: 22,
   },
 };

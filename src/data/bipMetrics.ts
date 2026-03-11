@@ -75,6 +75,7 @@ export const bipCodeVolume: CodeVolumeEntry[] = [
   { session: 'Claude Code 5', date: 'Mar 5', label: 'React.memo', added: 61, deleted: 50, net: 11, total: 4129 },
   { session: 'Claude Code 5', date: 'Mar 5', label: 'Export Cleaned', added: 62, deleted: 4, net: 58, total: 4187 },
   { session: 'Claude Code 5', date: 'Mar 5', label: 'Code Review', added: 42, deleted: 102, net: -60, total: 4127 },
+  { session: 'Claude Code 6', date: 'Mar 11', label: 'Playwright + CI', added: 917, deleted: 0, net: 917, total: 5044 },
 ];
 
 export const bipSessions: SessionEntry[] = [
@@ -259,6 +260,20 @@ export const bipSessions: SessionEntry[] = [
     chapterId: 'ch-perf-review',
     workCategory: 'Refactor', tool: 'Claude Code', taskCount: 3,
     phase: 'Review',
+    driver: 'agent-led',
+  },
+  {
+    session: 'Claude Code 6',
+    date: 'Mar 11',
+    label: 'Playwright + CI',
+    duration: 1,
+    prs: 4,
+    decisions: 1,
+    deadEnds: 0,
+    focus: '52 e2e Tests + GitHub Actions CI — v1.0 Stable',
+    chapterId: 'ch-testing',
+    workCategory: 'Tooling', tool: 'Claude Code', taskCount: 3,
+    phase: 'Shipped',
     driver: 'agent-led',
   },
 ];

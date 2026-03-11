@@ -63,6 +63,13 @@ export interface ProjectStats {
 export type ProjectType = 'web-app' | 'addon' | 'game' | 'tool' | 'extension' | 'joint';
 export type ProjectPhase = 'Research' | 'Spec' | 'Build' | 'Review' | 'Shipped';
 
+export interface ProjectMilestone {
+  label: string;
+  date: string;
+  session?: string;
+  description?: string;
+}
+
 export interface Project {
   id: string;
   name: string;
@@ -70,6 +77,7 @@ export interface Project {
   url?: string;
   projectType?: ProjectType;
   currentPhase?: ProjectPhase;
+  milestones?: ProjectMilestone[];
   chapters: Chapter[];
   stats: ProjectStats;
 }

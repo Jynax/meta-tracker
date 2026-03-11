@@ -4,7 +4,7 @@ import { metaProject } from '../data/metaProject';
 import { remnantsProject } from '../data/remnantsProject';
 import { itemBGoneProject } from '../data/itemBGoneProject';
 import { vulnBankProject } from '../data/vulnBankProject';
-import type { ProjectPhase } from '../types';
+import type { Project, ProjectPhase } from '../types';
 import { Card, C } from './MetricsCard';
 import type { CodeVolumeEntry, SessionEntry, DerivedMetric, StackEntry, WorkCategory } from '../data/metaMetrics';
 
@@ -33,6 +33,8 @@ export default function OverviewTab({
   onProjectChange, activeProjectId,
 }: OverviewTabProps) {
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
+  const allProjects: Project[] = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject];
+  const activeProject = allProjects.find((p) => p.id === projectId);
   const chartDims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
   const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
   const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
@@ -245,6 +247,19 @@ export default function OverviewTab({
                 </g>
               );
             })}
+
+            {activeProject?.milestones?.map((ms) => {
+              const matchIndex = chartPoints.findIndex((p) => p.session === ms.session || p.label === ms.session);
+              if (matchIndex < 0) return null;
+              const point = chartPoints[matchIndex];
+              return (
+                <g key={`milestone-${ms.label}`}>
+                  <line x1={point.x} y1={chartDims.top} x2={point.x} y2={chartDims.height - chartDims.bottom} stroke={C.amber} strokeWidth="1.5" strokeDasharray="6 3" strokeOpacity="0.8" />
+                  <rect x={point.x - 32} y={chartDims.top - 2} width={64} height={16} rx={4} fill={C.amber} fillOpacity="0.15" stroke={C.amber} strokeOpacity="0.4" strokeWidth="0.5" />
+                  <text x={point.x} y={chartDims.top + 10} textAnchor="middle" fill={C.amber} fontSize="9" fontWeight="600">{ms.label}</text>
+                </g>
+              );
+            })}
           </svg>
         </div>
       </div>
@@ -313,14 +328,29 @@ export default function OverviewTab({
                     </span>
                   )}
                 </div>
-                <div
-                  className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold mb-2"
-                  style={{
-                    backgroundColor: `color-mix(in srgb, ${phaseColors[phase]} 13%, transparent)`,
-                    color: phaseColors[phase],
-                  }}
-                >
-                  {phase}
+                <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                  <div
+                    className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold"
+                    style={{
+                      backgroundColor: `color-mix(in srgb, ${phaseColors[phase]} 13%, transparent)`,
+                      color: phaseColors[phase],
+                    }}
+                  >
+                    {phase}
+                  </div>
+                  {proj.milestones?.map((ms) => (
+                    <div
+                      key={ms.label}
+                      className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                      style={{
+                        backgroundColor: `color-mix(in srgb, ${C.amber} 15%, transparent)`,
+                        color: C.amber,
+                        border: `1px solid color-mix(in srgb, ${C.amber} 30%, transparent)`,
+                      }}
+                    >
+                      {ms.label}
+                    </div>
+                  ))}
                 </div>
                 <div className="flex gap-0.5 rounded-full overflow-hidden" style={{ height: 4 }}>
                   {phaseOrder.map((p, i) => (
@@ -342,7 +372,12 @@ export default function OverviewTab({
                     borderRadius: 8, padding: '8px 12px', fontSize: 11, color: 'var(--theme-text-secondary)',
                     zIndex: 50, whiteSpace: 'nowrap', pointerEvents: 'none', marginBottom: 6,
                   }}>
-                    {proj.name} — {phase} · {proj.projectType ? typeLabels[proj.projectType] ?? proj.projectType : 'Project'}
+                    <div>{proj.name} — {phase} · {proj.projectType ? typeLabels[proj.projectType] ?? proj.projectType : 'Project'}</div>
+                    {proj.milestones?.map((ms) => (
+                      <div key={ms.label} style={{ color: C.amber, marginTop: 2 }}>
+                        {ms.label} — {ms.date}{ms.description ? ` · ${ms.description}` : ''}
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>

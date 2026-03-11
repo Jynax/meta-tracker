@@ -12,6 +12,13 @@ export interface CodeVolumeEntry {
   total: number;
 }
 
+export interface PRDetail {
+  number: number;
+  title: string;
+  createdAt: string;
+  mergedAt: string;
+}
+
 export interface SessionEntry {
   session: string;
   date: string;
@@ -25,6 +32,7 @@ export interface SessionEntry {
   workCategory: WorkCategory;
   tool: SessionTool;
   taskCount: number;
+  prDetails?: PRDetail[];
 }
 
 export interface BugEntry {
@@ -120,11 +128,29 @@ export const metaSessions: SessionEntry[] = [
   { session: 'Session 28', date: 'Mar 6', label: 'SC Theme Toggle', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'CSS custom properties theme system, SC dark theme toggle. 3 new files, 7 modified. PR #66.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Feature', tool: 'Claude Code', taskCount: 1, phase: 'Build', driver: 'agent-led' },
   { session: 'Session 29', date: 'Mar 6', label: 'Accessibility + Link Fixes', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'Accessibility pass: landmarks, nav, aria-current, button conversions. Fixed project app links. PR #67.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 2, phase: 'Review', driver: 'agent-led' },
   { session: 'Session 30', date: 'Mar 6', label: 'Time Machine + Bugfixes', duration: 2, prs: 2, decisions: 0, deadEnds: 0, focus: 'Time Machine toggle on History tab (Task #10, PR #70). Fix category bar + parent date bar regressions from SC theme (Task #43, PR #71).', chapterId: 'meta-ch-process-overhaul', workCategory: 'Feature', tool: 'Claude Code', taskCount: 2, phase: 'Build', driver: 'agent-led' },
-  { session: 'Session 31', date: 'Mar 8', label: 'Data Model + New Projects', duration: 1, prs: 3, decisions: 0, deadEnds: 0, focus: 'Phase 1 data model extension (projectType, currentPhase, phase, driver, operator, expanded workCategory). Phase 2: Item-B-Gone + Vuln Bank projects added. PRs #75-77.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Data', tool: 'Claude Code', taskCount: 2, phase: 'Build', driver: 'agent-led' },
-  { session: 'Session 32', date: 'Mar 9', label: 'Batch Update + Phase 3', duration: 2, prs: 4, decisions: 2, deadEnds: 0, focus: 'Designer credit, planning session backfill, metrics crash fix (Bug #31), decision tree updates + SC Easter egg, Phase 3 cross-project visuals. PRs #78-81.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Feature', tool: 'Claude Code', taskCount: 7, phase: 'Build', driver: 'agent-led' },
-  { session: 'Session 34', date: 'Mar 10', label: 'ChatGPT Audit + VB Data', duration: 1, prs: 3, decisions: 0, deadEnds: 0, focus: 'ChatGPT export audit (86 conversations parsed, tool attribution fixed, ChatGPT 5 session added). Vuln Bank data syncs (Sessions 2-5). PRs #82-84.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Data', tool: 'Claude Code', taskCount: 1, phase: 'Review', driver: 'agent-led' },
-  { session: 'Session 35', date: 'Mar 10', label: 'Playwright Setup', duration: 1, prs: 1, decisions: 1, deadEnds: 0, focus: 'Playwright e2e testing framework with Chromium. 27 baseline tests across 4 spec files covering navigation, decision tree, metrics, data integrity. PR #85.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 1, phase: 'Review', driver: 'agent-led' },
-  { session: 'Session 37', date: 'Mar 10', label: 'Playwright Deep Tests', duration: 2, prs: 2, decisions: 0, deadEnds: 0, focus: '54 deep Playwright tests (27→81 total) across 5 spec files. Stacked tree interactions, all 4 metrics tabs, canvas view, How We Work overlay, regression guards. Fixed BIP duplicate React key warning. VB Session 8 sync. PRs #86-87.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 4, phase: 'Review', driver: 'agent-led' },
+  { session: 'Session 31', date: 'Mar 8', label: 'Data Model + New Projects', duration: 1, prs: 3, decisions: 0, deadEnds: 0, focus: 'Phase 1 data model extension (projectType, currentPhase, phase, driver, operator, expanded workCategory). Phase 2: Item-B-Gone + Vuln Bank projects added. PRs #75-77.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Data', tool: 'Claude Code', taskCount: 2, phase: 'Build', driver: 'agent-led', prDetails: [
+    { number: 75, title: 'Phase 1: Data model extension — project metadata + session classification', createdAt: '2026-03-08T21:32:34Z', mergedAt: '2026-03-08T21:59:02Z' },
+    { number: 76, title: 'Fix flagged phase assignments (Session 11 + Remnants Claude 1)', createdAt: '2026-03-08T22:29:17Z', mergedAt: '2026-03-08T22:36:14Z' },
+    { number: 77, title: 'Phase 2: Add Item-B-Gone and Vuln Bank projects', createdAt: '2026-03-08T23:00:38Z', mergedAt: '2026-03-08T23:03:46Z' },
+  ] },
+  { session: 'Session 32', date: 'Mar 9', label: 'Batch Update + Phase 3', duration: 2, prs: 4, decisions: 2, deadEnds: 0, focus: 'Designer credit, planning session backfill, metrics crash fix (Bug #31), decision tree updates + SC Easter egg, Phase 3 cross-project visuals. PRs #78-81.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Feature', tool: 'Claude Code', taskCount: 7, phase: 'Build', driver: 'agent-led', prDetails: [
+    { number: 78, title: 'Tasks #48 + #50: Designer credit + backfill planning sessions', createdAt: '2026-03-09T15:53:46Z', mergedAt: '2026-03-09T16:03:07Z' },
+    { number: 79, title: 'Fix Metrics crash + Session 31 data push + Bug #31', createdAt: '2026-03-09T17:00:24Z', mergedAt: '2026-03-09T17:03:44Z' },
+    { number: 80, title: 'Tasks #51, #52, #42: Decision tree updates + Easter egg', createdAt: '2026-03-09T18:15:25Z', mergedAt: '2026-03-09T18:19:48Z' },
+    { number: 81, title: 'Phase 3: Cross-project phase view, driver chart, phase badges', createdAt: '2026-03-09T18:44:00Z', mergedAt: '2026-03-09T18:45:22Z' },
+  ] },
+  { session: 'Session 34', date: 'Mar 10', label: 'ChatGPT Audit + VB Data', duration: 1, prs: 3, decisions: 0, deadEnds: 0, focus: 'ChatGPT export audit (86 conversations parsed, tool attribution fixed, ChatGPT 5 session added). Vuln Bank data syncs (Sessions 2-5). PRs #82-84.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Data', tool: 'Claude Code', taskCount: 1, phase: 'Review', driver: 'agent-led', prDetails: [
+    { number: 82, title: 'Vuln Bank data push: Sessions 2-4, coordination chapter', createdAt: '2026-03-09T21:18:37Z', mergedAt: '2026-03-09T21:20:22Z' },
+    { number: 83, title: 'Add Vuln Bank Session 5 metrics', createdAt: '2026-03-10T16:50:03Z', mergedAt: '2026-03-10T16:51:58Z' },
+    { number: 84, title: 'Task #49: ChatGPT export audit — tool fix + new session', createdAt: '2026-03-10T18:30:52Z', mergedAt: '2026-03-10T19:03:23Z' },
+  ] },
+  { session: 'Session 35', date: 'Mar 10', label: 'Playwright Setup', duration: 1, prs: 1, decisions: 1, deadEnds: 0, focus: 'Playwright e2e testing framework with Chromium. 27 baseline tests across 4 spec files covering navigation, decision tree, metrics, data integrity. PR #85.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 1, phase: 'Review', driver: 'agent-led', prDetails: [
+    { number: 85, title: 'Add Playwright e2e testing framework (Task #18)', createdAt: '2026-03-10T19:25:24Z', mergedAt: '2026-03-10T19:26:57Z' },
+  ] },
+  { session: 'Session 37', date: 'Mar 10', label: 'Playwright Deep Tests', duration: 2, prs: 2, decisions: 0, deadEnds: 0, focus: '54 deep Playwright tests (27→81 total) across 5 spec files. Stacked tree interactions, all 4 metrics tabs, canvas view, How We Work overlay, regression guards. Fixed BIP duplicate React key warning. VB Session 8 sync. PRs #86-87.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 4, phase: 'Review', driver: 'agent-led', prDetails: [
+    { number: 86, title: 'Vuln Bank Session 8 sync: full metrics + 4 bugs + phase change', createdAt: '2026-03-10T19:59:55Z', mergedAt: '2026-03-10T20:07:01Z' },
+    { number: 87, title: 'Add deep Playwright tests (Tasks #54-57) + fix BIP React key', createdAt: '2026-03-10T20:12:35Z', mergedAt: '2026-03-10T20:14:08Z' },
+  ] },
 ];
 
 export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };

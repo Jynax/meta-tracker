@@ -147,14 +147,13 @@ test.describe('Navigation & Layout', () => {
     await page.getByRole('button', { name: 'Time Machine', exact: true }).click();
     await page.waitForTimeout(500);
 
-    // Snapshot items are buttons with area titles — use force click since FadeIn overlay may intercept
-    const snapshotItems = page.locator('button[style*="width: 100%"]');
-    if (await snapshotItems.count() > 0) {
-      await snapshotItems.first().click({ force: true });
-      await page.waitForTimeout(300);
+    // Wait for snapshot items to render after FadeIn animation
+    const firstItem = page.getByRole('button', { name: /How We Work view added/ });
+    await expect(firstItem).toBeVisible({ timeout: 5000 });
+    await firstItem.click();
+    await page.waitForTimeout(300);
 
-      const stateLabel = page.locator('text=/Current State|State/');
-      await expect(stateLabel.first()).toBeVisible();
-    }
+    const stateLabel = page.locator('text=/Current State|State/');
+    await expect(stateLabel.first()).toBeVisible({ timeout: 5000 });
   });
 });

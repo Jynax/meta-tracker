@@ -16,6 +16,13 @@ export type SessionPhase = 'Research' | 'Spec' | 'Build' | 'Review';
 export type SessionDriver = 'human' | 'human-only' | 'agent-led' | 'collaborative';
 export type SessionOperator = 'michael' | 'hrpatel' | 'joint';
 
+export interface PRDetail {
+  number: number;
+  title: string;
+  createdAt: string;
+  mergedAt: string;
+}
+
 export interface SessionEntry {
   session: string;
   date: string;
@@ -32,6 +39,7 @@ export interface SessionEntry {
   phase?: SessionPhase;
   driver?: SessionDriver;
   operator?: SessionOperator;
+  prDetails?: PRDetail[];
 }
 
 export interface BugEntry {

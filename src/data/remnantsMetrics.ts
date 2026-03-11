@@ -21,6 +21,8 @@ export const remnantsCodeVolume: CodeVolumeEntry[] = [
   { session: 'Git Setup', date: 'Feb 19', label: 'Repo Init + Docs', added: 4131, deleted: 2, net: 4129, total: 4129 },
   { session: 'Codex 1', date: 'Feb 21', label: 'Launcher & Deploy', added: 680, deleted: 38, net: 642, total: 4771 },
   { session: 'Legacy Port', date: 'Feb 21', label: 'Source Restructure', added: 4038, deleted: 4131, net: -93, total: 4678 },
+  { session: 'Session 40', date: 'Mar 11', label: 'Pause + Save/Load', added: 122, deleted: 13, net: 109, total: 4787 },
+  { session: 'Session 41', date: 'Mar 11', label: 'Playwright Suite + CI', added: 433, deleted: 2, net: 431, total: 5218 },
 ];
 
 // --- Sessions ---
@@ -31,12 +33,14 @@ export const remnantsSessions: SessionEntry[] = [
   { session: 'Claude 3', date: 'Feb 18', label: 'Home Base & Recovery', duration: 0, prs: 0, decisions: 3, deadEnds: 0, focus: 'Home base, recovery system, character naming', chapterId: 'ch-the-house', workCategory: 'Feature', tool: 'Cowork', taskCount: 1, phase: 'Spec', driver: 'collaborative' },
   { session: 'Git Setup', date: 'Feb 19', label: 'Repo Init + Docs', duration: 1, prs: 0, decisions: 1, deadEnds: 0, focus: 'Created repos, uploaded docs + code', chapterId: 'ch-repo-deployment', workCategory: 'Tooling', tool: 'Cowork', taskCount: 1, phase: 'Build', driver: 'agent-led' },
   { session: 'Codex 1', date: 'Feb 21', label: 'Launcher & Deploy', duration: 1, prs: 3, decisions: 1, deadEnds: 0, focus: 'Launcher, README, deploy fix', chapterId: 'ch-repo-deployment', workCategory: 'Tooling', tool: 'Codex', taskCount: 1, phase: 'Build', driver: 'agent-led' },
+  { session: 'Session 40', date: 'Mar 11', label: 'Pause + Save/Load', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'Pause button (spacebar) with auto-save on pause. Save/load system using localStorage with full game state serialization. Tasks #04-#05.', chapterId: 'ch-core-loop', workCategory: 'Feature', tool: 'Claude Code', taskCount: 2, phase: 'Build', driver: 'agent-led' },
+  { session: 'Session 41', date: 'Mar 11', label: 'Playwright Suite + CI', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'Full Playwright test suite: 26 tests across 6 specs (title screen, game flow, controls, save/load, deep interactions, responsive). GitHub Actions CI workflow. Tasks #07-#09.', chapterId: 'ch-repo-deployment', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 3, phase: 'Review', driver: 'agent-led' },
 ];
 
 // --- Date Range ---
 export const remnantsDateRange = {
   start: 'Feb 2025',
-  end: 'Feb 2025',
+  end: 'Mar 2026',
 };
 
 // --- Bugs ---

@@ -95,6 +95,7 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 34', date: 'Mar 10', label: 'ChatGPT Audit + VB Data', added: 126, deleted: 29, net: 97, total: 7599 },
   { session: 'Session 35', date: 'Mar 10', label: 'Playwright Setup', added: 350, deleted: 1, net: 0, total: 7599 },
   { session: 'Session 37', date: 'Mar 10', label: 'Playwright Deep Tests', added: 686, deleted: 32, net: 33, total: 7632 },
+  { session: 'Session 40', date: 'Mar 11', label: 'Playwright CI + PR Timestamps', added: 233, deleted: 17, net: 216, total: 7848 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -151,6 +152,11 @@ export const metaSessions: SessionEntry[] = [
     { number: 86, title: 'Vuln Bank Session 8 sync: full metrics + 4 bugs + phase change', createdAt: '2026-03-10T19:59:55Z', mergedAt: '2026-03-10T20:07:01Z' },
     { number: 87, title: 'Add deep Playwright tests (Tasks #54-57) + fix BIP React key', createdAt: '2026-03-10T20:12:35Z', mergedAt: '2026-03-10T20:14:08Z' },
   ] },
+  { session: 'Session 39', date: 'Mar 11', label: 'Task Triage & Housekeeping', duration: 1, prs: 0, decisions: 0, deadEnds: 0, focus: 'Task triage and housekeeping. 2 tasks completed (Remnants #06, MT #45), 3 tasks created (#09, #10, MT #66). Screenshot cleanup, PAT permissions updated, memory hygiene. Voice mode first use.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 2, phase: 'Review', driver: 'collaborative' },
+  { session: 'Session 40', date: 'Mar 11', label: 'Playwright CI + PR Timestamps', duration: 1, prs: 2, decisions: 0, deadEnds: 0, focus: 'MT #58 Playwright GitHub Actions CI workflow. MT #66 PR timestamp enrichment (fetch-pr-timestamps.cjs script + Sessions tab merged/created columns). Remnants #04 pause + #05 save/load. PRs #92, Remnants #5.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 4, phase: 'Build', driver: 'agent-led', prDetails: [
+    { number: 92, title: 'Tasks #58 + #66: Playwright CI + PR timestamp enrichment', createdAt: '2026-03-11T17:00:26Z', mergedAt: '2026-03-11T18:05:43Z' },
+  ] },
+  { session: 'Session 41', date: 'Mar 11', label: 'Playwright Sweep', duration: 1, prs: 3, decisions: 0, deadEnds: 0, focus: 'Complete Playwright test suites for all remaining projects: IBG Dashboard (37 tests), JynaxxApps Landing (30 tests), Remnants (26 tests). Each includes framework setup, deep interaction tests, and GitHub Actions CI. 93 new tests total. Created Remnants Playwright tasks (#07-#09).', chapterId: 'meta-ch-process-overhaul', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 9, phase: 'Build', driver: 'agent-led' },
 ];
 
 export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };

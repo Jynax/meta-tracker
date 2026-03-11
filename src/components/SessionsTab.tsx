@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect, type ReactNode } from 'react';
 import { Card, C } from './MetricsCard';
 import { formatShortDate, formatSessionDate, buildSmoothPath } from './chartUtils';
-import type { SessionEntry, SessionTool, SessionDriver } from '../data/metaMetrics';
+import type { SessionEntry, SessionTool, SessionDriver, PRDetail } from '../data/metaMetrics';
 
 interface SessionsTabProps {
   sessions: SessionEntry[];
@@ -144,6 +144,14 @@ export default function SessionsTab({
     collaborative: C.violet,
     human: C.cyan,
   };
+  const repoUrls: Record<string, string> = {
+    meta: 'https://github.com/Jynax/meta-tracker',
+    bip: 'https://github.com/Jynax/buriedinprint-reading-app',
+    remnants: 'https://github.com/Jynax/remnants-game',
+    'item-b-gone': 'https://github.com/Jynax/item-b-gone-dashboard',
+    'vuln-bank': 'https://github.com/hrpatel/vuln-bank',
+  };
+
   const driverLabels: Record<SessionDriver, string> = {
     'human-only': 'Human Only',
     'agent-led': 'Agent-Led',
@@ -552,8 +560,41 @@ export default function SessionsTab({
                     </div>
                     <p className="mb-3 text-sm" style={{ color: C.cyan }}>{entry.focus}</p>
                     <div className="grid grid-cols-2 gap-2 text-xs" style={{ color: C.slate }}>
-                      <span>Duration</span><span>{entry.duration}h</span>
-                      <span>PRs</span><span>{entry.prs}</span>
+                      <span>Duration</span>
+                      <span>
+                        {entry.duration}h
+                        {entry.prDetails && entry.prDetails.length > 0 && (() => {
+                          const first = new Date(Math.min(...entry.prDetails.map(p => new Date(p.createdAt).getTime())));
+                          const last = new Date(Math.max(...entry.prDetails.map(p => new Date(p.mergedAt).getTime())));
+                          const spanMin = Math.round((last.getTime() - first.getTime()) / 60000);
+                          const h = Math.floor(spanMin / 60);
+                          const m = spanMin % 60;
+                          const spanStr = h > 0 ? `${h}h ${m}m` : `${m}m`;
+                          return <span style={{ color: C.muted, marginLeft: 6 }} title="Actual span from first PR created to last PR merged">({spanStr} measured)</span>;
+                        })()}
+                      </span>
+                      <span>PRs</span>
+                      <span>
+                        {entry.prDetails && entry.prDetails.length > 0 ? (
+                          <span className="flex flex-wrap gap-1">
+                            {entry.prDetails.map((pr) => (
+                              <a
+                                key={pr.number}
+                                href={`${repoUrls[projectId] ?? '#'}/pull/${pr.number}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title={pr.title}
+                                className="hover:underline"
+                                style={{ color: C.cyan }}
+                              >
+                                #{pr.number}
+                              </a>
+                            ))}
+                          </span>
+                        ) : (
+                          entry.prs
+                        )}
+                      </span>
                       <span>Decisions</span><span>{entry.decisions}</span>
                       <span>Dead Ends</span><span>{entry.deadEnds}</span>
                     </div>

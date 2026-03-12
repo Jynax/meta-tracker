@@ -137,15 +137,103 @@ export const vulnBankProject: Project = {
         },
       ],
     },
+    {
+      id: 'vb-ch-codebase-cleanup',
+      name: 'Codebase Cleanup',
+      period: 'Mar 10, 2026',
+      toolLabel: 'Claude Code + Cursor',
+      tool: 'mixed',
+      nodes: [
+        {
+          id: 'vb-sdelements-profile-assumptions',
+          type: 'discovery',
+          category: 'technical',
+          title: 'SDElements Profile Assumptions',
+          description:
+            'Cursor audited SDElements security profile and documented Django framework assumptions, bias patterns, and profile coverage gaps. Created profile documentation for the project\'s actual stack (Flask, not Django) to guide future security scanning configuration.',
+        },
+        {
+          id: 'vb-dead-sqlite-replacement',
+          type: 'decision',
+          category: 'technical',
+          title: 'Replace Dead SQLite Code with PostgreSQL',
+          description:
+            'Removed sqlite3 import and replaced all sqlite3.connect() calls in auth.py API endpoints with execute_query() from database.py. All 3 endpoints (/api/login, /api/check_balance, /api/transfer) now use the same PostgreSQL backend as the rest of the app. Intentional vulnerabilities preserved.',
+          chosenPath: 'Replace sqlite3 calls with existing execute_query() PostgreSQL helper',
+          alternatives: [
+            'Keep dead SQLite code alongside PostgreSQL',
+            'Remove the affected endpoints entirely',
+          ],
+        },
+        {
+          id: 'vb-commando-refs-debug-prints',
+          type: 'decision',
+          category: 'technical',
+          title: 'Fix Commando-X References + Remove Debug Prints',
+          description:
+            'Updated 3 README clone URLs, openapi.json contact URL, and 2 index.html repo links from Commando-X/vuln-bank to hrpatel/vuln-bank after the repo migration. Removed 6 debug print statements from login handler and auth.py that exposed usernames, SQL queries, query results, and JWT tokens to stdout.',
+          chosenPath: 'Bulk-fix all stale references and strip all debug prints in one PR',
+          alternatives: [
+            'Fix references only, leave debug prints for development',
+            'Address each file in separate PRs',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'vb-ch-docker-modernization',
+      name: 'Docker Modernization & Bug Fixes',
+      period: 'Mar 10–11, 2026',
+      toolLabel: 'Claude Code',
+      tool: 'claude',
+      nodes: [
+        {
+          id: 'vb-docker-modernization',
+          type: 'decision',
+          category: 'technical',
+          title: 'Docker Modernization — Python 3.12, Compose V2, Health Checks',
+          description:
+            'Upgraded base image from python:3.9-slim to python:3.12-slim (3.9 EOL), postgres from 13 to 16. Removed deprecated version field from docker-compose.yml. Added HEALTHCHECK to Dockerfile and pg_isready to db service. Web service now waits for healthy db before starting. Updated README to use docker compose (V2).',
+          chosenPath: 'Full modernization pass: Python 3.12, Postgres 16, Compose V2, health checks',
+          alternatives: [
+            'Upgrade Python only, leave Postgres and Compose as-is',
+            'Stay on Python 3.9 until app-level changes require it',
+          ],
+        },
+        {
+          id: 'vb-bare-exception-fixes',
+          type: 'decision',
+          category: 'technical',
+          title: 'Fix Bare Exception Handlers',
+          description:
+            'Replaced bare except: with except Exception: in app.py (lines 147, 2040) so KeyboardInterrupt and SystemExit are no longer silently swallowed. These were unintentional bugs, not part of the deliberately vulnerable design.',
+          chosenPath: 'Replace bare except: with except Exception: to preserve intentional vulns while fixing unintentional ones',
+          alternatives: [
+            'Use specific exception types per handler',
+            'Leave bare excepts as-is since the app is intentionally vulnerable',
+          ],
+        },
+        {
+          id: 'vb-stale-index-references',
+          type: 'decision',
+          category: 'process',
+          title: 'Fix Stale Task Index References in Workflow Docs',
+          description:
+            'Updated two references in How We Work.md that still mentioned the retired file-based task index to say "GitHub Issues" instead, completing the migration from Session 4.',
+          chosenPath: 'Update stale references to match current GitHub Issues workflow',
+          alternatives: ['Leave old references as historical context'],
+        },
+      ],
+    },
   ],
   stats: {
-    totalDays: 5,
+    totalDays: 6,
     chatGptMessages: '0',
     coworkSessions: 0,
-    prsCreated: '13',
+    prsCreated: '19',
     codexTasks: '0',
     linesOfCode: '1166',
     deadEnds: 0,
-    majorDecisions: 9,
+    majorDecisions: 14,
   },
 };

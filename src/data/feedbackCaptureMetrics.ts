@@ -1,3 +1,4 @@
+import type { DayEntry } from '../types/index';
 import type { CodeVolumeEntry, SessionEntry, DerivedMetric, StackEntry } from './bipMetrics';
 import type { BugEntry } from './remnantsMetrics';
 
@@ -46,4 +47,44 @@ export const fcStack: StackEntry[] = [
   { name: 'JavaScript (ES6+)', cat: 'Core' },
   { name: 'HTML5 Canvas', cat: 'Core' },
   { name: 'Claude Code Command', cat: 'Utility' },
+];
+
+/** Migrated from fcSessions — each Day groups sessions that share a date. */
+export const fcDays: DayEntry[] = [
+  {
+    date: 'Mar 10',
+    title: 'Inception & Briefs',
+    projectId: 'fc',
+    phase: 'Spec',
+    chapterId: 'ch-inception',
+    blocks: [
+      { id: 'fc-session-39', dayId: 'Mar 10', label: 'Inception & Briefs', workCategory: 'Planning', driver: 'collaborative', operator: 'claude-code', timeMinutes: 30, linesAdded: 0, linesDeleted: 0, note: 'Replaced Vibe Annotations with custom Feedback Capture concept. Wrote extension + server brief and /feedback command brief.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 30, linesAdded: 0, linesDeleted: 0, totalDecisions: 5 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Mar 11',
+    title: 'Scaffolding & Command Brief',
+    projectId: 'fc',
+    phase: 'Spec',
+    chapterId: 'ch-feedback-command',
+    blocks: [
+      { id: 'fc-session-40', dayId: 'Mar 11', label: 'Scaffolding & Command Brief', workCategory: 'Planning', driver: 'collaborative', operator: 'claude-code', timeMinutes: 30, linesAdded: 0, linesDeleted: 0, note: 'Scaffolded project directory structure. Wrote /feedback command brief. Created STATUS.md.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 30, linesAdded: 0, linesDeleted: 0, totalDecisions: 2 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Mar 12',
+    projectId: 'fc',
+    phase: 'Build',
+    chapterId: 'ch-build',
+    blocks: [
+      { id: 'fc-session-42', dayId: 'Mar 12', label: 'Full Build & Annotations', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 120, linesAdded: 935, linesDeleted: 0, note: 'Built complete extension (capture, annotations, note panel), server (loopback, JSON+PNG pairs), /captures command, auto-start scheduled task. Fixed CORS, injection, and flicker bugs. Added rectangle + arrow annotation tools.', contextWindowOrigin: false },
+      { id: 'fc-session-43', dayId: 'Mar 12', label: 'Placeholder + First-Click Fix', workCategory: 'Bug', driver: 'collaborative', operator: 'claude-code', timeMinutes: 15, linesAdded: 15, linesDeleted: 5, note: 'Updated textarea placeholder text. Fixed first-click race condition — content script listener not ready before startCapture message. Added readiness polling in background script.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 135, linesAdded: 950, linesDeleted: 5, totalDecisions: 3 },
+    driverSummary: { human: 0, ai: 0, collaborative: 2 },
+  },
 ];

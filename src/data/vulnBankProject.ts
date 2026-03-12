@@ -13,6 +13,7 @@ export const vulnBankProject: Project = {
       period: 'Mar 6, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'vb-multi-model-coordination',
@@ -46,6 +47,7 @@ export const vulnBankProject: Project = {
       period: 'Mar 9, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'vb-repo-migration',
@@ -91,6 +93,7 @@ export const vulnBankProject: Project = {
       period: 'Mar 10, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'vb-dry-entry-points',
@@ -120,6 +123,7 @@ export const vulnBankProject: Project = {
       period: 'Mar 10, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'vb-split-metrics-closeout',
@@ -143,6 +147,7 @@ export const vulnBankProject: Project = {
       period: 'Mar 10, 2026',
       toolLabel: 'Claude Code + Cursor',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'vb-sdelements-profile-assumptions',
@@ -186,6 +191,7 @@ export const vulnBankProject: Project = {
       period: 'Mar 10–11, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'vb-docker-modernization',

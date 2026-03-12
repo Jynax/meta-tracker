@@ -13,6 +13,7 @@ export const landingProject: Project = {
       period: 'Mar 9\u201312, 2026',
       toolLabel: 'Claude',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'landing-dark-first',
@@ -47,6 +48,7 @@ export const landingProject: Project = {
       period: 'Mar 10, 2026',
       toolLabel: 'Claude',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'landing-kv-cms',
@@ -83,6 +85,7 @@ export const landingProject: Project = {
       period: 'Mar 11, 2026',
       toolLabel: 'Claude',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'landing-playwright',

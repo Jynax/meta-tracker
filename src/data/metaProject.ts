@@ -13,6 +13,7 @@ export const metaProject: Project = {
       period: 'Feb 26, 2026',
       toolLabel: 'Claude Cowork',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'meta-concept-born',
@@ -61,6 +62,7 @@ export const metaProject: Project = {
       period: 'Feb 26, 2026',
       toolLabel: 'Claude, ChatGPT',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'meta-horizontal-layout',
@@ -101,6 +103,7 @@ export const metaProject: Project = {
       period: 'Feb 27–28, 2026',
       toolLabel: 'Claude, ChatGPT',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'meta-vertical-layout',
@@ -163,6 +166,7 @@ export const metaProject: Project = {
       period: 'Feb 28, 2026',
       toolLabel: 'ChatGPT Codex',
       tool: 'chatgpt',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'meta-iterative-spacing',
@@ -213,6 +217,7 @@ export const metaProject: Project = {
       period: 'Feb 28, 2026',
       toolLabel: 'Claude Cowork, Codex',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'meta-phases-to-chapters',
@@ -303,6 +308,7 @@ export const metaProject: Project = {
       period: 'Mar 2, 2026',
       toolLabel: 'Claude Cowork, Codex',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'meta-spine-offset',
@@ -378,6 +384,7 @@ export const metaProject: Project = {
       period: 'Mar 2, 2026',
       toolLabel: 'Claude Cowork, Codex',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'meta-overview-cleanup',
@@ -447,6 +454,7 @@ export const metaProject: Project = {
       period: 'Mar 3, 2026',
       toolLabel: 'Claude Cowork, Codex',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'meta-remnants-wired',
@@ -495,6 +503,7 @@ export const metaProject: Project = {
       period: 'Mar 3, 2026',
       toolLabel: 'Claude Cowork, ChatGPT Codex',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'meta-stacked-tree-component',
@@ -532,6 +541,7 @@ export const metaProject: Project = {
       period: 'Mar 3, 2026',
       toolLabel: 'Claude Cowork, ChatGPT Codex',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'meta-mojibake-fix',
@@ -599,6 +609,7 @@ export const metaProject: Project = {
     period: 'Mar 3, 2026',
     toolLabel: 'Claude Cowork',
     tool: 'claude',
+      chapterType: 'date-range' as const,
     nodes: [
       {
         id: 'meta-process-reference-view',
@@ -636,6 +647,7 @@ export const metaProject: Project = {
     period: 'Mar 4, 2026',
     toolLabel: 'Claude Cowork',
     tool: 'claude',
+      chapterType: 'date-range' as const,
     nodes: [
       {
         id: 'meta-process-restructure',
@@ -663,6 +675,7 @@ export const metaProject: Project = {
     period: 'Mar 4, 2026',
     toolLabel: 'Claude Cowork',
     tool: 'claude',
+      chapterType: 'date-range' as const,
     nodes: [
       {
         id: 'meta-mojibake-remediation',
@@ -681,6 +694,7 @@ export const metaProject: Project = {
     period: 'Mar 4, 2026',
     toolLabel: 'Claude Code',
     tool: 'claude',
+      chapterType: 'date-range' as const,
     nodes: [
       {
         id: 'meta-cli-experiment',
@@ -730,6 +744,7 @@ export const metaProject: Project = {
     period: 'Mar 5, 2026',
     toolLabel: 'Claude Code',
     tool: 'claude',
+      chapterType: 'date-range' as const,
     nodes: [
       {
         id: 'meta-all-prs-policy',
@@ -791,6 +806,7 @@ export const metaProject: Project = {
     period: 'Mar 5, 2026',
     toolLabel: 'Claude Code',
     tool: 'claude',
+      chapterType: 'date-range' as const,
     nodes: [
       {
         id: 'meta-metrics-decomposition',
@@ -841,6 +857,7 @@ export const metaProject: Project = {
     period: 'Mar 5-6, 2026',
     toolLabel: 'Claude Code',
     tool: 'claude',
+      chapterType: 'date-range' as const,
     nodes: [
       {
         id: 'meta-weekly-chart-fix',
@@ -889,6 +906,7 @@ export const metaProject: Project = {
     period: 'Mar 6, 2026',
     toolLabel: 'Claude Code',
     tool: 'claude',
+      chapterType: 'date-range' as const,
     nodes: [
       {
         id: 'meta-css-custom-properties',
@@ -936,6 +954,7 @@ export const metaProject: Project = {
     period: 'Mar 6-8, 2026',
     toolLabel: 'Claude Code',
     tool: 'claude',
+      chapterType: 'date-range' as const,
     nodes: [
       {
         id: 'meta-time-machine',
@@ -982,6 +1001,7 @@ export const metaProject: Project = {
     period: 'Mar 10, 2026',
     toolLabel: 'Claude Code',
     tool: 'claude',
+      chapterType: 'date-range' as const,
     nodes: [
       {
         id: 'meta-driver-label-rename',
@@ -1020,6 +1040,7 @@ export const metaProject: Project = {
     period: 'Mar 10-11, 2026',
     toolLabel: 'Claude Code',
     tool: 'claude',
+      chapterType: 'date-range' as const,
     nodes: [
       {
         id: 'meta-playwright-framework',
@@ -1067,6 +1088,7 @@ export const metaProject: Project = {
     period: 'Mar 11, 2026',
     toolLabel: 'Claude Code',
     tool: 'claude',
+      chapterType: 'date-range' as const,
     nodes: [
       {
         id: 'meta-milestones-feature',

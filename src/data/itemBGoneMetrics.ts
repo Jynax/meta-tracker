@@ -1,3 +1,4 @@
+import type { DayEntry } from '../types/index';
 import type { CodeVolumeEntry, SessionEntry, BugEntry, DerivedMetric, StackEntry } from './bipMetrics';
 
 export const ibgCodeVolume: CodeVolumeEntry[] = [
@@ -30,4 +31,46 @@ export const ibgStack: StackEntry[] = [
   { name: 'Node.js', cat: 'Build' },
   { name: 'HTML/CSS/JS', cat: 'UI' },
   { name: 'Cloudflare Pages', cat: 'Core' },
+];
+
+/** Migrated from ibgSessions — each Day groups sessions that share a date. */
+export const ibgDays: DayEntry[] = [
+  {
+    date: 'Mar 6',
+    title: 'Research Kickoff',
+    projectId: 'ibg',
+    phase: 'Research',
+    chapterId: 'ibg-ch-research',
+    blocks: [
+      { id: 'ibg-session-24', dayId: 'Mar 6', label: 'Research Kickoff', workCategory: 'Research', driver: 'agent-led', operator: 'claude-code', timeMinutes: 0, linesAdded: 0, linesDeleted: 0, note: 'Initial API research: tooltip hooks, quest/achievement detection, item classification, GW2_UI compat, existing addon landscape, architecture plan', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 0, linesAdded: 0, linesDeleted: 0, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 7',
+    projectId: 'ibg',
+    phase: 'Spec',
+    chapterId: 'ibg-ch-research',
+    blocks: [
+      { id: 'ibg-session-25', dayId: 'Mar 7', label: 'Architecture Decisions', workCategory: 'Planning', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 0, linesDeleted: 0, note: 'Zone-restricted items, ATT/DataStore integration APIs, plugin vs standalone analysis, keep category, web dashboard concept, decisions framework', contextWindowOrigin: false },
+      { id: 'ibg-session-26', dayId: 'Mar 7', label: 'Addon v0.1 + Data Fetcher', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-code', timeMinutes: 0, linesAdded: 596, linesDeleted: 53, note: 'Addon skeleton, detection engine, tooltip hook, confidence model, Wowhead/Blizzard data fetcher, repo setup, in-game testing passed', contextWindowOrigin: false },
+      { id: 'ibg-session-27', dayId: 'Mar 7', label: 'Scanner + Dashboard Deploy', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-code', timeMinutes: 0, linesAdded: 9224, linesDeleted: 174, note: 'Scanner module, dashboard (parser + UI + deploy), Cloudflare Pages setup, auto-sync, first real data: 3 chars / 819 items', contextWindowOrigin: false },
+      { id: 'ibg-session-28', dayId: 'Mar 7', label: 'UX Overhaul + Item Class Detection', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 414, linesDeleted: 47, note: 'Dashboard UX review (20 findings), UX overhaul (sticky header, pill counts, Wowhead links/tooltips, icons, reason text cleanup), item class detection (reagents, recipes, legendaries, toys, currency), parse.js bugfix', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 0, linesAdded: 10234, linesDeleted: 274, totalDecisions: 15 },
+    driverSummary: { human: 0, ai: 2, collaborative: 2 },
+  },
+  {
+    date: 'Mar 11',
+    title: 'Playwright Suite + CI',
+    projectId: 'ibg',
+    phase: 'Review',
+    chapterId: 'ibg-ch-dashboard-detection',
+    blocks: [
+      { id: 'ibg-session-41', dayId: 'Mar 11', label: 'Playwright Suite + CI', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 1605, linesDeleted: 0, note: 'Full Playwright test suite: 37 tests across 5 specs (navigation, data integrity, upload flow, filtering, deep interactions). GitHub Actions CI workflow. Tasks #31-#33.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 60, linesAdded: 1605, linesDeleted: 0, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
 ];

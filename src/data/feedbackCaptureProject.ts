@@ -13,6 +13,7 @@ export const feedbackCaptureProject: Project = {
       period: 'Mar 10–11, 2026',
       toolLabel: 'Claude',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'fc-replace-vibe',
@@ -72,6 +73,7 @@ export const feedbackCaptureProject: Project = {
       period: 'Mar 11, 2026',
       toolLabel: 'Claude',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'fc-url-routing',
@@ -101,6 +103,7 @@ export const feedbackCaptureProject: Project = {
       period: 'Mar 12, 2026',
       toolLabel: 'Claude',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'fc-scripting-injection',

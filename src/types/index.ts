@@ -6,6 +6,7 @@ export interface BaseNode {
   id: string;
   type: NodeType;
   category?: NodeCategory;
+  dayId?: string;
   title: string;
   description: string;
   lesson?: string;

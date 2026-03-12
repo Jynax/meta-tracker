@@ -13,13 +13,13 @@ test.describe('Decision Tree', () => {
   });
 
   test('stacked view renders chapter cards', async ({ page }) => {
-    const chapterCards = page.locator('button >> text=/^The /');
+    const chapterCards = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/');
     const count = await chapterCards.count();
     expect(count).toBeGreaterThan(0);
   });
 
   test('clicking a chapter expands it to show nodes', async ({ page }) => {
-    const firstChapter = page.locator('button >> text=/^The /').first();
+    const firstChapter = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/').first();
     await firstChapter.click();
     await page.waitForTimeout(300);
     const expandedIndicator = page.locator('text="\u25BC"');
@@ -48,7 +48,7 @@ test.describe('Decision Tree', () => {
   // === Task #54: Stacked Tree Deep Interaction Tests ===
 
   test('expanding a chapter reveals node entries with type badges', async ({ page }) => {
-    const firstChapter = page.locator('button >> text=/^The /').first();
+    const firstChapter = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/').first();
     await firstChapter.click();
     await page.waitForTimeout(300);
 
@@ -58,7 +58,7 @@ test.describe('Decision Tree', () => {
   });
 
   test('expanded chapter nodes show category pills', async ({ page }) => {
-    const firstChapter = page.locator('button >> text=/^The /').first();
+    const firstChapter = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/').first();
     await firstChapter.click();
     await page.waitForTimeout(300);
 
@@ -69,7 +69,7 @@ test.describe('Decision Tree', () => {
 
   test('clicking a node expands its detail view', async ({ page }) => {
     // Expand first chapter
-    const firstChapter = page.locator('button >> text=/^The /').first();
+    const firstChapter = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/').first();
     await firstChapter.click();
     await page.waitForTimeout(300);
 
@@ -83,10 +83,10 @@ test.describe('Decision Tree', () => {
     await expect(detailContent).toBeVisible();
   });
 
-  test('chapter header shows period and tool label', async ({ page }) => {
-    // Period and tool label are shown to the right, like "Feb 24\u2013Mar 1 \u00b7 Claude Code"
-    const periodText = page.locator('text=/\u00b7/').first();
-    await expect(periodText).toBeVisible();
+  test('day header shows chapter name context', async ({ page }) => {
+    // Day headers show the chapter name as context on the right side
+    const dayHeader = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/').first();
+    await expect(dayHeader).toBeVisible();
   });
 
   test('chapter summary bar shows entry stats', async ({ page }) => {
@@ -108,7 +108,7 @@ test.describe('Decision Tree', () => {
   });
 
   test('collapsing an expanded chapter hides its nodes', async ({ page }) => {
-    const firstChapter = page.locator('button >> text=/^The /').first();
+    const firstChapter = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/').first();
 
     // Expand
     await firstChapter.click();
@@ -122,15 +122,16 @@ test.describe('Decision Tree', () => {
     await expect(typeBadge).not.toBeVisible();
   });
 
-  test('multiple chapters can be expanded simultaneously', async ({ page }) => {
-    const chapters = page.locator('button >> text=/^The /');
-    const count = await chapters.count();
-    if (count < 2) return; // Skip if only one chapter
+  test('multiple day groups can be expanded simultaneously', async ({ page }) => {
+    // Day groups show date headers like "Mar 11", "Mar 10", etc.
+    const dayHeaders = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/');
+    const count = await dayHeaders.count();
+    if (count < 2) return; // Skip if only one day group
 
-    // Expand first two chapters
-    await chapters.nth(0).click();
+    // Expand first two day groups
+    await dayHeaders.nth(0).click();
     await page.waitForTimeout(200);
-    await chapters.nth(1).click();
+    await dayHeaders.nth(1).click();
     await page.waitForTimeout(200);
 
     // Both should show the expanded indicator

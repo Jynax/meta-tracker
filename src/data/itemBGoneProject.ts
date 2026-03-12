@@ -19,6 +19,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-standalone-addon',
           type: 'decision',
+          dayId: 'Mar 7',
           category: 'technical',
           title: 'Standalone Addon with Optional Integrations',
           description:
@@ -29,6 +30,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-three-tier-detection',
           type: 'decision',
+          dayId: 'Mar 7',
           category: 'technical',
           title: 'Three-Tier Detection Architecture',
           description:
@@ -39,6 +41,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-zone-restricted',
           type: 'decision',
+          dayId: 'Mar 7',
           category: 'functional',
           title: 'Zone-Restricted Items \u2014 No Level Comparison',
           description:
@@ -49,6 +52,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-keep-category',
           type: 'decision',
+          dayId: 'Mar 7',
           category: 'functional',
           title: '\u201cKeep\u201d Category for Cost/Turn-in Items',
           description:
@@ -59,6 +63,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-separate-dashboard',
           type: 'decision',
+          dayId: 'Mar 7',
           category: 'technical',
           title: 'Separate Web Dashboard Project',
           description:
@@ -69,6 +74,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-over-track-metrics',
           type: 'decision',
+          dayId: 'Mar 7',
           category: 'process',
           title: 'Over-Track Metrics Now, Refine Later',
           description:
@@ -89,6 +95,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-confidence-model',
           type: 'decision',
+          dayId: 'Mar 7',
           category: 'technical',
           title: 'Confidence Model for Detection Verdicts',
           description:
@@ -99,6 +106,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-external-data-sources',
           type: 'decision',
+          dayId: 'Mar 7',
           category: 'technical',
           title: 'Wowhead + Blizzard API as External Data Sources',
           description:
@@ -109,6 +117,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-dashboard-critical-path',
           type: 'decision',
+          dayId: 'Mar 7',
           category: 'process',
           title: 'Web Dashboard Is Next Critical Path',
           description:
@@ -119,6 +128,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-midnight-bank-tabs',
           type: 'decision',
+          dayId: 'Mar 7',
           category: 'technical',
           title: 'Midnight Bank Tab IDs (Not Legacy Bag IDs)',
           description:
@@ -130,6 +140,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-dashboard-hosting',
           type: 'decision',
+          dayId: 'Mar 7',
           category: 'technical',
           title: 'Dashboard Hosted with Auto-Sync',
           description:
@@ -140,6 +151,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-token-cleanup',
           type: 'decision',
+          dayId: 'Mar 7',
           category: 'process',
           title: 'Cloudflare Token Cleanup',
           description:
@@ -161,6 +173,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-item-class-detection',
           type: 'decision',
+          dayId: 'Mar 11',
           category: 'technical',
           title: 'Item Class Detection for Keep Categories',
           description:
@@ -171,6 +184,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-wowhead-integration',
           type: 'decision',
+          dayId: 'Mar 11',
           category: 'ux-design',
           title: 'Wowhead Integration for Dashboard',
           description:
@@ -181,6 +195,7 @@ export const itemBGoneProject: Project = {
         {
           id: 'ibg-escape-code-cleanup',
           type: 'decision',
+          dayId: 'Mar 11',
           category: 'technical',
           title: 'Clean WoW Escape Codes in Dashboard Display',
           description:

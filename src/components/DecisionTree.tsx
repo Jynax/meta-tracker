@@ -7,15 +7,14 @@ import { itemBGoneProject } from '../data/itemBGoneProject';
 import { vulnBankProject } from '../data/vulnBankProject';
 import { landingProject } from '../data/landingProject';
 import { feedbackCaptureProject } from '../data/feedbackCaptureProject';
-import type { FilterType, NodeCategory, Project, ProjectNode } from '../types';
-import type { SessionEntry, SessionPhase } from '../data/metaMetrics';
-import { bipSessions } from '../data/bipMetrics';
-import { metaSessions } from '../data/metaMetrics';
-import { remnantsSessions } from '../data/remnantsMetrics';
-import { ibgSessions } from '../data/itemBGoneMetrics';
-import { vbSessions } from '../data/vulnBankMetrics';
-import { landingSessions } from '../data/landingMetrics';
-import { fcSessions } from '../data/feedbackCaptureMetrics';
+import type { DayEntry, FilterType, NodeCategory, Project, ProjectNode, ProjectPhase } from '../types';
+import { bipDays } from '../data/bipMetrics';
+import { metaDays } from '../data/metaMetrics';
+import { remnantsDays } from '../data/remnantsMetrics';
+import { ibgDays } from '../data/itemBGoneMetrics';
+import { vbDays } from '../data/vulnBankMetrics';
+import { landingDays } from '../data/landingMetrics';
+import { fcDays } from '../data/feedbackCaptureMetrics';
 import { nodeTypes } from './CustomNodes';
 import MetricsDashboard from './MetricsDashboard';
 import ProcessWorkflow from './ProcessWorkflow';
@@ -25,7 +24,6 @@ import type { TreeNodeData } from './treeLayout';
 import { buildTreeLayout } from './treeLayout';
 import { ExternalLink } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
-import { C } from './MetricsCard';
 
 const FILTERS: Array<{ id: FilterType; label: string }> = [
   { id: 'all', label: 'All' },
@@ -207,29 +205,28 @@ export default function DecisionTree() {
 
   const activeFilterLabel = FILTERS.find((item) => item.id === filter)?.label;
 
-  const activeSessionsForTree = useMemo(() => {
-    const sessionMap: Record<string, SessionEntry[]> = {
-      bip: bipSessions,
-      meta: metaSessions,
-      remnants: remnantsSessions,
-      'item-b-gone': ibgSessions,
-      'vuln-bank': vbSessions,
-      'landing': landingSessions,
-      'feedback-capture': fcSessions,
+  const activeDaysForTree = useMemo(() => {
+    const dayMap: Record<string, DayEntry[]> = {
+      bip: bipDays,
+      meta: metaDays,
+      remnants: remnantsDays,
+      'item-b-gone': ibgDays,
+      'vuln-bank': vbDays,
+      'landing': landingDays,
+      'feedback-capture': fcDays,
     };
-    return sessionMap[activeProject.id] ?? [];
+    return dayMap[activeProject.id] ?? [];
   }, [activeProject.id]);
 
-  const chapterPhaseMap = useMemo(() => {
-    const map: Record<string, SessionPhase> = {};
-    activeSessionsForTree.forEach((s) => {
-      if (s.phase && s.chapterId) {
-        // Use the last session's phase as representative for the chapter
-        map[s.chapterId] = s.phase;
+  const dayPhaseMap = useMemo(() => {
+    const map: Record<string, ProjectPhase> = {};
+    activeDaysForTree.forEach((d) => {
+      if (d.phase && d.date) {
+        map[d.date] = d.phase;
       }
     });
     return map;
-  }, [activeSessionsForTree]);
+  }, [activeDaysForTree]);
 
   const projectSummary = useMemo(() => {
     const chapterStats = Object.fromEntries(activeProject.chapters.map((chapter) => [chapter.id, getChapterStats(chapter.nodes)]));
@@ -451,7 +448,8 @@ export default function DecisionTree() {
               expandedNode={expandedNode}
               onNodeToggle={(id) => setExpandedNode((current) => (current === id ? null : id))}
               highlightChapter={null}
-              chapterPhaseMap={chapterPhaseMap}
+              days={activeDaysForTree}
+              dayPhaseMap={dayPhaseMap}
             />
             </ErrorBoundary>
           ) : (

@@ -18,6 +18,7 @@ export const metaProject: Project = {
         {
           id: 'meta-concept-born',
           type: 'event',
+          dayId: 'Feb 26',
           category: 'functional',
           title: 'Meta Tracker Concept Born',
           description:
@@ -26,6 +27,7 @@ export const metaProject: Project = {
         {
           id: 'meta-stack-selection',
           type: 'decision',
+          dayId: 'Feb 26',
           category: 'technical',
           title: 'Architecture & Stack Selection',
           description:
@@ -37,6 +39,7 @@ export const metaProject: Project = {
         {
           id: 'meta-react-flow',
           type: 'decision',
+          dayId: 'Feb 26',
           category: 'technical',
           title: 'React Flow for Visualization',
           description:
@@ -47,6 +50,7 @@ export const metaProject: Project = {
         {
           id: 'meta-hardcoded-json',
           type: 'decision',
+          dayId: 'Feb 26',
           category: 'technical',
           title: 'Hardcoded JSON Data Model',
           description:
@@ -67,6 +71,7 @@ export const metaProject: Project = {
         {
           id: 'meta-horizontal-layout',
           type: 'decision',
+          dayId: 'Feb 26',
           category: 'ux-design',
           title: 'Horizontal Tree Layout (v0.1-v0.3)',
           description:
@@ -77,6 +82,7 @@ export const metaProject: Project = {
         {
           id: 'meta-filter-bar',
           type: 'decision',
+          dayId: 'Feb 26',
           category: 'functional',
           title: 'Filter Bar Implementation',
           description:
@@ -87,6 +93,7 @@ export const metaProject: Project = {
         {
           id: 'meta-category-tagging',
           type: 'decision',
+          dayId: 'Feb 26',
           category: 'functional',
           title: 'Category Tagging (Technical vs. Functional)',
           description:
@@ -108,6 +115,7 @@ export const metaProject: Project = {
         {
           id: 'meta-vertical-layout',
           type: 'pivot',
+          dayId: 'Feb 27',
           category: 'ux-design',
           title: 'Switching to Vertical Layout',
           description:
@@ -123,6 +131,7 @@ export const metaProject: Project = {
         {
           id: 'meta-expandable-phases',
           type: 'decision',
+          dayId: 'Feb 27',
           category: 'ux-design',
           title: 'Expandable/Collapsible Phases',
           description:
@@ -137,6 +146,7 @@ export const metaProject: Project = {
         {
           id: 'meta-handle-routing',
           type: 'decision',
+          dayId: 'Feb 27',
           category: 'technical',
           title: 'Handle Routing Overhaul',
           description:
@@ -147,6 +157,7 @@ export const metaProject: Project = {
         {
           id: 'meta-dynamic-detail-height',
           type: 'decision',
+          dayId: 'Feb 27',
           category: 'technical',
           title: 'Dynamic Detail Height',
           description:
@@ -171,6 +182,7 @@ export const metaProject: Project = {
         {
           id: 'meta-iterative-spacing',
           type: 'event',
+          dayId: 'Feb 28',
           category: 'ux-design',
           title: 'Iterative Spacing Tuning',
           description:
@@ -181,6 +193,7 @@ export const metaProject: Project = {
         {
           id: 'meta-codex-revert-issue',
           type: 'dead-end',
+          dayId: 'Feb 28',
           category: 'process',
           title: 'Codex Task Revert Issue',
           description:
@@ -192,6 +205,7 @@ export const metaProject: Project = {
         {
           id: 'meta-minimap-removal',
           type: 'decision',
+          dayId: 'Feb 28',
           category: 'ux-design',
           title: 'MiniMap Removal',
           description:
@@ -202,6 +216,7 @@ export const metaProject: Project = {
         {
           id: 'meta-unicode-fix',
           type: 'dead-end',
+          dayId: 'Feb 28',
           category: 'technical',
           title: 'Unicode Rendering Fix',
           description:
@@ -222,6 +237,7 @@ export const metaProject: Project = {
         {
           id: 'meta-phases-to-chapters',
           type: 'decision',
+          dayId: 'Feb 28',
           category: 'process',
           title: 'Phases Renamed to Chapters',
           description:
@@ -232,6 +248,7 @@ export const metaProject: Project = {
         {
           id: 'meta-discovery-pivot-types',
           type: 'decision',
+          dayId: 'Feb 28',
           category: 'functional',
           title: 'Discovery and Pivot Node Types Added',
           description:
@@ -242,6 +259,7 @@ export const metaProject: Project = {
         {
           id: 'meta-category-expansion',
           type: 'decision',
+          dayId: 'Feb 28',
           category: 'functional',
           title: 'Category Expansion to Four',
           description:
@@ -252,6 +270,7 @@ export const metaProject: Project = {
         {
           id: 'meta-bip-data-loaded',
           type: 'event',
+          dayId: 'Feb 28',
           category: 'functional',
           title: 'Full BIP Dataset Loaded',
           description:
@@ -260,6 +279,7 @@ export const metaProject: Project = {
         {
           id: 'meta-multi-project',
           type: 'decision',
+          dayId: 'Feb 28',
           category: 'functional',
           title: 'Multi-Project Support with Project Selector',
           description:
@@ -270,6 +290,7 @@ export const metaProject: Project = {
         {
           id: 'meta-parser-deferred',
           type: 'decision',
+          dayId: 'Feb 28',
           category: 'technical',
           title: 'Build-Time Markdown Parser Deferred',
           description:
@@ -281,6 +302,7 @@ export const metaProject: Project = {
         {
           id: 'meta-proportional-detail',
           type: 'decision',
+          dayId: 'Feb 28',
           category: 'technical',
           title: 'Proportional Detail Height Fix',
           description:
@@ -291,6 +313,7 @@ export const metaProject: Project = {
         {
           id: 'meta-alternating-layout',
           type: 'pivot',
+          dayId: 'Feb 28',
           category: 'ux-design',
           title: 'Alternating Left/Right Child Layout',
           description:
@@ -313,6 +336,7 @@ export const metaProject: Project = {
         {
           id: 'meta-spine-offset',
           type: 'decision',
+          dayId: 'Mar 2',
           category: 'ux-design',
           title: 'Spine Edge Offset Fix',
           description:
@@ -323,6 +347,7 @@ export const metaProject: Project = {
         {
           id: 'meta-view-switcher',
           type: 'decision',
+          dayId: 'Mar 2',
           category: 'functional',
           title: 'View Switcher Added',
           description:
@@ -333,6 +358,7 @@ export const metaProject: Project = {
         {
           id: 'meta-summary-bar',
           type: 'pivot',
+          dayId: 'Mar 2',
           category: 'ux-design',
           title: 'Summary Bar Replaces Summary Cards',
           description:
@@ -343,6 +369,7 @@ export const metaProject: Project = {
         {
           id: 'meta-collapsible-filters',
           type: 'decision',
+          dayId: 'Mar 2',
           category: 'ux-design',
           title: 'Collapsible Filter Buttons',
           description:
@@ -353,6 +380,7 @@ export const metaProject: Project = {
         {
           id: 'meta-chapter-stats-simplified',
           type: 'decision',
+          dayId: 'Mar 2',
           category: 'ux-design',
           title: 'Chapter Stats Simplified',
           description:
@@ -363,6 +391,7 @@ export const metaProject: Project = {
         {
           id: 'meta-metrics-data-files',
           type: 'event',
+          dayId: 'Mar 2',
           category: 'technical',
           title: 'Metrics Data Files Created',
           description:
@@ -371,6 +400,7 @@ export const metaProject: Project = {
         {
           id: 'meta-metrics-dashboard',
           type: 'event',
+          dayId: 'Mar 2',
           category: 'functional',
           title: 'Metrics Dashboard Built',
           description:
@@ -389,6 +419,7 @@ export const metaProject: Project = {
         {
           id: 'meta-overview-cleanup',
           type: 'decision',
+          dayId: 'Mar 2',
           category: 'ux-design',
           title: 'Overview Tab Decluttered',
           description:
@@ -399,6 +430,7 @@ export const metaProject: Project = {
         {
           id: 'meta-area-chart',
           type: 'decision',
+          dayId: 'Mar 2',
           category: 'ux-design',
           title: 'Codebase Chart Converted to SVG Area Chart',
           description:
@@ -409,6 +441,7 @@ export const metaProject: Project = {
         {
           id: 'meta-donut-charts',
           type: 'decision',
+          dayId: 'Mar 2',
           category: 'ux-design',
           title: 'Bug Breakdowns Converted to Donut Charts',
           description:
@@ -419,6 +452,7 @@ export const metaProject: Project = {
         {
           id: 'meta-vertical-bar-chart',
           type: 'decision',
+          dayId: 'Mar 2',
           category: 'ux-design',
           title: 'Session Activity Vertical Bar Chart',
           description:
@@ -429,6 +463,7 @@ export const metaProject: Project = {
         {
           id: 'meta-hover-tooltips',
           type: 'decision',
+          dayId: 'Mar 2',
           category: 'ux-design',
           title: 'Hover Tooltips Added Across All Charts',
           description:
@@ -439,6 +474,7 @@ export const metaProject: Project = {
         {
           id: 'meta-review-checklist',
           type: 'decision',
+          dayId: 'Mar 2',
           category: 'process',
           title: 'Technical Review Checklist Added',
           description:
@@ -459,6 +495,7 @@ export const metaProject: Project = {
         {
           id: 'meta-remnants-wired',
           type: 'event',
+          dayId: 'Mar 3',
           category: 'technical',
           title: 'Remnants Project Wired into UI',
           description:
@@ -467,6 +504,7 @@ export const metaProject: Project = {
         {
           id: 'meta-date-grouped-charts',
           type: 'decision',
+          dayId: 'Mar 3',
           category: 'ux-design',
           title: 'Date-Grouped Collapsible Chart Sessions',
           description:
@@ -477,6 +515,7 @@ export const metaProject: Project = {
         {
           id: 'meta-keep-both-charts',
           type: 'decision',
+          dayId: 'Mar 3',
           category: 'ux-design',
           title: 'Keep Both Code Tab Charts',
           description:
@@ -487,6 +526,7 @@ export const metaProject: Project = {
         {
           id: 'meta-deep-code-review',
           type: 'decision',
+          dayId: 'Mar 3',
           category: 'process',
           title: 'Deep Code Review via Source Analysis',
           description:
@@ -508,6 +548,7 @@ export const metaProject: Project = {
         {
           id: 'meta-stacked-tree-component',
           type: 'decision',
+          dayId: 'Mar 3',
           category: 'ux-design',
           title: 'StackedTreeView Component Created',
           description:
@@ -518,6 +559,7 @@ export const metaProject: Project = {
         {
           id: 'meta-stacked-canvas-toggle',
           type: 'decision',
+          dayId: 'Mar 3',
           category: 'ux-design',
           title: 'Stacked/Canvas Toggle',
           description:
@@ -528,6 +570,7 @@ export const metaProject: Project = {
         {
           id: 'meta-parity-polish',
           type: 'event',
+          dayId: 'Mar 3',
           category: 'technical',
           title: 'Parity Polish Pass (3 Bugs Fixed)',
           description:
@@ -546,6 +589,7 @@ export const metaProject: Project = {
         {
           id: 'meta-mojibake-fix',
           type: 'event',
+          dayId: 'Mar 3',
           category: 'technical',
           title: 'Unicode Mojibake Fix (Global)',
           description:
@@ -554,6 +598,7 @@ export const metaProject: Project = {
         {
           id: 'meta-font-contrast-overhaul',
           type: 'decision',
+          dayId: 'Mar 3',
           category: 'ux-design',
           title: 'Font Size & Contrast Overhaul',
           description:
@@ -564,6 +609,7 @@ export const metaProject: Project = {
         {
           id: 'meta-chapter-card-restructure',
           type: 'decision',
+          dayId: 'Mar 3',
           category: 'ux-design',
           title: 'Chapter Card Layout Restructure',
           description:
@@ -574,6 +620,7 @@ export const metaProject: Project = {
         {
           id: 'meta-dashboard-improvements',
           type: 'decision',
+          dayId: 'Mar 3',
           category: 'ux-design',
           title: 'Metrics Dashboard Improvements',
           description:
@@ -584,6 +631,7 @@ export const metaProject: Project = {
         {
           id: 'meta-chart-scalability',
           type: 'pivot',
+          dayId: 'Mar 3',
           category: 'ux-design',
           title: 'Session Charts Scalability Conversion',
           description:
@@ -594,6 +642,7 @@ export const metaProject: Project = {
         {
           id: 'meta-tab-persistence',
           type: 'decision',
+          dayId: 'Mar 3',
           category: 'functional',
           title: 'Metrics Tab State Persistence',
           description:
@@ -614,6 +663,7 @@ export const metaProject: Project = {
       {
         id: 'meta-process-reference-view',
         type: 'decision',
+        dayId: 'Mar 3',
         category: 'functional',
         title: 'Adding a Process Reference View',
         description: 'Added How We Work as a third tab in the view switcher. Renders ProcessWorkflow with three internal sub-tabs: Workflow (roles and step loop), Task Routing (which tool handles what), and Patterns (iteration strategies). In-app documentation over external docs.',
@@ -623,6 +673,7 @@ export const metaProject: Project = {
       {
         id: 'meta-tsx-conversion',
         type: 'decision',
+        dayId: 'Mar 3',
         category: 'technical',
         title: 'TypeScript Conversion of JSX Prototype',
         description: 'Converted ProcessWorkflow.jsx prototype to full TypeScript: interfaces for all props (FadeIn, Arrow, RoleCard, etc.), as const for colors, CSSProperties typing. Self-contained at 1037 lines with no new dependencies.',
@@ -632,6 +683,7 @@ export const metaProject: Project = {
       {
         id: 'meta-project-agnostic-view',
         type: 'decision',
+        dayId: 'Mar 3',
         category: 'ux-design',
         title: 'Project-Agnostic View Behavior',
         description: 'Modified switchProject() so How We Work view persists across project switches. Only metrics resets to tree (project-specific data). Process page is shared across all projects.',
@@ -652,6 +704,7 @@ export const metaProject: Project = {
       {
         id: 'meta-process-restructure',
         type: 'decision',
+        dayId: 'Mar 4',
         category: 'process',
         title: 'Replace Passoff Chain with Living Documents',
         description: 'Replaced the versioned passoff/brief/prompt chain with living docs per project: STATUS.md, tasks/ folder, decisions.md, metrics.md. Created START HERE.md as universal session entry point.',
@@ -661,6 +714,7 @@ export const metaProject: Project = {
       {
         id: 'meta-file-decomposition',
         type: 'decision',
+        dayId: 'Mar 4',
         category: 'technical',
         title: 'Decompose Large Component Files',
         description: 'Split ProcessWorkflow.tsx (1037\u2192697 lines, 3 files) and MetricsDashboard.tsx (1082\u2192982 lines, 3 files). Extracted sub-components, utilities, and data constants into focused modules.',
@@ -680,6 +734,7 @@ export const metaProject: Project = {
       {
         id: 'meta-mojibake-remediation',
         type: 'decision',
+        dayId: 'Mar 4',
         category: 'technical',
         title: 'Batch Mojibake Fix via Iterative UTF-8 Decoder',
         description: 'Fixed all 53 triple-encoded UTF-8 emoji/icon occurrences across 6 files. Built an iterative decoder in-browser that automatically handles all encoding levels (triple, double, single-extra). 19 unique mojibake patterns mapped to correct Unicode.',
@@ -699,6 +754,7 @@ export const metaProject: Project = {
       {
         id: 'meta-cli-experiment',
         type: 'decision',
+        dayId: 'Mar 4',
         category: 'process',
         title: 'Claude Code CLI as Primary Tool',
         description:
@@ -709,6 +765,7 @@ export const metaProject: Project = {
       {
         id: 'meta-work-mix-chart',
         type: 'decision',
+        dayId: 'Mar 4',
         category: 'functional',
         title: 'Work Mix Stacked Bar Chart',
         description:
@@ -719,6 +776,7 @@ export const metaProject: Project = {
       {
         id: 'meta-bugs-tab-restructure',
         type: 'decision',
+        dayId: 'Mar 4',
         category: 'ux-design',
         title: 'Bugs Tab Restructured',
         description:
@@ -729,6 +787,7 @@ export const metaProject: Project = {
       {
         id: 'meta-how-we-work-overlay',
         type: 'decision',
+        dayId: 'Mar 4',
         category: 'ux-design',
         title: 'How We Work Moved to Overlay',
         description:
@@ -749,6 +808,7 @@ export const metaProject: Project = {
       {
         id: 'meta-all-prs-policy',
         type: 'decision',
+        dayId: 'Mar 5',
         category: 'process',
         title: 'All Code Changes Go Through PRs',
         description:
@@ -760,6 +820,7 @@ export const metaProject: Project = {
       {
         id: 'meta-review-cadence',
         type: 'decision',
+        dayId: 'Mar 5',
         category: 'process',
         title: 'Review Cadence After Every 2-3 Merges',
         description:
@@ -770,6 +831,7 @@ export const metaProject: Project = {
       {
         id: 'meta-cowork-retired',
         type: 'pivot',
+        dayId: 'Mar 5',
         category: 'process',
         title: 'Cowork Retired, Claude Code Promoted',
         description:
@@ -781,6 +843,7 @@ export const metaProject: Project = {
       {
         id: 'meta-data-push-cadence',
         type: 'decision',
+        dayId: 'Mar 5',
         category: 'process',
         title: 'Data Push Cadence — Natural Breakpoints',
         description:
@@ -791,6 +854,7 @@ export const metaProject: Project = {
       {
         id: 'meta-stacked-tree-ux',
         type: 'decision',
+        dayId: 'Mar 5',
         category: 'ux-design',
         title: 'Stacked Tree — Default Collapsed + Multi-Open',
         description:
@@ -811,6 +875,7 @@ export const metaProject: Project = {
       {
         id: 'meta-metrics-decomposition',
         type: 'decision',
+        dayId: 'Mar 5',
         category: 'technical',
         title: 'MetricsDashboard Decomposed into Tab Components',
         description:
@@ -821,6 +886,7 @@ export const metaProject: Project = {
       {
         id: 'meta-eslint-prettier',
         type: 'decision',
+        dayId: 'Mar 5',
         category: 'technical',
         title: 'ESLint + Prettier Configuration',
         description:
@@ -832,6 +898,7 @@ export const metaProject: Project = {
       {
         id: 'meta-chart-scaling',
         type: 'decision',
+        dayId: 'Mar 5',
         category: 'ux-design',
         title: 'Chart Scaling — Milestones, Deltas, Toggle',
         description:
@@ -842,6 +909,7 @@ export const metaProject: Project = {
       {
         id: 'meta-session-tool-tracking',
         type: 'decision',
+        dayId: 'Mar 5',
         category: 'functional',
         title: 'Session Tool Tracking + Avg Task Time',
         description:
@@ -862,6 +930,7 @@ export const metaProject: Project = {
       {
         id: 'meta-weekly-chart-fix',
         type: 'event',
+        dayId: 'Mar 5',
         category: 'technical',
         title: 'Weekly Chart Bug Fix (Bug #28)',
         description:
@@ -870,6 +939,7 @@ export const metaProject: Project = {
       {
         id: 'meta-ux-batch-polish',
         type: 'decision',
+        dayId: 'Mar 5',
         category: 'ux-design',
         title: 'UX Batch Polish — Defaults and Links',
         description:
@@ -880,6 +950,7 @@ export const metaProject: Project = {
       {
         id: 'meta-security-audit',
         type: 'decision',
+        dayId: 'Mar 5',
         category: 'technical',
         title: 'Security Audit Across All Projects',
         description:
@@ -890,6 +961,7 @@ export const metaProject: Project = {
       {
         id: 'meta-security-headers',
         type: 'decision',
+        dayId: 'Mar 5',
         category: 'technical',
         title: 'Security Headers via _headers File',
         description:
@@ -911,6 +983,7 @@ export const metaProject: Project = {
       {
         id: 'meta-css-custom-properties',
         type: 'decision',
+        dayId: 'Mar 6',
         category: 'technical',
         title: 'CSS Custom Properties Theme System',
         description:
@@ -921,6 +994,7 @@ export const metaProject: Project = {
       {
         id: 'meta-sc-theme-toggle',
         type: 'event',
+        dayId: 'Mar 6',
         category: 'functional',
         title: 'SC Theme Toggle Shipped',
         description:
@@ -929,6 +1003,7 @@ export const metaProject: Project = {
       {
         id: 'meta-accessibility-pass',
         type: 'decision',
+        dayId: 'Mar 6',
         category: 'ux-design',
         title: 'Accessibility Pass — Semantic HTML + Keyboard Nav',
         description:
@@ -939,6 +1014,7 @@ export const metaProject: Project = {
       {
         id: 'meta-sc-theme-regressions',
         type: 'dead-end',
+        dayId: 'Mar 6',
         category: 'technical',
         title: 'SC Theme Regressions (Bugs #29-30)',
         description:
@@ -959,6 +1035,7 @@ export const metaProject: Project = {
       {
         id: 'meta-time-machine',
         type: 'decision',
+        dayId: 'Mar 6',
         category: 'functional',
         title: 'Time Machine Feature on History Tab',
         description:
@@ -969,6 +1046,7 @@ export const metaProject: Project = {
       {
         id: 'meta-data-model-extension',
         type: 'decision',
+        dayId: 'Mar 6',
         category: 'technical',
         title: 'Data Model Extension — Phase 1',
         description:
@@ -979,6 +1057,7 @@ export const metaProject: Project = {
       {
         id: 'meta-new-projects-onboarding',
         type: 'event',
+        dayId: 'Mar 6',
         category: 'functional',
         title: 'Item-B-Gone & Vuln Bank Added to Tracker',
         description:
@@ -987,6 +1066,7 @@ export const metaProject: Project = {
       {
         id: 'meta-five-projects-tracked',
         type: 'discovery',
+        dayId: 'Mar 6',
         category: 'process',
         title: 'Five Projects Tracked — Portfolio Milestone',
         description:
@@ -1006,6 +1086,7 @@ export const metaProject: Project = {
       {
         id: 'meta-driver-label-rename',
         type: 'decision',
+        dayId: 'Mar 10',
         category: 'ux',
         title: 'Driver Label Rename — "AI Only" to "Agent-Led"',
         description:
@@ -1016,6 +1097,7 @@ export const metaProject: Project = {
       {
         id: 'meta-research-sessions-dynamic',
         type: 'decision',
+        dayId: 'Mar 10',
         category: 'functional',
         title: 'Research Sessions — Dynamic Rendering',
         description:
@@ -1026,6 +1108,7 @@ export const metaProject: Project = {
       {
         id: 'meta-planning-session-gap',
         type: 'discovery',
+        dayId: 'Mar 10',
         category: 'process',
         title: 'Planning/Human-Only Session Logging Gap',
         description:
@@ -1045,6 +1128,7 @@ export const metaProject: Project = {
       {
         id: 'meta-playwright-framework',
         type: 'decision',
+        dayId: 'Mar 10',
         category: 'technical',
         title: 'Playwright E2E Testing Framework',
         description:
@@ -1055,6 +1139,7 @@ export const metaProject: Project = {
       {
         id: 'meta-playwright-deep-tests',
         type: 'event',
+        dayId: 'Mar 10',
         category: 'technical',
         title: 'Deep Interaction Tests — 81 Total',
         description:
@@ -1063,6 +1148,7 @@ export const metaProject: Project = {
       {
         id: 'meta-playwright-ci',
         type: 'decision',
+        dayId: 'Mar 10',
         category: 'technical',
         title: 'GitHub Actions CI for Playwright',
         description:
@@ -1073,6 +1159,7 @@ export const metaProject: Project = {
       {
         id: 'meta-pr-timestamps',
         type: 'decision',
+        dayId: 'Mar 10',
         category: 'functional',
         title: 'PR Timestamp Enrichment',
         description:
@@ -1093,6 +1180,7 @@ export const metaProject: Project = {
       {
         id: 'meta-milestones-feature',
         type: 'decision',
+        dayId: 'Mar 11',
         category: 'functional',
         title: 'Project Milestone Markers',
         description:

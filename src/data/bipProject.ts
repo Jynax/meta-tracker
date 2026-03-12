@@ -27,6 +27,7 @@ export const bipProject: Project = {
         {
           id: 'bip-choosing-project',
           type: 'decision',
+          dayId: 'Feb 14',
           category: 'functional',
           title: 'Choosing the Project: A Reading Log App',
           description: "Michael wanted a practical project to learn GPT-5.3 Codex. Chose to build a reading log explorer for Marcie's book blog (Buried in Print) with real data and a real user.",
@@ -37,6 +38,7 @@ export const bipProject: Project = {
         {
           id: 'bip-stack-selection',
           type: 'decision',
+          dayId: 'Feb 14',
           category: 'technical',
           title: 'Stack Selection: Vite + React + TypeScript',
           description: 'Selected modern web stack that Codex generates good code for, with free hosting and auto-deploy from GitHub.',
@@ -46,6 +48,7 @@ export const bipProject: Project = {
         {
           id: 'bip-recharts-decision',
           type: 'decision',
+          dayId: 'Feb 14',
           category: 'technical',
           title: 'Recharts for Visualization',
           description: 'Needed a charting library for monthly reading trends and year-over-year comparisons. Recharts integrates naturally with React.',
@@ -65,6 +68,7 @@ export const bipProject: Project = {
         {
           id: 'bip-spreadsheet-challenge',
           type: 'event',
+          dayId: 'Feb 22',
           category: 'functional',
           title: 'The Spreadsheet Challenge',
           description: "Marcie's master spreadsheet contained 30 sheets spanning 1990-2026, with ~5,350 books. Massive inconsistencies drove a multi-session normalization effort.",
@@ -73,6 +77,7 @@ export const bipProject: Project = {
         {
           id: 'bip-multi-sheet-parsing',
           type: 'decision',
+          dayId: 'Feb 22',
           category: 'technical',
           title: 'Single-Sheet to Multi-Sheet Parsing',
           description: 'Built a multi-sheet ingestion pipeline: sheetClassifier.ts classifies sheets, builds per-sheet column mappings, and detects year source. All 26 data sheets ingested correctly.',
@@ -82,6 +87,7 @@ export const bipProject: Project = {
         {
           id: 'bip-boolean-semantics-bug',
           type: 'discovery',
+          dayId: 'Feb 22',
           category: 'technical',
           title: 'The Boolean Semantics Bug',
           description: "The truthy() function treated 'f' as globally truthy, silently corrupting representation data. Fixed with column-specific parseTriBool().",
@@ -90,6 +96,7 @@ export const bipProject: Project = {
         {
           id: 'bip-column-alias-resolution',
           type: 'decision',
+          dayId: 'Feb 22',
           category: 'technical',
           title: 'Column Alias Resolution System',
           description: 'Column names varied wildly across year tabs. Built extensible candidate lists in sheetClassifier.ts that handle all 26 data sheets.',
@@ -99,6 +106,7 @@ export const bipProject: Project = {
         {
           id: 'bip-year-resolution-strategy',
           type: 'decision',
+          dayId: 'Feb 22',
           category: 'technical',
           title: 'Year Resolution Strategy',
           description: 'Different sheets encode year differently. Three-mode detection handles tab names, explicit columns, and no-year sheets.',
@@ -108,6 +116,7 @@ export const bipProject: Project = {
         {
           id: 'bip-spreadsheet-cleaning',
           type: 'event',
+          dayId: 'Feb 22',
           category: 'functional',
           title: 'Spreadsheet Cleaning Iterations',
           description: 'The spreadsheet went through several cleaning passes from original upload to full cleaned version. Each version identified new edge cases.',
@@ -125,6 +134,7 @@ export const bipProject: Project = {
         {
           id: 'bip-monolithic-app',
           type: 'decision',
+          dayId: 'Feb 16',
           category: 'technical',
           title: 'The Monolithic App.tsx',
           description: 'Codex generated all app logic in a single App.tsx (3,000+ lines). Works most reliably with single-file changes.',
@@ -135,6 +145,7 @@ export const bipProject: Project = {
         {
           id: 'bip-representation-metrics',
           type: 'decision',
+          dayId: 'Feb 16',
           category: 'functional',
           title: 'Representation Metrics as Core Feature',
           description: 'Chose to center the app on representation tracking rather than being a generic reading tracker. Every chart view supports filtering by Women/POC/Owned.',
@@ -144,6 +155,7 @@ export const bipProject: Project = {
         {
           id: 'bip-seasonal-color-palette',
           type: 'decision',
+          dayId: 'Feb 16',
           category: 'ux-design',
           title: 'Seasonal Color Palette',
           description: 'Monthly bar charts needed a visually distinct color scheme. Seasonal colors make charts immediately scannable.',
@@ -163,6 +175,7 @@ export const bipProject: Project = {
         {
           id: 'bip-representation-trend-view',
           type: 'event',
+          dayId: 'Feb 17',
           category: 'functional',
           title: 'Representation Trend View',
           description: 'Built a Recharts-based trend view showing Women/POC/Owned percentages as line charts across all years with a metric selector.',
@@ -170,6 +183,7 @@ export const bipProject: Project = {
         {
           id: 'bip-trend-metric-split',
           type: 'discovery',
+          dayId: 'Feb 17',
           category: 'technical',
           title: 'trendMetricForChart vs representationTrendMetric Split',
           description: 'Created two state variables for the metric selector. The split created a subtle title bug.',
@@ -178,6 +192,7 @@ export const bipProject: Project = {
         {
           id: 'bip-percent-all-title-bug',
           type: 'dead-end',
+          dayId: 'Feb 17',
           category: 'technical',
           title: 'The % All Title Bug (PR #56)',
           description: 'Selecting % All showed wrong header. Was reading trendMetricForChart instead of representationTrendMetric. A +4/-2 fix.',
@@ -186,6 +201,7 @@ export const bipProject: Project = {
         {
           id: 'bip-year-timeline',
           type: 'decision',
+          dayId: 'Feb 17',
           category: 'technical',
           title: 'YearTimeline: Custom HTML/CSS Visualization',
           description: 'The Recharts trend view lacked narrative context. Built YearTimeline.tsx with year bars, collapsible years, and an annotation engine.',
@@ -195,6 +211,7 @@ export const bipProject: Project = {
         {
           id: 'bip-annotation-engine',
           type: 'decision',
+          dayId: 'Feb 17',
           category: 'functional',
           title: 'The Annotation Engine (computeAnnotations)',
           description: 'Built computeAnnotations() that surfaces patterns automatically. Toggle chips control visibility.',
@@ -214,6 +231,7 @@ export const bipProject: Project = {
         {
           id: 'bip-timeline-modal-deadend',
           type: 'dead-end',
+          dayId: 'Feb 21',
           category: 'ux-design',
           title: 'Timeline Expand as Modal Overlay',
           description: 'The expanded timeline used position: fixed as a modal overlay. Michael immediately flagged it as wrong.',
@@ -223,6 +241,7 @@ export const bipProject: Project = {
         {
           id: 'bip-timeline-auto-expand',
           type: 'decision',
+          dayId: 'Feb 21',
           category: 'ux-design',
           title: 'Timeline Auto-Expand on View Switch',
           description: "When switching to Timeline view, it didn't auto-expand. Small change, big UX improvement.",
@@ -232,6 +251,7 @@ export const bipProject: Project = {
         {
           id: 'bip-new-tab-full-width',
           type: 'pivot',
+          dayId: 'Feb 21',
           category: 'ux-design',
           title: 'New-Tab Full-Width View (PR #59)',
           description: 'Michael suggested opening the timeline in a new browser tab. Built TimelineFullView.tsx with annotation toggles and Back to app link. +162/-20.',
@@ -242,6 +262,7 @@ export const bipProject: Project = {
         {
           id: 'bip-sessionstorage-noopener',
           type: 'dead-end',
+          dayId: 'Feb 21',
           category: 'technical',
           title: 'sessionStorage + noopener Bug (PR #60)',
           description: 'The new tab couldn\'t access sessionStorage because noopener prevents same-origin storage sharing. One-line fix.',
@@ -261,6 +282,7 @@ export const bipProject: Project = {
         {
           id: 'bip-cloudflare-pages',
           type: 'decision',
+          dayId: 'Feb 14',
           category: 'technical',
           title: 'Cloudflare Pages for Hosting',
           description: 'Deployed on Cloudflare Pages. Michael already had a Cloudflare account. Free tier with auto-deploy from GitHub.',
@@ -270,6 +292,7 @@ export const bipProject: Project = {
         {
           id: 'bip-custom-domain',
           type: 'event',
+          dayId: 'Feb 14',
           category: 'technical',
           title: 'Custom Domain Registration',
           description: 'Set up reading-log.jynaxxapps.com as the auth-gated URL and bip-pages.jynaxxapps.com as the direct Pages URL.',
@@ -277,6 +300,7 @@ export const bipProject: Project = {
         {
           id: 'bip-auth-worker',
           type: 'decision',
+          dayId: 'Feb 14',
           category: 'technical',
           title: 'bip-gate Auth Worker',
           description: 'The app contains personal reading data. Basic Auth via a Worker is simple, works everywhere, requires zero user signup.',
@@ -286,6 +310,7 @@ export const bipProject: Project = {
         {
           id: 'bip-worker-debug-bug',
           type: 'dead-end',
+          dayId: 'Feb 14',
           category: 'technical',
           title: 'Worker Debug Redirect Bug',
           description: 'The bip-gate Worker had debug code returning UPSTREAM REDIRECT instead of proxying. Fixed during Cowork Session 1 audit.',
@@ -305,6 +330,7 @@ export const bipProject: Project = {
         {
           id: 'bip-discovering-codex',
           type: 'event',
+          dayId: 'Unknown',
           category: 'process',
           title: 'Discovering GPT-5.3 Codex',
           description: "Explored Codex's sandboxed environment — full repo access, builds, PRs, code reviews. But can't install npm packages (403).",
@@ -312,6 +338,7 @@ export const bipProject: Project = {
         {
           id: 'bip-codex-stub-problem',
           type: 'discovery',
+          dayId: 'Unknown',
           category: 'process',
           title: 'Codex Stub File Problem',
           description: "When Codex can't install npm packages, it creates local stub files mimicking the package API. These compile inside Codex but break real builds.",
@@ -320,6 +347,7 @@ export const bipProject: Project = {
         {
           id: 'bip-pr-pileup',
           type: 'discovery',
+          dayId: 'Unknown',
           category: 'process',
           title: 'PR Pile-Up and Stale Branches',
           description: 'PR #18 sat open while 29+ other PRs merged, accumulating a massive merge conflict in App.tsx. Rebasing was impractical.',
@@ -328,6 +356,7 @@ export const bipProject: Project = {
         {
           id: 'bip-cowork-codex-workflow',
           type: 'decision',
+          dayId: 'Unknown',
           category: 'process',
           title: 'The Cowork + Codex Workflow',
           description: 'Established a division of labor: Cowork for reasoning and browser automation, Codex for code generation. ~5-15 minutes per bug-fix cycle.',
@@ -337,6 +366,7 @@ export const bipProject: Project = {
         {
           id: 'bip-switching-to-claude',
           type: 'pivot',
+          dayId: 'Unknown',
           category: 'process',
           title: 'Switching to Claude for Architecture',
           description: "As the project grew, Michael needed more than code generation. Cowork's desktop workspace and persistent file management solve the continuity problem.",
@@ -356,6 +386,7 @@ export const bipProject: Project = {
         {
           id: 'bip-stacked-bar-reimplement',
           type: 'decision',
+          dayId: 'Feb 25',
           category: 'functional',
           title: 'Stacked Bar Chart Re-implementation (PR #49)',
           description: 'PR #18 had a massive merge conflict. Re-implemented from scratch. Renamed StackBy to ChartStackBy, simplified fields. Net: +44/-50.',
@@ -365,6 +396,7 @@ export const bipProject: Project = {
         {
           id: 'bip-component-extraction',
           type: 'decision',
+          dayId: 'Feb 25',
           category: 'technical',
           title: 'Component Extraction (PR #50)',
           description: 'App.tsx was ~3,066 lines. Extracted 5 of 8 planned components. Reduced by ~428 lines to ~2,550.',
@@ -375,6 +407,7 @@ export const bipProject: Project = {
         {
           id: 'bip-deep-decomposition',
           type: 'decision',
+          dayId: 'Feb 25',
           category: 'technical',
           title: 'Deep Decomposition (PR #61)',
           description: 'App.tsx still ~2,800 lines after PR #50. Claude Cowork extracted 2 utility modules (columnDetection.ts, statsAndFormatting.ts) and 5 components (ChartsSection, BookCardPanel, YearSummaryPanel, DataMappingPanel, ReadyState). Reduced to ~1,540 lines. +1,797/-1,380 across 8 files. Pure refactor — zero visual changes.',
@@ -395,6 +428,7 @@ export const bipProject: Project = {
         {
           id: 'bip-xlsx-vulnerability',
           type: 'decision',
+          dayId: 'Mar 5',
           category: 'technical',
           title: 'XLSX Vulnerability Mitigation (PR #62)',
           description: 'Added validation guards in parseExcel.ts to sanitize sheet data before processing, plus an ErrorBoundary component. Minimal change (+81 lines), keeps client-only architecture.',
@@ -404,6 +438,7 @@ export const bipProject: Project = {
         {
           id: 'bip-theme-context',
           type: 'decision',
+          dayId: 'Mar 5',
           category: 'technical',
           title: 'ThemeContext for Prop Drilling Elimination',
           description: 'darkMode and toggleDarkMode were passed as props through 10 components. Created ThemeContext with useTheme() hook. Removed 2-7 theme props from each component.',
@@ -413,6 +448,7 @@ export const bipProject: Project = {
         {
           id: 'bip-custom-hooks',
           type: 'decision',
+          dayId: 'Mar 5',
           category: 'technical',
           title: 'Custom Hooks for State Extraction (PR #63)',
           description: 'Extracted 5 custom hooks from App.tsx: useFileUpload, useFilteredRows, useChartData, useSummaryData, useBookSelection. App.tsx reduced from 1,456 to 622 lines (57%). +1,389/-1,124.',
@@ -423,6 +459,7 @@ export const bipProject: Project = {
         {
           id: 'bip-callback-pattern',
           type: 'decision',
+          dayId: 'Mar 5',
           category: 'technical',
           title: 'Callback Pattern for Cross-Hook Communication',
           description: 'useFileUpload needs to reset filters, books, and months owned by other hooks. Defined a ResetCallbacks interface with explicit function callbacks passed from App.tsx.',
@@ -442,6 +479,7 @@ export const bipProject: Project = {
         {
           id: 'bip-git-from-zero',
           type: 'event',
+          dayId: 'Feb 2026',
           category: 'process',
           title: 'Git from Zero',
           description: 'ChatGPT walked Michael through Git basics: cloning, configuring, pulling, committing, pushing.',
@@ -450,6 +488,7 @@ export const bipProject: Project = {
         {
           id: 'bip-local-dev-environment',
           type: 'event',
+          dayId: 'Feb 2026',
           category: 'process',
           title: 'Local Dev Environment (Windows + PowerShell)',
           description: 'Set up Node.js, npm, and the project on Windows. Michael can test locally and provide feedback before merging.',
@@ -467,6 +506,7 @@ export const bipProject: Project = {
         {
           id: 'bip-published-work-exploration',
           type: 'discovery',
+          dayId: 'Feb 2026',
           category: 'functional',
           title: 'Published Work Module Exploration',
           description: "Explored tracking Marcie's published work across the internet. Proposed as a second data source + dashboard. Scoped but deferred.",
@@ -484,6 +524,7 @@ export const bipProject: Project = {
         {
           id: 'bip-playwright-framework',
           type: 'decision',
+          dayId: 'Mar 11',
           category: 'technical',
           title: 'Playwright as the Testing Framework',
           description: 'BIP was feature-complete with zero automated tests. Installed @playwright/test with Chromium-only config, Vite dev server auto-start, and the same structure used in Meta Tracker. 52 tests across 11 spec files, all passing in ~11 seconds.',
@@ -493,6 +534,7 @@ export const bipProject: Project = {
         {
           id: 'bip-github-actions-ci',
           type: 'decision',
+          dayId: 'Mar 11',
           category: 'process',
           title: 'GitHub Actions CI for Test Automation',
           description: 'Added .github/workflows/playwright.yml — runs on push to main and on all PRs. Installs Chromium, runs tests, uploads HTML report as artifact. Every future PR will have automated test results before merge.',

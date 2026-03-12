@@ -18,6 +18,7 @@ export const feedbackCaptureProject: Project = {
         {
           id: 'fc-replace-vibe',
           type: 'pivot',
+          dayId: 'Mar 10',
           category: 'process',
           title: 'Replace Vibe Annotations with Custom Extension',
           description: 'Vibe Annotations used a third-party extension + MCP server. Replaced with a fully custom, private tool — simpler, more control, no external dependencies.',
@@ -28,6 +29,7 @@ export const feedbackCaptureProject: Project = {
         {
           id: 'fc-local-only',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'technical',
           title: 'Local-Only Architecture',
           description: 'Server binds to 127.0.0.1 only. No external requests, no store publishing, no auth needed. Security from loopback binding alone.',
@@ -38,6 +40,7 @@ export const feedbackCaptureProject: Project = {
         {
           id: 'fc-minimal-permissions',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'technical',
           title: 'Minimal Extension Permissions',
           description: 'Extension uses only activeTab + storage. No background scripts, no DOM scraping, no broad URL access. Captures only what the user explicitly selects.',
@@ -48,6 +51,7 @@ export const feedbackCaptureProject: Project = {
         {
           id: 'fc-three-components',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'functional',
           title: 'Three-Component Architecture',
           description: 'Extension captures, server writes to disk, /feedback command processes into task briefs. Clean separation — each piece does one thing.',
@@ -58,6 +62,7 @@ export const feedbackCaptureProject: Project = {
         {
           id: 'fc-json-png-pairs',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'technical',
           title: 'JSON + PNG File Pairs',
           description: 'Each capture writes two files: a .json (URL, note, timestamp) and a .png (screenshot). Timestamp + hostname slug as filename. Simple, grep-friendly, no database.',
@@ -78,6 +83,7 @@ export const feedbackCaptureProject: Project = {
         {
           id: 'fc-url-routing',
           type: 'decision',
+          dayId: 'Mar 11',
           category: 'functional',
           title: 'URL-Based Project Routing',
           description: 'Captures are routed to projects based on URL hostname (e.g. meta.jynaxxapps.com → Meta Tracker). Config maps hostnames to project names and repo paths.',
@@ -88,6 +94,7 @@ export const feedbackCaptureProject: Project = {
         {
           id: 'fc-confirm-before-write',
           type: 'decision',
+          dayId: 'Mar 11',
           category: 'process',
           title: 'Confirm Before Writing Briefs',
           description: 'The /feedback command presents grouped briefs to Michael before writing anything to repos. No auto-filing — human review is the gate.',
@@ -108,6 +115,7 @@ export const feedbackCaptureProject: Project = {
         {
           id: 'fc-scripting-injection',
           type: 'decision',
+          dayId: 'Mar 12',
           category: 'technical',
           title: 'On-Demand Script Injection via Background Worker',
           description: 'Static content_scripts with <all_urls> failed on pre-existing tabs. Switched to chrome.scripting.executeScript from background worker, triggered on demand. Added scripting permission.',
@@ -118,6 +126,7 @@ export const feedbackCaptureProject: Project = {
         {
           id: 'fc-cors-proxy',
           type: 'decision',
+          dayId: 'Mar 12',
           category: 'technical',
           title: 'CORS Proxy Through Background Script',
           description: 'Content scripts run in page context and hit CORS when fetching localhost. Routed all server requests through background service worker which has unrestricted network access.',
@@ -128,6 +137,7 @@ export const feedbackCaptureProject: Project = {
         {
           id: 'fc-annotation-tools',
           type: 'decision',
+          dayId: 'Mar 12',
           category: 'ux-design',
           title: 'Canvas-Based Annotation (Rectangles + Arrows)',
           description: 'After capture, screenshot renders on a canvas overlay. User draws red rectangles and arrows before adding a note. Annotations baked into saved PNG. Inspired by LightShot.',

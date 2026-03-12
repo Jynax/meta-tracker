@@ -462,6 +462,33 @@ export const bipProject: Project = {
         },
       ],
     },
+    {
+      id: 'ch-automated-testing',
+      name: 'Automated Testing with Playwright',
+      period: 'Mar 11, 2026',
+      toolLabel: 'Claude Code',
+      tool: 'claude',
+      nodes: [
+        {
+          id: 'bip-playwright-framework',
+          type: 'decision',
+          category: 'technical',
+          title: 'Playwright as the Testing Framework',
+          description: 'BIP was feature-complete with zero automated tests. Installed @playwright/test with Chromium-only config, Vite dev server auto-start, and the same structure used in Meta Tracker. 52 tests across 11 spec files, all passing in ~11 seconds.',
+          chosenPath: 'Playwright with Chromium-only config, mirroring Meta Tracker test patterns',
+          alternatives: ['Vitest + Testing Library (unit-level, misses integration issues)', 'Cypress (heavier, less aligned with existing patterns)'],
+        },
+        {
+          id: 'bip-github-actions-ci',
+          type: 'decision',
+          category: 'process',
+          title: 'GitHub Actions CI for Test Automation',
+          description: 'Added .github/workflows/playwright.yml — runs on push to main and on all PRs. Installs Chromium, runs tests, uploads HTML report as artifact. Every future PR will have automated test results before merge.',
+          chosenPath: 'GitHub Actions workflow with Chromium install and HTML report artifact upload',
+          alternatives: ['Manual test runs only', 'Different CI provider'],
+        },
+      ],
+    },
   ],
   stats: {
     totalDays: 400,
@@ -471,6 +498,6 @@ export const bipProject: Project = {
     codexTasks: '40+',
     linesOfCode: '5,044',
     deadEnds: 5,
-    majorDecisions: 22,
+    majorDecisions: 24,
   },
 };

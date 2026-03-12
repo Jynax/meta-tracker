@@ -976,15 +976,119 @@ export const metaProject: Project = {
       },
     ],
   },
+  {
+    id: 'meta-ch-ux-data-fixes',
+    name: 'UX & Data Fixes',
+    period: 'Mar 10, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    nodes: [
+      {
+        id: 'meta-driver-label-rename',
+        type: 'decision',
+        category: 'ux',
+        title: 'Driver Label Rename — "AI Only" to "Agent-Led"',
+        description:
+          'Renamed driver taxonomy: "AI only" → "Agent-Led" (every session has a human trigger), added "Human Only" for planning/review sessions. Migrated all existing driver values across 5 metrics files.',
+        chosenPath: 'Agent-Led / Collaborative / Human Only taxonomy',
+        alternatives: ['Keep "AI only" label', 'Use numeric involvement scale'],
+      },
+      {
+        id: 'meta-research-sessions-dynamic',
+        type: 'decision',
+        category: 'functional',
+        title: 'Research Sessions — Dynamic Rendering',
+        description:
+          'Removed hardcoded "Research Sessions" stat from Item-B-Gone derived metrics. Replaced with a dynamically computed card in OverviewTab that renders on any project with phase: Research sessions.',
+        chosenPath: 'Dynamic conditional rendering based on session phase data',
+        alternatives: ['Hardcoded per-project stats', 'Manual configuration flag'],
+      },
+      {
+        id: 'meta-planning-session-gap',
+        type: 'discovery',
+        category: 'process',
+        title: 'Planning/Human-Only Session Logging Gap',
+        description:
+          'Identified that planning and UX review sessions have no clean logging mechanism — SessionEntry requires fields like tool, prs, focus that do not apply. Current workaround: duration 0, prs 0. Future consideration: dedicated sessionType flag.',
+        lesson: 'The data model was built for code sessions and needs extension for non-code work.',
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-playwright-testing',
+    name: 'Playwright Testing',
+    period: 'Mar 10-11, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    nodes: [
+      {
+        id: 'meta-playwright-framework',
+        type: 'decision',
+        category: 'technical',
+        title: 'Playwright E2E Testing Framework',
+        description:
+          'Added Playwright with Chromium for end-to-end testing. 27 baseline tests across 4 spec files covering navigation, decision tree, metrics dashboard, and data integrity. Auto-starts Vite dev server.',
+        chosenPath: 'Playwright with Chromium + Vite dev server integration',
+        alternatives: ['Cypress', 'Vitest with jsdom (unit only)', 'Manual testing'],
+      },
+      {
+        id: 'meta-playwright-deep-tests',
+        type: 'event',
+        category: 'technical',
+        title: 'Deep Interaction Tests — 81 Total',
+        description:
+          'Expanded test suite from 27 to 81 tests. Added deep interaction coverage for Stacked Tree (collapse/expand, search, chapter navigation), Metrics Dashboard (tab switching, chart rendering, project switching), Canvas View, and How We Work overlay. Regression guards for known bugs.',
+      },
+      {
+        id: 'meta-playwright-ci',
+        type: 'decision',
+        category: 'technical',
+        title: 'GitHub Actions CI for Playwright',
+        description:
+          'Added GitHub Actions workflow running Playwright tests on every push and PR to main. Chromium-only in CI. Uploads test report as artifact on failure.',
+        chosenPath: 'GitHub Actions with Playwright Chromium',
+        alternatives: ['No CI (local only)', 'Cloudflare Pages build hook', 'Pre-commit hook'],
+      },
+      {
+        id: 'meta-pr-timestamps',
+        type: 'decision',
+        category: 'functional',
+        title: 'PR Timestamp Enrichment',
+        description:
+          'Added createdAt/mergedAt fields to PRDetail type. Built fetch-pr-timestamps.cjs script to pull timestamps from GitHub API. Sessions tab now shows actual task duration (created → merged) instead of just PR count.',
+        chosenPath: 'GitHub API script + enriched PRDetail type',
+        alternatives: ['Manual timestamp entry', 'Git commit timestamps only'],
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-project-milestones',
+    name: 'Project Milestones',
+    period: 'Mar 11, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    nodes: [
+      {
+        id: 'meta-milestones-feature',
+        type: 'decision',
+        category: 'functional',
+        title: 'Project Milestone Markers',
+        description:
+          'Added milestone support to the data model and UI. Milestones appear as labeled markers on timeline charts. First milestone: BIP v1.0 (Mar 5). Renders conditionally — only shows when a project has milestone data.',
+        chosenPath: 'Milestone array on project data + conditional timeline markers',
+        alternatives: ['Annotations on existing charts', 'Separate milestones view'],
+      },
+    ],
+  },
 ],
   stats: {
-    totalDays: 12,
+    totalDays: 16,
     chatGptMessages: '250+',
-    coworkSessions: 32,
-    prsCreated: '79+',
-    codexTasks: '41+',
-    linesOfCode: '6,900+',
+    coworkSessions: 41,
+    prsCreated: '93+',
+    codexTasks: '66+',
+    linesOfCode: '7,800+',
     deadEnds: 4,
-    majorDecisions: 88,
+    majorDecisions: 97,
   },
 };

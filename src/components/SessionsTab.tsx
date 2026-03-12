@@ -1,10 +1,12 @@
 import { useMemo, useState, useEffect, type ReactNode } from 'react';
 import { Card, C } from './MetricsCard';
-import { formatShortDate, formatSessionDate, buildSmoothPath } from './chartUtils';
-import type { SessionEntry, SessionTool, SessionDriver, PRDetail } from '../data/metaMetrics';
+import { formatShortDate, buildSmoothPath } from './chartUtils';
+import type { SessionEntry, SessionTool, SessionDriver } from '../data/metaMetrics';
+import type { DayEntry, WorkBlock, WorkDriver, WorkOperator } from '../types/index';
 
 interface SessionsTabProps {
   sessions: SessionEntry[];
+  days: DayEntry[];
   totalPRs: number;
   totalHours: number;
   projectId: string;
@@ -18,13 +20,12 @@ interface SessionsTabProps {
 }
 
 export default function SessionsTab({
-  sessions, totalPRs, totalHours, projectId,
+  sessions, days, totalPRs, totalHours, projectId,
   sessionFocusMap, sessionDateMap, chapterMap,
   onJumpToChapter, hoveredPointIndex, setHoveredPointIndex, setTooltip,
 }: SessionsTabProps) {
-  const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set());
+  const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
   const [chartView, setChartView] = useState<'daily' | 'weekly'>('weekly');
-
 
   const toolColors: Record<SessionTool, string> = {
     'Claude Code': C.emerald,
@@ -144,14 +145,6 @@ export default function SessionsTab({
     collaborative: C.violet,
     human: C.cyan,
   };
-  const repoUrls: Record<string, string> = {
-    meta: 'https://github.com/Jynax/meta-tracker',
-    bip: 'https://github.com/Jynax/buriedinprint-reading-app',
-    remnants: 'https://github.com/Jynax/remnants-game',
-    'item-b-gone': 'https://github.com/Jynax/item-b-gone-dashboard',
-    'vuln-bank': 'https://github.com/hrpatel/vuln-bank',
-  };
-
   const driverLabels: Record<SessionDriver, string> = {
     'human-only': 'Human Only',
     'agent-led': 'Agent-Led',
@@ -205,38 +198,20 @@ export default function SessionsTab({
     };
   }, [sessionActivityPoints.points, chartView]);
 
-  const sessionsByMonth = useMemo(() => {
-    const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const groups = new Map<string, {
-      key: string;
-      label: string;
-      monthIndex: number;
-      sessions: Array<(typeof sessions)[number] & { date: string; displayDate: string }>;
-      totalPRs: number;
-      totalDecisions: number;
-    }>();
-
-    sessions.forEach((entry) => {
-      const date = sessionDateMap[entry.session] ?? '';
-      const [month = 'Jan'] = date.split(' ');
-      const monthIndex = monthOrder.indexOf(month);
-      const safeMonthIndex = monthIndex === -1 ? 0 : monthIndex;
-      const key = `2026-${String(safeMonthIndex + 1).padStart(2, '0')}`;
-      const label = `${month}/26`;
-      const existing = groups.get(key) ?? { key, label, monthIndex: safeMonthIndex, sessions: [], totalPRs: 0, totalDecisions: 0 };
-      existing.sessions.push({ ...entry, date, displayDate: formatSessionDate(date) });
-      existing.totalPRs += entry.prs;
-      existing.totalDecisions += entry.decisions;
-      groups.set(key, existing);
+  const sortedDays = useMemo(() => {
+    const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+    return [...days].sort((a, b) => {
+      const [aMonth = 'Jan', aDay = '1'] = a.date.split(' ');
+      const [bMonth = 'Jan', bDay = '1'] = b.date.split(' ');
+      const aDate = new Date(2026, monthMap[aMonth] ?? 0, parseInt(aDay, 10));
+      const bDate = new Date(2026, monthMap[bMonth] ?? 0, parseInt(bDay, 10));
+      return bDate.getTime() - aDate.getTime(); // newest first
     });
-
-    return Array.from(groups.values()).sort((a, b) => b.monthIndex - a.monthIndex).map(g => ({ ...g, sessions: [...g.sessions].reverse() }));
-  }, [sessions, sessionDateMap]);
+  }, [days]);
 
   useEffect(() => {
-    const latest = sessionsByMonth[0]?.key;
-    setExpandedMonths(latest ? new Set([latest]) : new Set());
-  }, [projectId, sessionsByMonth]);
+    setExpandedDays(new Set());
+  }, [projectId]);
 
   return (
     <div className="space-y-4">
@@ -516,97 +491,101 @@ export default function SessionsTab({
       </div>
       )}
 
-      <div className="space-y-3">
-        {sessionsByMonth.map((monthGroup) => {
-          const isExpanded = expandedMonths.has(monthGroup.key);
+      {/* Day / Work Block list */}
+      <div className="space-y-2">
+        {sortedDays.map((day) => {
+          const isExpanded = expandedDays.has(day.date);
+          const totalMinutes = day.metrics.totalTimeMinutes;
+          const hours = Math.floor(totalMinutes / 60);
+          const mins = totalMinutes % 60;
+          const timeStr = hours > 0 ? `${hours}h ${mins > 0 ? mins + 'm' : ''}` : `${mins}m`;
+
+          const phaseColors: Record<string, string> = { Research: '#60a5fa', Spec: C.violet, Build: C.amber, Review: '#fb923c', Shipped: C.emerald };
+          const operatorLabels: Record<WorkOperator, string> = { 'claude-code': 'Claude Code', 'claude-ai': 'Claude AI', cursor: 'Cursor', manual: 'Manual', mixed: 'Mixed' };
+          const driverBadgeColors: Record<WorkDriver, string> = { human: C.cyan, 'human-only': C.cyan, ai: C.emerald, 'agent-led': C.emerald, collaborative: C.violet };
+          const driverBadgeLabels: Record<WorkDriver, string> = { human: 'Human', 'human-only': 'Human Only', ai: 'Agent-Led', 'agent-led': 'Agent-Led', collaborative: 'Collaborative' };
+
+          // Dominant driver for badge
+          const { human: dHuman, ai: dAi, collaborative: dCollab } = day.driverSummary;
+          const dominantDriver: WorkDriver = dCollab > 0 && dCollab >= dHuman && dCollab >= dAi ? 'collaborative'
+            : dAi >= dHuman ? 'agent-led' : 'human';
+
           return (
-            <div key={monthGroup.key} className="space-y-3">
+            <div key={day.date}>
+              {/* Day row — collapsed header */}
               <button
                 onClick={() => {
-                  setExpandedMonths((prev) => {
+                  setExpandedDays((prev) => {
                     const next = new Set(prev);
-                    if (next.has(monthGroup.key)) next.delete(monthGroup.key);
-                    else next.add(monthGroup.key);
+                    if (next.has(day.date)) next.delete(day.date);
+                    else next.add(day.date);
                     return next;
                   });
                 }}
-                className="flex w-full items-center justify-between rounded-lg border px-4 py-2.5"
-                style={{ backgroundColor: C.cardBg, borderColor: C.border }}
+                className="flex w-full items-center justify-between rounded-lg border px-4 py-3"
+                style={{ backgroundColor: C.cardBg, borderColor: isExpanded ? C.cyan : C.border, transition: 'border-color 200ms ease' }}
               >
-                <div className="flex items-center gap-3">
-                  <span style={{ fontSize: 14, fontWeight: 600, color: C.white }}>{monthGroup.label}</span>
-                  <span style={{ fontSize: 12, color: C.muted }}>{monthGroup.sessions.length} session{monthGroup.sessions.length > 1 ? 's' : ''}</span>
-                  <span style={{ fontSize: 12, color: C.slate }}>{monthGroup.totalPRs} PRs | {monthGroup.totalDecisions} decisions</span>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span style={{ fontSize: 14, fontWeight: 600, color: C.white }}>{day.date}</span>
+                  {day.title && <span style={{ fontSize: 13, color: C.slate }}>{day.title}</span>}
+                  <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `color-mix(in srgb, ${phaseColors[day.phase] ?? C.slate} 13%, transparent)`, color: phaseColors[day.phase] ?? C.slate }}>{day.phase}</span>
+                  <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `color-mix(in srgb, ${driverBadgeColors[dominantDriver]} 13%, transparent)`, color: driverBadgeColors[dominantDriver] }}>{driverBadgeLabels[dominantDriver]}</span>
                 </div>
-                <span style={{ color: C.muted, transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 200ms ease' }}>&#9654;</span>
+                <div className="flex items-center gap-4">
+                  <span style={{ fontSize: 12, color: C.muted }}>{day.blocks.length} block{day.blocks.length > 1 ? 's' : ''}</span>
+                  <span style={{ fontSize: 12, color: C.slate }}>{timeStr}</span>
+                  {day.metrics.linesAdded > 0 && <span style={{ fontSize: 11, color: C.emerald }}>+{day.metrics.linesAdded.toLocaleString()}</span>}
+                  {day.metrics.linesDeleted > 0 && <span style={{ fontSize: 11, color: C.rose }}>-{day.metrics.linesDeleted.toLocaleString()}</span>}
+                  {day.metrics.totalDecisions > 0 && <span style={{ fontSize: 11, color: C.cyan }}>{day.metrics.totalDecisions}d</span>}
+                  <span style={{ color: C.muted, transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 200ms ease', fontSize: 12 }}>&#9654;</span>
+                </div>
               </button>
-              <div
-                className="grid gap-3 md:grid-cols-2"
-                style={{ maxHeight: isExpanded ? 2000 : 0, overflow: 'hidden', transition: 'max-height 300ms ease' }}
-              >
-                {monthGroup.sessions.map((entry) => (
-                  <div key={`${entry.session}-detail`} className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-base font-semibold">{entry.displayDate} — {entry.label}</h4>
-                      <div className="flex items-center gap-1.5">
-                        {entry.phase && (() => {
-                          const phaseColors: Record<string, string> = { Research: '#60a5fa', Spec: C.violet, Build: C.amber, Review: '#fb923c', Shipped: C.emerald };
-                          return (
-                            <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `color-mix(in srgb, ${phaseColors[entry.phase] ?? C.slate} 13%, transparent)`, color: phaseColors[entry.phase] ?? C.slate }}>{entry.phase}</span>
-                          );
-                        })()}
-                        <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `color-mix(in srgb, ${toolColors[entry.tool as SessionTool]} 13%, transparent)`, color: toolColors[entry.tool as SessionTool] }}>{entry.tool}</span>
+
+              {/* Expanded: Work Blocks */}
+              <div style={{ maxHeight: isExpanded ? 2000 : 0, overflow: 'hidden', transition: 'max-height 300ms ease' }}>
+                <div className="ml-4 mt-1 space-y-1.5 border-l-2 pl-4 pb-2" style={{ borderColor: `color-mix(in srgb, ${C.cyan} 25%, transparent)` }}>
+                  {day.blocks.map((block) => (
+                    <div
+                      key={block.id}
+                      className="rounded-lg border p-3"
+                      style={{
+                        backgroundColor: C.cardBg,
+                        borderColor: C.border,
+                        opacity: block.contextWindowOrigin ? 0.6 : 1,
+                      }}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span style={{ fontSize: 13, fontWeight: 500, color: C.white }}>{block.label}</span>
+                          {block.contextWindowOrigin && (
+                            <span className="rounded px-1.5 py-0.5 text-[10px]" style={{ backgroundColor: `color-mix(in srgb, ${C.muted} 15%, transparent)`, color: C.muted }}>context split</span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="rounded-full px-2 py-0.5 text-[11px] font-medium" style={{ backgroundColor: `color-mix(in srgb, ${C.amber} 13%, transparent)`, color: C.amber }}>{block.workCategory}</span>
+                          <span className="rounded-full px-2 py-0.5 text-[11px] font-medium" style={{ backgroundColor: `color-mix(in srgb, ${driverBadgeColors[block.driver]} 13%, transparent)`, color: driverBadgeColors[block.driver] }}>{driverBadgeLabels[block.driver]}</span>
+                          <span style={{ fontSize: 11, color: C.muted }}>{operatorLabels[block.operator] ?? block.operator}</span>
+                        </div>
                       </div>
+                      <div className="flex items-center gap-4 text-xs" style={{ color: C.slate }}>
+                        {block.timeMinutes > 0 && <span>{Math.floor(block.timeMinutes / 60)}h {block.timeMinutes % 60 > 0 ? (block.timeMinutes % 60) + 'm' : ''}</span>}
+                        {block.linesAdded > 0 && <span style={{ color: C.emerald }}>+{block.linesAdded.toLocaleString()}</span>}
+                        {block.linesDeleted > 0 && <span style={{ color: C.rose }}>-{block.linesDeleted.toLocaleString()}</span>}
+                      </div>
+                      {block.note && <p className="mt-1 text-xs" style={{ color: C.muted }}>{block.note}</p>}
                     </div>
-                    <p className="mb-3 text-sm" style={{ color: C.cyan }}>{entry.focus}</p>
-                    <div className="grid grid-cols-2 gap-2 text-xs" style={{ color: C.slate }}>
-                      <span>Duration</span>
-                      <span>
-                        {entry.duration}h
-                        {entry.prDetails && entry.prDetails.length > 0 && (() => {
-                          const first = new Date(Math.min(...entry.prDetails.map(p => new Date(p.createdAt).getTime())));
-                          const last = new Date(Math.max(...entry.prDetails.map(p => new Date(p.mergedAt).getTime())));
-                          const spanMin = Math.round((last.getTime() - first.getTime()) / 60000);
-                          const h = Math.floor(spanMin / 60);
-                          const m = spanMin % 60;
-                          const spanStr = h > 0 ? `${h}h ${m}m` : `${m}m`;
-                          return <span style={{ color: C.muted, marginLeft: 6 }} title="Actual span from first PR created to last PR merged">({spanStr} measured)</span>;
-                        })()}
-                      </span>
-                      <span>PRs</span>
-                      <span>
-                        {entry.prDetails && entry.prDetails.length > 0 ? (
-                          <span className="flex flex-wrap gap-1">
-                            {entry.prDetails.map((pr) => (
-                              <a
-                                key={pr.number}
-                                href={`${repoUrls[projectId] ?? '#'}/pull/${pr.number}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title={pr.title}
-                                className="hover:underline"
-                                style={{ color: C.cyan }}
-                              >
-                                #{pr.number}
-                              </a>
-                            ))}
-                          </span>
-                        ) : (
-                          entry.prs
-                        )}
-                      </span>
-                      <span>Decisions</span><span>{entry.decisions}</span>
-                      <span>Dead Ends</span><span>{entry.deadEnds}</span>
-                    </div>
+                  ))}
+                  {/* Chapter link at day level */}
+                  {day.chapterId && (
                     <button
-                      onClick={() => onJumpToChapter?.(entry.chapterId)}
-                      className="mt-3 rounded-md border px-2.5 py-1 text-xs"
+                      onClick={() => onJumpToChapter?.(day.chapterId!)}
+                      className="mt-1 rounded-md border px-2.5 py-1 text-xs"
                       style={{ color: C.cyan, backgroundColor: 'var(--theme-accent-10)', borderColor: 'var(--theme-accent-33)' }}
                     >
-                      {'\uD83C\uDF33'} View chapter: {chapterMap[entry.chapterId] ?? entry.chapterId}
+                      {'\uD83C\uDF33'} View chapter: {chapterMap[day.chapterId] ?? day.chapterId}
                     </button>
-                  </div>
-                ))}
+                  )}
+                </div>
               </div>
             </div>
           );

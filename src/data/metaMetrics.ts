@@ -97,6 +97,8 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 35', date: 'Mar 10', label: 'Playwright Setup', added: 350, deleted: 1, net: 0, total: 7599 },
   { session: 'Session 37', date: 'Mar 10', label: 'Playwright Deep Tests', added: 686, deleted: 32, net: 33, total: 7632 },
   { session: 'Session 40', date: 'Mar 11', label: 'Playwright CI + PR Timestamps', added: 233, deleted: 17, net: 216, total: 7848 },
+  { session: 'Session 43', date: 'Mar 12', label: 'Landing + FC Projects & S43 Data', added: 372, deleted: 11, net: 361, total: 8209 },
+  { session: 'Session 44', date: 'Mar 12', label: 'T-1–T-4 Data Migration', added: 1753, deleted: 318, net: 1435, total: 9644 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -158,6 +160,15 @@ export const metaSessions: SessionEntry[] = [
     { number: 92, title: 'Tasks #58 + #66: Playwright CI + PR timestamp enrichment', createdAt: '2026-03-11T17:00:26Z', mergedAt: '2026-03-11T18:05:43Z' },
   ] },
   { session: 'Session 41', date: 'Mar 11', label: 'Playwright Sweep', duration: 1, prs: 3, decisions: 0, deadEnds: 0, focus: 'Complete Playwright test suites for all remaining projects: IBG Dashboard (37 tests), JynaxxApps Landing (30 tests), Remnants (26 tests). Each includes framework setup, deep interaction tests, and GitHub Actions CI. 93 new tests total. Created Remnants Playwright tasks (#07-#09).', chapterId: 'meta-ch-playwright-testing', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 9, phase: 'Build', driver: 'agent-led' },
+  { session: 'Session 43', date: 'Mar 12', label: 'Landing + FC Projects & S43 Data', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'Added JynaxxApps Landing + Feedback Capture as tracked projects (7 total). Backfilled 4 Landing sessions. Processed 2 feedback captures for Landing. Session 43 metrics.', chapterId: 'meta-ch-process-overhaul', workCategory: 'Data', tool: 'Claude Code', taskCount: 3, phase: 'Review', driver: 'agent-led', prDetails: [
+    { number: 95, title: 'Add Landing + Feedback Capture projects; Session 43 data', createdAt: '2026-03-12T18:00:00Z', mergedAt: '2026-03-12T18:28:47Z' },
+  ] },
+  { session: 'Session 44', date: 'Mar 12', label: 'T-1–T-4 Data Migration', duration: 3, prs: 4, decisions: 1, deadEnds: 0, focus: 'Full Day/Block data migration: T-1 type definitions + Easter egg (PR #96), T-2 migration script 84 sessions→42 days (PR #98), T-3 Sessions tab Day/Block UI (PR #99), T-4 Decision tree date anchoring with 192 nodes tagged (PR #100). All 81 Playwright tests pass.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Refactor', tool: 'Claude Code', taskCount: 4, phase: 'Review', driver: 'agent-led', prDetails: [
+    { number: 96, title: 'T-1: Migration type definitions + rogue pixel Easter egg', createdAt: '2026-03-12T19:00:00Z', mergedAt: '2026-03-12T19:24:38Z' },
+    { number: 98, title: 'T-2: Migration script — sessions to Day/Block model', createdAt: '2026-03-12T19:30:00Z', mergedAt: '2026-03-12T19:36:29Z' },
+    { number: 99, title: 'T-3: Sessions tab — Day/Block UI hierarchy', createdAt: '2026-03-12T20:00:00Z', mergedAt: '2026-03-12T20:36:51Z' },
+    { number: 100, title: 'T-4: Decision tree date anchoring', createdAt: '2026-03-12T20:45:00Z', mergedAt: '2026-03-12T21:00:58Z' },
+  ] },
 ];
 
 export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };
@@ -375,5 +386,18 @@ export const metaDays: DayEntry[] = [
     ],
     metrics: { totalTimeMinutes: 180, linesAdded: 233, linesDeleted: 17, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 2, collaborative: 1 },
+  },
+  {
+    date: 'Mar 12',
+    title: 'Day/Block Migration T-1–T-4',
+    projectId: 'meta',
+    phase: 'Review',
+    chapterId: 'meta-ch-time-machine-data-model',
+    blocks: [
+      { id: 'meta-session-43', dayId: 'Mar 12', label: 'Landing + FC Projects & S43 Data', workCategory: 'Data', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 372, linesDeleted: 11, note: 'Added Landing + Feedback Capture as tracked projects (7 total). Backfilled 4 Landing sessions. Processed 2 feedback captures. PR #95.', contextWindowOrigin: false },
+      { id: 'meta-session-44', dayId: 'Mar 12', label: 'T-1–T-4 Data Migration', workCategory: 'Refactor', driver: 'agent-led', operator: 'claude-code', timeMinutes: 180, linesAdded: 1753, linesDeleted: 318, note: 'Full Day/Block migration: T-1 types (PR #96), T-2 script (PR #98), T-3 Sessions tab UI (PR #99), T-4 Decision tree date anchoring 192 nodes (PR #100). All 81 tests pass.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 240, linesAdded: 2125, linesDeleted: 329, totalDecisions: 1 },
+    driverSummary: { human: 0, ai: 2, collaborative: 0 },
   },
 ];

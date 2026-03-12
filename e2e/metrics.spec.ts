@@ -218,26 +218,27 @@ test.describe('Metrics Dashboard', () => {
     }
   });
 
-  test('sessions tab has expandable month groups', async ({ page }) => {
+  test('sessions tab has collapsible day rows', async ({ page }) => {
     await page.getByRole('button', { name: 'Sessions' }).click();
     await page.waitForTimeout(300);
 
-    // Month groups show "N session(s)" and "N PRs" — look for buttons with PR text
-    const monthGroups = page.locator('button:has-text("PRs")');
-    const count = await monthGroups.count();
+    // Day rows show "N block(s)" text — look for buttons with block count
+    const dayRows = page.locator('button:has-text("block")');
+    const count = await dayRows.count();
     expect(count).toBeGreaterThan(0);
   });
 
-  test('sessions tab month group expands to show session cards', async ({ page }) => {
+  test('sessions tab day row expands to show work blocks', async ({ page }) => {
     await page.getByRole('button', { name: 'Sessions' }).click();
     await page.waitForTimeout(300);
 
-    const monthGroup = page.locator('button:has-text("PRs")').first();
-    await monthGroup.click();
+    const dayRow = page.locator('button:has-text("block")').first();
+    await dayRow.click();
     await page.waitForTimeout(300);
 
-    const sessionCards = page.locator('[class*="rounded-xl"][class*="border"][class*="p-4"]');
-    expect(await sessionCards.count()).toBeGreaterThan(0);
+    // Expanded day shows work block cards with rounded-lg border styling
+    const workBlocks = page.locator('[class*="rounded-lg"][class*="border"][class*="p-3"]');
+    expect(await workBlocks.count()).toBeGreaterThan(0);
   });
 
   // === Task #55: Cross-Tab Tests ===

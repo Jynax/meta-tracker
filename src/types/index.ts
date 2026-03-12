@@ -40,12 +40,15 @@ export type ProjectNode = DecisionNode | EventNode | DeadEndNode | DiscoveryNode
 
 export type ChapterTool = 'chatgpt' | 'mixed' | 'claude';
 
+export type ChapterType = 'date-range' | 'phase';
+
 export interface Chapter {
   id: string;
   name: string;
   period: string;
   toolLabel: string;
   tool: ChapterTool;
+  chapterType?: ChapterType;
   nodes: ProjectNode[];
 }
 
@@ -70,6 +73,8 @@ export interface ProjectMilestone {
   description?: string;
 }
 
+export type TrackingMode = 'full' | 'lightweight';
+
 export interface Project {
   id: string;
   name: string;
@@ -77,9 +82,64 @@ export interface Project {
   url?: string;
   projectType?: ProjectType;
   currentPhase?: ProjectPhase;
+  trackingMode?: TrackingMode;
   milestones?: ProjectMilestone[];
   chapters: Chapter[];
   stats: ProjectStats;
+}
+
+// ── Day / Work Block model (migration target) ──────────────────────
+
+export type WorkCategory =
+  | 'Feature'
+  | 'Bug'
+  | 'Refactor'
+  | 'UX'
+  | 'Testing'
+  | 'Docs'
+  | 'Scripting'
+  | 'Data'
+  | 'Local-Tooling'
+  | 'Planning'
+  | 'Tooling';
+
+export type WorkDriver = 'human' | 'human-only' | 'ai' | 'agent-led' | 'collaborative';
+
+export type WorkOperator = 'claude-code' | 'claude-ai' | 'cursor' | 'manual' | 'mixed';
+
+export interface WorkBlock {
+  id: string;
+  dayId: string;
+  label: string;
+  workCategory: WorkCategory;
+  driver: WorkDriver;
+  operator: WorkOperator;
+  timeMinutes?: number;
+  linesAdded?: number;
+  linesDeleted?: number;
+  note?: string;
+  /** Set on blocks migrated from context-window session splits */
+  contextWindowOrigin?: boolean;
+}
+
+export interface DayEntry {
+  date: string;
+  title?: string;
+  projectId: string;
+  phase: ProjectPhase;
+  chapterId?: string;
+  blocks: WorkBlock[];
+  metrics: {
+    totalTimeMinutes: number;
+    linesAdded: number;
+    linesDeleted: number;
+    totalDecisions: number;
+  };
+  driverSummary: {
+    human: number;
+    ai: number;
+    collaborative: number;
+  };
 }
 
 export type FilterType =

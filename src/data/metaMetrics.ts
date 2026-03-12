@@ -19,6 +19,7 @@ export interface PRDetail {
   mergedAt: string;
 }
 
+/** @deprecated Use DayEntry + WorkBlock from types/index.ts instead. Kept for migration compatibility. */
 export interface SessionEntry {
   session: string;
   date: string;

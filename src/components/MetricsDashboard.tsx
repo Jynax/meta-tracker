@@ -1,18 +1,18 @@
 import { useMemo, useState, useEffect, type ReactNode } from 'react';
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
-import { bipCodeVolume, bipSessions, bipBugs, bipDerived, bipStack, bipDateRange } from '../data/bipMetrics';
-import { metaCodeVolume, metaSessions, metaBugs, metaDerived, metaStack, metaDateRange } from '../data/metaMetrics';
-import { remnantsCodeVolume, remnantsSessions, remnantsBugs, remnantsDerived, remnantsStack, remnantsDateRange } from '../data/remnantsMetrics';
+import { bipCodeVolume, bipSessions, bipBugs, bipDerived, bipStack, bipDateRange, bipDays } from '../data/bipMetrics';
+import { metaCodeVolume, metaSessions, metaBugs, metaDerived, metaStack, metaDateRange, metaDays } from '../data/metaMetrics';
+import { remnantsCodeVolume, remnantsSessions, remnantsBugs, remnantsDerived, remnantsStack, remnantsDateRange, remnantsDays } from '../data/remnantsMetrics';
 import { remnantsProject } from '../data/remnantsProject';
 import { itemBGoneProject } from '../data/itemBGoneProject';
-import { ibgCodeVolume, ibgSessions, ibgBugs, ibgDerived, ibgStack, ibgDateRange } from '../data/itemBGoneMetrics';
+import { ibgCodeVolume, ibgSessions, ibgBugs, ibgDerived, ibgStack, ibgDateRange, ibgDays } from '../data/itemBGoneMetrics';
 import { vulnBankProject } from '../data/vulnBankProject';
-import { vbCodeVolume, vbSessions, vbBugs, vbDerived, vbStack, vbDateRange } from '../data/vulnBankMetrics';
+import { vbCodeVolume, vbSessions, vbBugs, vbDerived, vbStack, vbDateRange, vbDays } from '../data/vulnBankMetrics';
 import { landingProject } from '../data/landingProject';
-import { landingCodeVolume, landingSessions, landingBugs, landingDerived, landingStack, landingDateRange } from '../data/landingMetrics';
+import { landingCodeVolume, landingSessions, landingBugs, landingDerived, landingStack, landingDateRange, landingDays } from '../data/landingMetrics';
 import { feedbackCaptureProject } from '../data/feedbackCaptureProject';
-import { fcCodeVolume, fcSessions, fcBugs, fcDerived, fcStack, fcDateRange } from '../data/feedbackCaptureMetrics';
+import { fcCodeVolume, fcSessions, fcBugs, fcDerived, fcStack, fcDateRange, fcDays } from '../data/feedbackCaptureMetrics';
 
 import { C } from "./MetricsCard";
 import OverviewTab from './OverviewTab';
@@ -47,14 +47,14 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   }, [initialTab]);
 
   const selected = useMemo(() => {
-    const projectData: Record<string, { project: typeof bipProject; codeVolume: typeof bipCodeVolume; sessions: typeof bipSessions; bugs: typeof bipBugs; derived: typeof bipDerived; stack: typeof bipStack; dateRange: typeof bipDateRange }> = {
-      bip: { project: bipProject, codeVolume: bipCodeVolume, sessions: bipSessions, bugs: bipBugs, derived: bipDerived, stack: bipStack, dateRange: bipDateRange },
-      meta: { project: metaProject, codeVolume: metaCodeVolume, sessions: metaSessions, bugs: metaBugs, derived: metaDerived, stack: metaStack, dateRange: metaDateRange },
-      remnants: { project: remnantsProject, codeVolume: remnantsCodeVolume, sessions: remnantsSessions, bugs: remnantsBugs, derived: remnantsDerived, stack: remnantsStack, dateRange: remnantsDateRange },
-      'item-b-gone': { project: itemBGoneProject, codeVolume: ibgCodeVolume, sessions: ibgSessions, bugs: ibgBugs, derived: ibgDerived, stack: ibgStack, dateRange: ibgDateRange },
-      'vuln-bank': { project: vulnBankProject, codeVolume: vbCodeVolume, sessions: vbSessions, bugs: vbBugs, derived: vbDerived, stack: vbStack, dateRange: vbDateRange },
-      landing: { project: landingProject, codeVolume: landingCodeVolume, sessions: landingSessions, bugs: landingBugs, derived: landingDerived, stack: landingStack, dateRange: landingDateRange },
-      'feedback-capture': { project: feedbackCaptureProject, codeVolume: fcCodeVolume, sessions: fcSessions, bugs: fcBugs, derived: fcDerived, stack: fcStack, dateRange: fcDateRange },
+    const projectData: Record<string, { project: typeof bipProject; codeVolume: typeof bipCodeVolume; sessions: typeof bipSessions; bugs: typeof bipBugs; derived: typeof bipDerived; stack: typeof bipStack; dateRange: typeof bipDateRange; days: typeof bipDays }> = {
+      bip: { project: bipProject, codeVolume: bipCodeVolume, sessions: bipSessions, bugs: bipBugs, derived: bipDerived, stack: bipStack, dateRange: bipDateRange, days: bipDays },
+      meta: { project: metaProject, codeVolume: metaCodeVolume, sessions: metaSessions, bugs: metaBugs, derived: metaDerived, stack: metaStack, dateRange: metaDateRange, days: metaDays },
+      remnants: { project: remnantsProject, codeVolume: remnantsCodeVolume, sessions: remnantsSessions, bugs: remnantsBugs, derived: remnantsDerived, stack: remnantsStack, dateRange: remnantsDateRange, days: remnantsDays },
+      'item-b-gone': { project: itemBGoneProject, codeVolume: ibgCodeVolume, sessions: ibgSessions, bugs: ibgBugs, derived: ibgDerived, stack: ibgStack, dateRange: ibgDateRange, days: ibgDays },
+      'vuln-bank': { project: vulnBankProject, codeVolume: vbCodeVolume, sessions: vbSessions, bugs: vbBugs, derived: vbDerived, stack: vbStack, dateRange: vbDateRange, days: vbDays },
+      landing: { project: landingProject, codeVolume: landingCodeVolume, sessions: landingSessions, bugs: landingBugs, derived: landingDerived, stack: landingStack, dateRange: landingDateRange, days: landingDays },
+      'feedback-capture': { project: feedbackCaptureProject, codeVolume: fcCodeVolume, sessions: fcSessions, bugs: fcBugs, derived: fcDerived, stack: fcStack, dateRange: fcDateRange, days: fcDays },
     };
     return projectData[projectId] ?? projectData.bip;
   }, [projectId]);
@@ -149,6 +149,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
         {tab === 'sessions' && (
           <SessionsTab
             sessions={selected.sessions}
+            days={selected.days}
             totalPRs={totalPRs}
             totalHours={totalHours}
             projectId={projectId}

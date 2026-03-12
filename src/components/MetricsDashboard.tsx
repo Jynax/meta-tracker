@@ -9,6 +9,10 @@ import { itemBGoneProject } from '../data/itemBGoneProject';
 import { ibgCodeVolume, ibgSessions, ibgBugs, ibgDerived, ibgStack, ibgDateRange } from '../data/itemBGoneMetrics';
 import { vulnBankProject } from '../data/vulnBankProject';
 import { vbCodeVolume, vbSessions, vbBugs, vbDerived, vbStack, vbDateRange } from '../data/vulnBankMetrics';
+import { landingProject } from '../data/landingProject';
+import { landingCodeVolume, landingSessions, landingBugs, landingDerived, landingStack, landingDateRange } from '../data/landingMetrics';
+import { feedbackCaptureProject } from '../data/feedbackCaptureProject';
+import { fcCodeVolume, fcSessions, fcBugs, fcDerived, fcStack, fcDateRange } from '../data/feedbackCaptureMetrics';
 
 import { C } from "./MetricsCard";
 import OverviewTab from './OverviewTab';
@@ -43,14 +47,16 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   }, [initialTab]);
 
   const selected = useMemo(() => {
-    const project = projectId === 'meta' ? metaProject : projectId === 'remnants' ? remnantsProject : projectId === 'item-b-gone' ? itemBGoneProject : projectId === 'vuln-bank' ? vulnBankProject : bipProject;
-    const codeVolume = projectId === 'meta' ? metaCodeVolume : projectId === 'remnants' ? remnantsCodeVolume : projectId === 'item-b-gone' ? ibgCodeVolume : projectId === 'vuln-bank' ? vbCodeVolume : bipCodeVolume;
-    const sessions = projectId === 'meta' ? metaSessions : projectId === 'remnants' ? remnantsSessions : projectId === 'item-b-gone' ? ibgSessions : projectId === 'vuln-bank' ? vbSessions : bipSessions;
-    const bugs = projectId === 'meta' ? metaBugs : projectId === 'remnants' ? remnantsBugs : projectId === 'item-b-gone' ? ibgBugs : projectId === 'vuln-bank' ? vbBugs : bipBugs;
-    const derived = projectId === 'meta' ? metaDerived : projectId === 'remnants' ? remnantsDerived : projectId === 'item-b-gone' ? ibgDerived : projectId === 'vuln-bank' ? vbDerived : bipDerived;
-    const stack = projectId === 'meta' ? metaStack : projectId === 'remnants' ? remnantsStack : projectId === 'item-b-gone' ? ibgStack : projectId === 'vuln-bank' ? vbStack : bipStack;
-    const dateRange = projectId === 'meta' ? metaDateRange : projectId === 'remnants' ? remnantsDateRange : projectId === 'item-b-gone' ? ibgDateRange : projectId === 'vuln-bank' ? vbDateRange : bipDateRange;
-    return { project, codeVolume, sessions, bugs, derived, stack, dateRange };
+    const projectData: Record<string, { project: typeof bipProject; codeVolume: typeof bipCodeVolume; sessions: typeof bipSessions; bugs: typeof bipBugs; derived: typeof bipDerived; stack: typeof bipStack; dateRange: typeof bipDateRange }> = {
+      bip: { project: bipProject, codeVolume: bipCodeVolume, sessions: bipSessions, bugs: bipBugs, derived: bipDerived, stack: bipStack, dateRange: bipDateRange },
+      meta: { project: metaProject, codeVolume: metaCodeVolume, sessions: metaSessions, bugs: metaBugs, derived: metaDerived, stack: metaStack, dateRange: metaDateRange },
+      remnants: { project: remnantsProject, codeVolume: remnantsCodeVolume, sessions: remnantsSessions, bugs: remnantsBugs, derived: remnantsDerived, stack: remnantsStack, dateRange: remnantsDateRange },
+      'item-b-gone': { project: itemBGoneProject, codeVolume: ibgCodeVolume, sessions: ibgSessions, bugs: ibgBugs, derived: ibgDerived, stack: ibgStack, dateRange: ibgDateRange },
+      'vuln-bank': { project: vulnBankProject, codeVolume: vbCodeVolume, sessions: vbSessions, bugs: vbBugs, derived: vbDerived, stack: vbStack, dateRange: vbDateRange },
+      landing: { project: landingProject, codeVolume: landingCodeVolume, sessions: landingSessions, bugs: landingBugs, derived: landingDerived, stack: landingStack, dateRange: landingDateRange },
+      'feedback-capture': { project: feedbackCaptureProject, codeVolume: fcCodeVolume, sessions: fcSessions, bugs: fcBugs, derived: fcDerived, stack: fcStack, dateRange: fcDateRange },
+    };
+    return projectData[projectId] ?? projectData.bip;
   }, [projectId]);
 
   const chapterMap = useMemo(

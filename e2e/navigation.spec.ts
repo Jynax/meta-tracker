@@ -12,11 +12,11 @@ test.describe('Navigation & Layout', () => {
     await expect(heading).toContainText('Meta Tracker');
   });
 
-  test('project switcher shows all 5 projects', async ({ page }) => {
+  test('project switcher shows all 7 projects', async ({ page }) => {
     const switcher = page.locator('nav[aria-label="Project switcher"]');
     await expect(switcher).toBeVisible();
     const buttons = switcher.locator('button');
-    await expect(buttons).toHaveCount(5);
+    await expect(buttons).toHaveCount(7);
   });
 
   test('switching projects updates the heading', async ({ page }) => {

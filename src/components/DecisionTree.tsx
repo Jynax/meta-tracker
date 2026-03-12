@@ -5,6 +5,8 @@ import { metaProject } from '../data/metaProject';
 import { remnantsProject } from '../data/remnantsProject';
 import { itemBGoneProject } from '../data/itemBGoneProject';
 import { vulnBankProject } from '../data/vulnBankProject';
+import { landingProject } from '../data/landingProject';
+import { feedbackCaptureProject } from '../data/feedbackCaptureProject';
 import type { FilterType, NodeCategory, Project, ProjectNode } from '../types';
 import type { SessionEntry, SessionPhase } from '../data/metaMetrics';
 import { bipSessions } from '../data/bipMetrics';
@@ -12,6 +14,8 @@ import { metaSessions } from '../data/metaMetrics';
 import { remnantsSessions } from '../data/remnantsMetrics';
 import { ibgSessions } from '../data/itemBGoneMetrics';
 import { vbSessions } from '../data/vulnBankMetrics';
+import { landingSessions } from '../data/landingMetrics';
+import { fcSessions } from '../data/feedbackCaptureMetrics';
 import { nodeTypes } from './CustomNodes';
 import MetricsDashboard from './MetricsDashboard';
 import ProcessWorkflow from './ProcessWorkflow';
@@ -36,7 +40,7 @@ const FILTERS: Array<{ id: FilterType; label: string }> = [
   { id: 'process', label: 'Process' },
 ];
 
-const PROJECTS = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject];
+const PROJECTS = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject, landingProject, feedbackCaptureProject];
 
 const CATEGORY_META: Array<{ id: NodeCategory; label: string; color: string }> = [
   { id: 'technical', label: 'Technical', color: 'var(--theme-cyan)' },
@@ -218,6 +222,8 @@ export default function DecisionTree() {
       remnants: remnantsSessions,
       'item-b-gone': ibgSessions,
       'vuln-bank': vbSessions,
+      'landing': landingSessions,
+      'feedback-capture': fcSessions,
     };
     return sessionMap[activeProject.id] ?? [];
   }, [activeProject.id]);

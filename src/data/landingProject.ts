@@ -18,6 +18,7 @@ export const landingProject: Project = {
         {
           id: 'landing-dark-first',
           type: 'decision',
+          dayId: 'Mar 9',
           category: 'ux-design',
           title: 'Dark Theme First',
           description: 'Built with dark theme as default, matching the aesthetic of all other JynaxxApps projects. Light theme added as secondary option.',
@@ -27,6 +28,7 @@ export const landingProject: Project = {
         {
           id: 'landing-project-cards',
           type: 'decision',
+          dayId: 'Mar 9',
           category: 'functional',
           title: 'Project Cards Grid',
           description: 'Responsive card grid showcasing all projects with status badges (Live, Research Phase, Coming Soon). Cards link out to each project.',
@@ -36,6 +38,7 @@ export const landingProject: Project = {
         {
           id: 'landing-cf-deploy',
           type: 'event',
+          dayId: 'Mar 9',
           category: 'technical',
           title: 'Cloudflare Pages Deploy',
           description: 'Deployed to jynaxxapps.com on Cloudflare Pages with auto-deploy on merge to main. Same hosting pattern as all other projects.',
@@ -53,6 +56,7 @@ export const landingProject: Project = {
         {
           id: 'landing-kv-cms',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'technical',
           title: 'Cloudflare KV as CMS Backend',
           description: 'Used Cloudflare Pages Functions + KV store for a lightweight CMS. No external database needed \u2014 content stored as JSON in KV.',
@@ -62,6 +66,7 @@ export const landingProject: Project = {
         {
           id: 'landing-admin-panel',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'functional',
           title: 'Admin Panel at #/admin',
           description: 'Built an inline admin panel accessible at #/admin for editing site content live. No separate admin app needed.',
@@ -71,6 +76,7 @@ export const landingProject: Project = {
         {
           id: 'landing-google-oauth',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'technical',
           title: 'Google OAuth for Admin Auth',
           description: 'Replaced initial password-based admin auth with Google OAuth. More secure, no password to manage.',
@@ -90,6 +96,7 @@ export const landingProject: Project = {
         {
           id: 'landing-playwright',
           type: 'event',
+          dayId: 'Mar 11',
           category: 'technical',
           title: 'Playwright Test Suite + CI',
           description: 'Added Playwright e2e tests and GitHub Actions CI as part of the cross-project Playwright sweep. Covers navigation, themes, admin, data integrity, and deep interactions.',

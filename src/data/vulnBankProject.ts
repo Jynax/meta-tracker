@@ -18,6 +18,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-multi-model-coordination',
           type: 'decision',
+          dayId: 'Mar 6',
           category: 'process',
           title: 'Multi-Model Coordination Protocol',
           description:
@@ -32,6 +33,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-workflow-docs-in-repo',
           type: 'decision',
+          dayId: 'Mar 6',
           category: 'process',
           title: 'Workflow Documentation in Repo',
           description:
@@ -52,6 +54,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-repo-migration',
           type: 'decision',
+          dayId: 'Mar 9',
           category: 'process',
           title: 'Repo Migration — Remove Fork Association',
           description:
@@ -65,6 +68,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-github-issues-coordination',
           type: 'decision',
+          dayId: 'Mar 9',
           category: 'process',
           title: 'GitHub Issues Replace Task Index',
           description:
@@ -80,6 +84,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-issues-poc-validation',
           type: 'event',
+          dayId: 'Mar 9',
           category: 'process',
           title: 'POC Validation — GitHub Issues Coordination',
           description:
@@ -98,6 +103,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-dry-entry-points',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'process',
           title: 'DRY Up Entry Points',
           description:
@@ -108,6 +114,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-created-by-labels',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'process',
           title: 'Created-By Labels for Issue Attribution',
           description:
@@ -128,6 +135,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-split-metrics-closeout',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'process',
           title: 'Split Metrics Files + Session Close-Out',
           description:
@@ -152,6 +160,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-sdelements-profile-assumptions',
           type: 'discovery',
+          dayId: 'Mar 10',
           category: 'technical',
           title: 'SDElements Profile Assumptions',
           description:
@@ -160,6 +169,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-dead-sqlite-replacement',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'technical',
           title: 'Replace Dead SQLite Code with PostgreSQL',
           description:
@@ -173,6 +183,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-commando-refs-debug-prints',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'technical',
           title: 'Fix Commando-X References + Remove Debug Prints',
           description:
@@ -196,6 +207,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-docker-modernization',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'technical',
           title: 'Docker Modernization — Python 3.12, Compose V2, Health Checks',
           description:
@@ -209,6 +221,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-bare-exception-fixes',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'technical',
           title: 'Fix Bare Exception Handlers',
           description:
@@ -222,6 +235,7 @@ export const vulnBankProject: Project = {
         {
           id: 'vb-stale-index-references',
           type: 'decision',
+          dayId: 'Mar 10',
           category: 'process',
           title: 'Fix Stale Task Index References in Workflow Docs',
           description:

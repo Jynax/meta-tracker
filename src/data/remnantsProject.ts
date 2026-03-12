@@ -19,6 +19,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-combat-system',
           type: 'decision',
+          dayId: 'Feb 17',
           category: 'ux-design',
           title: 'Click-to-Attack Combat System',
           description: 'Chose click-to-attack with arc and cooldown over WASD+key or auto-attack. Makes combat intentional, rewards positioning.',
@@ -29,6 +30,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-fog-of-war',
           type: 'decision',
+          dayId: 'Feb 17',
           category: 'ux-design',
           title: 'Persistent Fog of War',
           description: 'Areas explored in previous runs stay visible. The House retains knowledge of terrain across expeditions.',
@@ -39,6 +41,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-creature-temperaments',
           type: 'decision',
+          dayId: 'Feb 17',
           category: 'ux-design',
           title: 'Three-Temperament Creature System',
           description: 'Three creature behaviors: aggressive (attacks on sight), territorial (defends zone), skittish (flees unless cornered). Creates varied encounters.',
@@ -49,6 +52,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-browser-canvas',
           type: 'decision',
+          dayId: 'Feb 17',
           category: 'technical',
           title: 'Browser-Based React + Canvas Architecture',
           description: 'React 18 + HTML5 Canvas with zero external dependencies. Single-file architecture, Canvas renders at 60fps, React manages state.',
@@ -69,6 +73,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-zone-difficulty',
           type: 'decision',
+          dayId: 'Feb 18',
           category: 'ux-design',
           title: 'Zone-Based Difficulty Scaling',
           description: 'Zone 1 is a safe training ground. Danger scales outward into deeper zones. Same mechanics, lethal intensity.',
@@ -79,6 +84,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-xenoflora',
           type: 'decision',
+          dayId: 'Feb 18',
           category: 'ux-design',
           title: 'Interactive Xenoflora System',
           description: 'Alien plants with discoverable effects: healing, poison, creature attraction, camouflage. Unknown until experimented with.',
@@ -89,6 +95,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-empty-extraction',
           type: 'decision',
+          dayId: 'Feb 18',
           category: 'ux-design',
           title: 'Empty Extraction Allowed',
           description: 'Players can always extract with nothing. The game never traps you. Sometimes cutting losses is the smart play.',
@@ -109,6 +116,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-character-naming',
           type: 'decision',
+          dayId: 'Feb 18',
           category: 'ux-design',
           title: 'Numerical Character Designations (Remnant-XXXX)',
           description: 'Characters get numerical designations, not names. Reinforces expendable-instrument theme. The House assigns, not the player.',
@@ -119,6 +127,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-recovery-timer',
           type: 'decision',
+          dayId: 'Feb 18',
           category: 'ux-design',
           title: 'Recovery System: Degradation Timer',
           description: '5-minute timer on death: 10-20% instant loss, then 10% per 30s. Skull beacon marks location. Next character can recover gear.',
@@ -129,6 +138,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-menu-base',
           type: 'decision',
+          dayId: 'Feb 18',
           category: 'technical',
           title: 'Menu-Based Home Base (Spatial Deferred)',
           description: 'Built menu-based base screen for Phase 2.1. Spatial base (walking around) deferred to future phase.',
@@ -149,6 +159,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-two-repos',
           type: 'decision',
+          dayId: 'Feb 19',
           category: 'technical',
           title: 'Two-Repo Structure',
           description: 'Created remenants-codex (public, Codex trial) and remnants-game (private, canonical). Typo preserved in codex repo name.',
@@ -159,6 +170,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-model-tiered-tasks',
           type: 'decision',
+          dayId: 'Feb 21',
           category: 'process',
           title: 'Model-Tiered Task Queue',
           description: 'Tasks organized by AI model tier: Haiku (polish), Sonnet (development), Opus (architecture). Cheapest model that can handle it.',
@@ -179,6 +191,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-cloudflare-deploy',
           type: 'event',
+          dayId: 'Mar 5',
           category: 'technical',
           title: 'Cloudflare Pages Deployment',
           description: 'Added Vite build setup, security headers, and weekly dependency audit. Moved from local-only play to live site at remnants.jynaxxapps.com.',
@@ -187,6 +200,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-five-dir-modules',
           type: 'decision',
+          dayId: 'Mar 5',
           category: 'technical',
           title: 'Five-Directory Module Structure',
           description: 'Decomposed 1507-line monolithic JSX into 13 focused modules across data/, state/, game/, screens/ plus an orchestrator. Used context objects instead of closure variables.',
@@ -207,6 +221,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-pause-saveload',
           type: 'event',
+          dayId: 'Mar 11',
           category: 'functional',
           title: 'Pause & Save/Load Features',
           description: 'Added SPACEBAR pause overlay and localStorage-based save/load. Two tasks (#04 + #05) shipped in a single PR.',
@@ -215,6 +230,7 @@ export const remnantsProject: Project = {
         {
           id: 'rem-playwright-ci',
           type: 'event',
+          dayId: 'Mar 11',
           category: 'technical',
           title: 'Playwright Test Suite + CI',
           description: 'Added 26 Playwright tests covering game screens, pause, save/load, and combat. GitHub Actions CI runs tests on every push.',

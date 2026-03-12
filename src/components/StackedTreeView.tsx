@@ -2,12 +2,21 @@ import React from 'react';
 import { C } from './MetricsCard';
 import {
   Project,
-  Chapter,
   ProjectNode,
   NodeType,
   NodeCategory,
   FilterType,
+  DayEntry,
+  ProjectPhase,
 } from '../types';
+
+interface DayGroup {
+  dayId: string;
+  title?: string;
+  phase?: ProjectPhase;
+  chapterName?: string;
+  nodes: ProjectNode[];
+}
 
 interface StackedTreeViewProps {
   project: Project;
@@ -19,6 +28,8 @@ interface StackedTreeViewProps {
   onNodeToggle: (nodeId: string) => void;
   highlightChapter?: string | null;
   onJumpToSession?: (session: string) => void;
+  days?: DayEntry[];
+  dayPhaseMap?: Record<string, ProjectPhase>;
 }
 
 const COLORS = C;
@@ -33,20 +44,14 @@ const PHASE_COLORS: Record<string, string> = {
 
 const CATEGORY_ORDER: NodeCategory[] = ['technical', 'functional', 'ux-design', 'process'];
 
-// type FilterOption = {
-//   value: FilterType;
-//   label: string;
-//   color: string;
-// };
+const MONTHS: Record<string, number> = { Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12 };
 
-// const FILTER_OPTIONS: FilterOption[] = [
-//   { value: 'all', label: 'All', color: COLORS.cyan },
-//   { value: 'decision', label: 'Decisions', color: COLORS.emerald },
-//   { value: 'dead-end', label: 'Dead Ends', color: COLORS.rose },
-//   { value: 'event', label: 'Events', color: COLORS.cyan },
-//   { value: 'discovery', label: 'Discoveries', color: COLORS.amber },
-//   { value: 'pivot', label: 'Pivots', color: COLORS.violet },
-// ];
+function parseDateKey(dateStr: string): number {
+  const parts = dateStr.trim().split(/\s+/);
+  const month = MONTHS[parts[0]] || 0;
+  const day = parseInt(parts[1], 10) || 0;
+  return month * 100 + day;
+}
 
 function getTypeColor(type: NodeType): string {
   switch (type) {
@@ -118,11 +123,10 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
     expandedNode,
     onNodeToggle,
     highlightChapter,
-
-    chapterPhaseMap,
+    days,
+    dayPhaseMap,
   } = props;
 
-  // const [showFilters, setShowFilters] = React.useState(false);
   const activeFilter: FilterType = filter as FilterType;
 
   const allNodes = project.chapters.flatMap((chapter) => chapter.nodes);
@@ -131,6 +135,50 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
   const discoveries = allNodes.filter((node) => node.type === 'discovery').length;
   const pivots = allNodes.filter((node) => node.type === 'pivot').length;
   const categoryCounts = getCategoryCounts(allNodes);
+
+  // Build day groups: group all nodes by dayId, sorted newest-first
+  const dayGroups: DayGroup[] = React.useMemo(() => {
+    // Build a day lookup from the days prop
+    const dayLookup: Record<string, DayEntry> = {};
+    if (days) {
+      for (const d of days) {
+        dayLookup[d.date] = d;
+      }
+    }
+
+    // Group nodes by dayId
+    const groupMap = new Map<string, ProjectNode[]>();
+    for (const chapter of project.chapters) {
+      for (const node of chapter.nodes) {
+        const dayId = node.dayId || 'Unknown';
+        if (!groupMap.has(dayId)) {
+          groupMap.set(dayId, []);
+        }
+        groupMap.get(dayId)!.push(node);
+      }
+    }
+
+    // Convert to array and sort newest-first
+    const groups: DayGroup[] = [];
+    for (const [dayId, nodes] of groupMap.entries()) {
+      const dayEntry = dayLookup[dayId];
+      const phase = dayPhaseMap?.[dayId] ?? dayEntry?.phase;
+      // Find chapter name for the first node's chapter (for subtitle)
+      const firstNodeChapter = project.chapters.find((ch) =>
+        ch.nodes.some((n) => n.id === nodes[0]?.id),
+      );
+      groups.push({
+        dayId,
+        title: dayEntry?.title,
+        phase,
+        chapterName: firstNodeChapter?.name,
+        nodes,
+      });
+    }
+
+    groups.sort((a, b) => parseDateKey(b.dayId) - parseDateKey(a.dayId));
+    return groups;
+  }, [project.chapters, days, dayPhaseMap]);
 
   const renderCategoryBar = (
     counts: Record<NodeCategory, number>,
@@ -186,20 +234,20 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
     );
   };
 
-  const renderChapterHeader = (chapter: Chapter) => {
-    const chapterCounts = getCategoryCounts(chapter.nodes);
-    const chapterDeadEnds = chapter.nodes.filter((node) => node.type === 'dead-end').length;
-    const chapterDiscoveries = chapter.nodes.filter((node) => node.type === 'discovery').length;
-    const chapterPivots = chapter.nodes.filter((node) => node.type === 'pivot').length;
-    const isExpanded = expandedChapters.has(chapter.id);
-    const isHighlighted = highlightChapter === chapter.id;
+  const renderDayHeader = (group: DayGroup) => {
+    const dayCounts = getCategoryCounts(group.nodes);
+    const dayDeadEnds = group.nodes.filter((node) => node.type === 'dead-end').length;
+    const dayDiscoveries = group.nodes.filter((node) => node.type === 'discovery').length;
+    const dayPivots = group.nodes.filter((node) => node.type === 'pivot').length;
+    const isExpanded = expandedChapters.has(group.dayId);
+    const isHighlighted = highlightChapter === group.dayId;
 
     return (
       <button
         type="button"
         onClick={() => {
-          onChapterToggle(chapter.id);
-            }}
+          onChapterToggle(group.dayId);
+        }}
         style={{
           width: '100%',
           textAlign: 'left',
@@ -217,7 +265,10 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
       >
         <div style={{ minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-            <span style={{ fontSize: 20, fontWeight: 700, color: COLORS.white }}>{chapter.name}</span>
+            <span style={{ fontSize: 20, fontWeight: 700, color: COLORS.white }}>{group.dayId}</span>
+            {group.title && (
+              <span style={{ fontSize: 15, color: COLORS.slate, fontWeight: 500 }}>{group.title}</span>
+            )}
             <span style={{ fontSize: 15, color: COLORS.slate }}>{isExpanded ? '\u25BC' : '\u25B6'}</span>
             <span
               style={{
@@ -229,34 +280,36 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                 fontWeight: 700,
               }}
             >
-              {chapter.nodes.length}
+              {group.nodes.length}
             </span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6 }}>
               <div style={{ display: 'flex', gap: 8, fontSize: 13, color: COLORS.muted, fontWeight: 600 }}>
-                <span>{chapter.nodes.length} entries</span>
-                {chapterDeadEnds > 0 && <span style={{ color: COLORS.rose }}>{chapterDeadEnds} dead ends</span>}
-                {chapterDiscoveries > 0 && <span style={{ color: COLORS.amber }}>{chapterDiscoveries} discoveries</span>}
-                {chapterPivots > 0 && <span style={{ color: COLORS.violet }}>{chapterPivots} pivots</span>}
+                <span>{group.nodes.length} entries</span>
+                {dayDeadEnds > 0 && <span style={{ color: COLORS.rose }}>{dayDeadEnds} dead ends</span>}
+                {dayDiscoveries > 0 && <span style={{ color: COLORS.amber }}>{dayDiscoveries} discoveries</span>}
+                {dayPivots > 0 && <span style={{ color: COLORS.violet }}>{dayPivots} pivots</span>}
               </div>
-              {renderCategoryBar(chapterCounts, chapter.nodes.length, false, 12, 120)}
+              {renderCategoryBar(dayCounts, group.nodes.length, false, 12, 120)}
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 13, color: COLORS.muted }}>{`${chapter.period} \u00b7 ${chapter.toolLabel}`}</span>
-              {chapterPhaseMap?.[chapter.id] && (
+              {group.chapterName && (
+                <span style={{ fontSize: 13, color: COLORS.muted }}>{group.chapterName}</span>
+              )}
+              {group.phase && (
                 <span
                   style={{
                     fontSize: 11,
                     fontWeight: 600,
-                    color: PHASE_COLORS[chapterPhaseMap[chapter.id]] ?? COLORS.slate,
-                    background: `color-mix(in srgb, ${PHASE_COLORS[chapterPhaseMap[chapter.id]] ?? COLORS.slate} 10%, transparent)`,
+                    color: PHASE_COLORS[group.phase] ?? COLORS.slate,
+                    background: `color-mix(in srgb, ${PHASE_COLORS[group.phase] ?? COLORS.slate} 10%, transparent)`,
                     borderRadius: 9999,
                     padding: '1px 8px',
                   }}
                 >
-                  {chapterPhaseMap[chapter.id]}
+                  {group.phase}
                 </span>
               )}
             </div>
@@ -362,86 +415,13 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
         </div>
       </div>
 
-      {/* <div
-        style={{
-          background: COLORS.cardBg,
-          border: `1px solid ${COLORS.border}`,
-          borderRadius: 12,
-          padding: 12,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 8,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-          <button
-            type="button"
-            onClick={() => setShowFilters((prev) => !prev)}
-            style={{
-              border: `1px solid ${COLORS.border}`,
-              background: 'transparent',
-              color: COLORS.white,
-              borderRadius: 8,
-              padding: '6px 10px',
-              fontSize: 12,
-              fontWeight: 700,
-              cursor: 'pointer',
-            }}
-          >
-            Filter {showFilters ? '▾' : '▸'}
-          </button>
-          {activeFilter !== 'all' && (
-            <span
-              style={{
-                fontSize: 13,
-                fontWeight: 700,
-                color: getTypeColor(activeFilter),
-                background: `${getTypeColor(activeFilter)}20`,
-                border: `1px solid ${getTypeColor(activeFilter)}40`,
-                borderRadius: 9999,
-                padding: '2px 8px',
-              }}
-            >
-              {FILTER_OPTIONS.find((option) => option.value === activeFilter)?.label ?? activeFilter}
-            </span>
-          )}
-        </div>
-
-        {showFilters && (
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {FILTER_OPTIONS.map((option) => {
-              const isActive = option.value === activeFilter;
-              return (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => onFilterChange(option.value)}
-                  style={{
-                    borderRadius: 8,
-                    border: `1px solid ${isActive ? `${option.color}40` : COLORS.border}`,
-                    background: isActive ? `${option.color}20` : 'transparent',
-                    color: isActive ? option.color : COLORS.muted,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    padding: '6px 10px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {option.label}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div> */}
-
-      {[...project.chapters].reverse().map((chapter) => {
-        const isExpanded = expandedChapters.has(chapter.id);
-        const filteredNodes = chapter.nodes.filter((node) => nodeMatchesFilter(node, activeFilter));
+      {dayGroups.map((group) => {
+        const isExpanded = expandedChapters.has(group.dayId);
+        const filteredNodes = group.nodes.filter((node) => nodeMatchesFilter(node, activeFilter));
 
         return (
           <div
-            key={chapter.id}
+            key={group.dayId}
             style={{
               background: COLORS.cardBg,
               border: `1px solid ${COLORS.border}`,
@@ -450,7 +430,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
               overflow: 'hidden',
             }}
           >
-            {renderChapterHeader(chapter)}
+            {renderDayHeader(group)}
 
             {isExpanded && (
               <div style={{ padding: '0 16px 16px' }}>
@@ -463,6 +443,10 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                     const isNodeExpanded = expandedNode === node.id;
                     const typeColor = getTypeColor(node.type);
                     const categoryColor = getCategoryColor(node.category);
+                    // Find the chapter this node belongs to for a subtle label
+                    const nodeChapter = project.chapters.find((ch) =>
+                      ch.nodes.some((n) => n.id === node.id),
+                    );
 
                     return (
                       <button
@@ -498,6 +482,17 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                               }}
                             >
                               {formatCategory(node.category)}
+                            </span>
+                          )}
+                          {nodeChapter && (
+                            <span
+                              style={{
+                                fontSize: 11,
+                                color: COLORS.muted,
+                                marginLeft: 'auto',
+                              }}
+                            >
+                              {nodeChapter.name}
                             </span>
                           )}
                         </div>

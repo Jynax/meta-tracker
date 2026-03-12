@@ -1,3 +1,4 @@
+import type { DayEntry } from '../types/index';
 import type { CodeVolumeEntry, SessionEntry, DerivedMetric, StackEntry } from './bipMetrics';
 import type { BugEntry } from './remnantsMetrics';
 
@@ -42,4 +43,56 @@ export const landingStack: StackEntry[] = [
   { name: 'Cloudflare Pages', cat: 'Core' },
   { name: 'Cloudflare KV', cat: 'Core' },
   { name: 'Playwright', cat: 'Utility' },
+];
+
+/** Migrated from landingSessions — each Day groups sessions that share a date. */
+export const landingDays: DayEntry[] = [
+  {
+    date: 'Mar 9',
+    title: 'Scaffold + Theme & Sections',
+    projectId: 'landing',
+    phase: 'Build',
+    chapterId: 'landing-ch-build',
+    blocks: [
+      { id: 'landing-session-33', dayId: 'Mar 9', label: 'Scaffold + Theme & Sections', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 90, linesAdded: 4232, linesDeleted: 12, note: 'Initial React + Vite + TypeScript scaffold with dark theme. Added light/dark theme system, hero section, project cards grid, about section, footer. Cloudflare Pages deploy. PR #1.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 90, linesAdded: 4232, linesDeleted: 12, totalDecisions: 3 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Mar 10',
+    title: 'CMS Backend + Admin + OAuth',
+    projectId: 'landing',
+    phase: 'Build',
+    chapterId: 'landing-ch-cms',
+    blocks: [
+      { id: 'landing-session-36', dayId: 'Mar 10', label: 'CMS Backend + Admin + OAuth', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 120, linesAdded: 1586, linesDeleted: 167, note: 'Cloudflare Pages Functions + KV backend for CMS. Admin panel at #/admin with live content editing. Replaced password auth with Google OAuth. PRs #2-4.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 120, linesAdded: 1586, linesDeleted: 167, totalDecisions: 3 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Mar 11',
+    title: 'Playwright Suite + CI',
+    projectId: 'landing',
+    phase: 'Review',
+    chapterId: 'landing-ch-testing',
+    blocks: [
+      { id: 'landing-session-41', dayId: 'Mar 11', label: 'Playwright Suite + CI', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 30, linesAdded: 483, linesDeleted: 2, note: 'Playwright e2e test suite + GitHub Actions CI workflow. Part of cross-project Playwright sweep. PR #5.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 30, linesAdded: 483, linesDeleted: 2, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 12',
+    title: 'Hero Polish + Coming Soon Border',
+    projectId: 'landing',
+    phase: 'Build',
+    chapterId: 'landing-ch-build',
+    blocks: [
+      { id: 'landing-session-43', dayId: 'Mar 12', label: 'Hero Polish + Coming Soon Border', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 60, linesAdded: 88, linesDeleted: 5, note: 'Reduced hero section height (80vh→50vh), added bouncing scroll-down arrow. Brightened Coming Soon card dashed border to white for "under construction" feel. Feedback capture workflow first real use. PR #6.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 60, linesAdded: 88, linesDeleted: 5, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
 ];

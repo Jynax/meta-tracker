@@ -22,6 +22,7 @@ export const bipProject: Project = {
       period: 'Feb 14, 2026',
       toolLabel: 'ChatGPT',
       tool: 'chatgpt',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'bip-choosing-project',
@@ -59,6 +60,7 @@ export const bipProject: Project = {
       period: 'Feb 22, 2026',
       toolLabel: 'ChatGPT, Codex, Cowork',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'bip-spreadsheet-challenge',
@@ -118,6 +120,7 @@ export const bipProject: Project = {
       period: 'Feb 16–17, 2026',
       toolLabel: 'ChatGPT',
       tool: 'chatgpt',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'bip-monolithic-app',
@@ -155,6 +158,7 @@ export const bipProject: Project = {
       period: 'Feb 17–22, 2026',
       toolLabel: 'ChatGPT, Codex, Cowork',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'bip-representation-trend-view',
@@ -205,6 +209,7 @@ export const bipProject: Project = {
       period: 'Feb 21, 2026',
       toolLabel: 'Claude, ChatGPT',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'bip-timeline-modal-deadend',
@@ -251,6 +256,7 @@ export const bipProject: Project = {
       period: 'Feb 14–21, 2026',
       toolLabel: 'ChatGPT, Codex, Cowork',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'bip-cloudflare-pages',
@@ -294,6 +300,7 @@ export const bipProject: Project = {
       period: 'Feb–Mar 2026',
       toolLabel: 'ChatGPT, Codex, Cowork',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'bip-discovering-codex',
@@ -344,6 +351,7 @@ export const bipProject: Project = {
       period: 'Feb 25, 2026',
       toolLabel: 'Claude, ChatGPT',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'bip-stacked-bar-reimplement',
@@ -382,6 +390,7 @@ export const bipProject: Project = {
       period: 'Mar 5, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'bip-xlsx-vulnerability',
@@ -428,6 +437,7 @@ export const bipProject: Project = {
       period: 'Feb 2026',
       toolLabel: 'ChatGPT',
       tool: 'chatgpt',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'bip-git-from-zero',
@@ -452,6 +462,7 @@ export const bipProject: Project = {
       period: 'Feb 2026',
       toolLabel: 'ChatGPT',
       tool: 'chatgpt',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'bip-published-work-exploration',
@@ -468,6 +479,7 @@ export const bipProject: Project = {
       period: 'Mar 11, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'bip-playwright-framework',

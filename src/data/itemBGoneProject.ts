@@ -14,6 +14,7 @@ export const itemBGoneProject: Project = {
       period: 'Mar 6\u20137, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'ibg-standalone-addon',
@@ -83,6 +84,7 @@ export const itemBGoneProject: Project = {
       period: 'Mar 7, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'ibg-confidence-model',
@@ -154,6 +156,7 @@ export const itemBGoneProject: Project = {
       period: 'Mar 7, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'ibg-item-class-detection',

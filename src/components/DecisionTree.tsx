@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ReactFlow, Background, Controls, Handle, Position } from '@xyflow/react';
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
@@ -156,18 +156,10 @@ function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { o
 export default function DecisionTree() {
   const { theme, toggleTheme } = useTheme();
   const [easterEggToast, setEasterEggToast] = useState<string | null>(null);
-  const tapCountRef = useRef(0);
-  const tapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const handleSubtitleTap = useCallback(() => {
-    tapCountRef.current += 1;
-    if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
-    tapTimerRef.current = setTimeout(() => { tapCountRef.current = 0; }, 800);
-    if (tapCountRef.current >= 5) {
-      tapCountRef.current = 0;
-      toggleTheme();
-      setEasterEggToast(theme === 'sc' ? 'Default theme restored' : 'SC Mode activated');
-      setTimeout(() => setEasterEggToast(null), 2000);
-    }
+  const handleRoguePixel = useCallback(() => {
+    toggleTheme();
+    setEasterEggToast(theme === 'sc' ? 'Default theme restored' : 'SC Mode activated');
+    setTimeout(() => setEasterEggToast(null), 2000);
   }, [theme, toggleTheme]);
   const [filter, setFilter] = useState<FilterType>('all');
   const [view, setView] = useState<'tree' | 'metrics'>('tree');
@@ -277,10 +269,10 @@ export default function DecisionTree() {
 
   return (
     <section className="mx-auto max-w-[1800px] px-4 py-8 text-slate-100 sm:px-8">
-      <header className="mb-5 border-b border-slate-700 pb-3">
+      <header className="mb-5 border-b border-slate-700 pb-3 relative">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-400 cursor-default select-none" onClick={handleSubtitleTap}>{activeProject.subtitle}</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400 cursor-default select-none">{activeProject.subtitle}</p>
             <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">
               {activeProject.name}
               {activeProject.url && (
@@ -353,6 +345,13 @@ export default function DecisionTree() {
             📊 Metrics
           </button>
         </nav>
+        <button
+          onClick={handleRoguePixel}
+          aria-hidden="true"
+          className="absolute bottom-[-1px] right-12 block opacity-40 hover:opacity-80 transition-opacity"
+          style={{ width: '3px', height: '3px', backgroundColor: '#94a3b8', border: 'none', padding: 0, cursor: 'default' }}
+          title=""
+        />
       </header>
 
       {view === 'tree' && (

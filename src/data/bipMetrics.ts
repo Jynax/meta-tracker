@@ -478,3 +478,152 @@ export const bipStack: StackEntry[] = [
   { name: 'Cloudflare Pages', cat: 'Core' },
   { name: 'Cloudflare Workers', cat: 'Core' },
 ];
+
+/** Migrated from bipSessions — each Day groups sessions that share a date. */
+export const bipDays: DayEntry[] = [
+  {
+    date: 'Feb 14',
+    title: 'Scaffold & Cards',
+    projectId: 'bip',
+    phase: 'Build',
+    chapterId: 'bip-spark',
+    blocks: [
+      { id: 'bip-chatgpt-1', dayId: 'Feb 14', label: 'Scaffold & Cards', workCategory: 'Feature', driver: 'collaborative', operator: 'mixed', timeMinutes: 120, linesAdded: 1102, linesDeleted: 89, note: 'Initial Scaffold & Card Exports', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 120, linesAdded: 1102, linesDeleted: 89, totalDecisions: 4 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Feb 15',
+    title: 'Refactoring',
+    projectId: 'bip',
+    phase: 'Build',
+    chapterId: 'bip-spark',
+    blocks: [
+      { id: 'bip-chatgpt-2', dayId: 'Feb 15', label: 'Refactoring', workCategory: 'Refactor', driver: 'collaborative', operator: 'mixed', timeMinutes: 60, linesAdded: 146, linesDeleted: 231, note: 'Refactoring & Cleanup', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 60, linesAdded: 146, linesDeleted: 231, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Feb 16',
+    title: 'Data & Charts',
+    projectId: 'bip',
+    phase: 'Build',
+    chapterId: 'bip-wrangling',
+    blocks: [
+      { id: 'bip-chatgpt-3', dayId: 'Feb 16', label: 'Data & Charts', workCategory: 'Feature', driver: 'collaborative', operator: 'mixed', timeMinutes: 240, linesAdded: 2230, linesDeleted: 1043, note: 'Data Pipeline, Charts & Normalization', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 240, linesAdded: 2230, linesDeleted: 1043, totalDecisions: 8 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Feb 17',
+    title: 'Representation',
+    projectId: 'bip',
+    phase: 'Build',
+    chapterId: 'bip-repr',
+    blocks: [
+      { id: 'bip-chatgpt-4', dayId: 'Feb 17', label: 'Representation', workCategory: 'Feature', driver: 'collaborative', operator: 'mixed', timeMinutes: 300, linesAdded: 4287, linesDeleted: 1534, note: 'Representation Engine & Polish', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 300, linesAdded: 4287, linesDeleted: 1534, totalDecisions: 6 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Feb 18',
+    title: 'Deployment & Auth',
+    projectId: 'bip',
+    phase: 'Build',
+    chapterId: 'bip-deploy',
+    blocks: [
+      { id: 'bip-chatgpt-5', dayId: 'Feb 18', label: 'Deployment & Auth', workCategory: 'Tooling', driver: 'collaborative', operator: 'mixed', timeMinutes: 180, linesAdded: 45, linesDeleted: 0, note: 'Cloudflare Pages Deploy, Workers Auth, Domain Setup', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 180, linesAdded: 45, linesDeleted: 0, totalDecisions: 4 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Feb 21',
+    title: 'Audit',
+    projectId: 'bip',
+    phase: 'Review',
+    chapterId: 'bip-deploy',
+    blocks: [
+      { id: 'bip-cowork-1', dayId: 'Feb 21', label: 'Audit', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-ai', timeMinutes: 120, linesAdded: 0, linesDeleted: 0, note: 'Audit & Worker Fix', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 120, linesAdded: 0, linesDeleted: 0, totalDecisions: 3 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Feb 22',
+    title: 'Data Wrangling',
+    projectId: 'bip',
+    phase: 'Build',
+    chapterId: 'bip-wrangling',
+    blocks: [
+      { id: 'bip-cowork-2', dayId: 'Feb 22', label: 'Data Wrangling', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-ai', timeMinutes: 180, linesAdded: 275, linesDeleted: 8, note: 'Multi-Sheet Ingestion', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 180, linesAdded: 275, linesDeleted: 8, totalDecisions: 2 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Feb 25',
+    title: 'Decomposition',
+    projectId: 'bip',
+    phase: 'Build',
+    chapterId: 'bip-decomp',
+    blocks: [
+      { id: 'bip-cowork-3', dayId: 'Feb 25', label: 'Decomposition', workCategory: 'Refactor', driver: 'agent-led', operator: 'claude-ai', timeMinutes: 180, linesAdded: 136, linesDeleted: 570, note: 'App.tsx Decomposition', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 180, linesAdded: 136, linesDeleted: 570, totalDecisions: 3 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Feb 26',
+    title: 'Timeline',
+    projectId: 'bip',
+    phase: 'Build',
+    chapterId: 'bip-windows',
+    blocks: [
+      { id: 'bip-cowork-4', dayId: 'Feb 26', label: 'Timeline', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-ai', timeMinutes: 120, linesAdded: 173, linesDeleted: 38, note: 'Timeline & Fixes', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 120, linesAdded: 173, linesDeleted: 38, totalDecisions: 5 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 4',
+    title: 'Deep Decomposition',
+    projectId: 'bip',
+    phase: 'Build',
+    chapterId: 'bip-decomp',
+    blocks: [
+      { id: 'bip-cowork-13', dayId: 'Mar 4', label: 'Deep Decomposition', workCategory: 'Refactor', driver: 'agent-led', operator: 'claude-ai', timeMinutes: 120, linesAdded: 1797, linesDeleted: 1380, note: 'Deep App.tsx Decomposition', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 120, linesAdded: 1797, linesDeleted: 1380, totalDecisions: 1 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 5',
+    projectId: 'bip',
+    phase: 'Build',
+    chapterId: 'ch-state-extraction',
+    blocks: [
+      { id: 'bip-claude-code-2', dayId: 'Mar 5', label: 'State Extraction', workCategory: 'Refactor', driver: 'agent-led', operator: 'claude-code', timeMinutes: 180, linesAdded: 1470, linesDeleted: 1124, note: 'ThemeContext + 5 Hooks + ErrorBoundary', contextWindowOrigin: false },
+      { id: 'bip-claude-code-4', dayId: 'Mar 5', label: 'Messy Ingestion + Bugs', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-code', timeMinutes: 120, linesAdded: 51, linesDeleted: 52, note: 'BIP Auto-Cleaning + Bug Fixes #08-12', contextWindowOrigin: false },
+      { id: 'bip-claude-code-5', dayId: 'Mar 5', label: 'Memo + Export + Review', workCategory: 'Refactor', driver: 'agent-led', operator: 'claude-code', timeMinutes: 120, linesAdded: 42, linesDeleted: 102, note: 'React.memo, Export Cleaned File, Code Review & Cleanup', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 420, linesAdded: 1563, linesDeleted: 1278, totalDecisions: 5 },
+    driverSummary: { human: 0, ai: 3, collaborative: 0 },
+  },
+  {
+    date: 'Mar 11',
+    title: 'Playwright + CI',
+    projectId: 'bip',
+    phase: 'Shipped',
+    chapterId: 'ch-testing',
+    blocks: [
+      { id: 'bip-claude-code-6', dayId: 'Mar 11', label: 'Playwright + CI', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 917, linesDeleted: 0, note: '52 e2e Tests + GitHub Actions CI — v1.0 Stable', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 60, linesAdded: 917, linesDeleted: 0, totalDecisions: 1 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+];

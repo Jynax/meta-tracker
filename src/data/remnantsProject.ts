@@ -14,6 +14,7 @@ export const remnantsProject: Project = {
       period: 'Feb 17, 2026',
       toolLabel: 'Claude',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'rem-combat-system',
@@ -63,6 +64,7 @@ export const remnantsProject: Project = {
       period: 'Feb 18, 2026',
       toolLabel: 'Claude',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'rem-zone-difficulty',
@@ -102,6 +104,7 @@ export const remnantsProject: Project = {
       period: 'Feb 18, 2026',
       toolLabel: 'Claude',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'rem-character-naming',
@@ -141,6 +144,7 @@ export const remnantsProject: Project = {
       period: 'Feb 19–21, 2026',
       toolLabel: 'Mixed',
       tool: 'mixed',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'rem-two-repos',
@@ -170,6 +174,7 @@ export const remnantsProject: Project = {
       period: 'Mar 5–10, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'rem-cloudflare-deploy',
@@ -197,6 +202,7 @@ export const remnantsProject: Project = {
       period: 'Mar 11, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
+      chapterType: 'date-range' as const,
       nodes: [
         {
           id: 'rem-pause-saveload',

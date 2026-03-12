@@ -1,3 +1,4 @@
+import type { DayEntry } from '../types/index';
 import type { CodeVolumeEntry, SessionEntry, DerivedMetric, StackEntry } from './bipMetrics';
 
 export interface BugEntry {
@@ -68,4 +69,68 @@ export const remnantsStack: StackEntry[] = [
   { name: 'Python (launcher)', cat: 'Utility' },
   { name: 'Cloudflare Pages', cat: 'Core' },
   { name: 'GitHub Pages', cat: 'Core' },
+];
+
+/** Migrated from remnantsSessions — each Day groups sessions that share a date. */
+export const remnantsDays: DayEntry[] = [
+  {
+    date: 'Feb 17',
+    projectId: 'remnants',
+    phase: 'Research',
+    chapterId: 'ch-core-loop',
+    blocks: [
+      { id: 'remnants-pre-tracking', dayId: 'Feb 17', label: 'Remnants — World & Scope Definition', workCategory: 'Planning', driver: 'human', operator: 'claude-ai', timeMinutes: 0, linesAdded: 0, linesDeleted: 0, note: 'World & scope definition — 20yr concept, first formal documentation session', contextWindowOrigin: false },
+      { id: 'remnants-claude-1', dayId: 'Feb 17', label: 'Vertical Slice', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-ai', timeMinutes: 0, linesAdded: 850, linesDeleted: 0, note: 'Vertical slice: map, combat, inventory, extraction', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 0, linesAdded: 850, linesDeleted: 0, totalDecisions: 4 },
+    driverSummary: { human: 1, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Feb 18',
+    projectId: 'remnants',
+    phase: 'Spec',
+    chapterId: 'ch-living-world',
+    blocks: [
+      { id: 'remnants-claude-2', dayId: 'Feb 18', label: 'Balance & Xenoflora', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-ai', timeMinutes: 0, linesAdded: 0, linesDeleted: 0, note: 'Balance, terrain, xenoflora, zone difficulty', contextWindowOrigin: false },
+      { id: 'remnants-claude-3', dayId: 'Feb 18', label: 'Home Base & Recovery', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-ai', timeMinutes: 0, linesAdded: 0, linesDeleted: 0, note: 'Home base, recovery system, character naming', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 0, linesAdded: 0, linesDeleted: 0, totalDecisions: 6 },
+    driverSummary: { human: 0, ai: 0, collaborative: 2 },
+  },
+  {
+    date: 'Feb 19',
+    title: 'Repo Init + Docs',
+    projectId: 'remnants',
+    phase: 'Build',
+    chapterId: 'ch-repo-deployment',
+    blocks: [
+      { id: 'remnants-git-setup', dayId: 'Feb 19', label: 'Repo Init + Docs', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-ai', timeMinutes: 60, linesAdded: 4131, linesDeleted: 2, note: 'Created repos, uploaded docs + code', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 60, linesAdded: 4131, linesDeleted: 2, totalDecisions: 1 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Feb 21',
+    title: 'Launcher & Deploy',
+    projectId: 'remnants',
+    phase: 'Build',
+    chapterId: 'ch-repo-deployment',
+    blocks: [
+      { id: 'remnants-codex-1', dayId: 'Feb 21', label: 'Launcher & Deploy', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-ai', timeMinutes: 60, linesAdded: 680, linesDeleted: 38, note: 'Launcher, README, deploy fix', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 60, linesAdded: 680, linesDeleted: 38, totalDecisions: 1 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 11',
+    projectId: 'remnants',
+    phase: 'Build',
+    chapterId: 'ch-core-loop',
+    blocks: [
+      { id: 'remnants-session-40', dayId: 'Mar 11', label: 'Pause + Save/Load', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 122, linesDeleted: 13, note: 'Pause button (spacebar) with auto-save on pause. Save/load system using localStorage with full game state serialization. Tasks #04-#05.', contextWindowOrigin: false },
+      { id: 'remnants-session-41', dayId: 'Mar 11', label: 'Playwright Suite + CI', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 433, linesDeleted: 2, note: 'Full Playwright test suite: 26 tests across 6 specs (title screen, game flow, controls, save/load, deep interactions, responsive). GitHub Actions CI workflow. Tasks #07-#09.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 120, linesAdded: 555, linesDeleted: 15, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 2, collaborative: 0 },
+  },
 ];

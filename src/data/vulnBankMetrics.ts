@@ -1,3 +1,4 @@
+import type { DayEntry } from '../types/index';
 import type { CodeVolumeEntry, SessionEntry, BugEntry, DerivedMetric, StackEntry } from './bipMetrics';
 
 export const vbCodeVolume: CodeVolumeEntry[] = [
@@ -47,4 +48,49 @@ export const vbStack: StackEntry[] = [
   { name: 'PostgreSQL 16', cat: 'Core' },
   { name: 'Docker Compose V2', cat: 'Build' },
   { name: 'HTML/CSS/JS', cat: 'UI' },
+];
+
+/** Migrated from vbSessions — each Day groups sessions that share a date. */
+export const vbDays: DayEntry[] = [
+  {
+    date: 'Mar 6',
+    title: 'Workflow Setup',
+    projectId: 'vb',
+    phase: 'Spec',
+    chapterId: 'vb-ch-getting-organized',
+    blocks: [
+      { id: 'vb-session-1', dayId: 'Mar 6', label: 'Workflow Setup', workCategory: 'Planning', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 629, linesDeleted: 0, note: 'Workflow setup, multi-model coordination protocol, .workflow/ docs, .cursorrules, CLAUDE.md', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 60, linesAdded: 629, linesDeleted: 0, totalDecisions: 2 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 9',
+    projectId: 'vb',
+    phase: 'Spec',
+    chapterId: 'vb-ch-getting-organized',
+    blocks: [
+      { id: 'vb-session-2', dayId: 'Mar 9', label: 'Workflow Alignment Prep', workCategory: 'Planning', driver: 'collaborative', operator: 'claude-code', timeMinutes: 18, linesAdded: 0, linesDeleted: 0, note: 'Align workflow docs with Meta Tracker data model', contextWindowOrigin: false },
+      { id: 'vb-session-3', dayId: 'Mar 9', label: 'Repo Migration + Cursor Review', workCategory: 'Planning', driver: 'collaborative', operator: 'claude-code', timeMinutes: 90, linesAdded: 111, linesDeleted: 0, note: 'Repo migration (remove fork), workflow alignment PR #3, Cursor review intake, task #05 design', contextWindowOrigin: false },
+      { id: 'vb-session-4', dayId: 'Mar 9', label: 'Issues POC + Coordination Guide', workCategory: 'Planning', driver: 'collaborative', operator: 'claude-code', timeMinutes: 60, linesAdded: 323, linesDeleted: 58, note: 'GitHub Issues POC validation, coordination guide, workflow doc updates (6 files)', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 168, linesAdded: 434, linesDeleted: 58, totalDecisions: 3 },
+    driverSummary: { human: 0, ai: 0, collaborative: 3 },
+  },
+  {
+    date: 'Mar 10',
+    projectId: 'vb',
+    phase: 'Spec',
+    chapterId: 'vb-ch-workflow-refinements',
+    blocks: [
+      { id: 'vb-session-5', dayId: 'Mar 10', label: 'Archive + Workflow Cleanup', workCategory: 'Planning', driver: 'agent-led', operator: 'mixed', timeMinutes: 0, linesAdded: 0, linesDeleted: 0, note: 'Created .archive/, moved obsolete task files and workflow artifacts, updated workflow docs', contextWindowOrigin: false },
+      { id: 'vb-session-6', dayId: 'Mar 10', label: 'DRY Entry Points + Workflow Changes', workCategory: 'Planning', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 39, linesDeleted: 88, note: 'DRY entry points, created-by labels, codebase audit, 26 issues created', contextWindowOrigin: false },
+      { id: 'vb-session-7', dayId: 'Mar 10', label: 'Rebase Checklist + Workflow', workCategory: 'Planning', driver: 'agent-led', operator: 'mixed', timeMinutes: 0, linesAdded: 50, linesDeleted: 10, note: 'Issue #49: rebase-on-main in checklist, close issue only when PR merged', contextWindowOrigin: false },
+      { id: 'vb-session-8', dayId: 'Mar 10', label: 'Bug Fixes + Session Close-Out', workCategory: 'Bug', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 159, linesDeleted: 41, note: 'Fixed 4 bugs (#21, #22, #26, #36), Meta Tracker sync, session close-out workflow (#55)', contextWindowOrigin: false },
+      { id: 'vb-session-8-cursor', dayId: 'Mar 10', label: 'SDElements Profile + Assumptions', workCategory: 'Planning', driver: 'agent-led', operator: 'mixed', timeMinutes: 0, linesAdded: 46, linesDeleted: 0, note: 'SDElements Django profile (P5), survey bias analysis (auth/encryption/compliance), profile doc', contextWindowOrigin: false },
+      { id: 'vb-session-9', dayId: 'Mar 10', label: 'Bugs + Docker Modernization', workCategory: 'Bug', driver: 'agent-led', operator: 'claude-code', timeMinutes: 30, linesAdded: 24, linesDeleted: 18, note: 'Bare exception fix (#37), stale index refs (#15), Docker modernization (#23, #25, #39), closed #52 #16, metrics merge', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 30, linesAdded: 318, linesDeleted: 157, totalDecisions: 4 },
+    driverSummary: { human: 0, ai: 4, collaborative: 2 },
+  },
 ];

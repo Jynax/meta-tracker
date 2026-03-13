@@ -185,7 +185,7 @@ export default function SessionsTab({
       const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
       const key = d.toISOString().slice(0, 10);
       const dayLabel = month + ' ' + parseInt(day, 10);
-      const existing = dayGroups.get(key) ?? { dayLabel, counts: { human: 0, ai: 0, collaborative: 0 } };
+      const existing = dayGroups.get(key) ?? { dayLabel, counts: { 'human-only': 0, 'agent-led': 0, collaborative: 0, human: 0 } };
       existing.counts[driver] = (existing.counts[driver] ?? 0) + 1;
       dayGroups.set(key, existing);
     });

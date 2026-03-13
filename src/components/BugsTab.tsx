@@ -125,7 +125,7 @@ export default function BugsTab({ bugs, projectId }: BugsTabProps) {
                         <td className="px-3 py-2" style={{ color: bug.severity === 'Critical' ? C.rose : bug.severity === 'High' ? C.amber : bug.severity === 'Medium' ? C.cyan : C.muted }}>{bug.severity}</td>
                         <td className="px-3 py-2">{bug.category}</td>
                         <td className="px-3 py-2">{bug.source}</td>
-                        <td className="px-3 py-2" style={{ color: bug.status.toLowerCase() === 'fixed' ? C.emerald : C.amber }}>{bug.status}</td>
+                        <td className="px-3 py-2" style={{ color: bug.status.toLowerCase().startsWith('fixed') ? C.emerald : C.amber }}>{bug.status}</td>
                       </tr>
                     ))}
                   </tbody>

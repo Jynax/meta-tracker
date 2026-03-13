@@ -9,7 +9,7 @@ interface BugsTabProps {
 
 export default function BugsTab({ bugs, projectId }: BugsTabProps) {
   const [animateBugDonuts, setAnimateBugDonuts] = useState(false);
-  const [expandedBugSessions, setExpandedBugSessions] = useState<Set<string>>(new Set());
+  const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     setAnimateBugDonuts(false);
@@ -21,26 +21,29 @@ export default function BugsTab({ bugs, projectId }: BugsTabProps) {
     const bySev = bugs.reduce<Record<string, number>>((acc, bug) => { acc[bug.severity] = (acc[bug.severity] ?? 0) + 1; return acc; }, {});
     const byCat = bugs.reduce<Record<string, number>>((acc, bug) => { acc[bug.category] = (acc[bug.category] ?? 0) + 1; return acc; }, {});
     const bySrc = bugs.reduce<Record<string, number>>((acc, bug) => { acc[bug.source] = (acc[bug.source] ?? 0) + 1; return acc; }, {});
-    const fixed = bugs.filter((bug) => bug.status.toLowerCase() === 'fixed').length;
+    const fixed = bugs.filter((bug) => bug.status.toLowerCase().startsWith('fixed')).length;
     return { bySeverity: bySev, byCategory: byCat, bySource: bySrc, fixedBugs: fixed, openBugs: bugs.length - fixed };
   }, [bugs]);
 
-  const bugsBySession = useMemo(() => {
-    const groups = new Map<string, { key: string; label: string; date: string; bugs: typeof bugs }>();
+  const bugsByDay = useMemo(() => {
+    const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+    const groups = new Map<string, { isoKey: string; dayLabel: string; bugs: BugEntry[] }>();
     bugs.forEach((bug) => {
-      const key = bug.session;
-      const existing = groups.get(key) ?? { key, label: bug.label, date: bug.date, bugs: [] };
+      const [month = 'Jan', day = '1'] = bug.date.split(' ');
+      const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
+      const isoKey = d.toISOString().slice(0, 10);
+      const existing = groups.get(isoKey) ?? { isoKey, dayLabel: bug.date, bugs: [] };
       existing.bugs.push(bug);
-      groups.set(key, existing);
+      groups.set(isoKey, existing);
     });
-    return Array.from(groups.values()).reverse();
+    return Array.from(groups.values()).sort((a, b) => b.isoKey.localeCompare(a.isoKey));
   }, [bugs]);
 
   useEffect(() => {
-    if (bugsBySession.length > 0) {
-      setExpandedBugSessions(new Set([bugsBySession[0].key]));
+    if (bugsByDay.length > 0) {
+      setExpandedDays(new Set([bugsByDay[0].isoKey]));
     }
-  }, [projectId, bugsBySession]);
+  }, [projectId, bugsByDay]);
 
   return (
     <div className="space-y-4">
@@ -82,17 +85,17 @@ export default function BugsTab({ bugs, projectId }: BugsTabProps) {
         />
       </div>
       <div className="space-y-2">
-        {bugsBySession.map((group) => {
-          const isExpanded = expandedBugSessions.has(group.key);
-          const fixedInGroup = group.bugs.filter(b => b.status.toLowerCase() === 'fixed').length;
+        {bugsByDay.map((group) => {
+          const isExpanded = expandedDays.has(group.isoKey);
+          const fixedInGroup = group.bugs.filter(b => b.status.toLowerCase().startsWith('fixed')).length;
           return (
-            <div key={group.key} className="rounded-xl border" style={{ backgroundColor: C.cardBg, borderColor: C.border, overflow: 'hidden' }}>
+            <div key={group.isoKey} className="rounded-xl border" style={{ backgroundColor: C.cardBg, borderColor: C.border, overflow: 'hidden' }}>
               <button
                 onClick={() => {
-                  setExpandedBugSessions((prev) => {
+                  setExpandedDays((prev) => {
                     const next = new Set(prev);
-                    if (next.has(group.key)) next.delete(group.key);
-                    else next.add(group.key);
+                    if (next.has(group.isoKey)) next.delete(group.isoKey);
+                    else next.add(group.isoKey);
                     return next;
                   });
                 }}
@@ -100,9 +103,9 @@ export default function BugsTab({ bugs, projectId }: BugsTabProps) {
                 style={{ backgroundColor: C.cardBg }}
               >
                 <div className="flex items-center gap-3">
-                  <span style={{ fontSize: 14, fontWeight: 600, color: C.white }}>{group.date} — {group.label}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: C.white }}>{group.dayLabel}</span>
                   <span style={{ fontSize: 12, color: C.muted }}>{group.bugs.length} bug{group.bugs.length > 1 ? 's' : ''}</span>
-                  <span style={{ fontSize: 12, color: C.slate }}>{fixedInGroup} fixed</span>
+                  <span style={{ fontSize: 12, color: C.emerald }}>{fixedInGroup} fixed</span>
                 </div>
                 <span style={{ color: C.muted, transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 200ms ease' }}>&#9654;</span>
               </button>
@@ -110,7 +113,7 @@ export default function BugsTab({ bugs, projectId }: BugsTabProps) {
                 <table className="w-full border-collapse text-xs">
                   <thead>
                     <tr style={{ backgroundColor: '#162136' }}>
-                      {['#', 'Date', 'Summary', 'Decision', 'Severity', 'Category', 'Source', 'Status'].map((header) => (
+                      {['#', 'Session', 'Summary', 'Decision', 'Severity', 'Category', 'Source', 'Status'].map((header) => (
                         <th key={header} className="px-3 py-2 text-left font-semibold" style={{ color: C.slate }}>{header}</th>
                       ))}
                     </tr>
@@ -119,7 +122,7 @@ export default function BugsTab({ bugs, projectId }: BugsTabProps) {
                     {group.bugs.map((bug) => (
                       <tr key={bug.id} className="border-t" style={{ borderColor: C.border }}>
                         <td className="px-3 py-2">{bug.id}</td>
-                        <td className="px-3 py-2" style={{ color: C.cyan }}>{bug.date}</td>
+                        <td className="px-3 py-2" style={{ color: C.cyan }}>{bug.session}</td>
                         <td className="px-3 py-2">{bug.summary}</td>
                         <td className="px-3 py-2" style={{ color: C.muted }}>&mdash;</td>
                         <td className="px-3 py-2" style={{ color: bug.severity === 'Critical' ? C.rose : bug.severity === 'High' ? C.amber : bug.severity === 'Medium' ? C.cyan : C.muted }}>{bug.severity}</td>

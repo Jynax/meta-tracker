@@ -113,32 +113,67 @@ export default function SessionsTab({
   const avgTaskTimePoints = useMemo(() => {
     const validSessions = sessions.filter(s => s.taskCount > 0);
     if (!validSessions.length) return null;
+
+    type AvgPoint = { session: string; date: string; dateLabel: string; label: string; avgMin: number; tool: string; taskCount: number; duration: number; x: number; y: number };
+
+    let dataPoints: AvgPoint[];
+    if (chartView === 'weekly') {
+      // Aggregate by day
+      const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+      const dayBuckets = new Map<string, { dayLabel: string; totalMinutes: number; totalTasks: number; tool: string }>();
+      validSessions.forEach((entry) => {
+        const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
+        const [month = 'Jan', day = '1'] = date.split(' ');
+        const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
+        const key = d.toISOString().slice(0, 10);
+        const existing = dayBuckets.get(key) ?? { dayLabel: date, totalMinutes: 0, totalTasks: 0, tool: entry.tool };
+        existing.totalMinutes += entry.duration * 60;
+        existing.totalTasks += entry.taskCount;
+        dayBuckets.set(key, existing);
+      });
+      const sorted = Array.from(dayBuckets.entries()).sort(([a], [b]) => a.localeCompare(b));
+      dataPoints = sorted.map(([, bucket], index) => {
+        const avgMin = bucket.totalTasks > 0 ? bucket.totalMinutes / bucket.totalTasks : 0;
+        const ratioX = sorted.length > 1 ? index / (sorted.length - 1) : 0;
+        const x = chartDims.left + ratioX * chartInnerWidth;
+        return {
+          session: bucket.dayLabel, date: bucket.dayLabel, dateLabel: formatShortDate(bucket.dayLabel),
+          label: `${bucket.totalTasks} tasks`, avgMin: Math.round(avgMin), tool: bucket.tool,
+          taskCount: bucket.totalTasks, duration: Math.round(bucket.totalMinutes / 60),
+          x, y: 0,
+        };
+      });
+    } else {
+      dataPoints = validSessions.map((entry, index) => {
+        const avgMin = (entry.duration * 60) / entry.taskCount;
+        const ratioX = validSessions.length > 1 ? index / (validSessions.length - 1) : 0;
+        const x = chartDims.left + ratioX * chartInnerWidth;
+        const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
+        return {
+          ...entry, date, dateLabel: formatShortDate(date),
+          avgMin: Math.round(avgMin), tool: entry.tool, x, y: 0,
+        };
+      });
+    }
+
     const yTicks = 4;
-    const avgTimes = validSessions.map(s => (s.duration * 60) / s.taskCount);
-    const maxTime = Math.max(...avgTimes, 1);
+    const maxTime = Math.max(...dataPoints.map(p => p.avgMin), 1);
     const raw = maxTime / yTicks || 1;
     const mag = 10 ** Math.floor(Math.log10(raw));
     const step = Math.max(1, Math.ceil(raw / mag) * mag);
     const yMax = step * yTicks;
 
-    const points = validSessions.map((entry, index) => {
-      const avgMin = (entry.duration * 60) / entry.taskCount;
-      const ratioX = validSessions.length > 1 ? index / (validSessions.length - 1) : 0;
-      const x = chartDims.left + ratioX * chartInnerWidth;
-      const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
-      return {
-        ...entry,
-        date,
-        dateLabel: formatShortDate(date),
-        avgMin: Math.round(avgMin),
-        tool: entry.tool,
-        x,
-        y: chartDims.top + (1 - (avgMin / yMax)) * chartInnerHeight,
-      };
-    });
+    const points = dataPoints.map(p => ({
+      ...p,
+      y: chartDims.top + (1 - (p.avgMin / yMax)) * chartInnerHeight,
+    }));
 
-    return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points };
-  }, [sessions, sessionDateMap]);
+    // Smart tick interval: show at most ~15 labels to avoid overlap
+    const maxTicks = 15;
+    const tickInterval = points.length > maxTicks ? Math.ceil(points.length / maxTicks) : 1;
+
+    return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points, tickInterval };
+  }, [sessions, sessionDateMap, chartView]);
 
   const avgTaskTimePaths = useMemo(() => {
     if (!avgTaskTimePoints) return {};
@@ -339,7 +374,7 @@ export default function SessionsTab({
       {avgTaskTimePoints && (
       <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
         <h3 className="text-sm font-semibold">Avg Task Time</h3>
-        <div className="text-xs mb-3" style={{ color: C.muted }}>Minutes per task by session</div>
+        <div className="text-xs mb-3" style={{ color: C.muted }}>Minutes per task {chartView === 'weekly' ? 'by day' : 'by session'}</div>
         <div style={{ position: 'relative', overflowX: 'auto', paddingBottom: 4 }}>
           <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }} role="img" aria-label="Average task time chart">
             {Array.from({ length: avgTaskTimePoints.yTicks + 1 }, (_, index) => {
@@ -385,16 +420,22 @@ export default function SessionsTab({
               />
             ))}
 
-            {avgTaskTimePoints.points.map((point, index) => (
-              <text
-                key={`avg-label-${index}`}
-                x={point.x}
-                y={index % 2 === 0 ? avgTaskTimePoints.dims.height - 10 : avgTaskTimePoints.dims.height - 22}
-                textAnchor="middle" fill={C.slate} fontSize="10"
-              >
-                {point.dateLabel}
-              </text>
-            ))}
+            {avgTaskTimePoints.points.map((point, index) => {
+              if (avgTaskTimePoints.tickInterval > 1 && index % avgTaskTimePoints.tickInterval !== 0 && index !== avgTaskTimePoints.points.length - 1) return null;
+              const tickIndex = avgTaskTimePoints.tickInterval > 1
+                ? Math.floor(index / avgTaskTimePoints.tickInterval)
+                : index;
+              return (
+                <text
+                  key={`avg-label-${index}`}
+                  x={point.x}
+                  y={tickIndex % 2 === 0 ? avgTaskTimePoints.dims.height - 10 : avgTaskTimePoints.dims.height - 22}
+                  textAnchor="middle" fill={C.slate} fontSize="10"
+                >
+                  {point.dateLabel}
+                </text>
+              );
+            })}
           </svg>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>

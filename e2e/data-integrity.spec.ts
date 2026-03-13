@@ -41,7 +41,8 @@ test.describe('Data Integrity', () => {
       await page.goto('/');
       if (projectName !== 'Meta Tracker') {
         const switcher = page.locator('nav[aria-label="Project switcher"]');
-        await switcher.getByText(projectName).click();
+        await switcher.locator('button[aria-haspopup="listbox"]').click();
+        await switcher.getByRole('option', { name: projectName }).click();
       }
 
       // Check tree view
@@ -61,7 +62,8 @@ test.describe('Data Integrity', () => {
 
     for (const projectName of PROJECTS) {
       const switcher = page.locator('nav[aria-label="Project switcher"]');
-      await switcher.getByText(projectName).click();
+      await switcher.locator('button[aria-haspopup="listbox"]').click();
+      await switcher.getByRole('option', { name: projectName }).click();
 
       // Heading should show the project name
       await expect(page.locator('h1')).toContainText(projectName);

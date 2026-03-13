@@ -11,7 +11,7 @@ test.describe('Regression Guards', () => {
     const heading = page.locator('h1');
     await expect(heading).toContainText('Meta Tracker');
 
-    const activeProject = page.locator('nav[aria-label="Project switcher"] button[aria-current="page"]');
+    const activeProject = page.locator('nav[aria-label="Project switcher"] button[aria-haspopup="listbox"]');
     await expect(activeProject).toContainText('Meta Tracker');
   });
 
@@ -24,7 +24,8 @@ test.describe('Regression Guards', () => {
     const projects = ['BIP', 'Remnants', 'Item-B-Gone', 'Vuln Bank', 'Meta Tracker'];
 
     for (const project of projects) {
-      await switcher.getByText(project).click();
+      await switcher.locator('button[aria-haspopup="listbox"]').click();
+      await switcher.getByRole('option', { name: project }).click();
       await page.waitForTimeout(50);
     }
 
@@ -66,7 +67,8 @@ test.describe('Regression Guards', () => {
     const projects = ['BIP', 'Remnants', 'Item-B-Gone', 'Vuln Bank', 'Meta Tracker'];
 
     for (const project of projects) {
-      await switcher.getByText(project).click();
+      await switcher.locator('button[aria-haspopup="listbox"]').click();
+      await switcher.getByRole('option', { name: project }).click();
       await expect(page.locator('h1')).toContainText(project);
       const content = page.locator('section');
       await expect(content).toBeVisible();
@@ -75,7 +77,8 @@ test.describe('Regression Guards', () => {
 
   test('switching view to Metrics and back to Tree preserves project', async ({ page }) => {
     const switcher = page.locator('nav[aria-label="Project switcher"]');
-    await switcher.getByText('BIP').click();
+    await switcher.locator('button[aria-haspopup="listbox"]').click();
+    await switcher.getByRole('option', { name: 'BIP' }).click();
     await expect(page.locator('h1')).toContainText('BIP');
 
     const viewSwitcher = page.locator('nav[aria-label="View switcher"]');
@@ -108,7 +111,8 @@ test.describe('Regression Guards', () => {
     });
 
     const switcher = page.locator('nav[aria-label="Project switcher"]');
-    await switcher.getByText('BIP').click();
+    await switcher.locator('button[aria-haspopup="listbox"]').click();
+    await switcher.getByRole('option', { name: 'BIP' }).click();
     await page.waitForTimeout(500);
 
     const viewSwitcher = page.locator('nav[aria-label="View switcher"]');

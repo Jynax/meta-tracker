@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ReactFlow, Background, Controls, Handle, Position } from '@xyflow/react';
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
@@ -39,6 +39,12 @@ const FILTERS: Array<{ id: FilterType; label: string }> = [
 ];
 
 const PROJECTS = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject, landingProject, feedbackCaptureProject];
+
+const PROJECT_GROUPS: Array<{ label: string; projects: typeof PROJECTS }> = [
+  { label: 'Solo', projects: PROJECTS.filter(p => p.trackingMode !== 'lightweight' && p.projectType !== 'joint') },
+  { label: 'Micro', projects: PROJECTS.filter(p => p.trackingMode === 'lightweight') },
+  { label: 'Joint', projects: PROJECTS.filter(p => p.projectType === 'joint') },
+];
 
 const CATEGORY_META: Array<{ id: NodeCategory; label: string; color: string }> = [
   { id: 'technical', label: 'Technical', color: 'var(--theme-cyan)' },
@@ -166,6 +172,8 @@ export default function DecisionTree() {
   const [metricsTab, setMetricsTab] = useState<'overview' | 'code' | 'bugs' | 'sessions'>('overview');
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [activeProject, setActiveProject] = useState<Project>(metaProject);
+  const [projectDropdownOpen, setProjectDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set());
   const [expandedNode, setExpandedNode] = useState<string | null>(null);
   const [detailNodes, setDetailNodes] = useState<Set<string>>(new Set());
@@ -186,6 +194,16 @@ export default function DecisionTree() {
       else next.add(nodeId);
       return next;
     });
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setProjectDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const switchProject = (projectId: string) => {
@@ -298,21 +316,47 @@ export default function DecisionTree() {
         </div>
 
         {PROJECTS.length > 1 && (
-          <nav aria-label="Project switcher" className="mt-2 flex items-center gap-2">
-            {PROJECTS.map((proj) => (
-              <button
-                key={proj.id}
-                onClick={() => switchProject(proj.id)}
-                aria-current={activeProject.id === proj.id ? 'page' : undefined}
-                className={`rounded-lg px-3 py-1.5 text-sm transition ${
-                  activeProject.id === proj.id
-                    ? 'bg-slate-100 text-slate-950'
-                    : 'border border-slate-700 bg-slate-800 text-slate-300 hover:brightness-110'
-                }`}
+          <nav aria-label="Project switcher" className="mt-2 relative" ref={dropdownRef}>
+            <button
+              onClick={() => setProjectDropdownOpen(!projectDropdownOpen)}
+              className="flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition hover:brightness-110"
+              style={{ borderColor: 'var(--theme-border)', backgroundColor: 'var(--theme-card-bg)', color: 'var(--theme-text-primary)' }}
+              aria-haspopup="listbox"
+              aria-expanded={projectDropdownOpen}
+            >
+              {activeProject.name}
+              <span style={{ fontSize: 10, color: 'var(--theme-text-muted)', transform: projectDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 150ms ease' }}>&#9660;</span>
+            </button>
+            {projectDropdownOpen && (
+              <div
+                className="absolute left-0 top-full mt-1 z-50 rounded-xl border shadow-lg"
+                style={{ backgroundColor: 'var(--theme-card-bg)', borderColor: 'var(--theme-border)', minWidth: 220 }}
+                role="listbox"
               >
-                {proj.name}
-              </button>
-            ))}
+                {PROJECT_GROUPS.filter(g => g.projects.length > 0).map((group) => (
+                  <div key={group.label}>
+                    <div className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--theme-text-muted)' }}>
+                      {group.label}
+                    </div>
+                    {group.projects.map((proj) => (
+                      <button
+                        key={proj.id}
+                        role="option"
+                        aria-selected={activeProject.id === proj.id}
+                        onClick={() => { switchProject(proj.id); setProjectDropdownOpen(false); }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-sm transition hover:brightness-125"
+                        style={{
+                          color: activeProject.id === proj.id ? 'var(--theme-cyan)' : 'var(--theme-text-secondary)',
+                          backgroundColor: activeProject.id === proj.id ? 'color-mix(in srgb, var(--theme-cyan) 8%, transparent)' : 'transparent',
+                        }}
+                      >
+                        {proj.name}
+                      </button>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
           </nav>
         )}
 

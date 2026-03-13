@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
 import { remnantsProject } from '../data/remnantsProject';
@@ -37,6 +37,7 @@ interface OverviewTabProps {
   setHoveredPointIndex: (index: number | null) => void;
   setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
   activeProjectId?: string;
+  onProjectChange?: (projectId: string) => void;
 }
 
 export default function OverviewTab({
@@ -44,8 +45,8 @@ export default function OverviewTab({
   totalPRs, currentLoc, timelineRange, projectId,
   hoveredPointIndex, setHoveredPointIndex, setTooltip,
   activeProjectId,
+  onProjectChange,
 }: OverviewTabProps) {
-  const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const allProjects: Project[] = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject, landingProject, feedbackCaptureProject];
   const activeProject = allProjects.find((p) => p.id === projectId);
 
@@ -318,6 +319,7 @@ export default function OverviewTab({
           {allProjects.map((proj) => {
             const isLightweight = proj.trackingMode === 'lightweight';
             const phase = proj.currentPhase ?? 'Research';
+            const isShipped = phase === 'Shipped';
             const phaseColors: Record<ProjectPhase, string> = {
               Research: '#60a5fa',
               Spec: C.violet,
@@ -337,19 +339,21 @@ export default function OverviewTab({
             };
             const isActive = activeProjectId === proj.id;
             return (
-              <div
+              <button
                 key={proj.id}
+                type="button"
+                onClick={() => onProjectChange?.(proj.id)}
                 className="rounded-xl border p-3 text-left transition group"
                 style={{
                   backgroundColor: isActive ? 'color-mix(in srgb, var(--theme-cyan) 6%, var(--theme-card-bg))' : C.bg,
                   borderColor: isActive ? C.cyan : C.border,
-                  position: 'relative',
+                  borderStyle: isShipped ? 'dashed' : 'solid',
+                  opacity: isShipped ? 0.65 : 1,
+                  cursor: 'pointer',
                 }}
-                onMouseEnter={() => setHoveredProject(proj.id)}
-                onMouseLeave={() => setHoveredProject(null)}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-semibold" style={{ color: C.white }}>{proj.name}</span>
+                  <span className="text-sm font-semibold" style={{ color: isShipped ? C.muted : C.white }}>{proj.name}</span>
                   <div className="flex items-center gap-1">
                     {isLightweight && (
                       <span
@@ -406,22 +410,7 @@ export default function OverviewTab({
                     />
                   ))}
                 </div>
-                {hoveredProject === proj.id && (
-                  <div style={{
-                    position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)',
-                    background: 'var(--theme-card-bg)', border: '1px solid var(--theme-border)',
-                    borderRadius: 8, padding: '8px 12px', fontSize: 11, color: 'var(--theme-text-secondary)',
-                    zIndex: 50, whiteSpace: 'nowrap', pointerEvents: 'none', marginBottom: 6,
-                  }}>
-                    <div>{proj.name} — {phase} · {proj.projectType ? typeLabels[proj.projectType] ?? proj.projectType : 'Project'}{isLightweight ? ' · Micro' : ''}</div>
-                    {proj.milestones?.map((ms) => (
-                      <div key={ms.label} style={{ color: C.amber, marginTop: 2 }}>
-                        {ms.label} — {ms.date}{ms.description ? ` · ${ms.description}` : ''}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              </button>
             );
           })}
         </div>

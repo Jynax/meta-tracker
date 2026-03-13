@@ -26,6 +26,7 @@ export default function SessionsTab({
 }: SessionsTabProps) {
   const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
   const [chartView, setChartView] = useState<'daily' | 'weekly'>('weekly');
+  const [humanAttribution, setHumanAttribution] = useState(30);
 
   const toolColors: Record<SessionTool, string> = {
     'Claude Code': C.emerald,
@@ -200,12 +201,12 @@ export default function SessionsTab({
     'human-only': 'Human Only',
     'agent-led': 'Agent-Led',
     collaborative: 'Collaborative',
-    human: 'Human',
+    human: humanAttribution > 0 ? 'Human (est.)' : 'Human',
   };
 
   const driverChartData = useMemo(() => {
     const drivers: SessionDriver[] = ['human-only', 'agent-led', 'collaborative', 'human'];
-    const driverTotals: Record<SessionDriver, number> = { 'human-only': 0, 'agent-led': 0, collaborative: 0, human: 0 };
+    const rawTotals: Record<SessionDriver, number> = { 'human-only': 0, 'agent-led': 0, collaborative: 0, human: 0 };
 
     // Group sessions by date to create bars
     const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
@@ -214,7 +215,7 @@ export default function SessionsTab({
     sessions.forEach((entry) => {
       const driver = entry.driver;
       if (!driver) return;
-      driverTotals[driver] = (driverTotals[driver] ?? 0) + 1;
+      rawTotals[driver] = (rawTotals[driver] ?? 0) + 1;
       const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
       const [month = 'Jan', day = '1'] = date.split(' ');
       const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
@@ -225,9 +226,21 @@ export default function SessionsTab({
       dayGroups.set(key, existing);
     });
 
+    // Apply human time attribution: shift a % of collaborative to human (est.)
+    const attrFrac = humanAttribution / 100;
+    const driverTotals = { ...rawTotals };
+    driverTotals.human = (driverTotals.human ?? 0) + rawTotals.collaborative * attrFrac;
+    driverTotals.collaborative = rawTotals.collaborative * (1 - attrFrac);
+
     const bars = Array.from(dayGroups.entries())
       .sort(([a], [b]) => a.localeCompare(b))
-      .map(([, v]) => v);
+      .map(([, v]) => {
+        const adjusted = { ...v, counts: { ...v.counts } };
+        const collabRaw = adjusted.counts.collaborative;
+        adjusted.counts.human = (adjusted.counts.human ?? 0) + collabRaw * attrFrac;
+        adjusted.counts.collaborative = collabRaw * (1 - attrFrac);
+        return adjusted;
+      });
 
     const maxStack = bars.length > 0 ? Math.max(...bars.map(b => drivers.reduce((s, d) => s + b.counts[d], 0))) : 0;
     const yTicks = 4;
@@ -237,7 +250,7 @@ export default function SessionsTab({
     const yMax = step * yTicks;
 
     return { drivers, driverTotals, bars, yTicks, step, yMax };
-  }, [sessions, sessionDateMap]);
+  }, [sessions, sessionDateMap, humanAttribution]);
 
   const sessionLines = useMemo(() => {
     const pathBuilder = chartView === 'weekly'
@@ -453,8 +466,23 @@ export default function SessionsTab({
       {/* Driver Breakdown */}
       {driverChartData.bars.length > 0 && (
       <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
-        <h3 className="text-sm font-semibold" style={{ color: C.white }}>Driver Breakdown</h3>
-        <div className="text-xs mb-2" style={{ color: C.muted }}>Who drove the work in each session</div>
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="text-sm font-semibold" style={{ color: C.white }}>Driver Breakdown</h3>
+          <div className="flex items-center gap-2">
+            <label className="text-[10px]" style={{ color: C.muted }}>Human attribution</label>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={humanAttribution}
+              onChange={(e) => setHumanAttribution(Number(e.target.value))}
+              style={{ width: 80, accentColor: C.cyan }}
+            />
+            <span className="text-xs font-medium" style={{ color: C.cyan, minWidth: 30 }}>{humanAttribution}%</span>
+          </div>
+        </div>
+        <div className="text-xs mb-2" style={{ color: C.muted }}>Who drove the work in each session{humanAttribution > 0 ? ` · ${humanAttribution}% of collaborative time attributed to human` : ''}</div>
         <div className="flex flex-wrap gap-2 mb-3">
           {driverChartData.drivers.filter(d => driverChartData.driverTotals[d] > 0).map(d => (
             <span
@@ -466,7 +494,7 @@ export default function SessionsTab({
               }}
             >
               <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: driverColors[d], display: 'inline-block' }} />
-              {driverLabels[d]} {driverChartData.driverTotals[d]}
+              {driverLabels[d]} {Math.round(driverChartData.driverTotals[d] * 10) / 10}
             </span>
           ))}
         </div>
@@ -519,7 +547,7 @@ export default function SessionsTab({
                                 <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{bar.dayLabel}</div>
                                 {driverChartData.drivers.filter(dd => bar.counts[dd] > 0).map(dd => (
                                   <div key={dd} style={{ color: driverColors[dd], fontSize: 11 }}>
-                                    {dd.charAt(0).toUpperCase() + dd.slice(1)}: {bar.counts[dd]}
+                                    {driverLabels[dd]}: {Math.round(bar.counts[dd] * 10) / 10}
                                   </div>
                                 ))}
                               </>

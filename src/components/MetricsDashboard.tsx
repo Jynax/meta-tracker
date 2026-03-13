@@ -110,16 +110,14 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
 
         {tab === 'overview' && (
           <OverviewTab
-            sessions={selected.sessions}
+            days={selected.days}
             codeVolume={selected.codeVolume}
             derived={selected.derived}
             stack={selected.stack}
             totalPRs={totalPRs}
-            totalHours={totalHours}
             currentLoc={currentLoc}
             timelineRange={timelineRange}
             projectId={projectId}
-            sessionFocusMap={sessionFocusMap}
             hoveredPointIndex={hoveredPointIndex}
             setHoveredPointIndex={setHoveredPointIndex}
             setTooltip={setTooltip}

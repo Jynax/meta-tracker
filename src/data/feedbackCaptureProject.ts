@@ -6,6 +6,7 @@ export const feedbackCaptureProject: Project = {
   subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE CODE',
   projectType: 'extension',
   currentPhase: 'Shipped',
+  trackingMode: 'lightweight',
   chapters: [
     {
       id: 'ch-inception',

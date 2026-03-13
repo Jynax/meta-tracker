@@ -8,6 +8,7 @@ import {
   FilterType,
   DayEntry,
   ProjectPhase,
+  ChapterType,
 } from '../types';
 
 interface DayGroup {
@@ -15,6 +16,7 @@ interface DayGroup {
   title?: string;
   phase?: ProjectPhase;
   chapterName?: string;
+  chapterType?: ChapterType;
   nodes: ProjectNode[];
 }
 
@@ -172,6 +174,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
         title: dayEntry?.title,
         phase,
         chapterName: firstNodeChapter?.name,
+        chapterType: firstNodeChapter?.chapterType,
         nodes,
       });
     }
@@ -296,7 +299,27 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               {group.chapterName && (
-                <span style={{ fontSize: 13, color: COLORS.muted }}>{group.chapterName}</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <span style={{ fontSize: 13, color: COLORS.muted }}>{group.chapterName}</span>
+                  {group.chapterType && (
+                    <span
+                      style={{
+                        fontSize: 9,
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: 0.5,
+                        color: group.chapterType === 'phase' ? COLORS.violet : COLORS.slate,
+                        background: group.chapterType === 'phase'
+                          ? `color-mix(in srgb, ${COLORS.violet} 10%, transparent)`
+                          : `color-mix(in srgb, ${COLORS.slate} 8%, transparent)`,
+                        borderRadius: 4,
+                        padding: '1px 5px',
+                      }}
+                    >
+                      {group.chapterType === 'phase' ? 'Phase' : 'Date'}
+                    </span>
+                  )}
+                </span>
               )}
               {group.phase && (
                 <span
@@ -490,9 +513,26 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                                 fontSize: 11,
                                 color: COLORS.muted,
                                 marginLeft: 'auto',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 4,
                               }}
                             >
                               {nodeChapter.name}
+                              {nodeChapter.chapterType === 'phase' && (
+                                <span
+                                  style={{
+                                    fontSize: 9,
+                                    fontWeight: 700,
+                                    color: COLORS.violet,
+                                    background: `color-mix(in srgb, ${COLORS.violet} 10%, transparent)`,
+                                    borderRadius: 4,
+                                    padding: '1px 4px',
+                                  }}
+                                >
+                                  Phase
+                                </span>
+                              )}
                             </span>
                           )}
                         </div>

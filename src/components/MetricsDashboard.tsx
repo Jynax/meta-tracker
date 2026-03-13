@@ -39,7 +39,7 @@ const TABS: Array<{ id: MetricsTab; label: string }> = [
 export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview', onTabChange, onProjectChange }: MetricsDashboardProps) {
   const [tab, setTab] = useState<MetricsTab>(initialTab);
   const [hoveredPointIndex, setHoveredPointIndex] = useState<number | null>(null);
-  const [hoveredCodeSession, setHoveredCodeSession] = useState<string | null>(null);
+  const [hoveredCodeEntry, setHoveredCodeEntry] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; content: ReactNode } | null>(null);
 
   useEffect(() => {
@@ -129,12 +129,12 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
         {tab === 'code' && (
           <CodeTab
             codeVolume={selected.codeVolume}
+            days={selected.days}
             totalAdded={totalAdded}
             totalDeleted={totalDeleted}
             currentLoc={currentLoc}
-            sessionFocusMap={sessionFocusMap}
-            hoveredCodeSession={hoveredCodeSession}
-            setHoveredCodeSession={setHoveredCodeSession}
+            hoveredCodeEntry={hoveredCodeEntry}
+            setHoveredCodeEntry={setHoveredCodeEntry}
             setTooltip={setTooltip}
           />
         )}

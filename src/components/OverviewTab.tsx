@@ -4,37 +4,65 @@ import { metaProject } from '../data/metaProject';
 import { remnantsProject } from '../data/remnantsProject';
 import { itemBGoneProject } from '../data/itemBGoneProject';
 import { vulnBankProject } from '../data/vulnBankProject';
-import type { Project, ProjectPhase } from '../types';
+import type { DayEntry, Project, ProjectPhase, WorkCategory } from '../types';
 import { Card, C } from './MetricsCard';
-import type { CodeVolumeEntry, SessionEntry, DerivedMetric, StackEntry, WorkCategory } from '../data/metaMetrics';
+import type { CodeVolumeEntry, DerivedMetric, StackEntry } from '../data/metaMetrics';
+
+const CATEGORY_COLORS: Record<WorkCategory, string> = {
+  Feature: '#22d3ee',
+  Bug: '#f43f5e',
+  Refactor: '#a78bfa',
+  UX: '#f59e0b',
+  Tooling: '#34d399',
+  Testing: '#818cf8',
+  Docs: '#94a3b8',
+  Scripting: '#34d399',
+  Data: '#60a5fa',
+  'Local-Tooling': '#34d399',
+  Planning: '#fbbf24',
+};
 
 interface OverviewTabProps {
-  sessions: SessionEntry[];
+  days: DayEntry[];
   codeVolume: CodeVolumeEntry[];
   derived: DerivedMetric[];
   stack: StackEntry[];
   totalPRs: number;
-  totalHours: number;
   currentLoc: number;
   timelineRange: string;
   projectId: string;
-  sessionFocusMap: Record<string, string>;
   hoveredPointIndex: number | null;
   setHoveredPointIndex: (index: number | null) => void;
   setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
-  onProjectChange?: (projectId: string) => void;
   activeProjectId?: string;
 }
 
 export default function OverviewTab({
-  sessions, codeVolume, derived, stack,
-  totalPRs, totalHours, currentLoc, timelineRange, projectId,
-  sessionFocusMap, hoveredPointIndex, setHoveredPointIndex, setTooltip,
-  onProjectChange, activeProjectId,
+  days, codeVolume, derived, stack,
+  totalPRs, currentLoc, timelineRange, projectId,
+  hoveredPointIndex, setHoveredPointIndex, setTooltip,
+  activeProjectId,
 }: OverviewTabProps) {
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const allProjects: Project[] = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject];
   const activeProject = allProjects.find((p) => p.id === projectId);
+
+  const totalHours = useMemo(
+    () => Math.round(days.reduce((sum, d) => sum + d.metrics.totalTimeMinutes, 0) / 60),
+    [days],
+  );
+
+  // Build lookup from (date + label) → block note for chart tooltips
+  const blockFocusLookup = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const day of days) {
+      for (const block of day.blocks) {
+        map.set(`${day.date}|${block.label}`, block.note ?? block.label);
+      }
+    }
+    return map;
+  }, [days]);
+
   const chartDims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
   const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
   const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
@@ -50,12 +78,12 @@ export default function OverviewTab({
       const ratioY = chartYMax > 0 ? entry.total / chartYMax : 0;
       return {
         ...entry,
-        focus: sessionFocusMap[entry.session] ?? '',
+        focus: blockFocusLookup.get(`${entry.date}|${entry.label}`) ?? entry.label,
         x: chartDims.left + ratioX * chartInnerWidth,
         y: chartDims.top + (1 - ratioY) * chartInnerHeight,
       };
     }),
-    [chartInnerHeight, chartInnerWidth, chartYMax, codeVolume, sessionFocusMap],
+    [chartInnerHeight, chartInnerWidth, chartYMax, codeVolume, blockFocusLookup],
   );
 
   const smoothLinePath = useMemo(() => {
@@ -92,22 +120,22 @@ export default function OverviewTab({
     [codeVolume],
   );
 
-  const cats: Array<{ key: WorkCategory; color: string }> = [
-    { key: 'Feature', color: C.cyan },
-    { key: 'Refactor', color: C.violet },
-    { key: 'Bug', color: C.rose },
-    { key: 'Tooling', color: C.amber },
-  ];
-  const workMixCounts = useMemo(() => cats.map(c => ({
-    ...c,
-    count: sessions.filter(s => s.workCategory === c.key).length,
-  })), [sessions]);
+  const allBlocks = useMemo(() => days.flatMap(d => d.blocks), [days]);
+  const workMixCounts = useMemo(() => {
+    const counts = new Map<WorkCategory, number>();
+    for (const block of allBlocks) {
+      counts.set(block.workCategory, (counts.get(block.workCategory) ?? 0) + 1);
+    }
+    return Array.from(counts.entries())
+      .map(([key, count]) => ({ key, color: CATEGORY_COLORS[key] ?? C.muted, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [allBlocks]);
   const workMixTotal = workMixCounts.reduce((s, c) => s + c.count, 0);
 
   return (
     <div className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        <Card label="Sessions" value={sessions.length} color={C.cyan} />
+        <Card label="Days" value={days.length} color={C.cyan} />
         <Card label="PRs Merged" value={totalPRs} color={C.emerald} />
         <Card label="Hours" value={`${totalHours}h`} color={C.amber} />
         <Card label="Current LOC" value={currentLoc.toLocaleString()} color={C.white} />
@@ -133,13 +161,13 @@ export default function OverviewTab({
       </div>
 
       {(() => {
-        const researchSessions = sessions.filter(s => s.phase === 'Research');
-        if (researchSessions.length === 0) return null;
-        const labels = researchSessions.map(s => s.label).slice(0, 3).join(', ');
-        const detail = researchSessions.length > 3 ? labels + '...' : labels;
+        const researchDays = days.filter(d => d.phase === 'Research');
+        if (researchDays.length === 0) return null;
+        const labels = researchDays.map(d => d.title ?? d.date).slice(0, 3).join(', ');
+        const detail = researchDays.length > 3 ? labels + '...' : labels;
         return (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            <Card label="Research Sessions" value={researchSessions.length} color="#8b5cf6" detail={detail} />
+            <Card label="Research Days" value={researchDays.length} color="#8b5cf6" detail={detail} />
           </div>
         );
       })()}
@@ -147,7 +175,7 @@ export default function OverviewTab({
       {workMixTotal > 0 && (
         <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
           <h3 className="text-sm font-semibold" style={{ color: C.white }}>Work Mix</h3>
-          <div className="text-xs mb-3" style={{ color: C.muted }}>Sessions by category</div>
+          <div className="text-xs mb-3" style={{ color: C.muted }}>Work blocks by category</div>
           <div className="flex rounded-md overflow-hidden" style={{ height: 28 }}>
             {workMixCounts.filter(c => c.count > 0).map(c => (
               <div

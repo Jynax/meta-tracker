@@ -366,7 +366,10 @@ export default function OverviewTab({
                     {proj.projectType && (
                       <span
                         className="rounded-full px-2 py-0.5 text-[10px] font-medium"
-                        style={{ backgroundColor: 'color-mix(in srgb, var(--theme-text-secondary) 10%, transparent)', color: C.muted }}
+                        style={proj.projectType === 'joint'
+                          ? { backgroundColor: 'color-mix(in srgb, #2dd4bf 15%, transparent)', color: '#2dd4bf', border: '1px solid color-mix(in srgb, #2dd4bf 30%, transparent)' }
+                          : { backgroundColor: 'color-mix(in srgb, var(--theme-text-secondary) 10%, transparent)', color: C.muted }
+                        }
                       >
                         {typeLabels[proj.projectType] ?? proj.projectType}
                       </span>

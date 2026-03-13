@@ -76,6 +76,12 @@ export interface ProjectMilestone {
 
 export type TrackingMode = 'full' | 'lightweight';
 
+export interface Contributor {
+  name: string;
+  role: string;
+  tool: WorkOperator;
+}
+
 export interface Project {
   id: string;
   name: string;
@@ -84,6 +90,7 @@ export interface Project {
   projectType?: ProjectType;
   currentPhase?: ProjectPhase;
   trackingMode?: TrackingMode;
+  contributors?: Contributor[];
   milestones?: ProjectMilestone[];
   chapters: Chapter[];
   stats: ProjectStats;

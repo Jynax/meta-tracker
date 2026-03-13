@@ -93,4 +93,16 @@ export const vbDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 30, linesAdded: 318, linesDeleted: 157, totalDecisions: 4 },
     driverSummary: { human: 0, ai: 4, collaborative: 2 },
   },
+  {
+    date: 'Mar 12',
+    title: 'Beads Framework Planning',
+    projectId: 'vb',
+    phase: 'Spec',
+    chapterId: 'vb-ch-workflow-refinements',
+    blocks: [
+      { id: 'vb-michael-beads-planning', dayId: 'Mar 12', label: 'Beads Discussion + Bootstrap Scoping', workCategory: 'Planning', driver: 'human-only', operator: 'manual', timeMinutes: 90, linesAdded: 0, linesDeleted: 0, note: 'Michael + Hrdayesh discussed Beads framework transition, bootstrapping responsibilities (who does what). No code produced — planning only.' },
+    ],
+    metrics: { totalTimeMinutes: 90, linesAdded: 0, linesDeleted: 0, totalDecisions: 0 },
+    driverSummary: { human: 1, ai: 0, collaborative: 0 },
+  },
 ];

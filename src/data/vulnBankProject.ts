@@ -6,6 +6,11 @@ export const vulnBankProject: Project = {
   subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE CODE & CURSOR',
   projectType: 'joint',
   currentPhase: 'Build',
+  contributors: [
+    { name: 'Michael', role: 'Product Owner / Designer', tool: 'manual' },
+    { name: 'hrpatel', role: 'Developer', tool: 'cursor' },
+    { name: 'Jynax', role: 'Developer / Coordinator', tool: 'claude-code' },
+  ],
   chapters: [
     {
       id: 'vb-ch-getting-organized',

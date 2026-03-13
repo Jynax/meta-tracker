@@ -15,13 +15,16 @@ test.describe('Navigation & Layout', () => {
   test('project switcher shows all 7 projects', async ({ page }) => {
     const switcher = page.locator('nav[aria-label="Project switcher"]');
     await expect(switcher).toBeVisible();
-    const buttons = switcher.locator('button');
-    await expect(buttons).toHaveCount(7);
+    // Open dropdown to count project options
+    await switcher.locator('button[aria-haspopup="listbox"]').click();
+    const options = switcher.locator('button[role="option"]');
+    await expect(options).toHaveCount(7);
   });
 
   test('switching projects updates the heading', async ({ page }) => {
     const switcher = page.locator('nav[aria-label="Project switcher"]');
-    await switcher.getByText('BIP').click();
+    await switcher.locator('button[aria-haspopup="listbox"]').click();
+    await switcher.getByRole('option', { name: 'BIP' }).click();
     await expect(page.locator('h1')).toContainText('BIP');
   });
 

@@ -141,7 +141,8 @@ test.describe('Decision Tree', () => {
 
   test('switching to BIP project shows its chapters', async ({ page }) => {
     const switcher = page.locator('nav[aria-label="Project switcher"]');
-    await switcher.getByText('BIP').click();
+    await switcher.locator('button[aria-haspopup="listbox"]').click();
+    await switcher.getByRole('option', { name: 'BIP' }).click();
     await expect(page.locator('h1')).toContainText('BIP');
 
     // BIP should also have chapter cards

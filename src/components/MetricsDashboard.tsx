@@ -27,6 +27,7 @@ interface MetricsDashboardProps {
   onJumpToChapter?: (chapterId: string) => void;
   initialTab?: MetricsTab;
   onTabChange?: (tab: MetricsTab) => void;
+  onProjectChange?: (projectId: string) => void;
 }
 
 const TABS: Array<{ id: MetricsTab; label: string }> = [
@@ -121,6 +122,8 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
             hoveredPointIndex={hoveredPointIndex}
             setHoveredPointIndex={setHoveredPointIndex}
             setTooltip={setTooltip}
+            activeProjectId={projectId}
+            onProjectChange={onProjectChange}
           />
         )}
 

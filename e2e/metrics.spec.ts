@@ -51,7 +51,8 @@ test.describe('Metrics Dashboard', () => {
   test('switching projects then viewing metrics works', async ({ page }) => {
     const viewSwitcher = page.locator('nav[aria-label="View switcher"]');
     const switcher = page.locator('nav[aria-label="Project switcher"]');
-    await switcher.getByText('BIP').click();
+    await switcher.locator('button[aria-haspopup="listbox"]').click();
+    await switcher.getByRole('option', { name: 'BIP' }).click();
     await expect(page.locator('h1')).toContainText('BIP');
     await viewSwitcher.getByText('Metrics').click();
     const metricsContainer = page.locator('[class*="rounded-2xl"]').first();
@@ -260,7 +261,8 @@ test.describe('Metrics Dashboard', () => {
     await page.waitForTimeout(300);
 
     const switcher = page.locator('nav[aria-label="Project switcher"]');
-    await switcher.getByText('BIP').click();
+    await switcher.locator('button[aria-haspopup="listbox"]').click();
+    await switcher.getByRole('option', { name: 'BIP' }).click();
     await expect(page.locator('h1')).toContainText('BIP');
 
     const viewSwitcher = page.locator('nav[aria-label="View switcher"]');

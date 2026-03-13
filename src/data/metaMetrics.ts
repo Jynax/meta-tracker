@@ -99,6 +99,8 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 40', date: 'Mar 11', label: 'Playwright CI + PR Timestamps', added: 233, deleted: 17, net: 216, total: 7848 },
   { session: 'Session 43', date: 'Mar 12', label: 'Landing + FC Projects & S43 Data', added: 372, deleted: 11, net: 361, total: 8209 },
   { session: 'Session 44', date: 'Mar 12', label: 'T-1–T-4 Data Migration', added: 1753, deleted: 318, net: 1435, total: 9644 },
+  { session: 'Session 45', date: 'Mar 12', label: 'Code Tab Day-Awareness', added: 103, deleted: 42, net: 61, total: 9705 },
+  { session: 'Session 46', date: 'Mar 12', label: 'Migration Complete + T-5/T-6', added: 125, deleted: 44, net: 81, total: 9786 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -169,6 +171,13 @@ export const metaSessions: SessionEntry[] = [
     { number: 99, title: 'T-3: Sessions tab — Day/Block UI hierarchy', createdAt: '2026-03-12T20:00:00Z', mergedAt: '2026-03-12T20:36:51Z' },
     { number: 100, title: 'T-4: Decision tree date anchoring', createdAt: '2026-03-12T20:45:00Z', mergedAt: '2026-03-12T21:00:58Z' },
   ] },
+  { session: 'Session 45', date: 'Mar 12', label: 'Code Tab Day-Awareness', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'Code tab migrated to Day/Block model. Tooltips show block metadata (category/driver/operator). Inline category badges. Removed sessionFocusMap dependency. PR #102.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Refactor', tool: 'Claude Code', taskCount: 1, phase: 'Review', driver: 'agent-led', prDetails: [
+    { number: 102, title: 'Code tab: migrate to Day/Block model', createdAt: '2026-03-13T00:11:36Z', mergedAt: '2026-03-13T00:13:57Z' },
+  ] },
+  { session: 'Session 46', date: 'Mar 12', label: 'Migration Complete + T-5/T-6', duration: 1, prs: 2, decisions: 0, deadEnds: 0, focus: 'Migration complete: Overview tab migrated to Day/Block (PR #103). T-5 tracking mode — lightweight on Landing + FC, Micro badges, 7-project Phase View. T-6 phase chapter visuals — Date/Phase badges in decision tree (PR #104).', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Feature', tool: 'Claude Code', taskCount: 3, phase: 'Review', driver: 'agent-led', prDetails: [
+    { number: 103, title: 'Migrate Overview tab to Day/Block model', createdAt: '2026-03-13T00:31:34Z', mergedAt: '2026-03-13T00:36:31Z' },
+    { number: 104, title: 'T-5: Tracking mode + T-6: Phase chapter visuals', createdAt: '2026-03-13T00:51:07Z', mergedAt: '2026-03-13T01:02:00Z' },
+  ] },
 ];
 
 export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };
@@ -212,7 +221,7 @@ export const metaDerived: DerivedMetric[] = [
   { label: 'Codex Success', value: '98%', detail: '40/41 tasks', color: '#34d399' },
   { label: 'Cycle Time', value: '0.77h', detail: 'Per merged PR', color: '#22d3ee' },
   { label: 'Decisions', value: '3.4', detail: 'Per session avg', color: '#22d3ee' },
-  { label: 'Bug Rate', value: '0.36', detail: '31 bugs / 87 PRs', color: '#34d399' },
+  { label: 'Bug Rate', value: '0.34', detail: '31 bugs / 90 PRs', color: '#34d399' },
 ];
 
 export const metaStack: StackEntry[] = [
@@ -389,15 +398,17 @@ export const metaDays: DayEntry[] = [
   },
   {
     date: 'Mar 12',
-    title: 'Day/Block Migration T-1–T-4',
+    title: 'Day/Block Migration Complete (T-1–T-6)',
     projectId: 'meta',
     phase: 'Review',
     chapterId: 'meta-ch-time-machine-data-model',
     blocks: [
       { id: 'meta-session-43', dayId: 'Mar 12', label: 'Landing + FC Projects & S43 Data', workCategory: 'Data', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 372, linesDeleted: 11, note: 'Added Landing + Feedback Capture as tracked projects (7 total). Backfilled 4 Landing sessions. Processed 2 feedback captures. PR #95.', contextWindowOrigin: false },
       { id: 'meta-session-44', dayId: 'Mar 12', label: 'T-1–T-4 Data Migration', workCategory: 'Refactor', driver: 'agent-led', operator: 'claude-code', timeMinutes: 180, linesAdded: 1753, linesDeleted: 318, note: 'Full Day/Block migration: T-1 types (PR #96), T-2 script (PR #98), T-3 Sessions tab UI (PR #99), T-4 Decision tree date anchoring 192 nodes (PR #100). All 81 tests pass.', contextWindowOrigin: false },
+      { id: 'meta-session-45', dayId: 'Mar 12', label: 'Code Tab Day-Awareness', workCategory: 'Refactor', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 103, linesDeleted: 42, note: 'Code tab migrated to Day/Block. Tooltips show block metadata (category/driver/operator). Inline category badges. Removed sessionFocusMap. PR #102.', contextWindowOrigin: false },
+      { id: 'meta-session-46', dayId: 'Mar 12', label: 'Migration Complete + T-5/T-6', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 125, linesDeleted: 44, note: 'Migration complete: Overview tab Day/Block (PR #103). T-5 tracking mode — lightweight projects, Micro badges, 7-project Phase View. T-6 phase chapter visuals — Date/Phase badges in decision tree (PR #104).', contextWindowOrigin: false },
     ],
-    metrics: { totalTimeMinutes: 240, linesAdded: 2125, linesDeleted: 329, totalDecisions: 1 },
-    driverSummary: { human: 0, ai: 2, collaborative: 0 },
+    metrics: { totalTimeMinutes: 360, linesAdded: 2353, linesDeleted: 415, totalDecisions: 1 },
+    driverSummary: { human: 0, ai: 4, collaborative: 0 },
   },
 ];

@@ -1,23 +1,54 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { Card, C } from './MetricsCard';
 import type { CodeVolumeEntry } from '../data/metaMetrics';
+import type { DayEntry } from '../types';
 
 interface CodeTabProps {
   codeVolume: CodeVolumeEntry[];
+  days: DayEntry[];
   totalAdded: number;
   totalDeleted: number;
   currentLoc: number;
-  sessionFocusMap: Record<string, string>;
-  hoveredCodeSession: string | null;
-  setHoveredCodeSession: (session: string | null) => void;
+  hoveredCodeEntry: string | null;
+  setHoveredCodeEntry: (entry: string | null) => void;
   setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
 }
 
+const CATEGORY_COLORS: Record<string, string> = {
+  Feature: '#22d3ee',
+  Bug: '#f43f5e',
+  Refactor: '#a78bfa',
+  UX: '#f59e0b',
+  Tooling: '#34d399',
+  Testing: '#818cf8',
+  Docs: '#94a3b8',
+  Scripting: '#34d399',
+  Data: '#60a5fa',
+  'Local-Tooling': '#34d399',
+  Planning: '#fbbf24',
+};
+
 export default function CodeTab({
-  codeVolume, totalAdded, totalDeleted, currentLoc,
-  sessionFocusMap, hoveredCodeSession, setHoveredCodeSession, setTooltip,
+  codeVolume, days, totalAdded, totalDeleted, currentLoc,
+  hoveredCodeEntry, setHoveredCodeEntry, setTooltip,
 }: CodeTabProps) {
   const [expandedCodeRows, setExpandedCodeRows] = useState<Set<string>>(new Set());
+
+  // Build a lookup from (date + label) → WorkBlock metadata
+  const blockLookup = useMemo(() => {
+    const map = new Map<string, { workCategory: string; driver: string; operator: string; note?: string }>();
+    for (const day of days) {
+      for (const block of day.blocks) {
+        map.set(`${day.date}|${block.label}`, {
+          workCategory: block.workCategory,
+          driver: block.driver,
+          operator: block.operator,
+          note: block.note,
+        });
+      }
+    }
+    return map;
+  }, [days]);
 
   const codeEntriesWithActivity = useMemo(
     () => codeVolume.filter((entry) => entry.added > 0 || entry.deleted > 0),
@@ -89,6 +120,24 @@ export default function CodeTab({
     [codeEntriesWithActivity, codeTopRows],
   );
 
+  const renderBlockTooltip = (entry: CodeVolumeEntry) => {
+    const block = blockLookup.get(`${entry.date}|${entry.label}`);
+    return (
+      <>
+        <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.date} — {entry.label}</div>
+        {block && (
+          <div className="flex items-center gap-2" style={{ fontSize: 11 }}>
+            <span style={{ color: CATEGORY_COLORS[block.workCategory] ?? C.muted }}>{block.workCategory}</span>
+            <span style={{ color: C.muted }}>{block.driver}</span>
+            <span style={{ color: C.muted }}>{block.operator}</span>
+          </div>
+        )}
+        {block?.note && <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic' }}>{block.note}</div>}
+        <div style={{ color: C.cyan, fontSize: 11 }}>Added: {entry.added.toLocaleString()}</div>
+        <div style={{ color: C.rose, fontSize: 11 }}>Deleted: {entry.deleted.toLocaleString()}</div>
+      </>
+    );
+  };
 
   const renderCodeRow = (row: (typeof codeTopRows)[number]) => {
     const isRowExpanded = expandedCodeRows.has(row.key);
@@ -113,7 +162,7 @@ export default function CodeTab({
           onClick={toggleRow}
           className="w-full text-left"
           onMouseEnter={(event) => {
-            setHoveredCodeSession(row.key);
+            setHoveredCodeEntry(row.key);
             setTooltip({
               x: event.clientX, y: event.clientY,
               content: (
@@ -128,9 +177,9 @@ export default function CodeTab({
           onMouseMove={(event) => {
             setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
           }}
-          onMouseLeave={() => { setHoveredCodeSession(null); setTooltip(null); }}
+          onMouseLeave={() => { setHoveredCodeEntry(null); setTooltip(null); }}
           style={{
-            backgroundColor: hoveredCodeSession === row.key ? 'rgba(15, 23, 42, 0.5)' : 'transparent',
+            backgroundColor: hoveredCodeEntry === row.key ? 'rgba(15, 23, 42, 0.5)' : 'transparent',
             borderRadius: 6, padding: 8,
             cursor: isExpandable ? 'pointer' : 'default',
           }}
@@ -185,26 +234,32 @@ export default function CodeTab({
                       key={entry.session}
                       style={{ paddingLeft: 20, paddingTop: 4 }}
                       onMouseEnter={(event) => {
-                        setHoveredCodeSession(entry.session);
-                        const focusText = sessionFocusMap[entry.session] ?? 'No focus recorded';
-                        setTooltip({
-                          x: event.clientX, y: event.clientY,
-                          content: (
-                            <>
-                              <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.date} — {entry.label}</div>
-                              <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic' }}>{focusText}</div>
-                              <div style={{ color: C.cyan, fontSize: 11 }}>Added: {entry.added.toLocaleString()}</div>
-                              <div style={{ color: C.rose, fontSize: 11 }}>Deleted: {entry.deleted.toLocaleString()}</div>
-                            </>
-                          ),
-                        });
+                        setHoveredCodeEntry(entry.session);
+                        setTooltip({ x: event.clientX, y: event.clientY, content: renderBlockTooltip(entry) });
                       }}
                       onMouseMove={(event) => {
                         setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
                       }}
-                      onMouseLeave={() => { setHoveredCodeSession(null); setTooltip(null); }}
+                      onMouseLeave={() => { setHoveredCodeEntry(null); setTooltip(null); }}
                     >
-                      <div className="mb-1 text-[11px]" style={{ color: C.white }}>{entry.label}</div>
+                      <div className="mb-1 flex items-center gap-1.5 text-[11px]">
+                        <span style={{ color: C.white }}>{entry.label}</span>
+                        {(() => {
+                          const block = blockLookup.get(`${entry.date}|${entry.label}`);
+                          if (!block) return null;
+                          return (
+                            <span
+                              className="rounded px-1 py-0.5 text-[9px] font-medium"
+                              style={{
+                                backgroundColor: `${CATEGORY_COLORS[block.workCategory] ?? C.muted}20`,
+                                color: CATEGORY_COLORS[block.workCategory] ?? C.muted,
+                              }}
+                            >
+                              {block.workCategory}
+                            </span>
+                          );
+                        })()}
+                      </div>
                       <div className="flex gap-2">
                         <div className="h-2 rounded" style={{ width: `${(entry.added / codeDeltaMax) * 100}%`, backgroundColor: C.cyan }} />
                         <div className="h-2 rounded" style={{ width: `${(entry.deleted / codeDeltaMax) * 100}%`, backgroundColor: C.rose }} />
@@ -223,26 +278,32 @@ export default function CodeTab({
                   key={entry.session}
                   style={{ paddingTop: 4 }}
                   onMouseEnter={(event) => {
-                    setHoveredCodeSession(entry.session);
-                    const focusText = sessionFocusMap[entry.session] ?? 'No focus recorded';
-                    setTooltip({
-                      x: event.clientX, y: event.clientY,
-                      content: (
-                        <>
-                          <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{entry.date} — {entry.label}</div>
-                          <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic' }}>{focusText}</div>
-                          <div style={{ color: C.cyan, fontSize: 11 }}>Added: {entry.added.toLocaleString()}</div>
-                          <div style={{ color: C.rose, fontSize: 11 }}>Deleted: {entry.deleted.toLocaleString()}</div>
-                        </>
-                      ),
-                    });
+                    setHoveredCodeEntry(entry.session);
+                    setTooltip({ x: event.clientX, y: event.clientY, content: renderBlockTooltip(entry) });
                   }}
                   onMouseMove={(event) => {
                     setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
                   }}
-                  onMouseLeave={() => { setHoveredCodeSession(null); setTooltip(null); }}
+                  onMouseLeave={() => { setHoveredCodeEntry(null); setTooltip(null); }}
                 >
-                  <div className="mb-1 text-[11px]" style={{ color: C.white }}>{entry.label}</div>
+                  <div className="mb-1 flex items-center gap-1.5 text-[11px]">
+                    <span style={{ color: C.white }}>{entry.label}</span>
+                    {(() => {
+                      const block = blockLookup.get(`${entry.date}|${entry.label}`);
+                      if (!block) return null;
+                      return (
+                        <span
+                          className="rounded px-1 py-0.5 text-[9px] font-medium"
+                          style={{
+                            backgroundColor: `${CATEGORY_COLORS[block.workCategory] ?? C.muted}20`,
+                            color: CATEGORY_COLORS[block.workCategory] ?? C.muted,
+                          }}
+                        >
+                          {block.workCategory}
+                        </span>
+                      );
+                    })()}
+                  </div>
                   <div className="flex gap-2">
                     <div className="h-2 rounded" style={{ width: `${(entry.added / codeDeltaMax) * 100}%`, backgroundColor: C.cyan }} />
                     <div className="h-2 rounded" style={{ width: `${(entry.deleted / codeDeltaMax) * 100}%`, backgroundColor: C.rose }} />

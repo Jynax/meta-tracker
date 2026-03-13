@@ -8,6 +8,7 @@ export const landingCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 36', date: 'Mar 10', label: 'CMS Backend + Admin + OAuth', added: 1586, deleted: 167, net: 1419, total: 5639 },
   { session: 'Session 41', date: 'Mar 11', label: 'Playwright Suite + CI', added: 483, deleted: 2, net: 481, total: 6120 },
   { session: 'Session 43', date: 'Mar 12', label: 'Hero Polish + Coming Soon Border', added: 88, deleted: 5, net: 83, total: 6203 },
+  { session: 'Session 47', date: 'Mar 13', label: 'Remove Scroll Arrow', added: 0, deleted: 36, net: -36, total: 6167 },
 ];
 
 // --- Sessions ---
@@ -16,6 +17,7 @@ export const landingSessions: SessionEntry[] = [
   { session: 'Session 36', date: 'Mar 10', label: 'CMS Backend + Admin + OAuth', duration: 2, prs: 3, decisions: 3, deadEnds: 0, focus: 'Cloudflare Pages Functions + KV backend for CMS. Admin panel at #/admin with live content editing. Replaced password auth with Google OAuth. PRs #2-4.', chapterId: 'landing-ch-cms', workCategory: 'Feature', tool: 'Claude Code', taskCount: 3, phase: 'Build', driver: 'collaborative' },
   { session: 'Session 41', date: 'Mar 11', label: 'Playwright Suite + CI', duration: 0.5, prs: 1, decisions: 0, deadEnds: 0, focus: 'Playwright e2e test suite + GitHub Actions CI workflow. Part of cross-project Playwright sweep. PR #5.', chapterId: 'landing-ch-testing', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 1, phase: 'Review', driver: 'agent-led' },
   { session: 'Session 43', date: 'Mar 12', label: 'Hero Polish + Coming Soon Border', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'Reduced hero section height (80vh→50vh), added bouncing scroll-down arrow. Brightened Coming Soon card dashed border to white for "under construction" feel. Feedback capture workflow first real use. PR #6.', chapterId: 'landing-ch-build', workCategory: 'Feature', tool: 'Claude Code', taskCount: 2, phase: 'Build', driver: 'collaborative' },
+  { session: 'Session 47', date: 'Mar 13', label: 'Remove Scroll Arrow', duration: 0.2, prs: 1, decisions: 0, deadEnds: 0, focus: 'Removed bouncing scroll-down arrow from hero section. PR #7.', chapterId: 'landing-ch-build', workCategory: 'UX', tool: 'Claude Code', taskCount: 1, phase: 'Shipped', driver: 'collaborative' },
 ];
 
 // --- Date Range ---
@@ -93,6 +95,18 @@ export const landingDays: DayEntry[] = [
       { id: 'landing-session-43', dayId: 'Mar 12', label: 'Hero Polish + Coming Soon Border', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 60, linesAdded: 88, linesDeleted: 5, note: 'Reduced hero section height (80vh→50vh), added bouncing scroll-down arrow. Brightened Coming Soon card dashed border to white for "under construction" feel. Feedback capture workflow first real use. PR #6.', contextWindowOrigin: false },
     ],
     metrics: { totalTimeMinutes: 60, linesAdded: 88, linesDeleted: 5, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Mar 13',
+    title: 'Remove Scroll Arrow',
+    projectId: 'landing',
+    phase: 'Shipped',
+    chapterId: 'landing-ch-build',
+    blocks: [
+      { id: 'landing-session-47', dayId: 'Mar 13', label: 'Remove Scroll Arrow', workCategory: 'UX', driver: 'collaborative', operator: 'claude-code', timeMinutes: 10, linesAdded: 0, linesDeleted: 36, note: 'Removed bouncing scroll-down arrow from hero section. PR #7.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 10, linesAdded: 0, linesDeleted: 36, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
 ];

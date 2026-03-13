@@ -101,6 +101,9 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 44', date: 'Mar 12', label: 'T-1–T-4 Data Migration', added: 1753, deleted: 318, net: 1435, total: 9644 },
   { session: 'Session 45', date: 'Mar 12', label: 'Code Tab Day-Awareness', added: 103, deleted: 42, net: 61, total: 9705 },
   { session: 'Session 46', date: 'Mar 12', label: 'Migration Complete + T-5/T-6', added: 125, deleted: 44, net: 81, total: 9786 },
+  { session: 'Session 47', date: 'Mar 13', label: 'Data Integrity + Driver Reclassification', added: 67, deleted: 67, net: 0, total: 9786 },
+  { session: 'Session 48', date: 'Mar 13', label: 'UX Brief — Bugs + Improvements', added: 102, deleted: 54, net: 48, total: 9834 },
+  { session: 'Session 49', date: 'Mar 13', label: 'UX Brief #78 + Metrics Reformat', added: 0, deleted: 0, net: 0, total: 9834 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -178,6 +181,14 @@ export const metaSessions: SessionEntry[] = [
     { number: 103, title: 'Migrate Overview tab to Day/Block model', createdAt: '2026-03-13T00:31:34Z', mergedAt: '2026-03-13T00:36:31Z' },
     { number: 104, title: 'T-5: Tracking mode + T-6: Phase chapter visuals', createdAt: '2026-03-13T00:51:07Z', mergedAt: '2026-03-13T01:02:00Z' },
   ] },
+  { session: 'Session 47', date: 'Mar 13', label: 'Data Integrity + Driver Reclassification', duration: 3, prs: 1, decisions: 2, deadEnds: 0, focus: 'Decision counts realigned to tree (66 total, 11 dates fixed). Driver values reclassified: 28 blocks agent-led→collaborative. Chart now reads from DayEntry. 12-item UX brief broken into tasks #68-79. PR #106.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Data', tool: 'Claude Code', taskCount: 2, phase: 'Review', driver: 'collaborative', prDetails: [
+    { number: 106, title: 'Data integrity: decision counts + driver reclassification', createdAt: '2026-03-13T00:00:00Z', mergedAt: '2026-03-13T00:00:00Z' },
+  ] },
+  { session: 'Session 48', date: 'Mar 13', label: 'UX Brief — Bugs + Improvements', duration: 1, prs: 2, decisions: 0, deadEnds: 0, focus: 'Tasks #70-75: Fixed badge color (#70), scrollbar layout shift (#71), driver chart init (#72), Bugs tab day grouping (#73), shared Day/Session toggle (#74), smart tick density (#75). PRs #107-108.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Bug', tool: 'Claude Code', taskCount: 6, phase: 'Review', driver: 'collaborative', prDetails: [
+    { number: 107, title: 'UX brief bugs: badge color, scrollbar, driver chart init', createdAt: '2026-03-13T00:00:00Z', mergedAt: '2026-03-13T00:00:00Z' },
+    { number: 108, title: 'UX brief: day grouping, shared toggle, tick density', createdAt: '2026-03-13T00:00:00Z', mergedAt: '2026-03-13T00:00:00Z' },
+  ] },
+  { session: 'Session 49', date: 'Mar 13', label: 'UX Brief #78 + Metrics Reformat', duration: 0, prs: 0, decisions: 0, deadEnds: 0, focus: 'UX Brief #78 (Joint project type) shipped — 12/12 complete. Cross-project metrics.md reformat to Day/Block schema (MT, BIP, Landing, Remnants). Data push for Sessions 47-49.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Data', tool: 'Claude Code', taskCount: 5, phase: 'Review', driver: 'collaborative' },
 ];
 
 export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };
@@ -410,5 +421,19 @@ export const metaDays: DayEntry[] = [
     ],
     metrics: { totalTimeMinutes: 360, linesAdded: 2353, linesDeleted: 415, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 0, collaborative: 4 },
+  },
+  {
+    date: 'Mar 13',
+    title: 'UX Brief Complete + Data Alignment',
+    projectId: 'meta',
+    phase: 'Review',
+    chapterId: 'meta-ch-time-machine-data-model',
+    blocks: [
+      { id: 'meta-session-47', dayId: 'Mar 13', label: 'Data Integrity + Driver Reclassification', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 180, linesAdded: 67, linesDeleted: 67, note: 'Decision counts realigned to tree (66 total, 11 dates fixed). Driver values reclassified: 28 blocks agent-led→collaborative. Chart reads from DayEntry. 12-item UX brief broken into tasks #68-79. PR #106.', contextWindowOrigin: false },
+      { id: 'meta-session-48', dayId: 'Mar 13', label: 'UX Brief — Bugs + Improvements', workCategory: 'Bug', driver: 'collaborative', operator: 'claude-code', timeMinutes: 60, linesAdded: 102, linesDeleted: 54, note: 'Tasks #70-75: badge color, scrollbar, driver chart init, day grouping, shared toggle, tick density. PRs #107-108.', contextWindowOrigin: false },
+      { id: 'meta-session-49', dayId: 'Mar 13', label: 'UX Brief #78 + Metrics Reformat', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 0, linesDeleted: 0, note: 'UX Brief #78 (Joint project type) shipped — 12/12 complete. Cross-project metrics.md reformat to Day/Block schema. Data push for Sessions 47-49.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 240, linesAdded: 169, linesDeleted: 121, totalDecisions: 2 },
+    driverSummary: { human: 0, ai: 0, collaborative: 3 },
   },
 ];

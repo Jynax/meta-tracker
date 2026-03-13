@@ -6,6 +6,7 @@ export const landingProject: Project = {
   subtitle: 'DESIGNED BY MICHAEL \u00b7 BUILT WITH CLAUDE CODE',
   projectType: 'web-app',
   currentPhase: 'Shipped',
+  trackingMode: 'lightweight',
   chapters: [
     {
       id: 'landing-ch-build',

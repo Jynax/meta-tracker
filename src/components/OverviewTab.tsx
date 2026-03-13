@@ -4,6 +4,8 @@ import { metaProject } from '../data/metaProject';
 import { remnantsProject } from '../data/remnantsProject';
 import { itemBGoneProject } from '../data/itemBGoneProject';
 import { vulnBankProject } from '../data/vulnBankProject';
+import { landingProject } from '../data/landingProject';
+import { feedbackCaptureProject } from '../data/feedbackCaptureProject';
 import type { DayEntry, Project, ProjectPhase, WorkCategory } from '../types';
 import { Card, C } from './MetricsCard';
 import type { CodeVolumeEntry, DerivedMetric, StackEntry } from '../data/metaMetrics';
@@ -44,7 +46,7 @@ export default function OverviewTab({
   activeProjectId,
 }: OverviewTabProps) {
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
-  const allProjects: Project[] = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject];
+  const allProjects: Project[] = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject, landingProject, feedbackCaptureProject];
   const activeProject = allProjects.find((p) => p.id === projectId);
 
   const totalHours = useMemo(
@@ -313,7 +315,8 @@ export default function OverviewTab({
         <h3 className="mb-1 text-sm font-semibold" style={{ color: C.white }}>Project Phases</h3>
         <div className="text-xs mb-3" style={{ color: C.muted }}>All projects at a glance</div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {[bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject].map((proj) => {
+          {allProjects.map((proj) => {
+            const isLightweight = proj.trackingMode === 'lightweight';
             const phase = proj.currentPhase ?? 'Research';
             const phaseColors: Record<ProjectPhase, string> = {
               Research: '#60a5fa',
@@ -347,14 +350,24 @@ export default function OverviewTab({
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-semibold" style={{ color: C.white }}>{proj.name}</span>
-                  {proj.projectType && (
-                    <span
-                      className="rounded-full px-2 py-0.5 text-[10px] font-medium"
-                      style={{ backgroundColor: 'color-mix(in srgb, var(--theme-text-secondary) 10%, transparent)', color: C.muted }}
-                    >
-                      {typeLabels[proj.projectType] ?? proj.projectType}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-1">
+                    {isLightweight && (
+                      <span
+                        className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                        style={{ backgroundColor: 'color-mix(in srgb, #a78bfa 15%, transparent)', color: '#a78bfa', border: '1px solid color-mix(in srgb, #a78bfa 30%, transparent)' }}
+                      >
+                        Micro
+                      </span>
+                    )}
+                    {proj.projectType && (
+                      <span
+                        className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                        style={{ backgroundColor: 'color-mix(in srgb, var(--theme-text-secondary) 10%, transparent)', color: C.muted }}
+                      >
+                        {typeLabels[proj.projectType] ?? proj.projectType}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-1.5 mb-2">
                   <div
@@ -400,7 +413,7 @@ export default function OverviewTab({
                     borderRadius: 8, padding: '8px 12px', fontSize: 11, color: 'var(--theme-text-secondary)',
                     zIndex: 50, whiteSpace: 'nowrap', pointerEvents: 'none', marginBottom: 6,
                   }}>
-                    <div>{proj.name} — {phase} · {proj.projectType ? typeLabels[proj.projectType] ?? proj.projectType : 'Project'}</div>
+                    <div>{proj.name} — {phase} · {proj.projectType ? typeLabels[proj.projectType] ?? proj.projectType : 'Project'}{isLightweight ? ' · Micro' : ''}</div>
                     {proj.milestones?.map((ms) => (
                       <div key={ms.label} style={{ color: C.amber, marginTop: 2 }}>
                         {ms.label} — {ms.date}{ms.description ? ` · ${ms.description}` : ''}

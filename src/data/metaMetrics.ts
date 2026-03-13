@@ -99,6 +99,7 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 40', date: 'Mar 11', label: 'Playwright CI + PR Timestamps', added: 233, deleted: 17, net: 216, total: 7848 },
   { session: 'Session 43', date: 'Mar 12', label: 'Landing + FC Projects & S43 Data', added: 372, deleted: 11, net: 361, total: 8209 },
   { session: 'Session 44', date: 'Mar 12', label: 'T-1–T-4 Data Migration', added: 1753, deleted: 318, net: 1435, total: 9644 },
+  { session: 'Session 45', date: 'Mar 12', label: 'Code Tab Day-Awareness', added: 103, deleted: 42, net: 61, total: 9705 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -168,6 +169,9 @@ export const metaSessions: SessionEntry[] = [
     { number: 98, title: 'T-2: Migration script — sessions to Day/Block model', createdAt: '2026-03-12T19:30:00Z', mergedAt: '2026-03-12T19:36:29Z' },
     { number: 99, title: 'T-3: Sessions tab — Day/Block UI hierarchy', createdAt: '2026-03-12T20:00:00Z', mergedAt: '2026-03-12T20:36:51Z' },
     { number: 100, title: 'T-4: Decision tree date anchoring', createdAt: '2026-03-12T20:45:00Z', mergedAt: '2026-03-12T21:00:58Z' },
+  ] },
+  { session: 'Session 45', date: 'Mar 12', label: 'Code Tab Day-Awareness', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'Migrated Code tab from session-based lookups to Day/Block model. Tooltips now show work category/driver/operator. Inline category badges on expanded blocks.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Refactor', tool: 'Claude Code', taskCount: 1, phase: 'Review', driver: 'agent-led', prDetails: [
+    { number: 102, title: 'Code tab: migrate to Day/Block model', createdAt: '2026-03-12T22:00:00Z', mergedAt: '2026-03-12T22:30:00Z' },
   ] },
 ];
 
@@ -396,8 +400,9 @@ export const metaDays: DayEntry[] = [
     blocks: [
       { id: 'meta-session-43', dayId: 'Mar 12', label: 'Landing + FC Projects & S43 Data', workCategory: 'Data', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 372, linesDeleted: 11, note: 'Added Landing + Feedback Capture as tracked projects (7 total). Backfilled 4 Landing sessions. Processed 2 feedback captures. PR #95.', contextWindowOrigin: false },
       { id: 'meta-session-44', dayId: 'Mar 12', label: 'T-1–T-4 Data Migration', workCategory: 'Refactor', driver: 'agent-led', operator: 'claude-code', timeMinutes: 180, linesAdded: 1753, linesDeleted: 318, note: 'Full Day/Block migration: T-1 types (PR #96), T-2 script (PR #98), T-3 Sessions tab UI (PR #99), T-4 Decision tree date anchoring 192 nodes (PR #100). All 81 tests pass.', contextWindowOrigin: false },
+      { id: 'meta-session-45', dayId: 'Mar 12', label: 'Code Tab Day-Awareness', workCategory: 'Refactor', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 103, linesDeleted: 42, note: 'Code tab migrated to Day/Block model. Tooltips show work category/driver/operator. Inline category badges. PR #102.', contextWindowOrigin: false },
     ],
-    metrics: { totalTimeMinutes: 240, linesAdded: 2125, linesDeleted: 329, totalDecisions: 1 },
-    driverSummary: { human: 0, ai: 2, collaborative: 0 },
+    metrics: { totalTimeMinutes: 300, linesAdded: 2228, linesDeleted: 371, totalDecisions: 1 },
+    driverSummary: { human: 0, ai: 3, collaborative: 0 },
   },
 ];

@@ -37,23 +37,39 @@ export default function SessionsTab({
   const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
   const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
 
+  // Build a lookup of decisions-per-day from the authoritative DayEntry data
+  const dayDecisionMap = useMemo(() => {
+    const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+    const map = new Map<string, number>();
+    days.forEach((d) => {
+      const [month = 'Jan', day = '1'] = d.date.split(' ');
+      const dt = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
+      const key = dt.toISOString().slice(0, 10);
+      map.set(key, (map.get(key) ?? 0) + d.metrics.totalDecisions);
+    });
+    return map;
+  }, [days]);
+
   const dailyData = useMemo(() => {
     const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
-    const days = new Map<string, { dayLabel: string; prs: number; decisions: number; sessionCount: number }>();
+    const dayBuckets = new Map<string, { dayLabel: string; prs: number; decisions: number; sessionCount: number }>();
     sessions.forEach((entry) => {
       const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
       const [month = 'Jan', day = '1'] = date.split(' ');
       const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
       const key = d.toISOString().slice(0, 10);
       const dayLabel = month + ' ' + parseInt(day, 10);
-      const existing = days.get(key) ?? { dayLabel, prs: 0, decisions: 0, sessionCount: 0 };
+      const existing = dayBuckets.get(key) ?? { dayLabel, prs: 0, decisions: 0, sessionCount: 0 };
       existing.prs += entry.prs;
-      existing.decisions += entry.decisions;
       existing.sessionCount += 1;
-      days.set(key, existing);
+      dayBuckets.set(key, existing);
     });
-    return Array.from(days.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([, v]) => v);
-  }, [sessions, sessionDateMap]);
+    // Use DayEntry decisions as the authoritative source for daily view
+    for (const [key, bucket] of dayBuckets) {
+      bucket.decisions = dayDecisionMap.get(key) ?? 0;
+    }
+    return Array.from(dayBuckets.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([, v]) => v);
+  }, [sessions, sessionDateMap, dayDecisionMap]);
 
   const sessionActivityPoints = useMemo(() => {
     const yTicks = 4;
@@ -217,7 +233,7 @@ export default function SessionsTab({
     <div className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Card label="Total PRs" value={totalPRs} color={C.emerald} />
-        <Card label="Total Decisions" value={sessions.reduce((sum, item) => sum + item.decisions, 0)} color={C.cyan} />
+        <Card label="Total Decisions" value={days.reduce((sum, d) => sum + d.metrics.totalDecisions, 0)} color={C.cyan} />
         <Card label="Total Dead Ends" value={sessions.reduce((sum, item) => sum + item.deadEnds, 0)} color={C.rose} />
         <Card label="Total Hours" value={`${totalHours}h`} color={C.amber} />
       </div>

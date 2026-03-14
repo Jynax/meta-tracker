@@ -44,16 +44,16 @@ function DonutBreakdown({ label, items, animate }: { label: string; items: Array
   const radius = 58;
   const circumference = 2 * Math.PI * radius;
   const total = items.reduce((sum, item) => sum + item.count, 0);
-  let accumulated = 0;
   const segments = items
     .filter((item) => item.count > 0)
-    .map((item, index) => {
+    .reduce<Array<{ label: string; count: number; color: string; arcLength: number; offset: number; index: number }>>((acc, item, index) => {
+      const accumulated = acc.reduce((sum, seg) => sum + (total > 0 ? (seg.count / total) * circumference : 0), 0);
       const fullArcLength = total > 0 ? (item.count / total) * circumference : 0;
       const arcLength = Math.max(fullArcLength - 2, 0);
       const offset = -accumulated - 1;
-      accumulated += fullArcLength;
-      return { ...item, arcLength, offset, index };
-    });
+      acc.push({ ...item, arcLength, offset, index });
+      return acc;
+    }, []);
   return (
     <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>

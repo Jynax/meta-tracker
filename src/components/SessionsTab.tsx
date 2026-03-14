@@ -1,8 +1,8 @@
-import { useMemo, useState, useEffect, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { Card, C } from './MetricsCard';
 import { formatShortDate, buildSmoothPath } from './chartUtils';
 import type { SessionEntry, SessionTool, SessionDriver } from '../data/metaMetrics';
-import type { DayEntry, WorkBlock, WorkDriver, WorkOperator } from '../types/index';
+import type { DayEntry, WorkDriver, WorkOperator } from '../types/index';
 
 interface SessionsTabProps {
   sessions: SessionEntry[];
@@ -27,6 +27,7 @@ export default function SessionsTab({
   const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
   const [chartView, setChartView] = useState<'daily' | 'weekly'>('weekly');
   const [humanAttribution, setHumanAttribution] = useState(30);
+  const [prevProjectId, setPrevProjectId] = useState(projectId);
 
   const toolColors: Record<SessionTool, string> = {
     'Claude Code': C.emerald,
@@ -273,9 +274,10 @@ export default function SessionsTab({
     });
   }, [days]);
 
-  useEffect(() => {
+  if (prevProjectId !== projectId) {
+    setPrevProjectId(projectId);
     setExpandedDays(new Set());
-  }, [projectId]);
+  }
 
   return (
     <div className="space-y-4">

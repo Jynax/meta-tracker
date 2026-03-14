@@ -10,12 +10,12 @@ interface BugsTabProps {
 export default function BugsTab({ bugs, projectId }: BugsTabProps) {
   const [animateBugDonuts, setAnimateBugDonuts] = useState(false);
   const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
+  const [prevProjectId, setPrevProjectId] = useState(projectId);
 
   useEffect(() => {
-    setAnimateBugDonuts(false);
     const timer = window.setTimeout(() => setAnimateBugDonuts(true), 50);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, []); // mount-only animation trigger
 
   const { bySeverity, byCategory, bySource, fixedBugs, openBugs } = useMemo(() => {
     const bySev = bugs.reduce<Record<string, number>>((acc, bug) => { acc[bug.severity] = (acc[bug.severity] ?? 0) + 1; return acc; }, {});
@@ -39,11 +39,10 @@ export default function BugsTab({ bugs, projectId }: BugsTabProps) {
     return Array.from(groups.values()).sort((a, b) => b.isoKey.localeCompare(a.isoKey));
   }, [bugs]);
 
-  useEffect(() => {
-    if (bugsByDay.length > 0) {
-      setExpandedDays(new Set([bugsByDay[0].isoKey]));
-    }
-  }, [projectId, bugsByDay]);
+  if (prevProjectId !== projectId) {
+    setPrevProjectId(projectId);
+    setExpandedDays(bugsByDay.length > 0 ? new Set([bugsByDay[0].isoKey]) : new Set());
+  }
 
   return (
     <div className="space-y-4">

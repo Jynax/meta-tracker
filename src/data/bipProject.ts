@@ -330,7 +330,7 @@ export const bipProject: Project = {
         {
           id: 'bip-discovering-codex',
           type: 'event',
-          dayId: 'Unknown',
+          dayId: 'Feb 21',
           category: 'process',
           title: 'Discovering GPT-5.3 Codex',
           description: "Explored Codex's sandboxed environment — full repo access, builds, PRs, code reviews. But can't install npm packages (403).",
@@ -338,7 +338,7 @@ export const bipProject: Project = {
         {
           id: 'bip-codex-stub-problem',
           type: 'discovery',
-          dayId: 'Unknown',
+          dayId: 'Feb 21',
           category: 'process',
           title: 'Codex Stub File Problem',
           description: "When Codex can't install npm packages, it creates local stub files mimicking the package API. These compile inside Codex but break real builds.",
@@ -347,7 +347,7 @@ export const bipProject: Project = {
         {
           id: 'bip-pr-pileup',
           type: 'discovery',
-          dayId: 'Unknown',
+          dayId: 'Feb 21',
           category: 'process',
           title: 'PR Pile-Up and Stale Branches',
           description: 'PR #18 sat open while 29+ other PRs merged, accumulating a massive merge conflict in App.tsx. Rebasing was impractical.',
@@ -356,7 +356,7 @@ export const bipProject: Project = {
         {
           id: 'bip-cowork-codex-workflow',
           type: 'decision',
-          dayId: 'Unknown',
+          dayId: 'Feb 21',
           category: 'process',
           title: 'The Cowork + Codex Workflow',
           description: 'Established a division of labor: Cowork for reasoning and browser automation, Codex for code generation. ~5-15 minutes per bug-fix cycle.',
@@ -366,7 +366,7 @@ export const bipProject: Project = {
         {
           id: 'bip-switching-to-claude',
           type: 'pivot',
-          dayId: 'Unknown',
+          dayId: 'Feb 21',
           category: 'process',
           title: 'Switching to Claude for Architecture',
           description: "As the project grew, Michael needed more than code generation. Cowork's desktop workspace and persistent file management solve the continuity problem.",
@@ -479,7 +479,7 @@ export const bipProject: Project = {
         {
           id: 'bip-git-from-zero',
           type: 'event',
-          dayId: 'Feb 2026',
+          dayId: 'Feb 15',
           category: 'process',
           title: 'Git from Zero',
           description: 'ChatGPT walked Michael through Git basics: cloning, configuring, pulling, committing, pushing.',
@@ -488,7 +488,7 @@ export const bipProject: Project = {
         {
           id: 'bip-local-dev-environment',
           type: 'event',
-          dayId: 'Feb 2026',
+          dayId: 'Feb 15',
           category: 'process',
           title: 'Local Dev Environment (Windows + PowerShell)',
           description: 'Set up Node.js, npm, and the project on Windows. Michael can test locally and provide feedback before merging.',
@@ -506,7 +506,7 @@ export const bipProject: Project = {
         {
           id: 'bip-published-work-exploration',
           type: 'discovery',
-          dayId: 'Feb 2026',
+          dayId: 'Feb 17',
           category: 'functional',
           title: 'Published Work Module Exploration',
           description: "Explored tracking Marcie's published work across the internet. Proposed as a second data source + dashboard. Scoped but deferred.",

@@ -616,6 +616,7 @@ export const bipDays: DayEntry[] = [
   },
   {
     date: 'Mar 5',
+    title: 'State Extraction + Bugs + Review',
     projectId: 'bip',
     phase: 'Build',
     chapterId: 'ch-state-extraction',

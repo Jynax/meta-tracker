@@ -106,6 +106,7 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 49', date: 'Mar 13', label: 'UX Brief #78 + Metrics Reformat', added: 0, deleted: 0, net: 0, total: 9834 },
   { session: 'Session 50', date: 'Mar 13', label: 'Cross-Project Tooling', added: 22, deleted: 0, net: 22, total: 9856 },
   { session: 'Session 52', date: 'Mar 14', label: 'Dep Migration', added: 1147, deleted: 1335, net: -188, total: 9668 },
+  { session: 'Session 53', date: 'Mar 15', label: 'Data Push + v1.0', added: 140, deleted: 26, net: 114, total: 9782 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -191,6 +192,16 @@ export const metaSessions: SessionEntry[] = [
     { number: 108, title: 'UX brief: day grouping, shared toggle, tick density', createdAt: '2026-03-13T00:00:00Z', mergedAt: '2026-03-13T00:00:00Z' },
   ] },
   { session: 'Session 49', date: 'Mar 13', label: 'UX Brief #78 + Metrics Reformat', duration: 0, prs: 0, decisions: 0, deadEnds: 0, focus: 'UX Brief #78 (Joint project type) shipped — 12/12 complete. Cross-project metrics.md reformat to Day/Block schema (MT, BIP, Landing, Remnants). Data push for Sessions 47-49.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Data', tool: 'Claude Code', taskCount: 5, phase: 'Review', driver: 'collaborative' },
+  { session: 'Session 50', date: 'Mar 13', label: 'Cross-Project Tooling', duration: 2, prs: 2, decisions: 0, deadEnds: 0, focus: 'PR quality gates (lint, typecheck, build) rolled out to 5 repos. Dependabot config for all repos. CF deploy checker, workflow audit, gh-dash, Prettier hook. PRs #115-116.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 2, phase: 'Review', driver: 'agent-led' },
+  { session: 'Session 52', date: 'Mar 14', label: 'Dep Migration', duration: 1.5, prs: 4, decisions: 0, deadEnds: 0, focus: 'Cross-project dep migration task #13. Safe bumps + React 19 (PR #117), Vite 5→8 Rolldown (PR #118), ESLint hooks 5→7 (PR #119), lint fixes (PR #120).', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 1, phase: 'Review', driver: 'agent-led', prDetails: [
+    { number: 117, title: 'Bump deps + React 19', createdAt: '2026-03-14T00:00:00Z', mergedAt: '2026-03-14T00:00:00Z' },
+    { number: 118, title: 'Migrate Vite 5→8 (Rolldown)', createdAt: '2026-03-14T00:00:00Z', mergedAt: '2026-03-14T00:00:00Z' },
+    { number: 119, title: 'Upgrade eslint-plugin-react-hooks 5→7', createdAt: '2026-03-14T00:00:00Z', mergedAt: '2026-03-14T00:00:00Z' },
+    { number: 120, title: 'Fix hooks v7 lint errors', createdAt: '2026-03-14T00:00:00Z', mergedAt: '2026-03-14T00:00:00Z' },
+  ] },
+  { session: 'Session 53', date: 'Mar 15', label: 'Data Push + v1.0', duration: 2, prs: 1, decisions: 0, deadEnds: 0, focus: 'Full metrics audit across 5 projects. Data push PR #121 — backfilled ~20 PRs (Sessions 50-52). MT v1.0 milestone. USB refresh + bootstrapping folder.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Data', tool: 'Claude Code', taskCount: 2, phase: 'Shipped', driver: 'collaborative', prDetails: [
+    { number: 121, title: 'Data push: Sessions 50-52 + Meta Tracker v1.0 milestone', createdAt: '2026-03-15T00:00:00Z', mergedAt: '2026-03-15T12:24:46Z' },
+  ] },
 ];
 
 export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };
@@ -450,5 +461,17 @@ export const metaDays: DayEntry[] = [
     ],
     metrics: { totalTimeMinutes: 90, linesAdded: 1147, linesDeleted: 1335, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 15',
+    title: 'Data Push + v1.0 Milestone',
+    projectId: 'meta',
+    phase: 'Shipped',
+    chapterId: 'meta-ch-time-machine-data-model',
+    blocks: [
+      { id: 'meta-session-53', dayId: 'Mar 15', label: 'Data Push + v1.0', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 120, linesAdded: 140, linesDeleted: 26, note: 'Full metrics audit across 5 projects. Data push PR #121 — backfilled ~20 PRs (Sessions 50-52). MT v1.0 milestone added. USB refresh (task #07) + bootstrapping folder (task #14).', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 120, linesAdded: 140, linesDeleted: 26, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
 ];

@@ -547,10 +547,10 @@ export const bipProject: Project = {
   stats: {
     totalDays: 400,
     chatGptMessages: '1000+',
-    coworkSessions: 15,
-    prsCreated: '75+',
+    coworkSessions: 17,
+    prsCreated: '85+',
     codexTasks: '40+',
-    linesOfCode: '5,044',
+    linesOfCode: '~3,950',
     deadEnds: 5,
     majorDecisions: 24,
   },

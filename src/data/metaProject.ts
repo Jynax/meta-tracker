@@ -5,7 +5,15 @@ export const metaProject: Project = {
   name: 'Meta Tracker',
   subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE & CLAUDE CODE',
   projectType: 'web-app',
-  currentPhase: 'Review',
+  currentPhase: 'Shipped',
+  milestones: [
+    {
+      label: 'v1.0',
+      date: 'Mar 15, 2026',
+      session: 'Session 53',
+      description: 'Feature-complete with 81 e2e tests, CI, UX brief complete (12/12), Day/Block data model, 7 projects tracked, all deps current (Vite 8, React 19, Tailwind 4). 120 PRs, ~9,700 LOC.',
+    },
+  ],
   chapters: [
     {
       id: 'meta-ch-inception',
@@ -1192,12 +1200,12 @@ export const metaProject: Project = {
   },
 ],
   stats: {
-    totalDays: 16,
+    totalDays: 18,
     chatGptMessages: '250+',
-    coworkSessions: 41,
-    prsCreated: '93+',
+    coworkSessions: 53,
+    prsCreated: '120',
     codexTasks: '66+',
-    linesOfCode: '7,800+',
+    linesOfCode: '~9,700',
     deadEnds: 4,
     majorDecisions: 97,
   },

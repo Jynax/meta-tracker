@@ -9,6 +9,8 @@ export const landingCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 41', date: 'Mar 11', label: 'Playwright Suite + CI', added: 483, deleted: 2, net: 481, total: 6120 },
   { session: 'Session 43', date: 'Mar 12', label: 'Hero Polish + Coming Soon Border', added: 88, deleted: 5, net: 83, total: 6203 },
   { session: 'Session 47', date: 'Mar 13', label: 'Remove Scroll Arrow', added: 0, deleted: 36, net: -36, total: 6167 },
+  { session: 'Session 50', date: 'Mar 13', label: 'Dependabot + Quality Gates', added: 35, deleted: 0, net: 35, total: 6202 },
+  { session: 'Session 52', date: 'Mar 14', label: 'Dep Migration', added: 541, deleted: 850, net: -309, total: 5893 },
 ];
 
 // --- Sessions ---
@@ -105,8 +107,21 @@ export const landingDays: DayEntry[] = [
     chapterId: 'landing-ch-build',
     blocks: [
       { id: 'landing-session-47', dayId: 'Mar 13', label: 'Remove Scroll Arrow', workCategory: 'UX', driver: 'collaborative', operator: 'claude-code', timeMinutes: 10, linesAdded: 0, linesDeleted: 36, note: 'Removed bouncing scroll-down arrow from hero section. PR #7.', contextWindowOrigin: false },
+      { id: 'landing-session-50', dayId: 'Mar 13', label: 'Dependabot + Quality Gates', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 10, linesAdded: 35, linesDeleted: 0, note: 'Dependabot config (PR #8) + PR quality gates — lint, typecheck, build (PR #10). Part of cross-project tooling sweep.', contextWindowOrigin: false },
     ],
-    metrics: { totalTimeMinutes: 10, linesAdded: 0, linesDeleted: 36, totalDecisions: 0 },
-    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+    metrics: { totalTimeMinutes: 20, linesAdded: 35, linesDeleted: 36, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 1 },
+  },
+  {
+    date: 'Mar 14',
+    title: 'Dependency Migration — Vite 8',
+    projectId: 'landing',
+    phase: 'Shipped',
+    chapterId: 'landing-ch-testing',
+    blocks: [
+      { id: 'landing-session-52', dayId: 'Mar 14', label: 'Dep Migration', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 15, linesAdded: 541, linesDeleted: 850, note: 'Vite 7→8 (Rolldown, 86ms build), plugin-react 5→6, eslint-plugin-react-refresh 0.4→0.5, CF workers-types patch (PR #11). ThemeContext lint fix (PR #12). Part of task #13.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 15, linesAdded: 541, linesDeleted: 850, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
 ];

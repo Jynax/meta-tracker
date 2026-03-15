@@ -6,6 +6,8 @@ export const ibgCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 27', date: 'Mar 7', label: 'Scanner + Dashboard Deploy', added: 9224, deleted: 174, net: 9050, total: 9593 },
   { session: 'Session 28', date: 'Mar 7', label: 'UX Overhaul + Item Class Detection', added: 414, deleted: 47, net: 367, total: 9960 },
   { session: 'Session 41', date: 'Mar 11', label: 'Playwright Suite + CI', added: 1605, deleted: 0, net: 1605, total: 11565 },
+  { session: 'Session 43', date: 'Mar 12', label: 'Dashboard Bug Fixes', added: 125, deleted: 171, net: -46, total: 11519 },
+  { session: 'Session 50', date: 'Mar 13', label: 'Dependabot + Quality Gates', added: 31, deleted: 0, net: 31, total: 11550 },
 ];
 
 export const ibgSessions: SessionEntry[] = [
@@ -71,6 +73,30 @@ export const ibgDays: DayEntry[] = [
       { id: 'ibg-session-41', dayId: 'Mar 11', label: 'Playwright Suite + CI', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 1605, linesDeleted: 0, note: 'Full Playwright test suite: 37 tests across 5 specs (navigation, data integrity, upload flow, filtering, deep interactions). GitHub Actions CI workflow. Tasks #31-#33.', contextWindowOrigin: false },
     ],
     metrics: { totalTimeMinutes: 60, linesAdded: 1605, linesDeleted: 0, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 12',
+    title: 'Dashboard Bug Fixes',
+    projectId: 'ibg',
+    phase: 'Review',
+    chapterId: 'ibg-ch-dashboard-detection',
+    blocks: [
+      { id: 'ibg-session-43', dayId: 'Mar 12', label: 'Dashboard Bug Fixes', workCategory: 'Bug', driver: 'collaborative', operator: 'claude-code', timeMinutes: 60, linesAdded: 125, linesDeleted: 171, note: 'Fix confidence labels, raw WoW strings, verdict filtering (PR #5). Simplify UI: fix stat cards, remove filter pills, legend read-only (PR #6). 2 dashboard PRs.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 60, linesAdded: 125, linesDeleted: 171, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Mar 13',
+    title: 'Dependabot + Quality Gates',
+    projectId: 'ibg',
+    phase: 'Review',
+    chapterId: 'ibg-ch-dashboard-detection',
+    blocks: [
+      { id: 'ibg-session-50', dayId: 'Mar 13', label: 'Dependabot + Quality Gates', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 15, linesAdded: 31, linesDeleted: 0, note: 'Dependabot config (Dashboard PR #7) + PR quality gates — lint, typecheck, build (Dashboard PR #8). Part of cross-project tooling sweep.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 15, linesAdded: 31, linesDeleted: 0, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
 ];

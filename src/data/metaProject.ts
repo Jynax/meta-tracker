@@ -1198,6 +1198,117 @@ export const metaProject: Project = {
       },
     ],
   },
+  {
+    id: 'meta-ch-day-block-migration',
+    name: 'Day/Block Data Model',
+    period: 'Mar 12, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    chapterType: 'date-range' as const,
+    nodes: [
+      {
+        id: 'meta-day-block-model',
+        type: 'decision',
+        dayId: 'Mar 12',
+        category: 'technical',
+        title: 'Day/Block Data Model Migration',
+        description:
+          'Replaced session-centric data model with Day/Block hierarchy. Each day groups related work blocks with driver, operator, category, and time data. Migrated all 7 projects across 6 phases (T-1 types, T-2 migration script, T-3 Sessions tab, T-4 decision tree anchoring, T-5 Overview tab, T-6 tracking mode). 4 PRs (#96-100, #102-104).',
+        chosenPath: 'DayEntry + WorkBlock hierarchy with automated migration script',
+        alternatives: ['Keep session-based model', 'Hybrid model with optional day grouping'],
+      },
+      {
+        id: 'meta-seven-projects',
+        type: 'event',
+        dayId: 'Mar 12',
+        category: 'functional',
+        title: 'Seven Projects Tracked — Landing & Feedback Capture Added',
+        description:
+          'Added JynaxxApps Landing and Feedback Capture as tracked projects, bringing the total to 7. Landing uses lightweight tracking mode (no decision tree). Feedback Capture is a micro project with simplified metrics.',
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-ux-brief-complete',
+    name: 'UX Brief Complete',
+    period: 'Mar 13, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    chapterType: 'date-range' as const,
+    nodes: [
+      {
+        id: 'meta-ux-brief-complete',
+        type: 'event',
+        dayId: 'Mar 13',
+        category: 'ux-design',
+        title: 'UX Brief Complete — 12/12 Items Shipped',
+        description:
+          'Completed all 12 items from the UX brief: badge colors, scrollbar fix, driver chart init, day grouping, shared toggle, tick density, joint project type, and more. Decision counts realigned to tree (66 total), 28 blocks reclassified from agent-led to collaborative.',
+      },
+      {
+        id: 'meta-cross-project-tooling',
+        type: 'decision',
+        dayId: 'Mar 13',
+        category: 'process',
+        title: 'Cross-Project Tooling Sweep',
+        description:
+          'Rolled out Dependabot and PR quality gates (lint, typecheck, build) across all 5 repos in a single session. Evaluated 16 workflow tools, implemented 6: /session-start, /session-end, gh-dash, Dependabot, Prettier hook, PR quality gates.',
+        chosenPath: 'Standardized CI gates + automated dependency updates across all repos',
+        alternatives: ['Per-project tooling decisions', 'Manual dependency management'],
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-dep-migration',
+    name: 'Cross-Project Dependency Migration',
+    period: 'Mar 14, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    chapterType: 'date-range' as const,
+    nodes: [
+      {
+        id: 'meta-vite8-migration',
+        type: 'decision',
+        dayId: 'Mar 14',
+        category: 'technical',
+        title: 'Vite 8 (Rolldown) Migration — All Projects',
+        description:
+          'Migrated all projects to Vite 8 with the new Rolldown bundler. Meta Tracker build time: 2.4s → 300ms. BIP: Vite 6→8 + Tailwind 3→4 + React 18→19 + Recharts 2→3 (6 PRs). Landing: Vite 7→8. Discovered Rolldown breaks CDN dynamic imports (BIP xlsx regression, fixed by bundling locally).',
+        lesson: 'Test dynamic imports after major bundler changes — Rolldown handles them differently than esbuild.',
+        chosenPath: 'Vite 8 + Rolldown across all projects, sequential per-project migration',
+        alternatives: ['Stay on Vite 6/7', 'Migrate one project at a time over multiple sessions'],
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-v1-shipped',
+    name: 'v1.0 Shipped',
+    period: 'Mar 15, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    chapterType: 'date-range' as const,
+    nodes: [
+      {
+        id: 'meta-v1-milestone',
+        type: 'event',
+        dayId: 'Mar 15',
+        category: 'process',
+        title: 'Meta Tracker v1.0',
+        description:
+          'Meta Tracker reached v1.0: 120 PRs, ~9,700 LOC, 81 e2e tests, 7 projects tracked, UX brief complete (12/12), all dependencies current (Vite 8, React 19, Tailwind 4). Full metrics audit and data push backfilled ~20 PRs across 5 projects.',
+      },
+      {
+        id: 'meta-metrics-audit-pattern',
+        type: 'discovery',
+        dayId: 'Mar 15',
+        category: 'process',
+        title: 'Metrics Audit Pattern — Dual Data Sources',
+        description:
+          'Discovered that the app has two data paths: metaDays (new) and metaSessions (legacy). The Driver Breakdown chart still reads from metaSessions, causing gaps when only metaDays is updated. Both must be kept in sync until the legacy path is removed.',
+        lesson: 'When migrating data models, audit all consumers — legacy code paths silently break.',
+      },
+    ],
+  },
 ],
   stats: {
     totalDays: 18,

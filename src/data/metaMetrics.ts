@@ -104,6 +104,8 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 47', date: 'Mar 13', label: 'Data Integrity + Driver Reclassification', added: 67, deleted: 67, net: 0, total: 9786 },
   { session: 'Session 48', date: 'Mar 13', label: 'UX Brief — Bugs + Improvements', added: 102, deleted: 54, net: 48, total: 9834 },
   { session: 'Session 49', date: 'Mar 13', label: 'UX Brief #78 + Metrics Reformat', added: 0, deleted: 0, net: 0, total: 9834 },
+  { session: 'Session 50', date: 'Mar 13', label: 'Cross-Project Tooling', added: 22, deleted: 0, net: 22, total: 9856 },
+  { session: 'Session 52', date: 'Mar 14', label: 'Dep Migration', added: 1147, deleted: 1335, net: -188, total: 9668 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -432,8 +434,21 @@ export const metaDays: DayEntry[] = [
       { id: 'meta-session-47', dayId: 'Mar 13', label: 'Data Integrity + Driver Reclassification', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 180, linesAdded: 67, linesDeleted: 67, note: 'Decision counts realigned to tree (66 total, 11 dates fixed). Driver values reclassified: 28 blocks agent-led→collaborative. Chart reads from DayEntry. 12-item UX brief broken into tasks #68-79. PR #106.', contextWindowOrigin: false },
       { id: 'meta-session-48', dayId: 'Mar 13', label: 'UX Brief — Bugs + Improvements', workCategory: 'Bug', driver: 'collaborative', operator: 'claude-code', timeMinutes: 60, linesAdded: 102, linesDeleted: 54, note: 'Tasks #70-75: badge color, scrollbar, driver chart init, day grouping, shared toggle, tick density. PRs #107-108.', contextWindowOrigin: false },
       { id: 'meta-session-49', dayId: 'Mar 13', label: 'UX Brief #78 + Metrics Reformat', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 0, linesDeleted: 0, note: 'UX Brief #78 (Joint project type) shipped — 12/12 complete. Cross-project metrics.md reformat to Day/Block schema. Data push for Sessions 47-49.', contextWindowOrigin: false },
+      { id: 'meta-session-50', dayId: 'Mar 13', label: 'Cross-Project Tooling', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 120, linesAdded: 22, linesDeleted: 0, note: 'PR quality gates (lint, typecheck, build) rolled out to 5 repos. Dependabot config for all repos. CF deploy checker, workflow audit (16 tools evaluated), gh-dash, Prettier hook. PRs #115-116.', contextWindowOrigin: false },
     ],
-    metrics: { totalTimeMinutes: 240, linesAdded: 169, linesDeleted: 121, totalDecisions: 2 },
-    driverSummary: { human: 0, ai: 0, collaborative: 3 },
+    metrics: { totalTimeMinutes: 360, linesAdded: 191, linesDeleted: 121, totalDecisions: 2 },
+    driverSummary: { human: 0, ai: 1, collaborative: 3 },
+  },
+  {
+    date: 'Mar 14',
+    title: 'Dependency Migration — Vite 8, React 19',
+    projectId: 'meta',
+    phase: 'Review',
+    chapterId: 'meta-ch-time-machine-data-model',
+    blocks: [
+      { id: 'meta-session-52', dayId: 'Mar 14', label: 'Dep Migration', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 90, linesAdded: 1147, linesDeleted: 1335, note: 'Cross-project dep migration task #13. Safe bumps + React 19 (PR #117), Vite 5→8 with Rolldown (PR #118, 2.4s→300ms build), ESLint hooks 5→7 (PR #119), lint fixes (PR #120). 4 PRs merged.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 90, linesAdded: 1147, linesDeleted: 1335, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
 ];

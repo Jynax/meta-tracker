@@ -85,6 +85,8 @@ export const bipCodeVolume: CodeVolumeEntry[] = [
   { session: 'Claude Code 5', date: 'Mar 5', label: 'Export Cleaned', added: 62, deleted: 4, net: 58, total: 4187 },
   { session: 'Claude Code 5', date: 'Mar 5', label: 'Code Review', added: 42, deleted: 102, net: -60, total: 4127 },
   { session: 'Claude Code 6', date: 'Mar 11', label: 'Playwright + CI', added: 917, deleted: 0, net: 917, total: 5044 },
+  { session: 'Session 50', date: 'Mar 13', label: 'Dependabot + Quality Gates', added: 35, deleted: 0, net: 35, total: 5079 },
+  { session: 'Session 51', date: 'Mar 14', label: 'Full Dep Migration', added: 1461, deleted: 2591, net: -1130, total: 3949 },
 ];
 
 export const bipSessions: SessionEntry[] = [
@@ -458,6 +460,17 @@ export const bipBugs: BugEntry[] = [
     status: 'Fixed (PR #68)',
     category: 'UX',
   },
+  {
+    id: 16,
+    session: 'Session 51',
+    date: 'Mar 14',
+    label: 'Full Dep Migration',
+    summary: 'Vite 8 (Rolldown) broke XLSX CDN dynamic import — switched to bundled local package',
+    severity: 'High',
+    source: 'Migration Testing',
+    status: 'Fixed (PR #85)',
+    category: 'Technical',
+  },
 ];
 
 export const bipDerived: DerivedMetric[] = [
@@ -469,12 +482,12 @@ export const bipDerived: DerivedMetric[] = [
 ];
 
 export const bipStack: StackEntry[] = [
-  { name: 'React 18', cat: 'Core' },
+  { name: 'React 19', cat: 'Core' },
   { name: 'TypeScript', cat: 'Core' },
-  { name: 'Vite', cat: 'Build' },
-  { name: 'Tailwind CSS', cat: 'UI' },
-  { name: 'Recharts', cat: 'UI' },
-  { name: 'SheetJS (CDN)', cat: 'Utility' },
+  { name: 'Vite 8 (Rolldown)', cat: 'Build' },
+  { name: 'Tailwind CSS 4', cat: 'UI' },
+  { name: 'Recharts 3', cat: 'UI' },
+  { name: 'xlsx (bundled)', cat: 'Utility' },
   { name: 'Cloudflare Pages', cat: 'Core' },
   { name: 'Cloudflare Workers', cat: 'Core' },
 ];
@@ -624,6 +637,30 @@ export const bipDays: DayEntry[] = [
       { id: 'bip-claude-code-6', dayId: 'Mar 11', label: 'Playwright + CI', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 917, linesDeleted: 0, note: '52 e2e Tests + GitHub Actions CI — v1.0 Stable', contextWindowOrigin: false },
     ],
     metrics: { totalTimeMinutes: 60, linesAdded: 917, linesDeleted: 0, totalDecisions: 1 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 13',
+    title: 'Dependabot + Quality Gates',
+    projectId: 'bip',
+    phase: 'Shipped',
+    chapterId: 'ch-testing',
+    blocks: [
+      { id: 'bip-session-50', dayId: 'Mar 13', label: 'Dependabot + Quality Gates', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 15, linesAdded: 35, linesDeleted: 0, note: 'Dependabot config (PR #76) + PR quality gates — lint, typecheck, build (PR #79). Part of cross-project tooling sweep.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 15, linesAdded: 35, linesDeleted: 0, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 14',
+    title: 'Full Dependency Migration',
+    projectId: 'bip',
+    phase: 'Shipped',
+    chapterId: 'ch-testing',
+    blocks: [
+      { id: 'bip-session-51', dayId: 'Mar 14', label: 'Full Dep Migration', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 120, linesAdded: 1461, linesDeleted: 2591, note: 'Full dependency migration: safe bumps (PR #80), Vite 6→8 Rolldown (PR #81), Tailwind 3→4 (PR #82), React 18→19 (PR #83), Recharts 2→3 (PR #84), xlsx CDN→bundled fix (PR #85). 6 PRs. Task #11.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 120, linesAdded: 1461, linesDeleted: 2591, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
 ];

@@ -24,6 +24,7 @@ export const remnantsCodeVolume: CodeVolumeEntry[] = [
   { session: 'Legacy Port', date: 'Feb 21', label: 'Source Restructure', added: 4038, deleted: 4131, net: -93, total: 4678 },
   { session: 'Session 40', date: 'Mar 11', label: 'Pause + Save/Load', added: 122, deleted: 13, net: 109, total: 4787 },
   { session: 'Session 41', date: 'Mar 11', label: 'Playwright Suite + CI', added: 433, deleted: 2, net: 431, total: 5218 },
+  { session: 'Session 50', date: 'Mar 13', label: 'Dependabot + Quality Gates + Safe Bumps', added: 50, deleted: 35, net: 15, total: 5233 },
 ];
 
 // --- Sessions ---
@@ -132,5 +133,17 @@ export const remnantsDays: DayEntry[] = [
     ],
     metrics: { totalTimeMinutes: 120, linesAdded: 555, linesDeleted: 15, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 2, collaborative: 0 },
+  },
+  {
+    date: 'Mar 13',
+    title: 'Dependabot + Quality Gates + Safe Bumps',
+    projectId: 'remnants',
+    phase: 'Review',
+    chapterId: 'ch-repo-deployment',
+    blocks: [
+      { id: 'remnants-session-50', dayId: 'Mar 13', label: 'Dependabot + Quality Gates + Safe Bumps', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 15, linesAdded: 50, linesDeleted: 35, note: 'Dependabot config (PR #7), PR quality gates (PR #10), production dep safe bumps (PR #9). Part of cross-project tooling sweep.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 15, linesAdded: 50, linesDeleted: 35, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
 ];

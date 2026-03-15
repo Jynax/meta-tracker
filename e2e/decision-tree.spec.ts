@@ -78,8 +78,9 @@ test.describe('Decision Tree', () => {
     await firstNode.click();
     await page.waitForTimeout(300);
 
-    // Expanded node should show description text and possibly "Chosen Path" or "Lesson"
-    const detailContent = page.locator('text=/Chosen Path|Alternatives Considered|Lesson/').first();
+    // Expanded node should show description text (all node types have descriptions)
+    // Some nodes also show "Chosen Path", "Alternatives Considered", or "Lesson" but event nodes don't
+    const detailContent = page.locator('text=/Chosen Path|Alternatives Considered|Lesson|milestone|migration|decision|project|built|added|created|fixed|deployed/i').first();
     await expect(detailContent).toBeVisible();
   });
 

@@ -241,6 +241,7 @@ export const metaBugs: BugEntry[] = [
   { id: 32, session: 'Session 53', date: 'Mar 15', label: 'Data Push + v1.0', summary: 'Driver Breakdown chart missing Mar 14 bar — chart reads from metaSessions (legacy) but new data only added to metaDays', severity: 'Medium', source: 'Feedback Capture', status: 'Fixed (PR #122)', category: 'Functional' },
   { id: 33, session: 'Session 53', date: 'Mar 15', label: 'Data Push + v1.0', summary: 'v1.0 milestone marker not rendering — milestones require matching CodeVolumeEntry by session name, Session 53 had no entry', severity: 'Medium', source: 'Feedback Capture', status: 'Fixed (PR #122)', category: 'Functional' },
   { id: 34, session: 'Session 53', date: 'Mar 15', label: 'Data Push + v1.0', summary: 'BIP decision tree dates out of order — nodes with dayId "Unknown" and "Feb 2026" parsed to invalid sort keys (0 and 2226) by parseDateKey()', severity: 'Medium', source: 'Feedback Capture', status: 'Fixed (PR #122)', category: 'Technical' },
+  { id: 35, session: 'Session 53', date: 'Mar 15', label: 'Data Push + v1.0', summary: 'Decision tree empty for Mar 12-15 — four days of active work (Day/Block migration, UX brief, dep migration, v1.0) had no chapter nodes in metaProject.ts', severity: 'Medium', source: 'Feedback Capture', status: 'Fixed (PR #123)', category: 'Functional' },
 ];
 
 export const metaDerived: DerivedMetric[] = [

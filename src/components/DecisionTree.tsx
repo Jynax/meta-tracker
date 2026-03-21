@@ -7,6 +7,7 @@ import { itemBGoneProject } from '../data/itemBGoneProject';
 import { vulnBankProject } from '../data/vulnBankProject';
 import { landingProject } from '../data/landingProject';
 import { feedbackCaptureProject } from '../data/feedbackCaptureProject';
+import { noteWorthyProject } from '../data/noteWorthyProject';
 import type { DayEntry, FilterType, NodeCategory, Project, ProjectNode, ProjectPhase } from '../types';
 import { bipDays } from '../data/bipMetrics';
 import { metaDays } from '../data/metaMetrics';
@@ -15,6 +16,7 @@ import { ibgDays } from '../data/itemBGoneMetrics';
 import { vbDays } from '../data/vulnBankMetrics';
 import { landingDays } from '../data/landingMetrics';
 import { fcDays } from '../data/feedbackCaptureMetrics';
+import { nwDays } from '../data/noteWorthyMetrics';
 import { nodeTypes } from './CustomNodes';
 import MetricsDashboard from './MetricsDashboard';
 import ProcessWorkflow from './ProcessWorkflow';
@@ -38,7 +40,7 @@ const FILTERS: Array<{ id: FilterType; label: string }> = [
   { id: 'process', label: 'Process' },
 ];
 
-const PROJECTS = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject, landingProject, feedbackCaptureProject];
+const PROJECTS = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject, landingProject, feedbackCaptureProject, noteWorthyProject];
 
 const PROJECT_GROUPS: Array<{ label: string; projects: typeof PROJECTS }> = [
   { label: 'Solo', projects: PROJECTS.filter(p => p.trackingMode !== 'lightweight' && p.projectType !== 'joint') },
@@ -232,6 +234,7 @@ export default function DecisionTree() {
       'vuln-bank': vbDays,
       'landing': landingDays,
       'feedback-capture': fcDays,
+      'note-worthy': nwDays,
     };
     return dayMap[activeProject.id] ?? [];
   }, [activeProject.id]);

@@ -13,6 +13,8 @@ import { landingProject } from '../data/landingProject';
 import { landingCodeVolume, landingSessions, landingBugs, landingDerived, landingStack, landingDateRange, landingDays } from '../data/landingMetrics';
 import { feedbackCaptureProject } from '../data/feedbackCaptureProject';
 import { fcCodeVolume, fcSessions, fcBugs, fcDerived, fcStack, fcDateRange, fcDays } from '../data/feedbackCaptureMetrics';
+import { noteWorthyProject } from '../data/noteWorthyProject';
+import { nwCodeVolume, nwSessions, nwBugs, nwDerived, nwStack, nwDateRange, nwDays } from '../data/noteWorthyMetrics';
 
 import { C } from "./MetricsCard";
 import OverviewTab from './OverviewTab';
@@ -56,6 +58,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
       'vuln-bank': { project: vulnBankProject, codeVolume: vbCodeVolume, sessions: vbSessions, bugs: vbBugs, derived: vbDerived, stack: vbStack, dateRange: vbDateRange, days: vbDays },
       landing: { project: landingProject, codeVolume: landingCodeVolume, sessions: landingSessions, bugs: landingBugs, derived: landingDerived, stack: landingStack, dateRange: landingDateRange, days: landingDays },
       'feedback-capture': { project: feedbackCaptureProject, codeVolume: fcCodeVolume, sessions: fcSessions, bugs: fcBugs, derived: fcDerived, stack: fcStack, dateRange: fcDateRange, days: fcDays },
+      'note-worthy': { project: noteWorthyProject, codeVolume: nwCodeVolume, sessions: nwSessions, bugs: nwBugs, derived: nwDerived, stack: nwStack, dateRange: nwDateRange, days: nwDays },
     };
     return projectData[projectId] ?? projectData.bip;
   }, [projectId]);

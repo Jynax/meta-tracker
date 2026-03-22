@@ -107,6 +107,7 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 50', date: 'Mar 13', label: 'Cross-Project Tooling', added: 22, deleted: 0, net: 22, total: 9856 },
   { session: 'Session 52', date: 'Mar 14', label: 'Dep Migration', added: 1147, deleted: 1335, net: -188, total: 9668 },
   { session: 'Session 53', date: 'Mar 15', label: 'Data Push + v1.0', added: 140, deleted: 26, net: 114, total: 9782 },
+  { session: 'Session 58', date: 'Mar 21', label: 'NW Project Added', added: 20, deleted: 0, net: 20, total: 9802 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -201,6 +202,9 @@ export const metaSessions: SessionEntry[] = [
   ] },
   { session: 'Session 53', date: 'Mar 15', label: 'Data Push + v1.0', duration: 2, prs: 1, decisions: 0, deadEnds: 0, focus: 'Full metrics audit across 5 projects. Data push PR #121 — backfilled ~20 PRs (Sessions 50-52). MT v1.0 milestone. USB refresh + bootstrapping folder.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Data', tool: 'Claude Code', taskCount: 2, phase: 'Shipped', driver: 'collaborative', prDetails: [
     { number: 121, title: 'Data push: Sessions 50-52 + Meta Tracker v1.0 milestone', createdAt: '2026-03-15T00:00:00Z', mergedAt: '2026-03-15T12:24:46Z' },
+  ] },
+  { session: 'Session 58', date: 'Mar 21', label: 'NW Project Added', duration: 0.5, prs: 1, decisions: 0, deadEnds: 0, focus: 'Added Note Worthy as 8th tracked project in Meta Tracker dropdown. PR #126.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Data', tool: 'Claude Code', taskCount: 1, phase: 'Shipped', driver: 'agent-led', prDetails: [
+    { number: 126, title: 'Add Note Worthy as tracked project', createdAt: '2026-03-21T00:00:00Z', mergedAt: '2026-03-21T00:00:00Z' },
   ] },
 ];
 
@@ -477,5 +481,17 @@ export const metaDays: DayEntry[] = [
     ],
     metrics: { totalTimeMinutes: 120, linesAdded: 140, linesDeleted: 26, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Mar 21',
+    title: 'Note Worthy Project Added',
+    projectId: 'meta',
+    phase: 'Shipped',
+    chapterId: 'meta-ch-time-machine-data-model',
+    blocks: [
+      { id: 'meta-session-58', dayId: 'Mar 21', label: 'NW Project Added', workCategory: 'Data', driver: 'agent-led', operator: 'claude-code', timeMinutes: 30, linesAdded: 20, linesDeleted: 0, note: 'Added Note Worthy as 8th tracked project in Meta Tracker dropdown. PR #126.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 30, linesAdded: 20, linesDeleted: 0, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
 ];

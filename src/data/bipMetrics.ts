@@ -664,4 +664,28 @@ export const bipDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 120, linesAdded: 1461, linesDeleted: 2591, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
+  {
+    date: 'Mar 22',
+    title: 'Favicon',
+    projectId: 'bip',
+    phase: 'Shipped',
+    chapterId: 'ch-testing',
+    blocks: [
+      { id: 'bip-session-62', dayId: 'Mar 22', label: 'Favicon', workCategory: 'UX', driver: 'agent-led', operator: 'claude-code', timeMinutes: 10, linesAdded: 18, linesDeleted: 0, note: 'Custom favicon. PR #86.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 10, linesAdded: 18, linesDeleted: 0, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 23',
+    title: 'XLSX Code-Split',
+    projectId: 'bip',
+    phase: 'Shipped',
+    chapterId: 'ch-testing',
+    blocks: [
+      { id: 'bip-session-62-flex', dayId: 'Mar 23', label: 'XLSX Code-Split', workCategory: 'Refactor', driver: 'agent-led', operator: 'claude-code', timeMinutes: 20, linesAdded: 12, linesDeleted: 2, note: 'Dynamic import for xlsx library. Initial bundle 1093KB to 673KB (38% smaller). PR #87.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 20, linesAdded: 12, linesDeleted: 2, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
 ];

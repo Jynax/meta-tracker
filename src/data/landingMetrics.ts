@@ -124,4 +124,16 @@ export const landingDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 15, linesAdded: 541, linesDeleted: 850, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
+  {
+    date: 'Mar 22',
+    title: 'Favicon',
+    projectId: 'landing',
+    phase: 'Shipped',
+    chapterId: 'landing-ch-testing',
+    blocks: [
+      { id: 'landing-session-62', dayId: 'Mar 22', label: 'Favicon', workCategory: 'UX', driver: 'agent-led', operator: 'claude-code', timeMinutes: 10, linesAdded: 12, linesDeleted: 1, note: 'Custom favicon. PR #14.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 10, linesAdded: 12, linesDeleted: 1, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
 ];

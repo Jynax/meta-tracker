@@ -494,4 +494,16 @@ export const metaDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 30, linesAdded: 20, linesDeleted: 0, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
+  {
+    date: 'Mar 22',
+    title: 'Favicon',
+    projectId: 'meta',
+    phase: 'Shipped',
+    chapterId: 'meta-ch-time-machine-data-model',
+    blocks: [
+      { id: 'meta-session-62', dayId: 'Mar 22', label: 'Favicon', workCategory: 'UX', driver: 'agent-led', operator: 'claude-code', timeMinutes: 10, linesAdded: 9, linesDeleted: 0, note: 'Custom favicon. PR #128.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 10, linesAdded: 9, linesDeleted: 0, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
 ];

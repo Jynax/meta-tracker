@@ -140,7 +140,7 @@ export default function ProcessTimeline() {
                         marginBottom: 12,
                       }}
                     >
-                      {cluster.session} — {cluster.date.replace(/, d{4}$/, "")}
+                      {cluster.session} — {cluster.date.replace(/, \d{4}$/, "")}
                     </div>
 
                     {/* Entry list */}

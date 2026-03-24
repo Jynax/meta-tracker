@@ -146,4 +146,16 @@ export const remnantsDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 15, linesAdded: 50, linesDeleted: 35, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
+  {
+    date: 'Mar 23',
+    title: 'Vite 8 Migration',
+    projectId: 'remnants',
+    phase: 'Build',
+    chapterId: 'ch-repo-deployment',
+    blocks: [
+      { id: 'remnants-session-62-flex', dayId: 'Mar 23', label: 'Vite 8 Migration', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 10, linesAdded: 490, linesDeleted: 1322, note: 'Dependabot PR #8: Vite 6 to 8 (Rolldown) + plugin-react 4 to 6. Build verified.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 10, linesAdded: 490, linesDeleted: 1322, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
 ];

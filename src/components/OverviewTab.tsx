@@ -7,6 +7,7 @@ import { vulnBankProject } from '../data/vulnBankProject';
 import { landingProject } from '../data/landingProject';
 import { feedbackCaptureProject } from '../data/feedbackCaptureProject';
 import { noteWorthyProject } from '../data/noteWorthyProject';
+import { onTheMoveProject } from '../data/onTheMoveProject';
 import type { DayEntry, Project, ProjectPhase, WorkCategory } from '../types';
 import { Card, C } from './MetricsCard';
 import type { CodeVolumeEntry, DerivedMetric, StackEntry } from '../data/metaMetrics';
@@ -48,7 +49,7 @@ export default function OverviewTab({
   activeProjectId,
   onProjectChange,
 }: OverviewTabProps) {
-  const allProjects: Project[] = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject, landingProject, feedbackCaptureProject, noteWorthyProject];
+  const allProjects: Project[] = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject, landingProject, feedbackCaptureProject, noteWorthyProject, onTheMoveProject];
   const activeProject = allProjects.find((p) => p.id === projectId);
 
   const totalHours = useMemo(

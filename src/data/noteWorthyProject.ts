@@ -3,6 +3,7 @@ import type { Project } from '../types';
 export const noteWorthyProject: Project = {
   id: 'note-worthy',
   name: 'Note Worthy',
+  url: 'https://noteworthy.jynaxxapps.com',
   subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE CODE',
   projectType: 'app',
   currentPhase: 'Shipped',

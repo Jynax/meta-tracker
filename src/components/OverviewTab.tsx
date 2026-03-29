@@ -72,7 +72,8 @@ export default function OverviewTab({
   const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
   const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
   const yTickCount = 4;
-  const rawStep = currentLoc / yTickCount || 1;
+  const maxLoc = Math.max(currentLoc, ...codeVolume.map((e) => e.total));
+  const rawStep = maxLoc / yTickCount || 1;
   const magnitude = 10 ** Math.floor(Math.log10(rawStep));
   const niceStep = Math.max(1, Math.ceil(rawStep / magnitude) * magnitude);
   const chartYMax = niceStep * yTickCount;

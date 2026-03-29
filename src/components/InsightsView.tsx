@@ -268,12 +268,117 @@ function EstimatesSection({ data }: SectionProps) {
   );
 }
 
+const DRIVER_COLORS: Record<string, string> = {
+  'agent-led': 'var(--theme-cyan)',
+  collaborative: 'var(--theme-amber)',
+  human: 'var(--theme-emerald)',
+  'human-only': '#a78bfa',
+};
+
+const DRIVER_LABELS: Record<string, string> = {
+  'agent-led': 'Agent-Led',
+  collaborative: 'Collaborative',
+  human: 'Human',
+  'human-only': 'Human Only',
+};
+
 function DriversSection({ data }: SectionProps) {
-  return <div style={{ color: C.muted }}>Drivers detail loading...</div>;
+  const drivers = Object.entries(data.drivers).sort((a, b) => b[1].totalLoc - a[1].totalLoc);
+  const maxLoc = Math.max(...drivers.map(([, s]) => s.totalLoc), 1);
+
+  return (
+    <div>
+      <h3 className="mb-3 text-sm font-semibold" style={{ color: C.white }}>Output by Driver Type</h3>
+      <div className="space-y-4">
+        {drivers.map(([driver, stats]) => {
+          const color = DRIVER_COLORS[driver] ?? C.muted;
+          const label = DRIVER_LABELS[driver] ?? driver;
+          const barPct = maxLoc > 0 ? (stats.totalLoc / maxLoc) * 100 : 0;
+          return (
+            <div key={driver}>
+              <div className="mb-1 flex items-center justify-between">
+                <span className="text-xs font-medium" style={{ color }}>{label}</span>
+                <span className="text-xs" style={{ color: C.muted }}>{stats.sessionCount} blocks</span>
+              </div>
+              <div className="h-5 rounded-md overflow-hidden" style={{ backgroundColor: C.bg }}>
+                <div className="h-full rounded-md transition-all" style={{ width: `${barPct}%`, backgroundColor: color, opacity: 0.8 }} />
+              </div>
+              <div className="mt-1 flex gap-4 text-[10px]" style={{ color: C.muted }}>
+                <span>{stats.totalLoc.toLocaleString()} LOC</span>
+                <span>{Math.round(stats.totalHours)}h</span>
+                <span>{stats.bugsPerSession} bugs/block</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function TimelineSection({ data }: SectionProps) {
-  return <div style={{ color: C.muted }}>Timeline detail loading...</div>;
+  const allDates = Array.from(new Set(data.timeline.flatMap(r => [r.firstDate, r.lastDate, ...r.sessionDates]))).sort((a, b) => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const [am, ad] = a.split(' ');
+    const [bm, bd] = b.split(' ');
+    const ai = months.indexOf(am) * 100 + parseInt(ad);
+    const bi = months.indexOf(bm) * 100 + parseInt(bd);
+    return ai - bi;
+  });
+
+  if (allDates.length === 0) return <div style={{ color: C.muted }}>No timeline data</div>;
+
+  const dateToX = (date: string) => {
+    const idx = allDates.indexOf(date);
+    return idx >= 0 ? idx : 0;
+  };
+
+  const laneHeight = 32;
+  const laneGap = 8;
+  const labelWidth = 120;
+  const chartWidth = 700;
+  const totalHeight = data.timeline.length * (laneHeight + laneGap) + 30;
+  const dateRange = allDates.length - 1 || 1;
+
+  const PROJECT_COLORS = [
+    'var(--theme-cyan)', 'var(--theme-emerald)', 'var(--theme-amber)', '#a78bfa',
+    'var(--theme-rose)', '#60a5fa', '#f472b6', '#34d399', '#fbbf24',
+  ];
+
+  return (
+    <div>
+      <h3 className="mb-3 text-sm font-semibold" style={{ color: C.white }}>Project Activity Timeline</h3>
+      <div className="overflow-x-auto">
+        <svg width={chartWidth + labelWidth + 20} height={totalHeight} className="w-full" viewBox={`0 0 ${chartWidth + labelWidth + 20} ${totalHeight}`}>
+          {/* X-axis date labels */}
+          {allDates.filter((_, i) => i % Math.max(1, Math.floor(allDates.length / 8)) === 0 || i === allDates.length - 1).map(date => {
+            const x = labelWidth + (dateToX(date) / dateRange) * chartWidth;
+            return <text key={date} x={x} y={totalHeight - 4} fill={C.muted} fontSize={9} textAnchor="middle">{date}</text>;
+          })}
+
+          {/* Swim lanes */}
+          {data.timeline.map((row, i) => {
+            const y = i * (laneHeight + laneGap) + 4;
+            const x1 = labelWidth + (dateToX(row.firstDate) / dateRange) * chartWidth;
+            const x2 = labelWidth + (dateToX(row.lastDate) / dateRange) * chartWidth;
+            const color = PROJECT_COLORS[i % PROJECT_COLORS.length];
+            return (
+              <g key={row.projectId}>
+                <text x={labelWidth - 8} y={y + laneHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={11}>{row.projectName}</text>
+                {/* Lane bar */}
+                <rect x={x1} y={y + 4} width={Math.max(x2 - x1, 4)} height={laneHeight - 8} rx={4} fill={color} opacity={0.2} />
+                {/* Session dots */}
+                {row.sessionDates.map((date, di) => {
+                  const dx = labelWidth + (dateToX(date) / dateRange) * chartWidth;
+                  return <circle key={di} cx={dx} cy={y + laneHeight / 2} r={3} fill={color} opacity={0.9} />;
+                })}
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+    </div>
+  );
 }
 
 function WorkMixSection({ data }: SectionProps) {

@@ -1,4 +1,4 @@
-import type { CodeVolumeEntry, SessionEntry } from './bipMetrics';
+import type { CodeVolumeEntry, SessionEntry, BugEntry, DerivedMetric, StackEntry } from './bipMetrics';
 import type { DayEntry } from '../types/index';
 
 // --- Code Volume ---
@@ -107,3 +107,12 @@ export const otmDays: DayEntry[] = [
     driverSummary: { human: 0, ai: 2, collaborative: 0 },
   },
 ];
+
+// --- Bugs ---
+export const otmBugs: BugEntry[] = [];
+
+// --- Derived Metrics ---
+export const otmDerived: DerivedMetric[] = [];
+
+// --- Stack ---
+export const otmStack: StackEntry[] = [];

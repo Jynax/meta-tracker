@@ -14,6 +14,8 @@ import { landingCodeVolume, landingSessions, landingBugs, landingDerived, landin
 import { feedbackCaptureProject } from '../data/feedbackCaptureProject';
 import { fcCodeVolume, fcSessions, fcBugs, fcDerived, fcStack, fcDateRange, fcDays } from '../data/feedbackCaptureMetrics';
 import { noteWorthyProject } from '../data/noteWorthyProject';
+import { onTheMoveProject } from '../data/onTheMoveProject';
+import { otmCodeVolume, otmSessions, otmBugs, otmDerived, otmStack, otmDateRange, otmDays } from '../data/onTheMoveMetrics';
 import { nwCodeVolume, nwSessions, nwBugs, nwDerived, nwStack, nwDateRange, nwDays } from '../data/noteWorthyMetrics';
 
 import { C } from "./MetricsCard";
@@ -59,6 +61,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
       landing: { project: landingProject, codeVolume: landingCodeVolume, sessions: landingSessions, bugs: landingBugs, derived: landingDerived, stack: landingStack, dateRange: landingDateRange, days: landingDays },
       'feedback-capture': { project: feedbackCaptureProject, codeVolume: fcCodeVolume, sessions: fcSessions, bugs: fcBugs, derived: fcDerived, stack: fcStack, dateRange: fcDateRange, days: fcDays },
       'note-worthy': { project: noteWorthyProject, codeVolume: nwCodeVolume, sessions: nwSessions, bugs: nwBugs, derived: nwDerived, stack: nwStack, dateRange: nwDateRange, days: nwDays },
+      'on-the-move': { project: onTheMoveProject, codeVolume: otmCodeVolume, sessions: otmSessions, bugs: otmBugs, derived: otmDerived, stack: otmStack, dateRange: otmDateRange, days: otmDays },
     };
     return projectData[projectId] ?? projectData.bip;
   }, [projectId]);

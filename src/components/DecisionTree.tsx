@@ -210,8 +210,14 @@ export default function DecisionTree() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const switchProject = (projectId: string) => {
-    const project = PROJECTS.find((p) => p.id === projectId);
+  const switchProject = (newProjectId: string) => {
+    if (newProjectId === 'all') {
+      setActiveProject({ id: 'all', name: 'All Projects', subtitle: '', chapters: [], stats: { totalDays: 0, chatGptMessages: '0', coworkSessions: 0, prsCreated: '0', codexTasks: '0', linesOfCode: '0', deadEnds: 0, majorDecisions: 0 } } as typeof bipProject);
+      setView('metrics');
+      setMetricsTab('overview');
+      return;
+    }
+    const project = PROJECTS.find((p) => p.id === newProjectId);
     if (project) {
       setActiveProject(project);
       setExpandedChapters(new Set());
@@ -339,6 +345,20 @@ export default function DecisionTree() {
                 style={{ backgroundColor: 'var(--theme-card-bg)', borderColor: 'var(--theme-border)', minWidth: 220 }}
                 role="listbox"
               >
+                {/* All Projects entry */}
+                <button
+                  role="option"
+                  aria-selected={activeProject.id === 'all'}
+                  onClick={() => { switchProject('all'); setProjectDropdownOpen(false); }}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium transition hover:brightness-125"
+                  style={{
+                    color: activeProject.id === 'all' ? 'var(--theme-cyan)' : 'var(--theme-text-secondary)',
+                    backgroundColor: activeProject.id === 'all' ? 'color-mix(in srgb, var(--theme-cyan) 8%, transparent)' : 'transparent',
+                  }}
+                >
+                  All Projects
+                </button>
+                <div className="mx-2 my-1 border-t" style={{ borderColor: 'var(--theme-border)' }} />
                 {PROJECT_GROUPS.filter(g => g.projects.length > 0).map((group) => (
                   <div key={group.label}>
                     <div className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--theme-text-muted)' }}>
@@ -366,32 +386,34 @@ export default function DecisionTree() {
           </nav>
         )}
 
-        <nav aria-label="View switcher" className="mt-3 flex items-end gap-2">
-          <button
-            onClick={() => setView('tree')}
-            aria-current={view === 'tree' ? 'page' : undefined}
-            className="rounded-t-[8px] border-b-2 px-4 py-2 text-sm font-semibold"
-            style={{
-              backgroundColor: view === 'tree' ? 'var(--theme-card-bg)' : 'transparent',
-              color: view === 'tree' ? 'var(--theme-text-primary)' : 'var(--theme-text-muted)',
-              borderBottomColor: view === 'tree' ? 'var(--theme-cyan)' : 'transparent',
-            }}
-          >
-            🌳 Decision Tree
-          </button>
-          <button
-            onClick={() => setView('metrics')}
-            aria-current={view === 'metrics' ? 'page' : undefined}
-            className="rounded-t-[8px] border-b-2 px-4 py-2 text-sm font-semibold"
-            style={{
-              backgroundColor: view === 'metrics' ? 'var(--theme-card-bg)' : 'transparent',
-              color: view === 'metrics' ? 'var(--theme-text-primary)' : 'var(--theme-text-muted)',
-              borderBottomColor: view === 'metrics' ? 'var(--theme-cyan)' : 'transparent',
-            }}
-          >
-            📊 Metrics
-          </button>
-        </nav>
+        {activeProject.id !== 'all' && (
+          <nav aria-label="View switcher" className="mt-3 flex items-end gap-2">
+            <button
+              onClick={() => setView('tree')}
+              aria-current={view === 'tree' ? 'page' : undefined}
+              className="rounded-t-[8px] border-b-2 px-4 py-2 text-sm font-semibold"
+              style={{
+                backgroundColor: view === 'tree' ? 'var(--theme-card-bg)' : 'transparent',
+                color: view === 'tree' ? 'var(--theme-text-primary)' : 'var(--theme-text-muted)',
+                borderBottomColor: view === 'tree' ? 'var(--theme-cyan)' : 'transparent',
+              }}
+            >
+              🌳 Decision Tree
+            </button>
+            <button
+              onClick={() => setView('metrics')}
+              aria-current={view === 'metrics' ? 'page' : undefined}
+              className="rounded-t-[8px] border-b-2 px-4 py-2 text-sm font-semibold"
+              style={{
+                backgroundColor: view === 'metrics' ? 'var(--theme-card-bg)' : 'transparent',
+                color: view === 'metrics' ? 'var(--theme-text-primary)' : 'var(--theme-text-muted)',
+                borderBottomColor: view === 'metrics' ? 'var(--theme-cyan)' : 'transparent',
+              }}
+            >
+              📊 Metrics
+            </button>
+          </nav>
+        )}
         <button
           onClick={handleRoguePixel}
           aria-hidden="true"

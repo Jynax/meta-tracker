@@ -23,6 +23,7 @@ import OverviewTab from './OverviewTab';
 import CodeTab from './CodeTab';
 import BugsTab from './BugsTab';
 import SessionsTab from './SessionsTab';
+import InsightsView from './InsightsView';
 
 type MetricsTab = 'overview' | 'code' | 'bugs' | 'sessions';
 
@@ -95,79 +96,85 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   return (
     <>
       <div className="rounded-2xl border p-4" style={{ backgroundColor: C.bg, borderColor: C.border }}>
-        <div className="mb-4 flex flex-wrap gap-2">
-          {TABS.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setTab(item.id);
-                onTabChange?.(item.id);
-              }}
-              className="rounded-full border px-4 py-1.5 text-sm font-medium"
-              style={{
-                backgroundColor: tab === item.id ? 'color-mix(in srgb, var(--theme-cyan) 13%, transparent)' : C.cardBg,
-                borderColor: tab === item.id ? C.cyan : C.border,
-                color: tab === item.id ? C.cyan : C.slate,
-              }}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
+        {projectId === 'all' ? (
+          <InsightsView setTooltip={setTooltip} />
+        ) : (
+          <>
+            <div className="mb-4 flex flex-wrap gap-2">
+              {TABS.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setTab(item.id);
+                    onTabChange?.(item.id);
+                  }}
+                  className="rounded-full border px-4 py-1.5 text-sm font-medium"
+                  style={{
+                    backgroundColor: tab === item.id ? 'color-mix(in srgb, var(--theme-cyan) 13%, transparent)' : C.cardBg,
+                    borderColor: tab === item.id ? C.cyan : C.border,
+                    color: tab === item.id ? C.cyan : C.slate,
+                  }}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
 
-        {tab === 'overview' && (
-          <OverviewTab
-            days={selected.days}
-            codeVolume={selected.codeVolume}
-            derived={selected.derived}
-            stack={selected.stack}
-            totalPRs={totalPRs}
-            currentLoc={currentLoc}
-            timelineRange={timelineRange}
-            projectId={projectId}
-            hoveredPointIndex={hoveredPointIndex}
-            setHoveredPointIndex={setHoveredPointIndex}
-            setTooltip={setTooltip}
-            activeProjectId={projectId}
-            onProjectChange={onProjectChange}
-          />
-        )}
+            {tab === 'overview' && (
+              <OverviewTab
+                days={selected.days}
+                codeVolume={selected.codeVolume}
+                derived={selected.derived}
+                stack={selected.stack}
+                totalPRs={totalPRs}
+                currentLoc={currentLoc}
+                timelineRange={timelineRange}
+                projectId={projectId}
+                hoveredPointIndex={hoveredPointIndex}
+                setHoveredPointIndex={setHoveredPointIndex}
+                setTooltip={setTooltip}
+                activeProjectId={projectId}
+                onProjectChange={onProjectChange}
+              />
+            )}
 
-        {tab === 'code' && (
-          <CodeTab
-            codeVolume={selected.codeVolume}
-            days={selected.days}
-            totalAdded={totalAdded}
-            totalDeleted={totalDeleted}
-            currentLoc={currentLoc}
-            hoveredCodeEntry={hoveredCodeEntry}
-            setHoveredCodeEntry={setHoveredCodeEntry}
-            setTooltip={setTooltip}
-          />
-        )}
+            {tab === 'code' && (
+              <CodeTab
+                codeVolume={selected.codeVolume}
+                days={selected.days}
+                totalAdded={totalAdded}
+                totalDeleted={totalDeleted}
+                currentLoc={currentLoc}
+                hoveredCodeEntry={hoveredCodeEntry}
+                setHoveredCodeEntry={setHoveredCodeEntry}
+                setTooltip={setTooltip}
+              />
+            )}
 
-        {tab === 'bugs' && (
-          <BugsTab
-            bugs={selected.bugs}
-            projectId={projectId}
-          />
-        )}
+            {tab === 'bugs' && (
+              <BugsTab
+                bugs={selected.bugs}
+                projectId={projectId}
+              />
+            )}
 
-        {tab === 'sessions' && (
-          <SessionsTab
-            sessions={selected.sessions}
-            days={selected.days}
-            totalPRs={totalPRs}
-            totalHours={totalHours}
-            projectId={projectId}
-            sessionFocusMap={sessionFocusMap}
-            sessionDateMap={sessionDateMap}
-            chapterMap={chapterMap}
-            onJumpToChapter={onJumpToChapter}
-            hoveredPointIndex={hoveredPointIndex}
-            setHoveredPointIndex={setHoveredPointIndex}
-            setTooltip={setTooltip}
-          />
+            {tab === 'sessions' && (
+              <SessionsTab
+                sessions={selected.sessions}
+                days={selected.days}
+                totalPRs={totalPRs}
+                totalHours={totalHours}
+                projectId={projectId}
+                sessionFocusMap={sessionFocusMap}
+                sessionDateMap={sessionDateMap}
+                chapterMap={chapterMap}
+                onJumpToChapter={onJumpToChapter}
+                hoveredPointIndex={hoveredPointIndex}
+                setHoveredPointIndex={setHoveredPointIndex}
+                setTooltip={setTooltip}
+              />
+            )}
+          </>
         )}
       </div>
       {tooltip && (

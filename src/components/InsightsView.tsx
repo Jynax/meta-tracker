@@ -381,10 +381,173 @@ function TimelineSection({ data }: SectionProps) {
   );
 }
 
+const CATEGORY_COLORS: Record<string, string> = {
+  Feature: '#22d3ee',
+  Bug: '#f43f5e',
+  Refactor: '#a78bfa',
+  UX: '#f59e0b',
+  Tooling: '#34d399',
+  Testing: '#818cf8',
+  Docs: '#94a3b8',
+  Scripting: '#34d399',
+  Data: '#60a5fa',
+  'Local-Tooling': '#34d399',
+  Planning: '#fbbf24',
+};
+
 function WorkMixSection({ data }: SectionProps) {
-  return <div style={{ color: C.muted }}>Work Mix detail loading...</div>;
+  const totalBlocks = Object.values(data.workMix.aggregate).reduce((s, n) => s + n, 0);
+  const sortedAggregate = Object.entries(data.workMix.aggregate).sort((a, b) => b[1] - a[1]);
+
+  return (
+    <div>
+      <h3 className="mb-3 text-sm font-semibold" style={{ color: C.white }}>Work Category Distribution</h3>
+
+      {/* Aggregate bar */}
+      <div className="mb-4">
+        <div className="mb-1 text-xs" style={{ color: C.muted }}>Portfolio aggregate ({totalBlocks} blocks)</div>
+        <div className="flex rounded-md overflow-hidden" style={{ height: 28 }}>
+          {sortedAggregate.map(([cat, count]) => (
+            <div
+              key={cat}
+              style={{
+                width: `${(count / totalBlocks) * 100}%`,
+                backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8',
+                minWidth: count > 0 ? 4 : 0,
+                transition: 'width 0.5s ease',
+              }}
+            />
+          ))}
+        </div>
+        <div className="mt-2 flex flex-wrap gap-3">
+          {sortedAggregate.map(([cat, count]) => (
+            <div key={cat} className="flex items-center gap-1.5 text-[10px]" style={{ color: C.muted }}>
+              <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8' }} />
+              {cat}: {Math.round((count / totalBlocks) * 100)}%
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Per-project stacked bars */}
+      <div className="space-y-3">
+        {data.workMix.perProject.map(row => {
+          const projectTotal = Object.values(row.categories).reduce((s, n) => s + n, 0);
+          if (projectTotal === 0) return null;
+          const sorted = Object.entries(row.categories).sort((a, b) => b[1] - a[1]);
+          return (
+            <div key={row.projectId}>
+              <div className="mb-1 text-xs" style={{ color: C.muted }}>{row.projectName}</div>
+              <div className="flex rounded-md overflow-hidden" style={{ height: 20 }}>
+                {sorted.map(([cat, count]) => (
+                  <div
+                    key={cat}
+                    style={{
+                      width: `${(count / projectTotal) * 100}%`,
+                      backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8',
+                      minWidth: count > 0 ? 3 : 0,
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function BugTrendsSection({ data, setTooltip }: SectionProps) {
-  return <div style={{ color: C.muted }}>Bug Trends detail loading...</div>;
+  if (data.bugTrends.length === 0) {
+    return (
+      <div>
+        <h3 className="mb-3 text-sm font-semibold" style={{ color: C.white }}>Bug Discovery Rate</h3>
+        <div className="text-xs" style={{ color: C.muted }}>No bug data available across projects.</div>
+      </div>
+    );
+  }
+
+  const maxAge = Math.max(...data.bugTrends.flatMap(b => b.rateByAge.map(p => p.sessionAge)), 1);
+  const maxBugs = Math.max(...data.bugTrends.flatMap(b => b.rateByAge.map(p => p.bugsPerSession)), 1);
+  const chartW = 700;
+  const chartH = 220;
+  const pad = { left: 40, right: 20, top: 16, bottom: 28 };
+  const innerW = chartW - pad.left - pad.right;
+  const innerH = chartH - pad.top - pad.bottom;
+
+  const PROJECT_COLORS = [
+    'var(--theme-cyan)', 'var(--theme-emerald)', 'var(--theme-amber)', '#a78bfa',
+    'var(--theme-rose)', '#60a5fa', '#f472b6', '#34d399', '#fbbf24',
+  ];
+
+  return (
+    <div>
+      <h3 className="mb-3 text-sm font-semibold" style={{ color: C.white }}>Bug Discovery Rate by Session Age</h3>
+      <div className="overflow-x-auto">
+        <svg width={chartW} height={chartH} className="w-full" viewBox={`0 0 ${chartW} ${chartH}`}>
+          {/* Y-axis labels */}
+          {[0, Math.ceil(maxBugs / 2), maxBugs].map(v => {
+            const y = pad.top + innerH - (v / maxBugs) * innerH;
+            return (
+              <g key={v}>
+                <line x1={pad.left} y1={y} x2={chartW - pad.right} y2={y} stroke={C.border} strokeWidth={0.5} />
+                <text x={pad.left - 6} y={y + 3} textAnchor="end" fill={C.muted} fontSize={9}>{v}</text>
+              </g>
+            );
+          })}
+
+          {/* X-axis labels */}
+          {Array.from({ length: Math.min(maxAge, 10) }, (_, i) => {
+            const age = Math.round(((i + 1) / 10) * maxAge);
+            const x = pad.left + (age / maxAge) * innerW;
+            return <text key={age} x={x} y={chartH - 4} fill={C.muted} fontSize={9} textAnchor="middle">{age}</text>;
+          })}
+
+          {/* Lines per project */}
+          {data.bugTrends.map((trend, ti) => {
+            const color = PROJECT_COLORS[ti % PROJECT_COLORS.length];
+            const points = trend.rateByAge.map(p => ({
+              x: pad.left + (p.sessionAge / maxAge) * innerW,
+              y: pad.top + innerH - (p.bugsPerSession / maxBugs) * innerH,
+            }));
+            if (points.length < 2) return null;
+            const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+            return (
+              <g key={trend.projectId}>
+                <path d={pathD} fill="none" stroke={color} strokeWidth={1.5} opacity={0.8} />
+                {points.map((p, pi) => (
+                  <circle
+                    key={pi}
+                    cx={p.x}
+                    cy={p.y}
+                    r={2.5}
+                    fill={color}
+                    opacity={trend.rateByAge[pi].bugsPerSession > 0 ? 1 : 0.3}
+                    onMouseEnter={(e) => setTooltip?.({ x: e.clientX, y: e.clientY, content: (
+                      <div className="text-xs">
+                        <span style={{ color }}>{trend.projectName}</span>
+                        <span style={{ color: C.muted }}> — Session {trend.rateByAge[pi].sessionAge}: {trend.rateByAge[pi].bugsPerSession} bugs</span>
+                      </div>
+                    )})}
+                    onMouseLeave={() => setTooltip?.(null)}
+                  />
+                ))}
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Legend */}
+      <div className="mt-2 flex flex-wrap gap-3">
+        {data.bugTrends.map((trend, ti) => (
+          <div key={trend.projectId} className="flex items-center gap-1.5 text-[10px]" style={{ color: C.muted }}>
+            <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: PROJECT_COLORS[ti % PROJECT_COLORS.length] }} />
+            {trend.projectName}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }

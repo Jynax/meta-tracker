@@ -12,13 +12,13 @@ test.describe('Navigation & Layout', () => {
     await expect(heading).toContainText('Meta Tracker');
   });
 
-  test('project switcher shows all 9 projects', async ({ page }) => {
+  test('project switcher shows all 9 projects plus All Projects entry', async ({ page }) => {
     const switcher = page.locator('nav[aria-label="Project switcher"]');
     await expect(switcher).toBeVisible();
-    // Open dropdown to count project options
+    // Open dropdown to count project options (9 individual projects + 1 "All Projects" entry)
     await switcher.locator('button[aria-haspopup="listbox"]').click();
     const options = switcher.locator('button[role="option"]');
-    await expect(options).toHaveCount(9);
+    await expect(options).toHaveCount(10);
   });
 
   test('switching projects updates the heading', async ({ page }) => {

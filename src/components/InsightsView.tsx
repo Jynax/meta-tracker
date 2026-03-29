@@ -159,11 +159,113 @@ interface SectionProps {
 }
 
 function VelocitySection({ data, setTooltip }: SectionProps) {
-  return <div style={{ color: C.muted }}>Velocity detail loading...</div>;
+  const maxLoc = Math.max(...data.velocity.map(v => v.locPerHour), 1);
+  const barHeight = 28;
+  const labelWidth = 120;
+  const chartWidth = 700;
+
+  return (
+    <div>
+      <h3 className="mb-3 text-sm font-semibold" style={{ color: C.white }}>LOC / Hour by Project</h3>
+      <svg width={chartWidth + labelWidth + 80} height={data.velocity.length * (barHeight + 8) + 8} className="w-full" viewBox={`0 0 ${chartWidth + labelWidth + 80} ${data.velocity.length * (barHeight + 8) + 8}`}>
+        {data.velocity.map((row, i) => {
+          const y = i * (barHeight + 8) + 4;
+          const barW = maxLoc > 0 ? (row.locPerHour / maxLoc) * chartWidth : 0;
+          return (
+            <g key={row.projectId}
+              onMouseEnter={(e) => setTooltip?.({ x: e.clientX, y: e.clientY, content: (
+                <div className="text-xs space-y-1">
+                  <div style={{ color: C.white }} className="font-medium">{row.projectName}</div>
+                  <div style={{ color: C.muted }}>{row.locPerHour.toLocaleString()} LOC/hr | {row.totalHours}h total | {row.prsPerSession} PRs/session</div>
+                </div>
+              )})}
+              onMouseLeave={() => setTooltip?.(null)}
+            >
+              <text x={labelWidth - 8} y={y + barHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={12}>{row.projectName}</text>
+              <rect x={labelWidth} y={y} width={barW} height={barHeight} rx={4} fill="var(--theme-cyan)" opacity={0.8} />
+              <text x={labelWidth + barW + 6} y={y + barHeight / 2 + 4} fill={C.white} fontSize={11}>{row.locPerHour.toLocaleString()}</text>
+            </g>
+          );
+        })}
+      </svg>
+
+      {/* Summary table */}
+      <div className="mt-4 overflow-x-auto">
+        <table className="w-full text-xs" style={{ color: C.muted }}>
+          <thead>
+            <tr className="border-b" style={{ borderColor: C.border }}>
+              <th className="py-2 text-left font-medium" style={{ color: C.white }}>Project</th>
+              <th className="py-2 text-right font-medium" style={{ color: C.white }}>LOC/hr</th>
+              <th className="py-2 text-right font-medium" style={{ color: C.white }}>PRs/session</th>
+              <th className="py-2 text-right font-medium" style={{ color: C.white }}>Total Hours</th>
+              <th className="py-2 text-right font-medium" style={{ color: C.white }}>Total LOC</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.velocity.map(row => (
+              <tr key={row.projectId} className="border-b" style={{ borderColor: C.border }}>
+                <td className="py-1.5">{row.projectName}</td>
+                <td className="py-1.5 text-right">{row.locPerHour.toLocaleString()}</td>
+                <td className="py-1.5 text-right">{row.prsPerSession}</td>
+                <td className="py-1.5 text-right">{row.totalHours}</td>
+                <td className="py-1.5 text-right">{row.totalLoc.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
 
+const TIER_COLORS: Record<string, string> = {
+  Simple: 'var(--theme-emerald)',
+  Standard: 'var(--theme-cyan)',
+  Complex: 'var(--theme-amber)',
+  Specialized: '#a78bfa',
+};
+
 function EstimatesSection({ data }: SectionProps) {
-  return <div style={{ color: C.muted }}>Estimates detail loading...</div>;
+  const maxHours = Math.max(...data.estimates.map(e => e.traditionalHours), 1);
+  const barHeight = 20;
+  const gap = 6;
+  const rowHeight = barHeight * 2 + gap + 16;
+  const labelWidth = 120;
+  const chartWidth = 600;
+  const totalTraditional = data.estimates.reduce((s, e) => s + e.traditionalHours, 0);
+  const totalActual = data.estimates.reduce((s, e) => s + e.actualHours, 0);
+  const overallMultiplier = totalActual > 0 ? Math.round(totalTraditional / totalActual) : 0;
+
+  return (
+    <div>
+      <h3 className="mb-1 text-sm font-semibold" style={{ color: C.white }}>Actual vs Traditional Estimate</h3>
+      <p className="mb-3 text-xs" style={{ color: C.muted }}>
+        Portfolio multiplier: <span style={{ color: '#a78bfa' }} className="font-bold">{overallMultiplier}x</span> — {totalActual}h actual vs {totalTraditional}h traditional
+      </p>
+
+      <svg width={chartWidth + labelWidth + 120} height={data.estimates.length * rowHeight + 8} className="w-full" viewBox={`0 0 ${chartWidth + labelWidth + 120} ${data.estimates.length * rowHeight + 8}`}>
+        {data.estimates.map((row, i) => {
+          const y = i * rowHeight + 4;
+          const actualW = maxHours > 0 ? (row.actualHours / maxHours) * chartWidth : 0;
+          const tradW = maxHours > 0 ? (row.traditionalHours / maxHours) * chartWidth : 0;
+          const tierColor = TIER_COLORS[row.tier] ?? C.muted;
+          return (
+            <g key={row.projectId}>
+              <text x={labelWidth - 8} y={y + barHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={12}>{row.projectName}</text>
+              {/* Tier badge */}
+              <text x={labelWidth - 8} y={y + barHeight + gap + barHeight / 2 + 4} textAnchor="end" fill={tierColor} fontSize={10}>{row.tier}</text>
+              {/* Actual bar */}
+              <rect x={labelWidth} y={y} width={actualW} height={barHeight} rx={3} fill="var(--theme-cyan)" opacity={0.9} />
+              <text x={labelWidth + actualW + 6} y={y + barHeight / 2 + 4} fill={C.white} fontSize={10}>{row.actualHours}h actual</text>
+              {/* Traditional bar */}
+              <rect x={labelWidth} y={y + barHeight + gap} width={tradW} height={barHeight} rx={3} fill="#a78bfa" opacity={0.5} />
+              <text x={labelWidth + tradW + 6} y={y + barHeight + gap + barHeight / 2 + 4} fill={C.muted} fontSize={10}>{row.traditionalHours}h ({row.traditionalWeeks}w)</text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
 }
 
 function DriversSection({ data }: SectionProps) {

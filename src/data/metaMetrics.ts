@@ -108,6 +108,9 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 52', date: 'Mar 14', label: 'Dep Migration', added: 1147, deleted: 1335, net: -188, total: 9668 },
   { session: 'Session 53', date: 'Mar 15', label: 'Data Push + v1.0', added: 140, deleted: 26, net: 114, total: 9782 },
   { session: 'Session 58', date: 'Mar 21', label: 'NW Project Added', added: 20, deleted: 0, net: 20, total: 9802 },
+  { session: 'Session 62', date: 'Mar 22', label: 'Favicon + Data Pushes', added: 57, deleted: 0, net: 57, total: 9859 },
+  { session: 'Session 62b', date: 'Mar 25', label: 'OTM + NW URLs', added: 192, deleted: 4, net: 188, total: 10047 },
+  { session: 'Session 70', date: 'Mar 28', label: 'LOC Fix + Data Push', added: 2, deleted: 1, net: 1, total: 10048 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -205,6 +208,18 @@ export const metaSessions: SessionEntry[] = [
   ] },
   { session: 'Session 58', date: 'Mar 21', label: 'NW Project Added', duration: 0.5, prs: 1, decisions: 0, deadEnds: 0, focus: 'Added Note Worthy as 8th tracked project in Meta Tracker dropdown. PR #126.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Data', tool: 'Claude Code', taskCount: 1, phase: 'Shipped', driver: 'agent-led', prDetails: [
     { number: 126, title: 'Add Note Worthy as tracked project', createdAt: '2026-03-21T00:00:00Z', mergedAt: '2026-03-21T00:00:00Z' },
+  ] },
+  { session: 'Session 62', date: 'Mar 22', label: 'Favicon + Data Pushes', duration: 0.5, prs: 2, decisions: 0, deadEnds: 0, focus: 'Custom favicon (PR #128). Session 62 metrics push (PR #129). NW sessions 58-60 data push (PR #127).', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Data', tool: 'Claude Code', taskCount: 1, phase: 'Shipped', driver: 'agent-led', prDetails: [
+    { number: 128, title: 'Add custom favicon', createdAt: '2026-03-22T00:00:00Z', mergedAt: '2026-03-23T10:35:19Z' },
+    { number: 129, title: 'data: session 62 metrics push', createdAt: '2026-03-23T00:00:00Z', mergedAt: '2026-03-23T14:24:39Z' },
+  ] },
+  { session: 'Session 62b', date: 'Mar 25', label: 'OTM + NW URLs', duration: 0.5, prs: 1, decisions: 0, deadEnds: 0, focus: 'Added On The Move as 9th tracked project. Added Note Worthy app URL. Updated Playwright test to expect 9 projects. PR #134.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Feature', tool: 'Claude Code', taskCount: 1, phase: 'Shipped', driver: 'agent-led', prDetails: [
+    { number: 134, title: 'Add On The Move + Note Worthy URL', createdAt: '2026-03-25T00:00:00Z', mergedAt: '2026-03-25T22:57:51Z' },
+  ] },
+  { session: 'Session 70', date: 'Mar 28', label: 'LOC Fix + Data Push', duration: 1, prs: 4, decisions: 0, deadEnds: 0, focus: 'Fixed LOC chart y-axis overflow (PR #135). Reviewed Dependabot PRs: lucide-react 1.0 merged (PR #132), dev deps closed (PR #131, ESLint 10 blocked). Session 62 flex data push part 2 merged (PR #133).', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Bug', tool: 'Claude Code', taskCount: 2, phase: 'Shipped', driver: 'collaborative', prDetails: [
+    { number: 132, title: 'Bump lucide-react from 0.577.0 to 1.0.1', createdAt: '2026-03-23T00:00:00Z', mergedAt: '2026-03-29T01:27:35Z' },
+    { number: 133, title: 'data: session 62 flex metrics push (part 2)', createdAt: '2026-03-24T00:00:00Z', mergedAt: '2026-03-29T01:27:18Z' },
+    { number: 135, title: 'fix: LOC chart y-axis overflow on some projects (#82)', createdAt: '2026-03-28T00:00:00Z', mergedAt: '2026-03-29T01:36:52Z' },
   ] },
 ];
 
@@ -505,5 +520,29 @@ export const metaDays: DayEntry[] = [
     ],
     metrics: { totalTimeMinutes: 10, linesAdded: 9, linesDeleted: 0, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 25',
+    title: 'OTM + NW URLs Added',
+    projectId: 'meta',
+    phase: 'Shipped',
+    chapterId: 'meta-ch-time-machine-data-model',
+    blocks: [
+      { id: 'meta-session-62b', dayId: 'Mar 25', label: 'OTM + NW URLs', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-code', timeMinutes: 30, linesAdded: 192, linesDeleted: 4, note: 'Added On The Move as 9th tracked project. Added Note Worthy URL. Updated Playwright test to expect 9 projects. PR #134.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 30, linesAdded: 192, linesDeleted: 4, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 28',
+    title: 'LOC Fix + Data Push',
+    projectId: 'meta',
+    phase: 'Shipped',
+    chapterId: 'meta-ch-time-machine-data-model',
+    blocks: [
+      { id: 'meta-session-70', dayId: 'Mar 28', label: 'LOC Chart Fix + Data Push', workCategory: 'Bug', driver: 'collaborative', operator: 'claude-code', timeMinutes: 60, linesAdded: 2, linesDeleted: 1, note: 'Fixed LOC chart y-axis overflow — axis now scales from max data point, not just currentLoc (PR #135). Reviewed + closed Dependabot PRs #131-132. Lucide-react bumped to 1.0.1 (PR #132). Session 62 flex data push (PR #133).', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 60, linesAdded: 2, linesDeleted: 1, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
 ];

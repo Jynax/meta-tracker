@@ -136,4 +136,16 @@ export const landingDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 10, linesAdded: 12, linesDeleted: 1, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
+  {
+    date: 'Mar 23',
+    title: 'Safe Dep Bumps',
+    projectId: 'landing',
+    phase: 'Shipped',
+    chapterId: 'landing-ch-testing',
+    blocks: [
+      { id: 'landing-session-62-flex', dayId: 'Mar 23', label: 'Safe Dep Bumps', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 15, linesAdded: 85, linesDeleted: 85, note: 'Cherry-picked safe bumps from Dependabot PR #13: workers-types, @types/node, typescript-eslint, globals 17. ESLint 10 deferred. PR #15.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 15, linesAdded: 85, linesDeleted: 85, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
 ];

@@ -688,4 +688,16 @@ export const bipDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 20, linesAdded: 12, linesDeleted: 2, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
+  {
+    date: 'Mar 23',
+    title: 'Recharts Code-Split',
+    projectId: 'bip',
+    phase: 'Shipped',
+    chapterId: 'ch-testing',
+    blocks: [
+      { id: 'bip-session-62-flex-2', dayId: 'Mar 23', label: 'Recharts Code-Split', workCategory: 'Refactor', driver: 'agent-led', operator: 'claude-code', timeMinutes: 20, linesAdded: 5, linesDeleted: 4, note: 'React.lazy on ChartsSection. Main bundle 673KB to 300KB. Combined with xlsx split: 1093KB to 300KB (73% total). PR #90.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 20, linesAdded: 5, linesDeleted: 4, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
 ];

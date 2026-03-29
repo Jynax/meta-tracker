@@ -12,6 +12,8 @@ export const nwCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 58', date: 'Mar 21', label: 'OMR Improvements + Key Detection', added: 250, deleted: 7, net: 243, total: 666 },
   { session: 'Session 59', date: 'Mar 21', label: 'MusicXML Note Editor', added: 1705, deleted: 19, net: 1686, total: 2352 },
   { session: 'Session 60', date: 'Mar 22', label: 'Editor Bug Fixes + Toolbar', added: 281, deleted: 164, net: 117, total: 2469 },
+  { session: 'Session 61', date: 'Mar 22', label: 'Playwright E2E Setup', added: 260, deleted: 2, net: 258, total: 2727 },
+  { session: 'Session 63', date: 'Mar 23', label: 'OMR Comparison Tool', added: 1189, deleted: 111, net: 1078, total: 3805 },
 ];
 
 // --- Sessions ---
@@ -23,6 +25,8 @@ export const nwSessions: SessionEntry[] = [
   { session: 'Session 58', date: 'Mar 21', label: 'OMR Improvements + Key Detection', duration: 1.5, prs: 3, decisions: 2, deadEnds: 0, focus: 'Added NW to Meta Tracker dropdown (MT PR #126). OMR post-processing: title cleanup + slurs/ties re-enabled (BE PR #2). Original key detection from MusicXML (FE PR #4).', chapterId: 'ch-editor', workCategory: 'Feature', tool: 'Claude Code', taskCount: 3, phase: 'Build', driver: 'agent-led' },
   { session: 'Session 59', date: 'Mar 21', label: 'MusicXML Note Editor', duration: 2, prs: 1, decisions: 2, deadEnds: 0, focus: 'Full MusicXML note editor (FE PR #5). Click-to-select, sidebar editing, keyboard shortcuts, MusicXML mutation service. 23 new tests (51 total). Subagent-driven development.', chapterId: 'ch-editor', workCategory: 'Feature', tool: 'Claude Code', taskCount: 1, phase: 'Build', driver: 'agent-led' },
   { session: 'Session 60', date: 'Mar 22', label: 'Editor Bug Fixes + Toolbar', duration: 2, prs: 4, decisions: 0, deadEnds: 0, focus: 'Fix note click selection (PR #6), keep editor open across edits (PR #7), save/cancel workflow (PR #8), toolbar redesign + highlight persistence + connector support (PR #9).', chapterId: 'ch-editor', workCategory: 'Bug', tool: 'Claude Code', taskCount: 4, phase: 'Build', driver: 'collaborative' },
+  { session: 'Session 61', date: 'Mar 22', label: 'Playwright E2E Setup', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'Playwright e2e setup + 15 baseline tests across transposition, OMR, editor, and navigation. PR #10.', chapterId: 'ch-editor', workCategory: 'Testing', tool: 'Claude Code', taskCount: 2, phase: 'Build', driver: 'agent-led' },
+  { session: 'Session 63', date: 'Mar 23', label: 'OMR Comparison Tool', duration: 3, prs: 4, decisions: 3, deadEnds: 0, focus: 'OMR comparison view with 3 preprocessing pipelines, inline annotation tool, GitHub Issue feedback export. Backend PRs #3-4, Frontend PRs #11, #13.', chapterId: 'ch-editor', workCategory: 'Feature', tool: 'Claude Code', taskCount: 3, phase: 'Build', driver: 'agent-led' },
 ];
 
 // --- Date Range ---
@@ -121,5 +125,29 @@ export const nwDays: DayEntry[] = [
     ],
     metrics: { totalTimeMinutes: 120, linesAdded: 281, linesDeleted: 164, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Mar 22',
+    title: 'Playwright E2E Setup',
+    projectId: 'nw',
+    phase: 'Build',
+    chapterId: 'ch-editor',
+    blocks: [
+      { id: 'nw-session-61', dayId: 'Mar 22', label: 'Playwright E2E Setup', workCategory: 'Testing', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 260, linesDeleted: 2, note: 'Playwright e2e setup + 15 baseline tests across transposition, OMR, editor, and navigation. PR #10.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 60, linesAdded: 260, linesDeleted: 2, totalDecisions: 0 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Mar 23',
+    title: 'OMR Comparison Tool',
+    projectId: 'nw',
+    phase: 'Build',
+    chapterId: 'ch-editor',
+    blocks: [
+      { id: 'nw-session-63', dayId: 'Mar 23', label: 'OMR Comparison Tool', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-code', timeMinutes: 180, linesAdded: 1189, linesDeleted: 111, note: 'OMR comparison view with 3 preprocessing pipelines (original, grayscale, threshold). Inline annotation tool for visual OMR feedback. GitHub Issue feedback export via backend proxy. Backend PRs #3-4, Frontend PRs #11, #13.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 180, linesAdded: 1189, linesDeleted: 111, totalDecisions: 3 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
 ];

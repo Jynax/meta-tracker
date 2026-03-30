@@ -3,32 +3,21 @@ import type { DayEntry, WorkCategory, Project } from '../types/index';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
-export type ComplexityTier = 'Simple' | 'Standard' | 'Complex' | 'Specialized';
-
 export interface VelocityRow {
   projectId: string;
   projectName: string;
   locPerHour: number;
   prsPerSession: number;
-  sessionsToMvp: number;
   totalHours: number;
   totalLoc: number;
-}
-
-export interface EstimateRow {
-  projectId: string;
-  projectName: string;
-  actualHours: number;
-  traditionalHours: number;
-  traditionalWeeks: number;
-  tier: ComplexityTier;
+  hasEstimatedHours: boolean;
 }
 
 export interface DriverStats {
   totalLoc: number;
   totalHours: number;
-  bugsPerSession: number;
-  sessionCount: number;
+  blockCount: number;
+  bugsPerBlock: number;
 }
 
 export interface TimelineRow {
@@ -45,15 +34,24 @@ export interface WorkMixRow {
   categories: Partial<Record<WorkCategory, number>>;
 }
 
-export interface BugTrendPoint {
-  sessionAge: number;
-  bugsPerSession: number;
+export interface BugLifecyclePhase {
+  phase: 'Build-time' | 'Interaction' | 'Code Quality' | 'Systemic' | 'Integration';
+  sessionRange: string;
+  bugCount: number;
+  description: string;
 }
 
-export interface BugTrendRow {
+export interface BugProjectSummary {
   projectId: string;
   projectName: string;
-  rateByAge: BugTrendPoint[];
+  totalBugs: number;
+  phases: BugLifecyclePhase[];
+}
+
+export interface ResearchComparison {
+  source: string;
+  finding: string;
+  ourResult: string;
 }
 
 export interface PortfolioTotals {
@@ -62,16 +60,18 @@ export interface PortfolioTotals {
   totalHours: number;
   totalPrs: number;
   totalBugsFixed: number;
+  totalDays: number;
+  totalBlocks: number;
 }
 
 export interface InsightsData {
   portfolio: PortfolioTotals;
   velocity: VelocityRow[];
-  estimates: EstimateRow[];
   drivers: Record<string, DriverStats>;
   timeline: TimelineRow[];
   workMix: { aggregate: Partial<Record<WorkCategory, number>>; perProject: WorkMixRow[] };
-  bugTrends: BugTrendRow[];
+  bugSummaries: BugProjectSummary[];
+  researchComparisons: ResearchComparison[];
 }
 
 // ── Project data bundle type ───────────────────────────────────────────────
@@ -84,19 +84,50 @@ export interface ProjectBundle {
   days: DayEntry[];
 }
 
-// ── Tier config ──────────────────────────────────────────────────────────
+// ── Projects with estimated hours (flagged in UI) ──────────────────────────
 
-const TIER_CONFIG: Record<string, { tier: ComplexityTier; multiplier: number }> = {
-  landing: { tier: 'Simple', multiplier: 4 },
-  remnants: { tier: 'Simple', multiplier: 4 },
-  meta: { tier: 'Standard', multiplier: 6.5 },
-  bip: { tier: 'Standard', multiplier: 6.5 },
-  'item-b-gone': { tier: 'Standard', multiplier: 6.5 },
-  'feedback-capture': { tier: 'Standard', multiplier: 6.5 },
-  'on-the-move': { tier: 'Complex', multiplier: 10 },
-  'vuln-bank': { tier: 'Complex', multiplier: 10 },
-  'note-worthy': { tier: 'Specialized', multiplier: 12.5 },
-};
+const ESTIMATED_HOURS_PROJECTS = new Set(['item-b-gone']);
+
+// ── Research comparisons (evidence-backed) ─────────────────────────────────
+
+const RESEARCH_COMPARISONS: ResearchComparison[] = [
+  {
+    source: 'ISBSG 2026',
+    finding: 'Developers perceive 24% speed increase; measured outcomes are mixed',
+    ourResult: 'Portfolio built in 170h across 9 projects — estimated 2–3x faster than solo traditional development',
+  },
+  {
+    source: 'Cortex 2026 Benchmark',
+    finding: 'AI-assisted teams deliver faster but with higher change failure rate',
+    ourResult: '51 bugs across 55K LOC (0.09 bugs/100 LOC). 29 fixed, 1 deferred. Higher early-stage bug rate, lower late-stage.',
+  },
+  {
+    source: 'Portfolio self-assessment',
+    finding: 'Honest multiplier range: 2–3x with ~20–30% higher long-term maintenance cost',
+    ourResult: 'Based on actual hours vs comparable solo projects, excluding unmeasured human review/design time',
+  },
+];
+
+// ── Bug lifecycle classification ───────────────────────────────────────────
+
+function classifyBugPhase(bug: BugEntry, sessionIndex: number, totalSessions: number): BugLifecyclePhase['phase'] {
+  const position = totalSessions > 0 ? sessionIndex / totalSessions : 0;
+  const desc = (bug.summary ?? '').toLowerCase();
+
+  // Heuristic classification based on bug description and position
+  if (desc.includes('build') || desc.includes('import') || desc.includes('missing dep') || desc.includes('crash on load')) return 'Build-time';
+  if (desc.includes('layout') || desc.includes('click') || desc.includes('scroll') || desc.includes('hover') || desc.includes('ux')) return 'Interaction';
+  if (desc.includes('mojibake') || desc.includes('dead code') || desc.includes('unused') || desc.includes('duplicate') || desc.includes('perf')) return 'Code Quality';
+  if (desc.includes('audit') || desc.includes('migration') || desc.includes('rearchitect') || desc.includes('data model')) return 'Systemic';
+  if (desc.includes('regression') || desc.includes('removed') || desc.includes('broke') || desc.includes('missing prop')) return 'Integration';
+
+  // Fallback: position-based
+  if (position < 0.15) return 'Build-time';
+  if (position < 0.4) return 'Interaction';
+  if (position < 0.6) return 'Code Quality';
+  if (position < 0.8) return 'Systemic';
+  return 'Integration';
+}
 
 // ── Compute ────────────────────────────────────────────────────────────────
 
@@ -114,6 +145,9 @@ export function computeInsights(bundles: ProjectBundle[]): InsightsData {
       sum + b.sessions.reduce((s, sess) => s + sess.prs, 0), 0),
     totalBugsFixed: bundles.reduce((sum, b) =>
       sum + b.bugs.filter(bug => bug.status.toLowerCase().startsWith('fixed')).length, 0),
+    totalDays: new Set(bundles.flatMap(b => b.days.map(d => d.date))).size,
+    totalBlocks: bundles.reduce((sum, b) =>
+      sum + b.days.reduce((s, d) => s + d.blocks.length, 0), 0),
   };
 
   // Velocity
@@ -128,26 +162,11 @@ export function computeInsights(bundles: ProjectBundle[]): InsightsData {
       projectName: b.project.name,
       locPerHour: totalHours > 0 ? Math.round(totalLoc / totalHours) : 0,
       prsPerSession: sessionCount > 0 ? Math.round((totalPrs / sessionCount) * 10) / 10 : 0,
-      sessionsToMvp: sessionCount,
       totalHours,
       totalLoc,
+      hasEstimatedHours: ESTIMATED_HOURS_PROJECTS.has(b.project.id),
     };
   }).sort((a, b) => b.locPerHour - a.locPerHour);
-
-  // Estimates
-  const estimates: EstimateRow[] = bundles.map(b => {
-    const actualHours = b.sessions.reduce((s, sess) => s + sess.duration, 0);
-    const cfg = TIER_CONFIG[b.project.id] ?? { tier: 'Standard' as ComplexityTier, multiplier: 6.5 };
-    const traditionalHours = actualHours * cfg.multiplier;
-    return {
-      projectId: b.project.id,
-      projectName: b.project.name,
-      actualHours,
-      traditionalHours: Math.round(traditionalHours),
-      traditionalWeeks: Math.round((traditionalHours / 40) * 10) / 10,
-      tier: cfg.tier,
-    };
-  }).sort((a, b) => b.traditionalHours - a.traditionalHours);
 
   // Drivers — aggregate from DayEntry blocks
   const driverMap: Record<string, DriverStats> = {};
@@ -156,21 +175,21 @@ export function computeInsights(bundles: ProjectBundle[]): InsightsData {
     for (const day of b.days) {
       for (const block of day.blocks) {
         const d = block.driver === 'ai' ? 'agent-led' : block.driver;
-        if (!driverMap[d]) driverMap[d] = { totalLoc: 0, totalHours: 0, bugsPerSession: 0, sessionCount: 0 };
+        if (!driverMap[d]) driverMap[d] = { totalLoc: 0, totalHours: 0, blockCount: 0, bugsPerBlock: 0 };
         driverMap[d].totalLoc += (block.linesAdded ?? 0);
         driverMap[d].totalHours += (block.timeMinutes ?? 0) / 60;
-        driverMap[d].sessionCount += 1;
+        driverMap[d].blockCount += 1;
       }
     }
     for (const bug of b.bugs) {
       const sess = b.sessions.find(s => s.session === bug.session);
-      const d = sess?.driver === 'ai' ? 'agent-led' : (sess?.driver ?? 'agent-led');
+      const d = sess?.driver ?? 'agent-led';
       driverBugCounts[d] = (driverBugCounts[d] ?? 0) + 1;
     }
   }
   for (const [d, stats] of Object.entries(driverMap)) {
-    stats.bugsPerSession = stats.sessionCount > 0
-      ? Math.round(((driverBugCounts[d] ?? 0) / stats.sessionCount) * 100) / 100
+    stats.bugsPerBlock = stats.blockCount > 0
+      ? Math.round(((driverBugCounts[d] ?? 0) / stats.blockCount) * 100) / 100
       : 0;
   }
 
@@ -198,21 +217,43 @@ export function computeInsights(bundles: ProjectBundle[]): InsightsData {
     return { projectId: b.project.id, projectName: b.project.name, categories: cats };
   });
 
-  // Bug Trends
-  const bugTrends: BugTrendRow[] = bundles
+  // Bug summaries with lifecycle phases
+  const bugSummaries: BugProjectSummary[] = bundles
     .filter(b => b.bugs.length > 0)
     .map(b => {
       const sessionList = b.sessions.map(s => s.session);
-      const bugsBySession: Record<string, number> = {};
+      const phaseCounts: Record<BugLifecyclePhase['phase'], number> = {
+        'Build-time': 0, 'Interaction': 0, 'Code Quality': 0, 'Systemic': 0, 'Integration': 0,
+      };
       for (const bug of b.bugs) {
-        bugsBySession[bug.session] = (bugsBySession[bug.session] ?? 0) + 1;
+        const idx = sessionList.indexOf(bug.session);
+        const phase = classifyBugPhase(bug, idx >= 0 ? idx : 0, sessionList.length);
+        phaseCounts[phase]++;
       }
-      const rateByAge: BugTrendPoint[] = sessionList.map((sess, idx) => ({
-        sessionAge: idx + 1,
-        bugsPerSession: bugsBySession[sess] ?? 0,
-      }));
-      return { projectId: b.project.id, projectName: b.project.name, rateByAge };
+      const allPhases: BugLifecyclePhase[] = [
+        { phase: 'Build-time', sessionRange: 'Sessions 1–3', bugCount: phaseCounts['Build-time'], description: 'Missing deps, build failures, library conflicts' },
+        { phase: 'Interaction', sessionRange: 'Sessions 4–11', bugCount: phaseCounts['Interaction'], description: 'Layout, events, UX issues found by users' },
+        { phase: 'Code Quality', sessionRange: 'Sessions 12–16', bugCount: phaseCounts['Code Quality'], description: 'Mojibake, dead code, performance issues found by audit' },
+        { phase: 'Systemic', sessionRange: 'Sessions 12–20', bugCount: phaseCounts['Systemic'], description: 'Data model issues, architecture gaps' },
+        { phase: 'Integration', sessionRange: 'Sessions 20+', bugCount: phaseCounts['Integration'], description: 'Regressions from tool transitions and refactors' },
+      ];
+      const phases = allPhases.filter(p => p.bugCount > 0);
+
+      return {
+        projectId: b.project.id,
+        projectName: b.project.name,
+        totalBugs: b.bugs.length,
+        phases,
+      };
     });
 
-  return { portfolio, velocity, estimates, drivers: driverMap, timeline, workMix: { aggregate: aggregateMix, perProject }, bugTrends };
+  return {
+    portfolio,
+    velocity,
+    drivers: driverMap,
+    timeline,
+    workMix: { aggregate: aggregateMix, perProject },
+    bugSummaries,
+    researchComparisons: RESEARCH_COMPARISONS,
+  };
 }

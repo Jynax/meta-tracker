@@ -17,10 +17,9 @@ test.describe('Cross-Project Insights', () => {
     await switcher.getByRole('option', { name: 'All Projects' }).click();
     // Narrative headline
     await expect(page.getByText('9 projects. 3 AI tools. 1 human.')).toBeVisible();
-    // Compact stat row — check a few key stats are present
-    await expect(page.getByText('projects', { exact: false })).toBeVisible();
-    await expect(page.getByText('LOC', { exact: false })).toBeVisible();
-    await expect(page.getByText('hours', { exact: false })).toBeVisible();
+    // Compact stat row — verify key stats render with their values
+    await expect(page.getByText('55,680')).toBeVisible();
+    await expect(page.getByText('175.75')).toBeVisible();
   });
 
   test('chapter tabs are clickable and switch content', async ({ page }) => {

@@ -2,6 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { C } from './MetricsCard';
 import type { InsightsData, ProjectBundle } from '../utils/insightsData';
 import { computeInsights } from '../utils/insightsData';
+import { chapters, PORTFOLIO_HEADLINE, type ChapterId } from '../utils/insightsNarrative';
 
 // All project + metrics imports
 import { bipProject } from '../data/bipProject';
@@ -35,238 +36,14 @@ const ALL_BUNDLES: ProjectBundle[] = [
   { project: onTheMoveProject, codeVolume: otmCodeVolume, sessions: otmSessions, bugs: otmBugs, days: otmDays },
 ];
 
-type InsightTab = 'velocity' | 'estimates' | 'drivers' | 'timeline' | 'workMix' | 'bugTrends';
+const CHAPTER_ORDER: ChapterId[] = ['theStory', 'whatWeLearned', 'byTheNumbers', 'forTeams', 'fromTheAI'];
 
-const INSIGHT_CARDS: Array<{ id: InsightTab; label: string; color: string }> = [
-  { id: 'velocity', label: 'Velocity', color: 'var(--theme-cyan)' },
-  { id: 'estimates', label: 'Traditional Est.', color: '#a78bfa' },
-  { id: 'drivers', label: 'Drivers', color: 'var(--theme-emerald)' },
-  { id: 'timeline', label: 'Timeline', color: 'var(--theme-amber)' },
-  { id: 'workMix', label: 'Work Mix', color: '#60a5fa' },
-  { id: 'bugTrends', label: 'Bug Trends', color: 'var(--theme-rose)' },
+// ── Color constants ────────────────────────────────────────────────────────
+
+const PROJECT_COLORS = [
+  'var(--theme-cyan)', 'var(--theme-emerald)', 'var(--theme-amber)', '#a78bfa',
+  'var(--theme-rose)', '#60a5fa', '#f472b6', '#34d399', '#fbbf24',
 ];
-
-interface InsightsViewProps {
-  setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
-}
-
-export default function InsightsView({ setTooltip }: InsightsViewProps) {
-  const [activeTab, setActiveTab] = useState<InsightTab>('velocity');
-  const data = useMemo(() => computeInsights(ALL_BUNDLES), []);
-
-  const cardHeadlines: Record<InsightTab, string> = useMemo(() => {
-    const fastest = data.velocity[0];
-    const totalTraditional = data.estimates.reduce((s, e) => s + e.traditionalHours, 0);
-    const totalActual = data.estimates.reduce((s, e) => s + e.actualHours, 0);
-    const multiplier = totalActual > 0 ? Math.round(totalTraditional / totalActual) : 0;
-
-    const topDriver = Object.entries(data.drivers).sort((a, b) => b[1].totalLoc - a[1].totalLoc)[0];
-    const secondDriver = Object.entries(data.drivers).sort((a, b) => b[1].totalLoc - a[1].totalLoc)[1];
-    const driverRatio = secondDriver && secondDriver[1].totalLoc > 0
-      ? `${(topDriver[1].totalLoc / secondDriver[1].totalLoc).toFixed(1)}x`
-      : '';
-    const driverLabel = topDriver ? `${topDriver[0]}: ${driverRatio} output` : '';
-
-    const dayCount = new Set(ALL_BUNDLES.flatMap(b => b.days.map(d => d.date))).size;
-
-    const topCat = Object.entries(data.workMix.aggregate).sort((a, b) => b[1] - a[1])[0];
-    const totalBlocks = Object.values(data.workMix.aggregate).reduce((s, n) => s + n, 0);
-    const topPct = topCat && totalBlocks > 0 ? Math.round((topCat[1] / totalBlocks) * 100) : 0;
-
-    const bugsWithData = data.bugTrends.flatMap(b => b.rateByAge).filter(p => p.bugsPerSession > 0);
-    const avgAge = bugsWithData.length > 0
-      ? Math.round(bugsWithData.reduce((s, p) => s + p.sessionAge, 0) / bugsWithData.length)
-      : 0;
-
-    return {
-      velocity: fastest ? `${fastest.projectName}: ${fastest.locPerHour.toLocaleString()} LOC/hr` : 'No data',
-      estimates: `${multiplier}x faster avg`,
-      drivers: driverLabel,
-      timeline: `${dayCount} days, ${data.portfolio.totalProjects} projects`,
-      workMix: topCat ? `${topPct}% ${topCat[0]}` : 'No data',
-      bugTrends: avgAge > 0 ? `Peak at session ${avgAge}` : 'No bugs tracked',
-    };
-  }, [data]);
-
-  return (
-    <div className="space-y-4">
-      {/* Portfolio Banner */}
-      <div
-        className="grid grid-cols-5 gap-3 rounded-xl border p-4"
-        style={{ backgroundColor: C.cardBg, borderColor: C.border }}
-      >
-        {[
-          { label: 'Projects', value: data.portfolio.totalProjects },
-          { label: 'Total LOC', value: data.portfolio.totalLoc.toLocaleString() },
-          { label: 'Hours', value: data.portfolio.totalHours.toLocaleString() },
-          { label: 'PRs', value: data.portfolio.totalPrs.toLocaleString() },
-          { label: 'Bugs Fixed', value: data.portfolio.totalBugsFixed },
-        ].map(stat => (
-          <div key={stat.label} className="text-center">
-            <div className="text-2xl font-bold" style={{ color: C.white }}>{stat.value}</div>
-            <div className="text-xs" style={{ color: C.muted }}>{stat.label}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Insight Cards */}
-      <div className="grid grid-cols-3 gap-3 lg:grid-cols-6">
-        {INSIGHT_CARDS.map(card => {
-          const isActive = activeTab === card.id;
-          return (
-            <button
-              key={card.id}
-              onClick={() => setActiveTab(card.id)}
-              className="rounded-xl border p-3 text-left transition"
-              style={{
-                backgroundColor: C.cardBg,
-                borderColor: isActive ? card.color : C.border,
-                borderWidth: isActive ? 2 : 1,
-              }}
-            >
-              <div className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: card.color }}>
-                {card.label}
-              </div>
-              <div className="mt-1 text-sm font-medium truncate" style={{ color: C.white }}>
-                {cardHeadlines[card.id]}
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Detail Tab Content */}
-      <div
-        className="rounded-xl border p-4"
-        style={{ backgroundColor: C.cardBg, borderColor: C.border }}
-      >
-        {activeTab === 'velocity' && <VelocitySection data={data} setTooltip={setTooltip} />}
-        {activeTab === 'estimates' && <EstimatesSection data={data} />}
-        {activeTab === 'drivers' && <DriversSection data={data} />}
-        {activeTab === 'timeline' && <TimelineSection data={data} />}
-        {activeTab === 'workMix' && <WorkMixSection data={data} />}
-        {activeTab === 'bugTrends' && <BugTrendsSection data={data} setTooltip={setTooltip} />}
-      </div>
-    </div>
-  );
-}
-
-// ── Detail Sections (stubs — completed in Tasks 5-7) ──────────────
-
-interface SectionProps {
-  data: InsightsData;
-  setTooltip?: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
-}
-
-function VelocitySection({ data, setTooltip }: SectionProps) {
-  const maxLoc = Math.max(...data.velocity.map(v => v.locPerHour), 1);
-  const barHeight = 28;
-  const labelWidth = 120;
-  const chartWidth = 700;
-
-  return (
-    <div>
-      <h3 className="mb-3 text-sm font-semibold" style={{ color: C.white }}>LOC / Hour by Project</h3>
-      <svg width={chartWidth + labelWidth + 80} height={data.velocity.length * (barHeight + 8) + 8} className="w-full" viewBox={`0 0 ${chartWidth + labelWidth + 80} ${data.velocity.length * (barHeight + 8) + 8}`}>
-        {data.velocity.map((row, i) => {
-          const y = i * (barHeight + 8) + 4;
-          const barW = maxLoc > 0 ? (row.locPerHour / maxLoc) * chartWidth : 0;
-          return (
-            <g key={row.projectId}
-              onMouseEnter={(e) => setTooltip?.({ x: e.clientX, y: e.clientY, content: (
-                <div className="text-xs space-y-1">
-                  <div style={{ color: C.white }} className="font-medium">{row.projectName}</div>
-                  <div style={{ color: C.muted }}>{row.locPerHour.toLocaleString()} LOC/hr | {row.totalHours}h total | {row.prsPerSession} PRs/session</div>
-                </div>
-              )})}
-              onMouseLeave={() => setTooltip?.(null)}
-            >
-              <text x={labelWidth - 8} y={y + barHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={12}>{row.projectName}</text>
-              <rect x={labelWidth} y={y} width={barW} height={barHeight} rx={4} fill="var(--theme-cyan)" opacity={0.8} />
-              <text x={labelWidth + barW + 6} y={y + barHeight / 2 + 4} fill={C.white} fontSize={11}>{row.locPerHour.toLocaleString()}</text>
-            </g>
-          );
-        })}
-      </svg>
-
-      {/* Summary table */}
-      <div className="mt-4 overflow-x-auto">
-        <table className="w-full text-xs" style={{ color: C.muted }}>
-          <thead>
-            <tr className="border-b" style={{ borderColor: C.border }}>
-              <th className="py-2 text-left font-medium" style={{ color: C.white }}>Project</th>
-              <th className="py-2 text-right font-medium" style={{ color: C.white }}>LOC/hr</th>
-              <th className="py-2 text-right font-medium" style={{ color: C.white }}>PRs/session</th>
-              <th className="py-2 text-right font-medium" style={{ color: C.white }}>Total Hours</th>
-              <th className="py-2 text-right font-medium" style={{ color: C.white }}>Total LOC</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.velocity.map(row => (
-              <tr key={row.projectId} className="border-b" style={{ borderColor: C.border }}>
-                <td className="py-1.5">{row.projectName}</td>
-                <td className="py-1.5 text-right">{row.locPerHour.toLocaleString()}</td>
-                <td className="py-1.5 text-right">{row.prsPerSession}</td>
-                <td className="py-1.5 text-right">{row.totalHours}</td>
-                <td className="py-1.5 text-right">{row.totalLoc.toLocaleString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-const TIER_COLORS: Record<string, string> = {
-  Simple: 'var(--theme-emerald)',
-  Standard: 'var(--theme-cyan)',
-  Complex: 'var(--theme-amber)',
-  Specialized: '#a78bfa',
-};
-
-function EstimatesSection({ data }: SectionProps) {
-  const maxHours = Math.max(...data.estimates.map(e => e.traditionalHours), 1);
-  const barHeight = 20;
-  const gap = 6;
-  const rowHeight = barHeight * 2 + gap + 16;
-  const labelWidth = 120;
-  const chartWidth = 600;
-  const totalTraditional = data.estimates.reduce((s, e) => s + e.traditionalHours, 0);
-  const totalActual = data.estimates.reduce((s, e) => s + e.actualHours, 0);
-  const overallMultiplier = totalActual > 0 ? Math.round(totalTraditional / totalActual) : 0;
-
-  return (
-    <div>
-      <h3 className="mb-1 text-sm font-semibold" style={{ color: C.white }}>Actual vs Traditional Estimate</h3>
-      <p className="mb-3 text-xs" style={{ color: C.muted }}>
-        Portfolio multiplier: <span style={{ color: '#a78bfa' }} className="font-bold">{overallMultiplier}x</span> — {totalActual}h actual vs {totalTraditional}h traditional
-      </p>
-
-      <svg width={chartWidth + labelWidth + 120} height={data.estimates.length * rowHeight + 8} className="w-full" viewBox={`0 0 ${chartWidth + labelWidth + 120} ${data.estimates.length * rowHeight + 8}`}>
-        {data.estimates.map((row, i) => {
-          const y = i * rowHeight + 4;
-          const actualW = maxHours > 0 ? (row.actualHours / maxHours) * chartWidth : 0;
-          const tradW = maxHours > 0 ? (row.traditionalHours / maxHours) * chartWidth : 0;
-          const tierColor = TIER_COLORS[row.tier] ?? C.muted;
-          return (
-            <g key={row.projectId}>
-              <text x={labelWidth - 8} y={y + barHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={12}>{row.projectName}</text>
-              {/* Tier badge */}
-              <text x={labelWidth - 8} y={y + barHeight + gap + barHeight / 2 + 4} textAnchor="end" fill={tierColor} fontSize={10}>{row.tier}</text>
-              {/* Actual bar */}
-              <rect x={labelWidth} y={y} width={actualW} height={barHeight} rx={3} fill="var(--theme-cyan)" opacity={0.9} />
-              <text x={labelWidth + actualW + 6} y={y + barHeight / 2 + 4} fill={C.white} fontSize={10}>{row.actualHours}h actual</text>
-              {/* Traditional bar */}
-              <rect x={labelWidth} y={y + barHeight + gap} width={tradW} height={barHeight} rx={3} fill="#a78bfa" opacity={0.5} />
-              <text x={labelWidth + tradW + 6} y={y + barHeight + gap + barHeight / 2 + 4} fill={C.muted} fontSize={10}>{row.traditionalHours}h ({row.traditionalWeeks}w)</text>
-            </g>
-          );
-        })}
-      </svg>
-    </div>
-  );
-}
 
 const DRIVER_COLORS: Record<string, string> = {
   'agent-led': 'var(--theme-cyan)',
@@ -282,48 +59,152 @@ const DRIVER_LABELS: Record<string, string> = {
   'human-only': 'Human Only',
 };
 
-function DriversSection({ data }: SectionProps) {
-  const drivers = Object.entries(data.drivers).sort((a, b) => b[1].totalLoc - a[1].totalLoc);
-  const maxLoc = Math.max(...drivers.map(([, s]) => s.totalLoc), 1);
+const CATEGORY_COLORS: Record<string, string> = {
+  Feature: '#22d3ee', Bug: '#f43f5e', Refactor: '#a78bfa', UX: '#f59e0b',
+  Tooling: '#34d399', Testing: '#818cf8', Docs: '#94a3b8', Scripting: '#34d399',
+  Data: '#60a5fa', 'Local-Tooling': '#34d399', Planning: '#fbbf24',
+};
+
+const PHASE_COLORS: Record<string, string> = {
+  'Build-time': '#60a5fa',
+  'Interaction': '#f59e0b',
+  'Code Quality': '#a78bfa',
+  'Systemic': '#f43f5e',
+  'Integration': '#22d3ee',
+};
+
+// ── Prose renderer (converts **bold** to <strong>) ─────────────────────────
+
+function renderProse(prose: string): ReactNode[] {
+  const parts = prose.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i} style={{ color: C.white }}>{part.slice(2, -2)}</strong>;
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
+
+// ── Main Component ─────────────────────────────────────────────────────────
+
+interface InsightsViewProps {
+  setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
+}
+
+export default function InsightsView({ setTooltip }: InsightsViewProps) {
+  const [activeChapter, setActiveChapter] = useState<ChapterId>('theStory');
+  const data = useMemo(() => computeInsights(ALL_BUNDLES), []);
+  const chapter = chapters[activeChapter];
 
   return (
-    <div>
-      <h3 className="mb-3 text-sm font-semibold" style={{ color: C.white }}>Output by Driver Type</h3>
-      <div className="space-y-4">
-        {drivers.map(([driver, stats]) => {
-          const color = DRIVER_COLORS[driver] ?? C.muted;
-          const label = DRIVER_LABELS[driver] ?? driver;
-          const barPct = maxLoc > 0 ? (stats.totalLoc / maxLoc) * 100 : 0;
+    <div className="space-y-4">
+      {/* Narrative headline */}
+      <div className="text-center py-3">
+        <p className="text-base font-medium" style={{ color: C.white }}>{PORTFOLIO_HEADLINE}</p>
+      </div>
+
+      {/* Compact stat row */}
+      <div className="flex justify-center gap-6 text-xs" style={{ color: C.muted }}>
+        <span><strong style={{ color: C.white }}>{data.portfolio.totalProjects}</strong> projects</span>
+        <span><strong style={{ color: C.white }}>{data.portfolio.totalLoc.toLocaleString()}</strong> LOC</span>
+        <span><strong style={{ color: C.white }}>{data.portfolio.totalHours}</strong> hours</span>
+        <span><strong style={{ color: C.white }}>{data.portfolio.totalPrs}</strong> PRs</span>
+        <span><strong style={{ color: C.white }}>{data.portfolio.totalBlocks}</strong> blocks</span>
+      </div>
+
+      {/* Chapter tabs — pill buttons */}
+      <div className="flex gap-2 flex-wrap">
+        {CHAPTER_ORDER.map(id => {
+          const ch = chapters[id];
+          const isActive = activeChapter === id;
           return (
-            <div key={driver}>
-              <div className="mb-1 flex items-center justify-between">
-                <span className="text-xs font-medium" style={{ color }}>{label}</span>
-                <span className="text-xs" style={{ color: C.muted }}>{stats.sessionCount} blocks</span>
-              </div>
-              <div className="h-5 rounded-md overflow-hidden" style={{ backgroundColor: C.bg }}>
-                <div className="h-full rounded-md transition-all" style={{ width: `${barPct}%`, backgroundColor: color, opacity: 0.8 }} />
-              </div>
-              <div className="mt-1 flex gap-4 text-[10px]" style={{ color: C.muted }}>
-                <span>{stats.totalLoc.toLocaleString()} LOC</span>
-                <span>{Math.round(stats.totalHours)}h</span>
-                <span>{stats.bugsPerSession} bugs/block</span>
-              </div>
-            </div>
+            <button
+              key={id}
+              onClick={() => setActiveChapter(id)}
+              className="px-4 py-2 rounded-full text-xs font-semibold transition"
+              style={{
+                backgroundColor: isActive ? 'var(--theme-cyan)' : C.cardBg,
+                color: isActive ? '#0f172a' : C.muted,
+                border: `1px solid ${isActive ? 'var(--theme-cyan)' : C.border}`,
+              }}
+            >
+              {ch.title}
+            </button>
           );
         })}
+      </div>
+
+      {/* Chapter content */}
+      <div className="rounded-xl border p-6" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
+        {chapter.intro && (
+          <p className="text-sm mb-6" style={{ color: C.muted, lineHeight: 1.7 }}>{chapter.intro}</p>
+        )}
+
+        <div className="space-y-8">
+          {chapter.sections.map(section => (
+            <div key={section.id}>
+              <h3 className="text-sm font-semibold mb-2" style={{ color: C.white }}>{section.heading}</h3>
+              <div className="text-xs leading-relaxed whitespace-pre-line" style={{ color: C.muted, lineHeight: 1.7 }}>
+                {renderProse(section.prose)}
+              </div>
+              {section.disclaimer && (
+                <div className="mt-2 text-[10px] italic px-3 py-2 rounded" style={{ color: C.muted, backgroundColor: C.bg, borderLeft: '3px solid var(--theme-amber)' }}>
+                  {section.disclaimer}
+                </div>
+              )}
+              {section.sources && section.sources.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {section.sources.map((src, i) => (
+                    <span key={i} className="text-[10px] px-2 py-0.5 rounded-full" style={{ backgroundColor: C.bg, color: C.muted }}>
+                      {src.label}{src.note ? ` — ${src.note}` : ''}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {section.chartKey && (
+                <div className="mt-4">
+                  <ChartRenderer chartKey={section.chartKey} data={data} setTooltip={setTooltip} />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-function TimelineSection({ data }: SectionProps) {
+// ── Chart Dispatcher ───────────────────────────────────────────────────────
+
+interface ChartProps {
+  data: InsightsData;
+  setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
+}
+
+function ChartRenderer({ chartKey, data, setTooltip }: ChartProps & { chartKey: string }) {
+  switch (chartKey) {
+    case 'projectTimeline': return <TimelineChart data={data} setTooltip={setTooltip} />;
+    case 'locPerHour': return <VelocityChart data={data} setTooltip={setTooltip} />;
+    case 'driverBreakdown': return <DriverChart data={data} setTooltip={setTooltip} />;
+    case 'workMix': return <WorkMixChart data={data} setTooltip={setTooltip} />;
+    case 'bugLifecycle': return <BugLifecycleChart data={data} setTooltip={setTooltip} />;
+    case 'realMultiplier': return <MultiplierChart data={data} setTooltip={setTooltip} />;
+    case 'velocityVsQuality': return <VelocityQualityChart data={data} setTooltip={setTooltip} />;
+    case 'testingImpact': return <TestingImpactChart data={data} setTooltip={setTooltip} />;
+    case 'toolTransitionBugs': return <ToolTransitionChart data={data} setTooltip={setTooltip} />;
+    case 'lifecyclePhases': return <LifecyclePhasesChart data={data} setTooltip={setTooltip} />;
+    default: return null;
+  }
+}
+
+// ── 1. TimelineChart ───────────────────────────────────────────────────────
+
+function TimelineChart({ data }: ChartProps) {
   const allDates = Array.from(new Set(data.timeline.flatMap(r => [r.firstDate, r.lastDate, ...r.sessionDates]))).sort((a, b) => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const [am, ad] = a.split(' ');
     const [bm, bd] = b.split(' ');
-    const ai = months.indexOf(am) * 100 + parseInt(ad);
-    const bi = months.indexOf(bm) * 100 + parseInt(bd);
-    return ai - bi;
+    return (months.indexOf(am) * 100 + parseInt(ad)) - (months.indexOf(bm) * 100 + parseInt(bd));
   });
 
   if (allDates.length === 0) return <div style={{ color: C.muted }}>No timeline data</div>;
@@ -340,69 +221,111 @@ function TimelineSection({ data }: SectionProps) {
   const totalHeight = data.timeline.length * (laneHeight + laneGap) + 30;
   const dateRange = allDates.length - 1 || 1;
 
-  const PROJECT_COLORS = [
-    'var(--theme-cyan)', 'var(--theme-emerald)', 'var(--theme-amber)', '#a78bfa',
-    'var(--theme-rose)', '#60a5fa', '#f472b6', '#34d399', '#fbbf24',
-  ];
-
   return (
-    <div>
-      <h3 className="mb-3 text-sm font-semibold" style={{ color: C.white }}>Project Activity Timeline</h3>
-      <div className="overflow-x-auto">
-        <svg width={chartWidth + labelWidth + 20} height={totalHeight} className="w-full" viewBox={`0 0 ${chartWidth + labelWidth + 20} ${totalHeight}`}>
-          {/* X-axis date labels */}
-          {allDates.filter((_, i) => i % Math.max(1, Math.floor(allDates.length / 8)) === 0 || i === allDates.length - 1).map(date => {
-            const x = labelWidth + (dateToX(date) / dateRange) * chartWidth;
-            return <text key={date} x={x} y={totalHeight - 4} fill={C.muted} fontSize={9} textAnchor="middle">{date}</text>;
-          })}
-
-          {/* Swim lanes */}
-          {data.timeline.map((row, i) => {
-            const y = i * (laneHeight + laneGap) + 4;
-            const x1 = labelWidth + (dateToX(row.firstDate) / dateRange) * chartWidth;
-            const x2 = labelWidth + (dateToX(row.lastDate) / dateRange) * chartWidth;
-            const color = PROJECT_COLORS[i % PROJECT_COLORS.length];
-            return (
-              <g key={row.projectId}>
-                <text x={labelWidth - 8} y={y + laneHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={11}>{row.projectName}</text>
-                {/* Lane bar */}
-                <rect x={x1} y={y + 4} width={Math.max(x2 - x1, 4)} height={laneHeight - 8} rx={4} fill={color} opacity={0.2} />
-                {/* Session dots */}
-                {row.sessionDates.map((date, di) => {
-                  const dx = labelWidth + (dateToX(date) / dateRange) * chartWidth;
-                  return <circle key={di} cx={dx} cy={y + laneHeight / 2} r={3} fill={color} opacity={0.9} />;
-                })}
-              </g>
-            );
-          })}
-        </svg>
-      </div>
+    <div className="overflow-x-auto">
+      <svg width={chartWidth + labelWidth + 20} height={totalHeight} className="w-full" viewBox={`0 0 ${chartWidth + labelWidth + 20} ${totalHeight}`}>
+        {allDates.filter((_, i) => i % Math.max(1, Math.floor(allDates.length / 8)) === 0 || i === allDates.length - 1).map(date => {
+          const x = labelWidth + (dateToX(date) / dateRange) * chartWidth;
+          return <text key={date} x={x} y={totalHeight - 4} fill={C.muted} fontSize={9} textAnchor="middle">{date}</text>;
+        })}
+        {data.timeline.map((row, i) => {
+          const y = i * (laneHeight + laneGap) + 4;
+          const x1 = labelWidth + (dateToX(row.firstDate) / dateRange) * chartWidth;
+          const x2 = labelWidth + (dateToX(row.lastDate) / dateRange) * chartWidth;
+          const color = PROJECT_COLORS[i % PROJECT_COLORS.length];
+          return (
+            <g key={row.projectId}>
+              <text x={labelWidth - 8} y={y + laneHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={11}>{row.projectName}</text>
+              <rect x={x1} y={y + 4} width={Math.max(x2 - x1, 4)} height={laneHeight - 8} rx={4} fill={color} opacity={0.2} />
+              {row.sessionDates.map((date, di) => {
+                const dx = labelWidth + (dateToX(date) / dateRange) * chartWidth;
+                return <circle key={di} cx={dx} cy={y + laneHeight / 2} r={3} fill={color} opacity={0.9} />;
+              })}
+            </g>
+          );
+        })}
+      </svg>
     </div>
   );
 }
 
-const CATEGORY_COLORS: Record<string, string> = {
-  Feature: '#22d3ee',
-  Bug: '#f43f5e',
-  Refactor: '#a78bfa',
-  UX: '#f59e0b',
-  Tooling: '#34d399',
-  Testing: '#818cf8',
-  Docs: '#94a3b8',
-  Scripting: '#34d399',
-  Data: '#60a5fa',
-  'Local-Tooling': '#34d399',
-  Planning: '#fbbf24',
-};
+// ── 2. VelocityChart ───────────────────────────────────────────────────────
 
-function WorkMixSection({ data }: SectionProps) {
+function VelocityChart({ data, setTooltip }: ChartProps) {
+  const maxLoc = Math.max(...data.velocity.map(v => v.locPerHour), 1);
+  const barHeight = 28;
+  const labelWidth = 130;
+  const chartWidth = 700;
+
+  return (
+    <div>
+      <svg width={chartWidth + labelWidth + 80} height={data.velocity.length * (barHeight + 8) + 8} className="w-full" viewBox={`0 0 ${chartWidth + labelWidth + 80} ${data.velocity.length * (barHeight + 8) + 8}`}>
+        {data.velocity.map((row, i) => {
+          const y = i * (barHeight + 8) + 4;
+          const barW = maxLoc > 0 ? (row.locPerHour / maxLoc) * chartWidth : 0;
+          const label = row.hasEstimatedHours ? `${row.projectName} †` : row.projectName;
+          return (
+            <g key={row.projectId}
+              onMouseEnter={(e) => setTooltip({ x: e.clientX, y: e.clientY, content: (
+                <div className="text-xs space-y-1">
+                  <div style={{ color: C.white }} className="font-medium">{row.projectName}{row.hasEstimatedHours ? ' (estimated hours)' : ''}</div>
+                  <div style={{ color: C.muted }}>{row.locPerHour.toLocaleString()} LOC/hr | {row.totalHours}h total | {row.prsPerSession} PRs/session</div>
+                </div>
+              )})}
+              onMouseLeave={() => setTooltip(null)}
+            >
+              <text x={labelWidth - 8} y={y + barHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={12}>{label}</text>
+              <rect x={labelWidth} y={y} width={barW} height={barHeight} rx={4} fill="var(--theme-cyan)" opacity={0.8} />
+              <text x={labelWidth + barW + 6} y={y + barHeight / 2 + 4} fill={C.white} fontSize={11}>{row.locPerHour.toLocaleString()}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// ── 3. DriverChart ─────────────────────────────────────────────────────────
+
+function DriverChart({ data }: ChartProps) {
+  const drivers = Object.entries(data.drivers).sort((a, b) => b[1].totalLoc - a[1].totalLoc);
+  const maxLoc = Math.max(...drivers.map(([, s]) => s.totalLoc), 1);
+
+  return (
+    <div className="space-y-4">
+      {drivers.map(([driver, stats]) => {
+        const color = DRIVER_COLORS[driver] ?? C.muted;
+        const label = DRIVER_LABELS[driver] ?? driver;
+        const barPct = maxLoc > 0 ? (stats.totalLoc / maxLoc) * 100 : 0;
+        return (
+          <div key={driver}>
+            <div className="mb-1 flex items-center justify-between">
+              <span className="text-xs font-medium" style={{ color }}>{label}</span>
+              <span className="text-xs" style={{ color: C.muted }}>{stats.blockCount} blocks</span>
+            </div>
+            <div className="h-5 rounded-md overflow-hidden" style={{ backgroundColor: C.bg }}>
+              <div className="h-full rounded-md transition-all" style={{ width: `${barPct}%`, backgroundColor: color, opacity: 0.8 }} />
+            </div>
+            <div className="mt-1 flex gap-4 text-[10px]" style={{ color: C.muted }}>
+              <span>{stats.totalLoc.toLocaleString()} LOC</span>
+              <span>{Math.round(stats.totalHours)}h</span>
+              <span>{stats.bugsPerBlock} bugs/block</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── 4. WorkMixChart ────────────────────────────────────────────────────────
+
+function WorkMixChart({ data }: ChartProps) {
   const totalBlocks = Object.values(data.workMix.aggregate).reduce((s, n) => s + n, 0);
   const sortedAggregate = Object.entries(data.workMix.aggregate).sort((a, b) => b[1] - a[1]);
 
   return (
     <div>
-      <h3 className="mb-3 text-sm font-semibold" style={{ color: C.white }}>Work Category Distribution</h3>
-
       {/* Aggregate bar */}
       <div className="mb-4">
         <div className="mb-1 text-xs" style={{ color: C.muted }}>Portfolio aggregate ({totalBlocks} blocks)</div>
@@ -414,6 +337,7 @@ function WorkMixSection({ data }: SectionProps) {
                 width: `${(count / totalBlocks) * 100}%`,
                 backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8',
                 minWidth: count > 0 ? 4 : 0,
+                borderRight: '1px solid #0f172a',
                 transition: 'width 0.5s ease',
               }}
             />
@@ -446,6 +370,7 @@ function WorkMixSection({ data }: SectionProps) {
                       width: `${(count / projectTotal) * 100}%`,
                       backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8',
                       minWidth: count > 0 ? 3 : 0,
+                      borderRight: '1px solid #0f172a',
                     }}
                   />
                 ))}
@@ -458,93 +383,278 @@ function WorkMixSection({ data }: SectionProps) {
   );
 }
 
-function BugTrendsSection({ data, setTooltip }: SectionProps) {
-  if (data.bugTrends.length === 0) {
-    return (
-      <div>
-        <h3 className="mb-3 text-sm font-semibold" style={{ color: C.white }}>Bug Discovery Rate</h3>
-        <div className="text-xs" style={{ color: C.muted }}>No bug data available across projects.</div>
-      </div>
-    );
-  }
+// ── 5. BugLifecycleChart ───────────────────────────────────────────────────
 
-  const maxAge = Math.max(...data.bugTrends.flatMap(b => b.rateByAge.map(p => p.sessionAge)), 1);
-  const maxBugs = Math.max(...data.bugTrends.flatMap(b => b.rateByAge.map(p => p.bugsPerSession)), 1);
-  const chartW = 700;
-  const chartH = 220;
-  const pad = { left: 40, right: 20, top: 16, bottom: 28 };
-  const innerW = chartW - pad.left - pad.right;
-  const innerH = chartH - pad.top - pad.bottom;
+function BugLifecycleChart({ data, setTooltip }: ChartProps) {
+  const projects = data.bugSummaries.filter(p => p.totalBugs > 0);
+  if (projects.length === 0) return <div className="text-xs" style={{ color: C.muted }}>No bug data available.</div>;
 
-  const PROJECT_COLORS = [
-    'var(--theme-cyan)', 'var(--theme-emerald)', 'var(--theme-amber)', '#a78bfa',
-    'var(--theme-rose)', '#60a5fa', '#f472b6', '#34d399', '#fbbf24',
-  ];
+  const maxBugs = Math.max(...projects.map(p => p.totalBugs), 1);
+  const barHeight = 24;
+  const labelWidth = 120;
+  const chartWidth = 500;
+  const phaseOrder: string[] = ['Build-time', 'Interaction', 'Code Quality', 'Systemic', 'Integration'];
 
   return (
     <div>
-      <h3 className="mb-3 text-sm font-semibold" style={{ color: C.white }}>Bug Discovery Rate by Session Age</h3>
-      <div className="overflow-x-auto">
-        <svg width={chartW} height={chartH} className="w-full" viewBox={`0 0 ${chartW} ${chartH}`}>
-          {/* Y-axis labels */}
-          {[0, Math.ceil(maxBugs / 2), maxBugs].map(v => {
-            const y = pad.top + innerH - (v / maxBugs) * innerH;
-            return (
-              <g key={v}>
-                <line x1={pad.left} y1={y} x2={chartW - pad.right} y2={y} stroke={C.border} strokeWidth={0.5} />
-                <text x={pad.left - 6} y={y + 3} textAnchor="end" fill={C.muted} fontSize={9}>{v}</text>
-              </g>
-            );
-          })}
-
-          {/* X-axis labels */}
-          {Array.from({ length: Math.min(maxAge, 10) }, (_, i) => {
-            const age = Math.round(((i + 1) / 10) * maxAge);
-            const x = pad.left + (age / maxAge) * innerW;
-            return <text key={age} x={x} y={chartH - 4} fill={C.muted} fontSize={9} textAnchor="middle">{age}</text>;
-          })}
-
-          {/* Lines per project */}
-          {data.bugTrends.map((trend, ti) => {
-            const color = PROJECT_COLORS[ti % PROJECT_COLORS.length];
-            const points = trend.rateByAge.map(p => ({
-              x: pad.left + (p.sessionAge / maxAge) * innerW,
-              y: pad.top + innerH - (p.bugsPerSession / maxBugs) * innerH,
-            }));
-            if (points.length < 2) return null;
-            const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
-            return (
-              <g key={trend.projectId}>
-                <path d={pathD} fill="none" stroke={color} strokeWidth={1.5} opacity={0.8} />
-                {points.map((p, pi) => (
-                  <circle
-                    key={pi}
-                    cx={p.x}
-                    cy={p.y}
-                    r={2.5}
-                    fill={color}
-                    opacity={trend.rateByAge[pi].bugsPerSession > 0 ? 1 : 0.3}
-                    onMouseEnter={(e) => setTooltip?.({ x: e.clientX, y: e.clientY, content: (
+      <svg width={chartWidth + labelWidth + 60} height={projects.length * (barHeight + 8) + 40} className="w-full" viewBox={`0 0 ${chartWidth + labelWidth + 60} ${projects.length * (barHeight + 8) + 40}`}>
+        {projects.map((proj, i) => {
+          const y = i * (barHeight + 8) + 4;
+          let xOffset = labelWidth;
+          return (
+            <g key={proj.projectId}>
+              <text x={labelWidth - 8} y={y + barHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={11}>{proj.projectName}</text>
+              {phaseOrder.map(phase => {
+                const p = proj.phases.find(ph => ph.phase === phase);
+                if (!p || p.bugCount === 0) return null;
+                const w = (p.bugCount / maxBugs) * chartWidth;
+                const x = xOffset;
+                xOffset += w;
+                return (
+                  <rect
+                    key={phase}
+                    x={x} y={y} width={w} height={barHeight} rx={2}
+                    fill={PHASE_COLORS[phase] ?? C.muted}
+                    opacity={0.85}
+                    onMouseEnter={(e) => setTooltip({ x: e.clientX, y: e.clientY, content: (
                       <div className="text-xs">
-                        <span style={{ color }}>{trend.projectName}</span>
-                        <span style={{ color: C.muted }}> — Session {trend.rateByAge[pi].sessionAge}: {trend.rateByAge[pi].bugsPerSession} bugs</span>
+                        <span style={{ color: C.white }}>{proj.projectName}</span>
+                        <span style={{ color: C.muted }}> — {phase}: {p.bugCount} bugs</span>
                       </div>
                     )})}
-                    onMouseLeave={() => setTooltip?.(null)}
+                    onMouseLeave={() => setTooltip(null)}
                   />
-                ))}
-              </g>
-            );
-          })}
-        </svg>
-      </div>
-
+                );
+              })}
+              <text x={xOffset + 6} y={y + barHeight / 2 + 4} fill={C.muted} fontSize={10}>{proj.totalBugs}</text>
+            </g>
+          );
+        })}
+      </svg>
       {/* Legend */}
       <div className="mt-2 flex flex-wrap gap-3">
-        {data.bugTrends.map((trend, ti) => (
-          <div key={trend.projectId} className="flex items-center gap-1.5 text-[10px]" style={{ color: C.muted }}>
-            <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: PROJECT_COLORS[ti % PROJECT_COLORS.length] }} />
-            {trend.projectName}
+        {phaseOrder.map(phase => (
+          <div key={phase} className="flex items-center gap-1.5 text-[10px]" style={{ color: C.muted }}>
+            <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: PHASE_COLORS[phase] }} />
+            {phase}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── 6. MultiplierChart ─────────────────────────────────────────────────────
+
+function MultiplierChart({ data }: ChartProps) {
+  return (
+    <div className="space-y-3">
+      {data.researchComparisons.map((row, i) => (
+        <div key={i} className="rounded-lg border p-3" style={{ backgroundColor: C.bg, borderColor: C.border }}>
+          <div className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--theme-amber)' }}>{row.source}</div>
+          <div className="text-xs mb-1" style={{ color: C.muted }}><strong style={{ color: C.white }}>Finding:</strong> {row.finding}</div>
+          <div className="text-xs" style={{ color: C.muted }}><strong style={{ color: C.white }}>Our result:</strong> {row.ourResult}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── 7. VelocityQualityChart ────────────────────────────────────────────────
+
+function VelocityQualityChart({ data, setTooltip }: ChartProps) {
+  // Build scatter data: x = avg LOC/session, y = bugs per 100 LOC
+  const points = data.velocity.map((v, i) => {
+    const bugEntry = data.bugSummaries.find(b => b.projectId === v.projectId);
+    const totalBugs = bugEntry?.totalBugs ?? 0;
+    const bugsPer100 = v.totalLoc > 0 ? Math.round((totalBugs / v.totalLoc) * 10000) / 100 : 0;
+    const sessionCount = v.totalHours > 0 ? Math.max(1, Math.round(v.totalHours)) : 1;
+    const locPerSession = Math.round(v.totalLoc / sessionCount);
+    return { ...v, bugsPer100, locPerSession, totalBugs, color: PROJECT_COLORS[i % PROJECT_COLORS.length] };
+  });
+
+  const maxX = Math.max(...points.map(p => p.locPerSession), 1);
+  const maxY = Math.max(...points.map(p => p.bugsPer100), 0.1);
+  const maxHours = Math.max(...points.map(p => p.totalHours), 1);
+
+  const chartW = 600;
+  const chartH = 300;
+  const pad = { left: 50, right: 20, top: 20, bottom: 40 };
+  const innerW = chartW - pad.left - pad.right;
+  const innerH = chartH - pad.top - pad.bottom;
+
+  return (
+    <div className="overflow-x-auto">
+      <svg width={chartW} height={chartH} className="w-full" viewBox={`0 0 ${chartW} ${chartH}`}>
+        {/* Grid lines */}
+        {[0, 0.25, 0.5, 0.75, 1].map(pct => {
+          const y = pad.top + innerH * (1 - pct);
+          const val = (maxY * pct).toFixed(1);
+          return (
+            <g key={pct}>
+              <line x1={pad.left} y1={y} x2={chartW - pad.right} y2={y} stroke={C.border} strokeWidth={0.5} />
+              <text x={pad.left - 6} y={y + 3} textAnchor="end" fill={C.muted} fontSize={9}>{val}</text>
+            </g>
+          );
+        })}
+        {/* X-axis labels */}
+        {[0, 0.25, 0.5, 0.75, 1].map(pct => {
+          const x = pad.left + innerW * pct;
+          const val = Math.round(maxX * pct);
+          return <text key={pct} x={x} y={chartH - 8} fill={C.muted} fontSize={9} textAnchor="middle">{val}</text>;
+        })}
+        <text x={chartW / 2} y={chartH - 0} fill={C.muted} fontSize={9} textAnchor="middle">LOC / session</text>
+        <text x={10} y={pad.top + innerH / 2} fill={C.muted} fontSize={9} textAnchor="middle" transform={`rotate(-90, 10, ${pad.top + innerH / 2})`}>Bugs / 100 LOC</text>
+
+        {/* Dots */}
+        {points.map((p, i) => {
+          const x = pad.left + (p.locPerSession / maxX) * innerW;
+          const y = pad.top + innerH - (p.bugsPer100 / maxY) * innerH;
+          const r = 4 + (p.totalHours / maxHours) * 10;
+          return (
+            <circle
+              key={i}
+              cx={x} cy={y} r={r}
+              fill={p.color} opacity={0.7}
+              onMouseEnter={(e) => setTooltip({ x: e.clientX, y: e.clientY, content: (
+                <div className="text-xs">
+                  <div style={{ color: C.white }} className="font-medium">{p.projectName}</div>
+                  <div style={{ color: C.muted }}>{p.locPerSession} LOC/session | {p.bugsPer100} bugs/100 LOC | {p.totalHours}h</div>
+                </div>
+              )})}
+              onMouseLeave={() => setTooltip(null)}
+            />
+          );
+        })}
+      </svg>
+      {/* Legend */}
+      <div className="mt-2 flex flex-wrap gap-3">
+        {points.map((p, i) => (
+          <div key={i} className="flex items-center gap-1.5 text-[10px]" style={{ color: C.muted }}>
+            <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: p.color }} />
+            {p.projectName}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── 8. TestingImpactChart ──────────────────────────────────────────────────
+
+function TestingImpactChart({ data }: ChartProps) {
+  const withTests = ['item-b-gone', 'note-worthy', 'on-the-move'];
+  const withoutTests = ['meta-tracker', 'bip'];
+
+  const getGroup = (ids: string[], label: string) => {
+    const projects = data.bugSummaries.filter(b => ids.includes(b.projectId));
+    const totalBugs = projects.reduce((s, p) => s + p.totalBugs, 0);
+    return { label, projects, totalBugs };
+  };
+
+  const groups = [
+    getGroup(withTests, 'With Playwright Tests'),
+    getGroup(withoutTests, 'Without Playwright Tests'),
+  ];
+
+  const maxBugs = Math.max(...groups.flatMap(g => g.projects.map(p => p.totalBugs)), 1);
+  const barHeight = 22;
+  const labelWidth = 140;
+  const chartWidth = 400;
+
+  return (
+    <div className="space-y-6">
+      {groups.map(group => (
+        <div key={group.label}>
+          <div className="text-xs font-medium mb-2" style={{ color: group.label.includes('With') ? 'var(--theme-emerald)' : 'var(--theme-rose)' }}>
+            {group.label} — {group.totalBugs} total bugs
+          </div>
+          <svg width={chartWidth + labelWidth + 40} height={group.projects.length * (barHeight + 6) + 4} className="w-full" viewBox={`0 0 ${chartWidth + labelWidth + 40} ${group.projects.length * (barHeight + 6) + 4}`}>
+            {group.projects.map((proj, i) => {
+              const y = i * (barHeight + 6) + 2;
+              const w = (proj.totalBugs / maxBugs) * chartWidth;
+              const color = group.label.includes('With') ? 'var(--theme-emerald)' : 'var(--theme-rose)';
+              return (
+                <g key={proj.projectId}>
+                  <text x={labelWidth - 8} y={y + barHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={11}>{proj.projectName}</text>
+                  <rect x={labelWidth} y={y} width={w} height={barHeight} rx={3} fill={color} opacity={0.7} />
+                  <text x={labelWidth + w + 6} y={y + barHeight / 2 + 4} fill={C.muted} fontSize={10}>{proj.totalBugs}</text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── 9. ToolTransitionChart ─────────────────────────────────────────────────
+
+function ToolTransitionChart({ data }: ChartProps) {
+  const mt = data.bugSummaries.find(b => b.projectId === 'meta-tracker');
+  if (!mt || mt.phases.length === 0) return <div className="text-xs" style={{ color: C.muted }}>No Meta Tracker bug data.</div>;
+
+  const maxBugs = Math.max(...mt.phases.map(p => p.bugCount), 1);
+  const barHeight = 28;
+  const labelWidth = 100;
+  const chartWidth = 400;
+
+  return (
+    <div>
+      <div className="text-xs mb-2" style={{ color: C.muted }}>Meta Tracker bugs by phase — highlighting integration regressions from tool transitions</div>
+      <svg width={chartWidth + labelWidth + 60} height={mt.phases.length * (barHeight + 8) + 4} className="w-full" viewBox={`0 0 ${chartWidth + labelWidth + 60} ${mt.phases.length * (barHeight + 8) + 4}`}>
+        {mt.phases.map((phase, i) => {
+          const y = i * (barHeight + 8) + 2;
+          const w = (phase.bugCount / maxBugs) * chartWidth;
+          const color = PHASE_COLORS[phase.phase] ?? C.muted;
+          return (
+            <g key={phase.phase}>
+              <text x={labelWidth - 8} y={y + barHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={11}>{phase.phase}</text>
+              <rect x={labelWidth} y={y} width={w} height={barHeight} rx={3} fill={color} opacity={0.85} />
+              <text x={labelWidth + w + 6} y={y + barHeight / 2 + 4} fill={C.white} fontSize={11}>{phase.bugCount}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// ── 10. LifecyclePhasesChart ───────────────────────────────────────────────
+
+function LifecyclePhasesChart({ data }: ChartProps) {
+  return (
+    <div className="space-y-3">
+      {data.workMix.perProject.map((row, pi) => {
+        const projectTotal = Object.values(row.categories).reduce((s, n) => s + n, 0);
+        if (projectTotal === 0) return null;
+        const sorted = Object.entries(row.categories).sort((a, b) => b[1] - a[1]);
+        return (
+          <div key={row.projectId}>
+            <div className="mb-1 text-xs" style={{ color: PROJECT_COLORS[pi % PROJECT_COLORS.length] }}>{row.projectName}</div>
+            <div className="flex rounded-md overflow-hidden" style={{ height: 20 }}>
+              {sorted.map(([cat, count]) => (
+                <div
+                  key={cat}
+                  style={{
+                    width: `${(count / projectTotal) * 100}%`,
+                    backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8',
+                    minWidth: count > 0 ? 3 : 0,
+                    borderRight: '1px solid #0f172a',
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+      {/* Legend */}
+      <div className="mt-2 flex flex-wrap gap-3">
+        {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
+          <div key={cat} className="flex items-center gap-1.5 text-[10px]" style={{ color: C.muted }}>
+            <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
+            {cat}
           </div>
         ))}
       </div>

@@ -28,6 +28,7 @@ import type { TreeNodeData } from './treeLayout';
 import { buildTreeLayout } from './treeLayout';
 import { ExternalLink } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
+import ChangelogPage from './ChangelogPage';
 
 const FILTERS: Array<{ id: FilterType; label: string }> = [
   { id: 'all', label: 'All' },
@@ -170,7 +171,7 @@ export default function DecisionTree() {
     setTimeout(() => setEasterEggToast(null), 2000);
   }, [theme, toggleTheme]);
   const [filter, setFilter] = useState<FilterType>('all');
-  const [view, setView] = useState<'tree' | 'metrics'>('tree');
+  const [view, setView] = useState<'tree' | 'metrics' | 'changelog'>('tree');
   const [showHowWeWork, setShowHowWeWork] = useState(false);
   const [treeMode, setTreeMode] = useState<'stacked' | 'canvas'>('stacked');
   const [metricsTab, setMetricsTab] = useState<'overview' | 'code' | 'bugs' | 'sessions'>('overview');
@@ -317,6 +318,14 @@ export default function DecisionTree() {
             </h1>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setView('changelog')}
+              className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition hover:brightness-125"
+              style={{ borderColor: 'var(--theme-border)', backgroundColor: 'var(--theme-card-bg)', color: 'var(--theme-text-secondary)' }}
+              title="Changelog"
+            >
+              📋 Changelog
+            </button>
             <button
               onClick={() => setShowHowWeWork(true)}
               className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition hover:brightness-125"
@@ -561,6 +570,8 @@ export default function DecisionTree() {
         />
         </ErrorBoundary>
       )}
+
+      {view === 'changelog' && <ChangelogPage onClose={() => setView('tree')} />}
 
       {showHowWeWork && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 100, backgroundColor: 'var(--theme-bg)', overflowY: 'auto' }}>

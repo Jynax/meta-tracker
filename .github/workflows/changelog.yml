@@ -1,0 +1,118 @@
+name: Update Changelog
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  update-changelog:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Parse PR body and update changelog
+        uses: actions/github-script@v7
+        id: parse
+        with:
+          script: |
+            const fs = require('fs');
+            const body = context.payload.pull_request.body || '';
+
+            // Find ## Changelog section
+            const changelogMatch = body.match(/## Changelog\s*\n([\s\S]*?)(?=\n## |\n---|\s*$)/i);
+            if (!changelogMatch) {
+              console.log('No Changelog section found — skipping');
+              core.setOutput('has_entry', 'false');
+              return;
+            }
+
+            const section = changelogMatch[1];
+
+            // Extract Category and Summary
+            const categoryMatch = section.match(/\*\*Category:\*\*\s*(.+)/i);
+            const summaryMatch = section.match(/\*\*Summary:\*\*\s*(.+)/i);
+
+            if (!categoryMatch || !summaryMatch) {
+              console.log('Category or Summary missing — skipping');
+              core.setOutput('has_entry', 'false');
+              return;
+            }
+
+            const category = categoryMatch[1].trim().toLowerCase();
+            const summary = summaryMatch[1].trim();
+
+            // Validate category
+            const validCategories = ['new', 'improved', 'updated'];
+            if (!validCategories.includes(category)) {
+              console.log(`Invalid category "${category}" — skipping`);
+              core.setOutput('has_entry', 'false');
+              return;
+            }
+
+            // Skip if summary looks like a placeholder
+            if (summary.startsWith('<!--') || summary.length < 3) {
+              console.log('Summary is empty or placeholder — skipping');
+              core.setOutput('has_entry', 'false');
+              return;
+            }
+
+            // Read existing changelog
+            let changelog = [];
+            try {
+              changelog = JSON.parse(fs.readFileSync('CHANGELOG.json', 'utf8'));
+            } catch (e) {
+              console.log('No existing CHANGELOG.json — creating fresh');
+            }
+
+            // Get today's date in YYYY-MM-DD format
+            const today = new Date().toISOString().split('T')[0];
+
+            // Build the new entry
+            const entry = { category, title: summary, description: '' };
+
+            // Find or create today's date group
+            if (changelog.length > 0 && changelog[0].date === today) {
+              changelog[0].entries.unshift(entry);
+            } else {
+              changelog.unshift({ date: today, entries: [entry] });
+            }
+
+            fs.writeFileSync('CHANGELOG.json', JSON.stringify(changelog, null, 2) + '\n');
+
+            core.setOutput('has_entry', 'true');
+            core.setOutput('category', category);
+            core.setOutput('title', summary.replace(/["\\\n\r]/g, ' ').trim());
+            core.setOutput('date', today);
+
+      - name: Commit updated changelog
+        if: steps.parse.outputs.has_entry == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.json
+          git commit -m "docs: update changelog [skip ci]"
+          git push
+
+      - name: Dispatch to landing page
+        if: steps.parse.outputs.has_entry == 'true'
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.JYNAX_PAT }}
+          repository: Jynax/jynaxxapps-landing
+          event-type: changelog-entry
+          client-payload: |
+            {
+              "date": "${{ steps.parse.outputs.date }}",
+              "project": "Meta Tracker",
+              "projectUrl": "https://meta.jynaxxapps.com",
+              "category": "${{ steps.parse.outputs.category }}",
+              "title": "${{ steps.parse.outputs.title }}"
+            }

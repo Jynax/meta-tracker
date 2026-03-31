@@ -545,4 +545,29 @@ export const metaDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 60, linesAdded: 2, linesDeleted: 1, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
+  {
+    date: 'Mar 29',
+    title: 'Cross-Project Insights',
+    projectId: 'meta',
+    phase: 'Shipped',
+    chapterId: 'meta-ch-time-machine-data-model',
+    blocks: [
+      { id: 'meta-session-71', dayId: 'Mar 29', label: 'Cross-Project Insights (#83)', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 210, linesAdded: 987, linesDeleted: 105, note: '"All Projects" in dropdown → InsightsView with portfolio banner + 6 insight cards/tabs (Velocity, Estimates, Drivers, Timeline, Work Mix, Bug Trends). New files: InsightsView.tsx, insightsData.ts. 8 commits. 4 new Playwright tests. PR #138.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 210, linesAdded: 987, linesDeleted: 105, totalDecisions: 1 },
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
+  {
+    date: 'Mar 30',
+    title: 'InsightsView Redesign — Planning + Implementation',
+    projectId: 'meta',
+    phase: 'Shipped',
+    chapterId: 'meta-ch-time-machine-data-model',
+    blocks: [
+      { id: 'meta-session-72', dayId: 'Mar 30', label: 'InsightsView Redesign Planning', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 90, linesAdded: 0, linesDeleted: 0, note: 'Planning session. Reviewed 5 feedback captures on InsightsView. Deep research: IBG LOC/hr data gap, 7x multiplier debunked (honest range 2-3x per ISBSG/Cortex 2026), driver audit. Brainstormed full redesign: 5 narrative chapters replacing 6 data tabs. Spec + 7-task implementation plan written.', contextWindowOrigin: false },
+      { id: 'meta-session-73', dayId: 'Mar 30', label: 'InsightsView Redesign Implementation', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-code', timeMinutes: 60, linesAdded: 816, linesDeleted: 479, note: 'Executed redesign plan via subagent-driven development. 7 tasks, 7 commits. IBG data gaps fixed, session 27 driver fix, new insightsNarrative.ts (5 chapters), rewrote insightsData.ts (honest aggregation), rewrote InsightsView.tsx (narrative chapters + 10 charts), updated e2e tests. All 85 tests green. PR #139.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 150, linesAdded: 816, linesDeleted: 479, totalDecisions: 5 },
+    driverSummary: { human: 0, ai: 1, collaborative: 1 },
+  },
 ];

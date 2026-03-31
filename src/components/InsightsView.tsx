@@ -104,7 +104,7 @@ export default function InsightsView({ setTooltip }: InsightsViewProps) {
       </div>
 
       {/* Compact stat row */}
-      <div className="flex justify-center gap-6 text-xs" style={{ color: C.muted }}>
+      <div className="flex justify-center gap-6 text-sm" style={{ color: C.muted }}>
         <span><strong style={{ color: C.white }}>{data.portfolio.totalProjects}</strong> projects</span>
         <span><strong style={{ color: C.white }}>{data.portfolio.totalLoc.toLocaleString()}</strong> LOC</span>
         <span><strong style={{ color: C.white }}>{data.portfolio.totalHours}</strong> hours</span>
@@ -121,7 +121,7 @@ export default function InsightsView({ setTooltip }: InsightsViewProps) {
             <button
               key={id}
               onClick={() => setActiveChapter(id)}
-              className="px-4 py-2 rounded-full text-xs font-semibold transition"
+              className="px-4 py-2 rounded-full text-sm font-semibold transition"
               style={{
                 backgroundColor: isActive ? 'var(--theme-cyan)' : C.cardBg,
                 color: isActive ? '#0f172a' : C.muted,
@@ -144,7 +144,7 @@ export default function InsightsView({ setTooltip }: InsightsViewProps) {
           {chapter.sections.map(section => (
             <div key={section.id}>
               <h3 className="text-sm font-semibold mb-2" style={{ color: C.white }}>{section.heading}</h3>
-              <div className="text-xs leading-relaxed whitespace-pre-line" style={{ color: C.muted, lineHeight: 1.7 }}>
+              <div className="text-sm leading-relaxed whitespace-pre-line" style={{ color: C.muted, lineHeight: 1.7 }}>
                 {renderProse(section.prose)}
               </div>
               {section.disclaimer && (
@@ -452,8 +452,8 @@ function MultiplierChart({ data }: ChartProps) {
       {data.researchComparisons.map((row, i) => (
         <div key={i} className="rounded-lg border p-3" style={{ backgroundColor: C.bg, borderColor: C.border }}>
           <div className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--theme-amber)' }}>{row.source}</div>
-          <div className="text-xs mb-1" style={{ color: C.muted }}><strong style={{ color: C.white }}>Finding:</strong> {row.finding}</div>
-          <div className="text-xs" style={{ color: C.muted }}><strong style={{ color: C.white }}>Our result:</strong> {row.ourResult}</div>
+          <div className="text-sm mb-1" style={{ color: C.muted }}><strong style={{ color: C.white }}>Finding:</strong> {row.finding}</div>
+          <div className="text-sm" style={{ color: C.muted }}><strong style={{ color: C.white }}>Our result:</strong> {row.ourResult}</div>
         </div>
       ))}
     </div>

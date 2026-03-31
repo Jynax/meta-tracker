@@ -1,5 +1,7 @@
 @import '@xyflow/react/dist/style.css' layer(base);
 @import "tailwindcss";
+@import "jynaxxapps-tokens/tailwind-theme.css";
+@import "@fontsource-variable/inter";
 @import "./styles/sc-theme.css";
 
 html {

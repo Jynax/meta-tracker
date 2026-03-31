@@ -111,6 +111,12 @@ export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 62', date: 'Mar 22', label: 'Favicon + Data Pushes', added: 57, deleted: 0, net: 57, total: 9859 },
   { session: 'Session 62b', date: 'Mar 25', label: 'OTM + NW URLs', added: 192, deleted: 4, net: 188, total: 10047 },
   { session: 'Session 70', date: 'Mar 28', label: 'LOC Fix + Data Push', added: 2, deleted: 1, net: 1, total: 10048 },
+  { session: 'Session 71', date: 'Mar 29', label: 'Cross-Project Insights', added: 987, deleted: 105, net: 882, total: 10930 },
+  { session: 'Session 72', date: 'Mar 30', label: 'InsightsView Redesign Planning', added: 0, deleted: 0, net: 0, total: 10930 },
+  { session: 'Session 73', date: 'Mar 30', label: 'InsightsView Redesign', added: 816, deleted: 479, net: 337, total: 11267 },
+  { session: 'Session 74', date: 'Mar 31', label: 'Maintenance + Timeline', added: 737, deleted: 888, net: -151, total: 11116 },
+  { session: 'Session 75', date: 'Mar 31', label: 'Shared Design Tokens', added: 25, deleted: 5, net: 20, total: 11136 },
+  { session: 'Session 76', date: 'Mar 31', label: 'InsightsView Readability', added: 32, deleted: 25, net: 7, total: 11143 },
 ];
 
 export const metaSessions: SessionEntry[] = [
@@ -220,6 +226,25 @@ export const metaSessions: SessionEntry[] = [
     { number: 132, title: 'Bump lucide-react from 0.577.0 to 1.0.1', createdAt: '2026-03-23T00:00:00Z', mergedAt: '2026-03-29T01:27:35Z' },
     { number: 133, title: 'data: session 62 flex metrics push (part 2)', createdAt: '2026-03-24T00:00:00Z', mergedAt: '2026-03-29T01:27:18Z' },
     { number: 135, title: 'fix: LOC chart y-axis overflow on some projects (#82)', createdAt: '2026-03-28T00:00:00Z', mergedAt: '2026-03-29T01:36:52Z' },
+  ] },
+  { session: 'Session 71', date: 'Mar 29', label: 'Cross-Project Insights', duration: 3.5, prs: 1, decisions: 1, deadEnds: 0, focus: 'Cross-project insights (#83): "All Projects" in dropdown → InsightsView with portfolio banner + 6 insight cards/tabs (Velocity, Estimates, Drivers, Timeline, Work Mix, Bug Trends). New files: InsightsView.tsx, insightsData.ts. 8 commits. PR #138.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Feature', tool: 'Claude Code', taskCount: 1, phase: 'Shipped', driver: 'collaborative', prDetails: [
+    { number: 138, title: 'feat: cross-project InsightsView (#83)', createdAt: '2026-03-29T00:00:00Z', mergedAt: '2026-03-29T00:00:00Z' },
+  ] },
+  { session: 'Session 72', date: 'Mar 30', label: 'InsightsView Redesign Planning', duration: 1.5, prs: 0, decisions: 5, deadEnds: 0, focus: 'Planning session. Reviewed 5 feedback captures on InsightsView. Deep research: IBG LOC/hr data gap, 7x multiplier debunked (honest 2-3x per ISBSG/Cortex 2026), driver audit. Brainstormed full redesign: 5 narrative chapters replacing 6 data tabs. Spec + 7-task plan written.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Data', tool: 'Claude Code', taskCount: 0, phase: 'Shipped', driver: 'collaborative' },
+  { session: 'Session 73', date: 'Mar 30', label: 'InsightsView Redesign', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'InsightsView redesign via subagent-driven development. 7 tasks, 7 commits. IBG data gaps fixed, insightsNarrative.ts (5 chapters), rewrote insightsData.ts + InsightsView.tsx. All 85 tests green. PR #139.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Feature', tool: 'Claude Code', taskCount: 7, phase: 'Shipped', driver: 'agent-led', prDetails: [
+    { number: 139, title: 'feat: InsightsView redesign — narrative chapters + honest data', createdAt: '2026-03-30T00:00:00Z', mergedAt: '2026-03-30T00:00:00Z' },
+  ] },
+  { session: 'Session 74', date: 'Mar 31', label: 'Maintenance + Timeline', duration: 2, prs: 4, decisions: 0, deadEnds: 0, focus: 'Data push sessions 71-73 (PR #142). Fixed PR #130 Timeline Overhaul (rebased, 4 Playwright tests rewritten). Investigated 3 broken Dependabot PRs (ESLint 10 + TS 6 conflicts, closed). Safe dep bumps PR #143 (8 patch/minor updates). All PRs resolved.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 3, phase: 'Shipped', driver: 'collaborative', prDetails: [
+    { number: 130, title: 'feat: replace History tab with horizontal process timeline (#67)', createdAt: '2026-03-23T23:52:03Z', mergedAt: '2026-03-31T11:14:17Z' },
+    { number: 141, title: 'build(deps): bump production-dependencies group with 2 updates', createdAt: '2026-03-30T23:59:50Z', mergedAt: '2026-03-31T11:16:32Z' },
+    { number: 142, title: 'data: push sessions 71-73 metrics', createdAt: '2026-03-31T10:45:40Z', mergedAt: '2026-03-31T10:50:42Z' },
+    { number: 143, title: 'build(deps): safe patch/minor dependency bumps', createdAt: '2026-03-31T11:26:19Z', mergedAt: '2026-03-31T11:29:33Z' },
+  ] },
+  { session: 'Session 75', date: 'Mar 31', label: 'Shared Design Tokens', duration: 3, prs: 1, decisions: 1, deadEnds: 0, focus: 'Cross-cutting session. Brainstormed + spec\'d + implemented shared design system: jynaxxapps-tokens package. Rolled out to 6 projects. MT: Inter font, 10px card radius, InsightsView font size bumps. PR #144.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Feature', tool: 'Claude Code', taskCount: 1, phase: 'Shipped', driver: 'collaborative', prDetails: [
+    { number: 144, title: 'Shared design tokens + InsightsView font size fix', createdAt: '2026-03-31T11:36:41Z', mergedAt: '2026-03-31T11:59:43Z' },
+  ] },
+  { session: 'Session 76', date: 'Mar 31', label: 'InsightsView Readability', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'InsightsView readability pass (#85): font size bumps, timeline label widening, clickable source links, legend size increases. Feedback triage session. PR #145.', chapterId: 'meta-ch-time-machine-data-model', workCategory: 'Bug', tool: 'Claude Code', taskCount: 1, phase: 'Shipped', driver: 'collaborative', prDetails: [
+    { number: 145, title: 'fix: InsightsView readability pass (#85)', createdAt: '2026-03-31T14:22:57Z', mergedAt: '2026-03-31T14:26:11Z' },
   ] },
 ];
 
@@ -569,5 +594,19 @@ export const metaDays: DayEntry[] = [
     ],
     metrics: { totalTimeMinutes: 150, linesAdded: 816, linesDeleted: 479, totalDecisions: 5 },
     driverSummary: { human: 0, ai: 1, collaborative: 1 },
+  },
+  {
+    date: 'Mar 31',
+    title: 'Maintenance + Timeline Overhaul',
+    projectId: 'meta',
+    phase: 'Shipped',
+    chapterId: 'meta-ch-time-machine-data-model',
+    blocks: [
+      { id: 'meta-session-74', dayId: 'Mar 31', label: 'Maintenance + Timeline (#67)', workCategory: 'Tooling', driver: 'collaborative', operator: 'claude-code', timeMinutes: 120, linesAdded: 737, linesDeleted: 888, note: 'Data push sessions 71-73 (PR #142). Fixed PR #130 Timeline Overhaul (rebased, 4 Playwright tests rewritten, merged). Investigated 3 broken Dependabot PRs (ESLint 10 + TS 6 conflicts, closed all). Safe dep bumps PR #143 (8 patch/minor updates, merged). Dependabot PR #141 merged.', contextWindowOrigin: false },
+      { id: 'meta-session-75', dayId: 'Mar 31', label: 'Shared Design Tokens', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 180, linesAdded: 25, linesDeleted: 5, note: 'Cross-cutting session. Built jynaxxapps-tokens design system package, rolled out to 6 projects. MT portion: Inter font, 10px card radius, consistent shadows, InsightsView font size bumps. PR #144.', contextWindowOrigin: false },
+      { id: 'meta-session-76', dayId: 'Mar 31', label: 'InsightsView Readability (#85)', workCategory: 'Bug', driver: 'collaborative', operator: 'claude-code', timeMinutes: 60, linesAdded: 32, linesDeleted: 25, note: 'InsightsView readability pass: font size bumps (headings, intro, disclaimers, legends), timeline label widening (120→160px), clickable source links with hover states. Feedback triage (11 captures). PR #145.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 360, linesAdded: 794, linesDeleted: 918, totalDecisions: 1 },
+    driverSummary: { human: 0, ai: 0, collaborative: 3 },
   },
 ];

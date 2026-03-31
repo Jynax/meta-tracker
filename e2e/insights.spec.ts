@@ -18,8 +18,8 @@ test.describe('Cross-Project Insights', () => {
     // Narrative headline
     await expect(page.getByText('9 projects. 3 AI tools. 1 human.')).toBeVisible();
     // Compact stat row — verify key stats render with their values
-    await expect(page.getByText('55,680')).toBeVisible();
-    await expect(page.getByText('175.75')).toBeVisible();
+    await expect(page.getByText('56,775')).toBeVisible();
+    await expect(page.getByText('170')).toBeVisible();
   });
 
   test('chapter tabs are clickable and switch content', async ({ page }) => {

@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "date": "2026-03-31",
+    "entries": [
+      { "category": "new", "title": "Automated changelog system powered by PR descriptions", "description": "" },
+      { "category": "improved", "title": "InsightsView readability pass — larger fonts, wider labels, clickable sources", "description": "" },
+      { "category": "updated", "title": "Shared design system — Inter font, consistent card styling", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-30",
+    "entries": [
+      { "category": "new", "title": "InsightsView redesign — five narrative chapters with evidence-backed data", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-29",
+    "entries": [
+      { "category": "new", "title": "Cross-project insights — portfolio-wide analytics with velocity, timeline, and work mix views", "description": "" }
+    ]
+  }
+]

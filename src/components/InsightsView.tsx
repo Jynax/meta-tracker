@@ -137,28 +137,35 @@ export default function InsightsView({ setTooltip }: InsightsViewProps) {
       {/* Chapter content */}
       <div className="rounded-xl border p-6" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
         {chapter.intro && (
-          <p className="text-sm mb-6" style={{ color: C.muted, lineHeight: 1.7 }}>{chapter.intro}</p>
+          <p className="text-base mb-6" style={{ color: C.muted, lineHeight: 1.7 }}>{chapter.intro}</p>
         )}
 
         <div className="space-y-8">
           {chapter.sections.map(section => (
             <div key={section.id}>
-              <h3 className="text-sm font-semibold mb-2" style={{ color: C.white }}>{section.heading}</h3>
-              <div className="text-sm leading-relaxed whitespace-pre-line" style={{ color: C.muted, lineHeight: 1.7 }}>
+              <h3 className="text-base font-semibold mb-2" style={{ color: C.white }}>{section.heading}</h3>
+              <div className="text-sm leading-relaxed whitespace-pre-line" style={{ color: C.muted, lineHeight: 1.8 }}>
                 {renderProse(section.prose)}
               </div>
               {section.disclaimer && (
-                <div className="mt-2 text-[10px] italic px-3 py-2 rounded" style={{ color: C.muted, backgroundColor: C.bg, borderLeft: '3px solid var(--theme-amber)' }}>
+                <div className="mt-2 text-xs italic px-3 py-2 rounded" style={{ color: C.muted, backgroundColor: C.bg, borderLeft: '3px solid var(--theme-amber)' }}>
                   {section.disclaimer}
                 </div>
               )}
               {section.sources && section.sources.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {section.sources.map((src, i) => (
-                    <span key={i} className="text-[10px] px-2 py-0.5 rounded-full" style={{ backgroundColor: C.bg, color: C.muted }}>
-                      {src.label}{src.note ? ` — ${src.note}` : ''}
-                    </span>
-                  ))}
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {section.sources.map((src, i) => {
+                    const content = <>{src.label}{src.note ? ` — ${src.note}` : ''}</>;
+                    return src.url ? (
+                      <a key={i} href={src.url} target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1 rounded-full inline-flex items-center gap-1 hover:brightness-125 transition" style={{ backgroundColor: C.bg, color: 'var(--theme-cyan)', textDecoration: 'none' }}>
+                        {content} <span aria-hidden="true">&#8599;</span>
+                      </a>
+                    ) : (
+                      <span key={i} className="text-xs px-3 py-1 rounded-full" style={{ backgroundColor: C.bg, color: C.muted }}>
+                        {content}
+                      </span>
+                    );
+                  })}
                 </div>
               )}
               {section.chartKey && (
@@ -216,8 +223,8 @@ function TimelineChart({ data }: ChartProps) {
 
   const laneHeight = 32;
   const laneGap = 8;
-  const labelWidth = 120;
-  const chartWidth = 700;
+  const labelWidth = 160;
+  const chartWidth = 660;
   const totalHeight = data.timeline.length * (laneHeight + laneGap) + 30;
   const dateRange = allDates.length - 1 || 1;
 
@@ -226,7 +233,7 @@ function TimelineChart({ data }: ChartProps) {
       <svg width={chartWidth + labelWidth + 20} height={totalHeight} className="w-full" viewBox={`0 0 ${chartWidth + labelWidth + 20} ${totalHeight}`}>
         {allDates.filter((_, i) => i % Math.max(1, Math.floor(allDates.length / 8)) === 0 || i === allDates.length - 1).map(date => {
           const x = labelWidth + (dateToX(date) / dateRange) * chartWidth;
-          return <text key={date} x={x} y={totalHeight - 4} fill={C.muted} fontSize={9} textAnchor="middle">{date}</text>;
+          return <text key={date} x={x} y={totalHeight - 4} fill={C.muted} fontSize={11} textAnchor="middle">{date}</text>;
         })}
         {data.timeline.map((row, i) => {
           const y = i * (laneHeight + laneGap) + 4;
@@ -235,7 +242,7 @@ function TimelineChart({ data }: ChartProps) {
           const color = PROJECT_COLORS[i % PROJECT_COLORS.length];
           return (
             <g key={row.projectId}>
-              <text x={labelWidth - 8} y={y + laneHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={11}>{row.projectName}</text>
+              <text x={labelWidth - 8} y={y + laneHeight / 2 + 4} textAnchor="end" fill={C.muted} fontSize={12}>{row.projectName}</text>
               <rect x={x1} y={y + 4} width={Math.max(x2 - x1, 4)} height={laneHeight - 8} rx={4} fill={color} opacity={0.2} />
               {row.sessionDates.map((date, di) => {
                 const dx = labelWidth + (dateToX(date) / dateRange) * chartWidth;
@@ -306,7 +313,7 @@ function DriverChart({ data }: ChartProps) {
             <div className="h-5 rounded-md overflow-hidden" style={{ backgroundColor: C.bg }}>
               <div className="h-full rounded-md transition-all" style={{ width: `${barPct}%`, backgroundColor: color, opacity: 0.8 }} />
             </div>
-            <div className="mt-1 flex gap-4 text-[10px]" style={{ color: C.muted }}>
+            <div className="mt-1 flex gap-4 text-xs" style={{ color: C.muted }}>
               <span>{stats.totalLoc.toLocaleString()} LOC</span>
               <span>{Math.round(stats.totalHours)}h</span>
               <span>{stats.bugsPerBlock} bugs/block</span>
@@ -345,7 +352,7 @@ function WorkMixChart({ data }: ChartProps) {
         </div>
         <div className="mt-2 flex flex-wrap gap-3">
           {sortedAggregate.map(([cat, count]) => (
-            <div key={cat} className="flex items-center gap-1.5 text-[10px]" style={{ color: C.muted }}>
+            <div key={cat} className="flex items-center gap-1.5 text-xs" style={{ color: C.muted }}>
               <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8' }} />
               {cat}: {Math.round((count / totalBlocks) * 100)}%
             </div>
@@ -434,7 +441,7 @@ function BugLifecycleChart({ data, setTooltip }: ChartProps) {
       {/* Legend */}
       <div className="mt-2 flex flex-wrap gap-3">
         {phaseOrder.map(phase => (
-          <div key={phase} className="flex items-center gap-1.5 text-[10px]" style={{ color: C.muted }}>
+          <div key={phase} className="flex items-center gap-1.5 text-xs" style={{ color: C.muted }}>
             <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: PHASE_COLORS[phase] }} />
             {phase}
           </div>
@@ -451,7 +458,7 @@ function MultiplierChart({ data }: ChartProps) {
     <div className="space-y-3">
       {data.researchComparisons.map((row, i) => (
         <div key={i} className="rounded-lg border p-3" style={{ backgroundColor: C.bg, borderColor: C.border }}>
-          <div className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--theme-amber)' }}>{row.source}</div>
+          <div className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--theme-amber)' }}>{row.source}</div>
           <div className="text-sm mb-1" style={{ color: C.muted }}><strong style={{ color: C.white }}>Finding:</strong> {row.finding}</div>
           <div className="text-sm" style={{ color: C.muted }}><strong style={{ color: C.white }}>Our result:</strong> {row.ourResult}</div>
         </div>
@@ -530,7 +537,7 @@ function VelocityQualityChart({ data, setTooltip }: ChartProps) {
       {/* Legend */}
       <div className="mt-2 flex flex-wrap gap-3">
         {points.map((p, i) => (
-          <div key={i} className="flex items-center gap-1.5 text-[10px]" style={{ color: C.muted }}>
+          <div key={i} className="flex items-center gap-1.5 text-xs" style={{ color: C.muted }}>
             <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: p.color }} />
             {p.projectName}
           </div>
@@ -652,7 +659,7 @@ function LifecyclePhasesChart({ data }: ChartProps) {
       {/* Legend */}
       <div className="mt-2 flex flex-wrap gap-3">
         {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
-          <div key={cat} className="flex items-center gap-1.5 text-[10px]" style={{ color: C.muted }}>
+          <div key={cat} className="flex items-center gap-1.5 text-xs" style={{ color: C.muted }}>
             <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
             {cat}
           </div>

@@ -90,9 +90,9 @@ export const chapters: Record<ChapterId, Chapter> = {
         prose: 'Our original InsightsView claimed a 7x speedup over traditional development. That number was invented — hardcoded tier multipliers with no empirical basis.\n\nIndustry research tells a different story. The ISBSG 2026 study found developers perceive 24% faster work but measured outcomes are mixed. The Cortex 2026 benchmark found faster delivery but higher change failure rates. Our honest assessment: this portfolio was built roughly 2–3x faster than a solo developer without AI assistance, with a likely 20–30% higher long-term maintenance cost from accumulated technical debt.\n\nThat\'s still genuinely impressive. But it\'s honest.',
         chartKey: 'realMultiplier',
         sources: [
-          { label: 'ISBSG 2026', note: 'Impact of AI-Assisted Development on Software Productivity and Delivery Speed' },
-          { label: 'Cortex 2026', note: 'Engineering in the Age of AI benchmark report' },
-          { label: 'DEV Community', note: 'Developers Think AI Makes Them 24% Faster — actual measurement shows mixed results' },
+          { label: 'ISBSG 2026', url: 'https://www.isbsg.org/', note: 'Impact of AI-Assisted Development on Software Productivity and Delivery Speed' },
+          { label: 'Cortex 2026', url: 'https://www.cortex.io/', note: 'Engineering in the Age of AI benchmark report' },
+          { label: 'DEV Community', url: 'https://dev.to/', note: 'Developers Think AI Makes Them 24% Faster — actual measurement shows mixed results' },
         ],
       },
     ],
@@ -161,8 +161,8 @@ export const chapters: Record<ChapterId, Chapter> = {
         heading: 'Caveats',
         prose: 'This is one person\'s portfolio, not a controlled study. The projects are greenfield (no legacy code), the developer chose the tools and scope, and the AI models had access to well-structured prompts and context. Your mileage will vary.\n\nWhat we can say: the patterns (velocity vs quality, testing as force multiplier, tool transition costs, universal lifecycle arc) are consistent enough across 9 different projects that they\'re worth testing in your own context.',
         sources: [
-          { label: 'ISBSG 2026', note: 'AI productivity findings based on controlled measurements, not self-reporting' },
-          { label: 'Cortex 2026', note: 'Benchmark across engineering organizations showing faster delivery but higher incident rates' },
+          { label: 'ISBSG 2026', url: 'https://www.isbsg.org/', note: 'AI productivity findings based on controlled measurements, not self-reporting' },
+          { label: 'Cortex 2026', url: 'https://www.cortex.io/', note: 'Benchmark across engineering organizations showing faster delivery but higher incident rates' },
         ],
       },
     ],

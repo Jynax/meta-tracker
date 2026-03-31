@@ -101,62 +101,51 @@ test.describe('Navigation & Layout', () => {
     await expect(page.locator('text="Small, targeted PRs"')).toBeVisible();
   });
 
-  test('How We Work History tab shows Changelog and Time Machine toggle', async ({ page }) => {
+  test('How We Work History tab shows process timeline', async ({ page }) => {
     await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
     await page.waitForTimeout(300);
 
     await page.getByRole('button', { name: 'History', exact: true }).click();
     await page.waitForTimeout(200);
 
-    await expect(page.getByRole('button', { name: 'Changelog', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Time Machine', exact: true })).toBeVisible();
+    await expect(page.locator('text=Process timeline')).toBeVisible();
   });
 
-  test('How We Work Time Machine shows slider control', async ({ page }) => {
+  test('How We Work History tab has category filter chips', async ({ page }) => {
     await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
     await page.waitForTimeout(300);
 
     await page.getByRole('button', { name: 'History', exact: true }).click();
     await page.waitForTimeout(200);
 
-    await page.getByRole('button', { name: 'Time Machine', exact: true }).click();
-    await page.waitForTimeout(300);
-
-    const slider = page.locator('input[aria-label="Time machine session slider"]');
-    await expect(slider).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Tooling', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Process', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'UI / Presentation', exact: true })).toBeVisible();
   });
 
-  test('How We Work Time Machine slider shows snapshot items', async ({ page }) => {
+  test('How We Work History tab shows session clusters', async ({ page }) => {
     await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
     await page.waitForTimeout(300);
 
     await page.getByRole('button', { name: 'History', exact: true }).click();
     await page.waitForTimeout(200);
 
-    await page.getByRole('button', { name: 'Time Machine', exact: true }).click();
-    await page.waitForTimeout(300);
-
-    const changesText = page.locator('text=/\\d+ of \\d+ changes applied/');
-    await expect(changesText).toBeVisible();
+    // Timeline should have at least one session cluster
+    await expect(page.locator('text=/Session \\d+/').first()).toBeVisible();
   });
 
-  test('How We Work Time Machine snapshot items are expandable', async ({ page }) => {
+  test('How We Work History tab filter chips toggle entries', async ({ page }) => {
     await page.locator('header').getByRole('button', { name: /How We Work/ }).click();
     await page.waitForTimeout(300);
 
     await page.getByRole('button', { name: 'History', exact: true }).click();
     await page.waitForTimeout(200);
 
-    await page.getByRole('button', { name: 'Time Machine', exact: true }).click();
-    await page.waitForTimeout(500);
+    // Click a category filter to toggle it
+    await page.getByRole('button', { name: 'Tooling', exact: true }).click();
+    await page.waitForTimeout(200);
 
-    // Wait for snapshot items to render after FadeIn animation
-    const firstItem = page.getByRole('button', { name: /How We Work view added/ });
-    await expect(firstItem).toBeVisible({ timeout: 5000 });
-    await firstItem.click();
-    await page.waitForTimeout(300);
-
-    const stateLabel = page.locator('text=/Current State|State/');
-    await expect(stateLabel.first()).toBeVisible({ timeout: 5000 });
+    // Timeline should still be visible after toggling
+    await expect(page.locator('text=Process timeline')).toBeVisible();
   });
 });

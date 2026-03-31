@@ -1,3 +1,6 @@
+/* TIME MACHINE — commented out for ProcessTimeline replacement (Task #67)
+ * Preserved for potential rollback.
+ *
 import { useState, useMemo } from "react";
 import { colors, processHistory } from "./processWorkflowData";
 import type { ProcessHistoryEntry } from "./processWorkflowData";
@@ -211,3 +214,4 @@ export default function TimeMachine() {
     </div>
   );
 }
+*/

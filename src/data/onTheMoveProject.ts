@@ -5,7 +5,7 @@ export const onTheMoveProject: Project = {
   name: 'On the Move',
   subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE CODE',
   projectType: 'web-app',
-  currentPhase: 'Shipped',
+  currentPhase: 'Build',
   trackingMode: 'full',
   chapters: [
     {

@@ -3,11 +3,11 @@ import type { CodeVolumeEntry, SessionEntry, BugEntry, DerivedMetric, StackEntry
 
 export const ibgCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 26', date: 'Mar 7', label: 'Addon v0.1 + Data Fetcher', added: 596, deleted: 53, net: 543, total: 543 },
-  { session: 'Session 27', date: 'Mar 7', label: 'Scanner + Dashboard Deploy', added: 9224, deleted: 174, net: 9050, total: 9593 },
-  { session: 'Session 28', date: 'Mar 7', label: 'UX Overhaul + Item Class Detection', added: 414, deleted: 47, net: 367, total: 9960 },
-  { session: 'Session 41', date: 'Mar 11', label: 'Playwright Suite + CI', added: 1605, deleted: 0, net: 1605, total: 11565 },
-  { session: 'Session 43', date: 'Mar 12', label: 'Dashboard Bug Fixes', added: 125, deleted: 171, net: -46, total: 11519 },
-  { session: 'Session 50', date: 'Mar 13', label: 'Dependabot + Quality Gates', added: 31, deleted: 0, net: 31, total: 11550 },
+  { session: 'Session 27', date: 'Mar 7', label: 'Scanner + Dashboard Deploy', added: 203, deleted: 161, net: 42, total: 585 },
+  { session: 'Session 28', date: 'Mar 7', label: 'UX Overhaul + Item Class Detection', added: 414, deleted: 47, net: 367, total: 952 },
+  { session: 'Session 41', date: 'Mar 11', label: 'Playwright Suite + CI', added: 1605, deleted: 0, net: 1605, total: 2557 },
+  { session: 'Session 43', date: 'Mar 12', label: 'Dashboard Bug Fixes', added: 125, deleted: 171, net: -46, total: 2511 },
+  { session: 'Session 50', date: 'Mar 13', label: 'Dependabot + Quality Gates', added: 31, deleted: 0, net: 31, total: 2542 },
 ];
 
 export const ibgSessions: SessionEntry[] = [
@@ -59,10 +59,10 @@ export const ibgDays: DayEntry[] = [
     blocks: [
       { id: 'ibg-session-25', dayId: 'Mar 7', label: 'Architecture Decisions', workCategory: 'Planning', driver: 'collaborative', operator: 'claude-code', timeMinutes: 30, linesAdded: 0, linesDeleted: 0, note: 'Zone-restricted items, ATT/DataStore integration APIs, plugin vs standalone analysis, keep category, web dashboard concept, decisions framework', contextWindowOrigin: false },
       { id: 'ibg-session-26', dayId: 'Mar 7', label: 'Addon v0.1 + Data Fetcher', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-code', timeMinutes: 45, linesAdded: 596, linesDeleted: 53, note: 'Addon skeleton, detection engine, tooltip hook, confidence model, Wowhead/Blizzard data fetcher, repo setup, in-game testing passed', contextWindowOrigin: false },
-      { id: 'ibg-session-27', dayId: 'Mar 7', label: 'Scanner + Dashboard Deploy', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-code', timeMinutes: 90, linesAdded: 9224, linesDeleted: 174, note: 'Scanner module, dashboard (parser + UI + deploy), Cloudflare Pages setup, auto-sync, first real data: 3 chars / 819 items', contextWindowOrigin: false },
+      { id: 'ibg-session-27', dayId: 'Mar 7', label: 'Scanner + Dashboard Deploy', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-code', timeMinutes: 90, linesAdded: 203, linesDeleted: 161, note: 'Scanner module, dashboard (parser + UI + deploy), Cloudflare Pages setup, auto-sync, first real data: 3 chars / 819 items', contextWindowOrigin: false },
       { id: 'ibg-session-28', dayId: 'Mar 7', label: 'UX Overhaul + Item Class Detection', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 60, linesAdded: 414, linesDeleted: 47, note: 'Dashboard UX review (20 findings), UX overhaul (sticky header, pill counts, Wowhead links/tooltips, icons, reason text cleanup), item class detection (reagents, recipes, legendaries, toys, currency), parse.js bugfix', contextWindowOrigin: false },
     ],
-    metrics: { totalTimeMinutes: 225, linesAdded: 10234, linesDeleted: 274, totalDecisions: 15 },
+    metrics: { totalTimeMinutes: 225, linesAdded: 1213, linesDeleted: 261, totalDecisions: 15 },
     driverSummary: { human: 0, ai: 2, collaborative: 2 },
   },
   {

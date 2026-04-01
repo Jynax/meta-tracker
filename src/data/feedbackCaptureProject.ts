@@ -6,6 +6,13 @@ export const feedbackCaptureProject: Project = {
   subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE CODE',
   projectType: 'extension',
   currentPhase: 'Shipped',
+  milestones: [
+    {
+      label: 'v1.0',
+      date: 'Mar 11, 2026',
+      description: 'Extension + server + auto-routing + /captures command complete',
+    },
+  ],
   trackingMode: 'lightweight',
   chapters: [
     {

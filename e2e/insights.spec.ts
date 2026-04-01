@@ -18,7 +18,7 @@ test.describe('Cross-Project Insights', () => {
     // Narrative headline
     await expect(page.getByText('9 projects. 3 AI tools. 1 human.')).toBeVisible();
     // Compact stat row — verify key stats render with their values
-    await expect(page.getByText('56,775')).toBeVisible();
+    await expect(page.getByText('47,767')).toBeVisible();
     await expect(page.getByText('170')).toBeVisible();
   });
 

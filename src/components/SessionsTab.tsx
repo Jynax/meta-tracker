@@ -371,7 +371,7 @@ export default function SessionsTab({
             ))}
           </svg>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', marginTop: 2, paddingTop: 4 }}>
             {[
               { label: 'PRs Merged', color: C.cyan },
               { label: 'Decisions', color: C.emerald },
@@ -453,7 +453,7 @@ export default function SessionsTab({
             })}
           </svg>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', marginTop: 2, paddingTop: 4 }}>
             {Object.entries(toolColors).filter(([tool]) => avgTaskTimePoints.points.some(p => p.tool === tool)).map(([tool, color]) => (
               <div key={tool} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: C.slate }}>
                 <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: color }} />

@@ -6,7 +6,7 @@ export const noteWorthyProject: Project = {
   url: 'https://noteworthy.jynaxxapps.com',
   subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE CODE',
   projectType: 'app',
-  currentPhase: 'Shipped',
+  currentPhase: 'Build',
   trackingMode: 'full',
   chapters: [
     {

@@ -486,9 +486,42 @@ function VelocityQualityChart({ data, setTooltip }: ChartProps) {
 
   const chartW = 600;
   const chartH = 300;
-  const pad = { left: 50, right: 20, top: 20, bottom: 40 };
+  const pad = { left: 50, right: 80, top: 20, bottom: 40 };
   const innerW = chartW - pad.left - pad.right;
   const innerH = chartH - pad.top - pad.bottom;
+
+  // Short name map for labels
+  const shortName = (name: string) => {
+    if (name.startsWith('BIP')) return 'BIP';
+    if (name.startsWith('Remnants')) return 'Remnants';
+    return name;
+  };
+
+  // Pre-compute label positions with collision nudge
+  const rawPositions = points
+    .map((p, i) => {
+      const x = pad.left + (p.locPerSession / maxX) * innerW;
+      const y = pad.top + innerH - (p.bugsPer100 / maxY) * innerH;
+      const r = 4 + (p.totalHours / maxHours) * 10;
+      return { i, x, y, r, p };
+    })
+    .sort((a, b) => a.x - b.x);
+
+  const usedY: number[] = [];
+  const labelPositions = rawPositions.map(({ i, x, y, r, p }) => {
+    const nearRight = x > chartW - pad.right - 80;
+    const labelX = nearRight ? x - r - 4 : x + r + 4;
+    const anchor = nearRight ? 'end' : 'start';
+    let labelY = y + 4;
+    // Nudge down until no collision within 12px
+    let attempts = 0;
+    while (usedY.some(used => Math.abs(used - labelY) < 12) && attempts < 20) {
+      labelY += 12;
+      attempts++;
+    }
+    usedY.push(labelY);
+    return { i, x, y, r, p, labelX, labelY, anchor };
+  });
 
   return (
     <div className="overflow-x-auto">
@@ -513,14 +546,10 @@ function VelocityQualityChart({ data, setTooltip }: ChartProps) {
         <text x={chartW / 2} y={chartH - 0} fill={C.muted} fontSize={9} textAnchor="middle">LOC / session</text>
         <text x={10} y={pad.top + innerH / 2} fill={C.muted} fontSize={9} textAnchor="middle" transform={`rotate(-90, 10, ${pad.top + innerH / 2})`}>Bugs / 100 LOC</text>
 
-        {/* Dots */}
-        {points.map((p, i) => {
-          const x = pad.left + (p.locPerSession / maxX) * innerW;
-          const y = pad.top + innerH - (p.bugsPer100 / maxY) * innerH;
-          const r = 4 + (p.totalHours / maxHours) * 10;
-          return (
+        {/* Dots + direct labels */}
+        {labelPositions.map(({ i, x, y, r, p, labelX, labelY, anchor }) => (
+          <g key={i}>
             <circle
-              key={i}
               cx={x} cy={y} r={r}
               fill={p.color} opacity={0.7}
               onMouseEnter={(e) => setTooltip({ x: e.clientX, y: e.clientY, content: (
@@ -531,18 +560,12 @@ function VelocityQualityChart({ data, setTooltip }: ChartProps) {
               )})}
               onMouseLeave={() => setTooltip(null)}
             />
-          );
-        })}
-      </svg>
-      {/* Legend */}
-      <div className="mt-0.5 flex flex-wrap gap-3 pt-1">
-        {points.map((p, i) => (
-          <div key={i} className="flex items-center gap-1.5 text-xs" style={{ color: C.muted }}>
-            <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: p.color }} />
-            {p.projectName}
-          </div>
+            <text x={labelX} y={labelY} textAnchor={anchor} fill={C.muted} fontSize={9} style={{ pointerEvents: 'none' }}>
+              {shortName(p.projectName)}
+            </text>
+          </g>
         ))}
-      </div>
+      </svg>
     </div>
   );
 }

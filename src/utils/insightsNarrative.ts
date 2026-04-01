@@ -105,7 +105,7 @@ export const chapters: Record<ChapterId, Chapter> = {
       {
         id: 'loc-by-project',
         heading: 'LOC/hr by Project',
-        prose: 'Velocity varies wildly across projects. Item-B-Gone\'s rate is inflated by scaffolding-heavy sessions; Meta Tracker\'s is low because 90 hours of work includes extensive refactoring and data migration that reduces net LOC.',
+        prose: 'Velocity varies wildly across projects. Meta Tracker\'s rate is low because 90 hours of work includes extensive refactoring and data migration that reduces net LOC.',
         chartKey: 'locPerHour',
         disclaimer: 'IBG sessions 24–28 have estimated hours (originally untracked). Flagged with † in the chart.',
       },

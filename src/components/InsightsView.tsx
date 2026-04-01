@@ -350,14 +350,6 @@ function WorkMixChart({ data }: ChartProps) {
             />
           ))}
         </div>
-        <div className="mt-2 flex flex-wrap gap-3">
-          {sortedAggregate.map(([cat, count]) => (
-            <div key={cat} className="flex items-center gap-1.5 text-xs" style={{ color: C.muted }}>
-              <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8' }} />
-              {cat}: {Math.round((count / totalBlocks) * 100)}%
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Per-project stacked bars */}
@@ -385,6 +377,16 @@ function WorkMixChart({ data }: ChartProps) {
             </div>
           );
         })}
+      </div>
+
+      {/* Single legend at bottom, serving both aggregate and per-project */}
+      <div className="mt-3 flex flex-wrap justify-center gap-3">
+        {sortedAggregate.map(([cat, count]) => (
+          <div key={cat} className="flex items-center gap-1.5 text-xs" style={{ color: C.muted }}>
+            <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8' }} />
+            {cat}: {Math.round((count / totalBlocks) * 100)}%
+          </div>
+        ))}
       </div>
     </div>
   );

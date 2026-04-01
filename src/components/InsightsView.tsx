@@ -425,8 +425,8 @@ function BugLifecycleChart({ data, setTooltip }: ChartProps) {
                     opacity={0.85}
                     onMouseEnter={(e) => setTooltip({ x: e.clientX, y: e.clientY, content: (
                       <div className="text-xs">
-                        <span style={{ color: C.white }}>{proj.projectName}</span>
-                        <span style={{ color: C.muted }}> — {phase}: {p.bugCount} bugs</span>
+                        <span style={{ color: PHASE_COLORS[phase] ?? C.muted }}>{phase}</span>
+                        <span style={{ color: C.muted }}>: {p.bugCount} bugs</span>
                       </div>
                     )})}
                     onMouseLeave={() => setTooltip(null)}
@@ -439,7 +439,7 @@ function BugLifecycleChart({ data, setTooltip }: ChartProps) {
         })}
       </svg>
       {/* Legend */}
-      <div className="mt-0.5 flex flex-wrap gap-3 pt-1">
+      <div className="mt-0.5 flex flex-wrap justify-center gap-3 pt-1" style={{ maxWidth: chartWidth + labelWidth + 60, margin: '2px auto 0' }}>
         {phaseOrder.map(phase => (
           <div key={phase} className="flex items-center gap-1.5 text-xs" style={{ color: C.muted }}>
             <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: PHASE_COLORS[phase] }} />

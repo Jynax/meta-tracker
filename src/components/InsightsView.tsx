@@ -439,7 +439,7 @@ function BugLifecycleChart({ data, setTooltip }: ChartProps) {
         })}
       </svg>
       {/* Legend */}
-      <div className="mt-2 flex flex-wrap gap-3">
+      <div className="mt-0.5 flex flex-wrap gap-3 pt-1">
         {phaseOrder.map(phase => (
           <div key={phase} className="flex items-center gap-1.5 text-xs" style={{ color: C.muted }}>
             <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: PHASE_COLORS[phase] }} />
@@ -535,7 +535,7 @@ function VelocityQualityChart({ data, setTooltip }: ChartProps) {
         })}
       </svg>
       {/* Legend */}
-      <div className="mt-2 flex flex-wrap gap-3">
+      <div className="mt-0.5 flex flex-wrap gap-3 pt-1">
         {points.map((p, i) => (
           <div key={i} className="flex items-center gap-1.5 text-xs" style={{ color: C.muted }}>
             <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: p.color }} />
@@ -657,7 +657,7 @@ function LifecyclePhasesChart({ data }: ChartProps) {
         );
       })}
       {/* Legend */}
-      <div className="mt-2 flex flex-wrap gap-3">
+      <div className="mt-0.5 flex flex-wrap gap-3 pt-1">
         {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
           <div key={cat} className="flex items-center gap-1.5 text-xs" style={{ color: C.muted }}>
             <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: color }} />

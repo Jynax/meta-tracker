@@ -1,6 +1,7 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState, useEffect, useCallback, type ReactNode } from 'react';
 import { Card, C } from './MetricsCard';
 import { formatShortDate, buildSmoothPath } from './chartUtils';
+import { thinLabels, defaultWindow } from '../utils/brushUtils';
 import type { SessionEntry, SessionTool, SessionDriver } from '../data/metaMetrics';
 import type { DayEntry, WorkDriver, WorkOperator } from '../types/index';
 
@@ -28,6 +29,15 @@ export default function SessionsTab({
   const [chartView, setChartView] = useState<'daily' | 'weekly'>('weekly');
   const [humanAttribution, setHumanAttribution] = useState(30);
   const [prevProjectId, setPrevProjectId] = useState(projectId);
+  const [visibleRange, setVisibleRange] = useState<[number, number] | null>(null);
+  const [visibleRangeAvg, setVisibleRangeAvg] = useState<[number, number] | null>(null);
+  const [visibleRangeDriver, setVisibleRangeDriver] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    setVisibleRange(null);
+    setVisibleRangeAvg(null);
+    setVisibleRangeDriver(null);
+  }, [chartView, projectId]);
 
   const toolColors: Record<SessionTool, string> = {
     'Claude Code': C.emerald,
@@ -96,31 +106,38 @@ export default function SessionsTab({
     const step = Math.max(1, Math.ceil(raw / mag) * mag);
     const yMax = step * yTicks;
 
-    const points = dataSource.map((entry, index) => {
-      const ratioX = dataSource.length > 1 ? index / (dataSource.length - 1) : 0;
+    const allPoints = dataSource.map((entry) => ({
+      ...entry,
+      dateLabel: chartView === 'weekly' ? entry.date : formatShortDate(entry.date),
+    }));
+
+    const [defaultStart, defaultEnd] = defaultWindow(allPoints.length, 30);
+    const range = visibleRange ?? [defaultStart, defaultEnd];
+    const sliced = allPoints.slice(range[0], range[1] + 1);
+
+    const points = sliced.map((entry, index) => {
+      const ratioX = sliced.length > 1 ? index / (sliced.length - 1) : 0;
       const x = chartDims.left + ratioX * chartInnerWidth;
       return {
         ...entry,
-        dateLabel: chartView === 'weekly' ? entry.date : formatShortDate(entry.date),
         x,
         yPrs: chartDims.top + (1 - (entry.prs / yMax)) * chartInnerHeight,
         yDecisions: chartDims.top + (1 - (entry.decisions / yMax)) * chartInnerHeight,
       };
     });
 
-    return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points };
-  }, [sessions, sessionDateMap, chartView, dailyData]);
+    return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points, allPoints, range };
+  }, [sessions, sessionDateMap, chartView, dailyData, visibleRange]);
 
 
   const avgTaskTimePoints = useMemo(() => {
     const validSessions = sessions.filter(s => s.taskCount > 0);
     if (!validSessions.length) return null;
 
-    type AvgPoint = { session: string; date: string; dateLabel: string; label: string; avgMin: number; tool: string; taskCount: number; duration: number; x: number; y: number };
+    type AvgPoint = { session: string; date: string; dateLabel: string; label: string; avgMin: number; tool: string; taskCount: number; duration: number };
 
-    let dataPoints: AvgPoint[];
+    let rawPoints: AvgPoint[];
     if (chartView === 'weekly') {
-      // Aggregate by day
       const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
       const dayBuckets = new Map<string, { dayLabel: string; totalMinutes: number; totalTasks: number; tool: string }>();
       validSessions.forEach((entry) => {
@@ -134,48 +151,49 @@ export default function SessionsTab({
         dayBuckets.set(key, existing);
       });
       const sorted = Array.from(dayBuckets.entries()).sort(([a], [b]) => a.localeCompare(b));
-      dataPoints = sorted.map(([, bucket], index) => {
+      rawPoints = sorted.map(([, bucket]) => {
         const avgMin = bucket.totalTasks > 0 ? bucket.totalMinutes / bucket.totalTasks : 0;
-        const ratioX = sorted.length > 1 ? index / (sorted.length - 1) : 0;
-        const x = chartDims.left + ratioX * chartInnerWidth;
         return {
           session: bucket.dayLabel, date: bucket.dayLabel, dateLabel: formatShortDate(bucket.dayLabel),
-          label: `${bucket.totalTasks} tasks`, avgMin: Math.round(avgMin), tool: bucket.tool,
+          label: bucket.totalTasks + ' tasks', avgMin: Math.round(avgMin), tool: bucket.tool,
           taskCount: bucket.totalTasks, duration: Math.round(bucket.totalMinutes / 60),
-          x, y: 0,
         };
       });
     } else {
-      dataPoints = validSessions.map((entry, index) => {
+      rawPoints = validSessions.map((entry) => {
         const avgMin = (entry.duration * 60) / entry.taskCount;
-        const ratioX = validSessions.length > 1 ? index / (validSessions.length - 1) : 0;
-        const x = chartDims.left + ratioX * chartInnerWidth;
         const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
         return {
           ...entry, date, dateLabel: formatShortDate(date),
-          avgMin: Math.round(avgMin), tool: entry.tool, x, y: 0,
+          avgMin: Math.round(avgMin), tool: entry.tool,
         };
       });
     }
 
     const yTicks = 4;
-    const maxTime = Math.max(...dataPoints.map(p => p.avgMin), 1);
+    const maxTime = Math.max(...rawPoints.map(p => p.avgMin), 1);
     const raw = maxTime / yTicks || 1;
     const mag = 10 ** Math.floor(Math.log10(raw));
     const step = Math.max(1, Math.ceil(raw / mag) * mag);
     const yMax = step * yTicks;
 
-    const points = dataPoints.map(p => ({
-      ...p,
-      y: chartDims.top + (1 - (p.avgMin / yMax)) * chartInnerHeight,
-    }));
+    const allPoints = rawPoints;
+    const [defaultStart, defaultEnd] = defaultWindow(allPoints.length, 30);
+    const range = visibleRangeAvg ?? [defaultStart, defaultEnd];
+    const sliced = allPoints.slice(range[0], range[1] + 1);
 
-    // Smart tick interval: show at most ~15 labels to avoid overlap
-    const maxTicks = 15;
-    const tickInterval = points.length > maxTicks ? Math.ceil(points.length / maxTicks) : 1;
+    const points = sliced.map((p, index) => {
+      const ratioX = sliced.length > 1 ? index / (sliced.length - 1) : 0;
+      const x = chartDims.left + ratioX * chartInnerWidth;
+      return {
+        ...p,
+        x,
+        y: chartDims.top + (1 - (p.avgMin / yMax)) * chartInnerHeight,
+      };
+    });
 
-    return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points, tickInterval };
-  }, [sessions, sessionDateMap, chartView]);
+    return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points, allPoints, range };
+  }, [sessions, sessionDateMap, chartView, visibleRangeAvg]);
 
   const avgTaskTimePaths = useMemo(() => {
     if (!avgTaskTimePoints) return {};
@@ -233,7 +251,7 @@ export default function SessionsTab({
     driverTotals.human = (driverTotals.human ?? 0) + rawTotals.collaborative * attrFrac;
     driverTotals.collaborative = rawTotals.collaborative * (1 - attrFrac);
 
-    const bars = Array.from(dayGroups.entries())
+    const allBars = Array.from(dayGroups.entries())
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([, v]) => {
         const adjusted = { ...v, counts: { ...v.counts } };
@@ -243,6 +261,11 @@ export default function SessionsTab({
         return adjusted;
       });
 
+
+    const [defaultStart, defaultEnd] = defaultWindow(allBars.length, 30);
+    const range = visibleRangeDriver ?? [defaultStart, defaultEnd];
+    const bars = allBars.slice(range[0], range[1] + 1);
+
     const maxStack = bars.length > 0 ? Math.max(...bars.map(b => drivers.reduce((s, d) => s + b.counts[d], 0))) : 0;
     const yTicks = 4;
     const raw = (maxStack / yTicks) || 1;
@@ -250,18 +273,55 @@ export default function SessionsTab({
     const step = Math.max(1, Math.ceil(raw / mag) * mag);
     const yMax = step * yTicks;
 
-    return { drivers, driverTotals, bars, yTicks, step, yMax };
-  }, [sessions, sessionDateMap, humanAttribution]);
+    return { drivers, driverTotals, bars, allBars, range, yTicks, step, yMax };
+  }, [sessions, sessionDateMap, humanAttribution, visibleRangeDriver]);
 
   const sessionLines = useMemo(() => {
     const pathBuilder = chartView === 'weekly'
-      ? (pts) => pts.length ? 'M ' + pts.map(p => p.x + ' ' + p.y).join(' L ') : ''
+      ? (pts: Array<{ x: number; y: number }>) => pts.length ? 'M ' + pts.map(p => p.x + ' ' + p.y).join(' L ') : ''
       : buildSmoothPath;
     return {
       prs: pathBuilder(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yPrs }))),
       decisions: pathBuilder(sessionActivityPoints.points.map((point) => ({ x: point.x, y: point.yDecisions }))),
     };
   }, [sessionActivityPoints.points, chartView]);
+
+  const handleBrushDrag = useCallback((chartType: 'session' | 'avg' | 'driver') => (e: React.MouseEvent<SVGRectElement>) => {
+    const svg = e.currentTarget.closest('svg');
+    if (!svg) return;
+    const rect = svg.getBoundingClientRect();
+    const startX = e.clientX;
+
+    const allLen = chartType === 'session' ? sessionActivityPoints.allPoints.length
+      : chartType === 'avg' ? (avgTaskTimePoints?.allPoints.length ?? 0)
+      : driverChartData.allBars.length;
+
+    const setRange = chartType === 'session' ? setVisibleRange
+      : chartType === 'avg' ? setVisibleRangeAvg
+      : setVisibleRangeDriver;
+
+    const currentRange = chartType === 'session' ? (visibleRange ?? defaultWindow(allLen, 30))
+      : chartType === 'avg' ? (visibleRangeAvg ?? defaultWindow(allLen, 30))
+      : (visibleRangeDriver ?? defaultWindow(allLen, 30));
+
+    const windowSize = currentRange[1] - currentRange[0];
+
+    const onMove = (moveE: MouseEvent) => {
+      const dx = moveE.clientX - startX;
+      const pxPerPoint = (rect.width * 0.9) / Math.max(allLen, 1);
+      const shift = Math.round(dx / pxPerPoint);
+      const newStart = Math.max(0, Math.min(allLen - windowSize - 1, currentRange[0] + shift));
+      setRange([newStart, newStart + windowSize]);
+    };
+
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  }, [sessionActivityPoints, avgTaskTimePoints, driverChartData, visibleRange, visibleRangeAvg, visibleRangeDriver]);
 
   const sortedDays = useMemo(() => {
     const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
@@ -305,85 +365,121 @@ export default function SessionsTab({
           </div>
         </div>
         <div style={{ position: 'relative', overflowX: 'auto', paddingBottom: 4 }}>
-          <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }} role="img" aria-label="Session activity chart">
-            {Array.from({ length: sessionActivityPoints.yTicks + 1 }, (_, index) => {
-              const value = index * sessionActivityPoints.step;
-              const y = sessionActivityPoints.dims.top + sessionActivityPoints.innerHeight - (index / sessionActivityPoints.yTicks) * sessionActivityPoints.innerHeight;
-              return (
-                <g key={`session-activity-grid-${value}`}>
-                  <line x1={sessionActivityPoints.dims.left} y1={y} x2={sessionActivityPoints.dims.width - sessionActivityPoints.dims.right} y2={y} stroke={C.border} strokeDasharray="4 4" strokeOpacity="0.3" />
-                  <text x={sessionActivityPoints.dims.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">{value}</text>
-                </g>
-              );
-            })}
+          {(() => {
+            const { points, allPoints, range } = sessionActivityPoints;
+            const labelVis = thinLabels(points.map(p => p.dateLabel), 20);
+            const lastPoint = points[points.length - 1];
+            return (
+              <>
+                <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }} role="img" aria-label="Session activity chart">
+                  {Array.from({ length: sessionActivityPoints.yTicks + 1 }, (_, index) => {
+                    const value = index * sessionActivityPoints.step;
+                    const y = sessionActivityPoints.dims.top + sessionActivityPoints.innerHeight - (index / sessionActivityPoints.yTicks) * sessionActivityPoints.innerHeight;
+                    return (
+                      <g key={'sa-grid-' + value}>
+                        <line x1={sessionActivityPoints.dims.left} y1={y} x2={sessionActivityPoints.dims.width - sessionActivityPoints.dims.right} y2={y} stroke={C.border} strokeDasharray="4 4" strokeOpacity="0.3" />
+                        <text x={sessionActivityPoints.dims.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">{value}</text>
+                      </g>
+                    );
+                  })}
 
-            <path d={sessionLines.prs} fill="none" stroke={C.cyan} strokeWidth="2" />
-            <path d={sessionLines.decisions} fill="none" stroke={C.emerald} strokeWidth="2" />
+                  <path d={sessionLines.prs} fill="none" stroke={C.cyan} strokeWidth="2" />
+                  <path d={sessionLines.decisions} fill="none" stroke={C.emerald} strokeWidth="2" />
 
-            {sessionActivityPoints.points.map((point, index) => (
-              <g key={`${point.session}-session-activity`}>
-                {[
-                  { label: 'PRs', value: point.prs, y: point.yPrs, color: C.cyan },
-                  { label: 'Decisions', value: point.decisions, y: point.yDecisions, color: C.emerald },
-                ].map((metric) => (
-                  <circle
-                    key={`${point.session}-${metric.label}`}
-                    cx={point.x}
-                    cy={metric.y}
-                    r={hoveredPointIndex === index ? 6 : 4}
-                    fill={metric.color}
-                    onMouseEnter={(event) => {
-                      setHoveredPointIndex(index);
-                      setTooltip({
-                        x: event.clientX, y: event.clientY,
-                        content: (
-                          <>
-                            <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{chartView === 'weekly' ? `${point.date} (${point.label})` : `${point.date} — ${point.label}`}</div>
-                            <div style={{ color: C.slate, fontSize: 11 }}>{point.dateLabel}</div>
-                            <div style={{ color: C.cyan, fontSize: 11 }}>PRs: {point.prs}</div>
-                            <div style={{ color: C.emerald, fontSize: 11 }}>Decisions: {point.decisions}</div>
-                            {chartView === 'daily' && <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic', maxWidth: 220 }}>{sessionFocusMap[point.session] ?? ''}</div>}
-                          </>
-                        ),
-                      });
-                    }}
-                    onMouseMove={(event) => {
-                      setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
-                    }}
-                    onMouseLeave={() => { setHoveredPointIndex(null); setTooltip(null); }}
-                  />
-                ))}
-                <line
-                  x1={point.x}
-                  y1={sessionActivityPoints.dims.height - sessionActivityPoints.dims.bottom}
-                  x2={point.x}
-                  y2={(index % 2 === 0 ? sessionActivityPoints.dims.height - 10 : sessionActivityPoints.dims.height - 22) - 11}
-                  stroke={C.slate} strokeWidth="1" strokeOpacity="0.7"
-                />
-                <text
-                  x={point.x}
-                  y={index % 2 === 0 ? sessionActivityPoints.dims.height - 10 : sessionActivityPoints.dims.height - 22}
-                  textAnchor="middle" fill={C.slate} fontSize="10"
-                >
-                  {point.dateLabel}
-                </text>
-              </g>
-            ))}
-          </svg>
+                  {lastPoint && (
+                    <>
+                      <text x={lastPoint.x + 8} y={lastPoint.yPrs} fill={C.cyan} fontSize={10} dominantBaseline="middle">PRs</text>
+                      <text x={lastPoint.x + 8} y={lastPoint.yDecisions} fill={C.emerald} fontSize={10} dominantBaseline="middle">Decisions</text>
+                    </>
+                  )}
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', marginTop: 2, paddingTop: 4 }}>
-            {[
-              { label: 'PRs Merged', color: C.cyan },
-              { label: 'Decisions', color: C.emerald },
-            ].map((item) => (
-              <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: C.slate }}>
-                <span style={{ width: 10, height: 10, borderRadius: 2, backgroundColor: item.color }} />
-                {item.label}
-              </div>
-            ))}
+                  {points.map((point, index) => (
+                    <g key={point.session + '-' + index + '-sa'}>
+                      {[
+                        { label: 'PRs', value: point.prs, y: point.yPrs, color: C.cyan },
+                        { label: 'Decisions', value: point.decisions, y: point.yDecisions, color: C.emerald },
+                      ].map((metric) => (
+                        <circle
+                          key={point.session + '-' + index + '-' + metric.label}
+                          cx={point.x}
+                          cy={metric.y}
+                          r={hoveredPointIndex === index ? 6 : 4}
+                          fill={metric.color}
+                          onMouseEnter={(event) => {
+                            setHoveredPointIndex(index);
+                            setTooltip({
+                              x: event.clientX, y: event.clientY,
+                              content: (
+                                <>
+                                  <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{chartView === 'weekly' ? `${point.date} (${point.label})` : `${point.date} \u2014 ${point.label}`}</div>
+                                  <div style={{ color: C.slate, fontSize: 11 }}>{point.dateLabel}</div>
+                                  <div style={{ color: C.cyan, fontSize: 11 }}>PRs: {point.prs}</div>
+                                  <div style={{ color: C.emerald, fontSize: 11 }}>Decisions: {point.decisions}</div>
+                                  {chartView === 'daily' && <div style={{ color: C.muted, fontSize: 11, fontStyle: 'italic', maxWidth: 220 }}>{sessionFocusMap[point.session] ?? ''}</div>}
+                                </>
+                              ),
+                            });
+                          }}
+                          onMouseMove={(event) => {
+                            setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                          }}
+                          onMouseLeave={() => { setHoveredPointIndex(null); setTooltip(null); }}
+                        />
+                      ))}
+                      {labelVis[index] && (
+                        <>
+                          <line
+                            x1={point.x}
+                            y1={sessionActivityPoints.dims.height - sessionActivityPoints.dims.bottom}
+                            x2={point.x}
+                            y2={(index % 2 === 0 ? sessionActivityPoints.dims.height - 10 : sessionActivityPoints.dims.height - 22) - 11}
+                            stroke={C.slate} strokeWidth="1" strokeOpacity="0.7"
+                          />
+                          <text
+                            x={point.x}
+                            y={index % 2 === 0 ? sessionActivityPoints.dims.height - 10 : sessionActivityPoints.dims.height - 22}
+                            textAnchor="middle" fill={C.slate} fontSize="10"
+                          >
+                            {point.dateLabel}
+                          </text>
+                        </>
+                      )}
+                    </g>
+                  ))}
+                </svg>
+
+                {allPoints.length > 30 && (
+                  <div className="mt-1">
+                    <svg viewBox="0 0 920 32" style={{ width: '100%', height: 32 }}>
+                      <polyline
+                        points={allPoints.map((p, i) => {
+                          const x = chartDims.left + (i / Math.max(allPoints.length - 1, 1)) * chartInnerWidth;
+                          const y = 24 - (p.prs / sessionActivityPoints.yMax) * 20;
+                          return x + ',' + y;
+                        }).join(' ')}
+                        fill="none" stroke={C.cyan} strokeWidth="1" opacity="0.3"
+                      />
+                      <rect
+                        x={chartDims.left + (range[0] / Math.max(allPoints.length - 1, 1)) * chartInnerWidth}
+                        width={((range[1] - range[0]) / Math.max(allPoints.length - 1, 1)) * chartInnerWidth}
+                        y={0} height={32} rx={4}
+                        fill={C.cyan} opacity={0.08}
+                        style={{ cursor: 'grab' }}
+                        onMouseDown={handleBrushDrag('session')}
+                      />
+                    </svg>
+                    <div className="flex justify-between text-[10px] px-12" style={{ color: C.muted }}>
+                      <span>{allPoints[0]?.dateLabel}</span>
+                      <span>{range[1] - range[0] + 1} of {allPoints.length}</span>
+                      <span>{allPoints[allPoints.length - 1]?.dateLabel}</span>
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+          })()}
           </div>
         </div>
-      </div>
 
 
       {avgTaskTimePoints && (
@@ -391,80 +487,109 @@ export default function SessionsTab({
         <h3 className="text-sm font-semibold">Avg Task Time</h3>
         <div className="text-xs mb-3" style={{ color: C.muted }}>Minutes per task {chartView === 'weekly' ? 'by day' : 'by session'}</div>
         <div style={{ position: 'relative', overflowX: 'auto', paddingBottom: 4 }}>
-          <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }} role="img" aria-label="Average task time chart">
-            {Array.from({ length: avgTaskTimePoints.yTicks + 1 }, (_, index) => {
-              const value = index * avgTaskTimePoints.step;
-              const y = avgTaskTimePoints.dims.top + avgTaskTimePoints.innerHeight - (index / avgTaskTimePoints.yTicks) * avgTaskTimePoints.innerHeight;
-              return (
-                <g key={`avg-task-grid-${value}`}>
-                  <line x1={avgTaskTimePoints.dims.left} y1={y} x2={avgTaskTimePoints.dims.width - avgTaskTimePoints.dims.right} y2={y} stroke={C.border} strokeDasharray="4 4" strokeOpacity="0.3" />
-                  <text x={avgTaskTimePoints.dims.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">{value}m</text>
-                </g>
-              );
-            })}
+          {(() => {
+            const { points, allPoints, range } = avgTaskTimePoints;
+            const labelVis = thinLabels(points.map(p => p.dateLabel), 20);
+            const lastByTool: Record<string, typeof points[number]> = {};
+            points.forEach(p => { lastByTool[p.tool] = p; });
+            return (
+              <>
+                <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }} role="img" aria-label="Average task time chart">
+                  {Array.from({ length: avgTaskTimePoints.yTicks + 1 }, (_, index) => {
+                    const value = index * avgTaskTimePoints.step;
+                    const y = avgTaskTimePoints.dims.top + avgTaskTimePoints.innerHeight - (index / avgTaskTimePoints.yTicks) * avgTaskTimePoints.innerHeight;
+                    return (
+                      <g key={'avg-grid-' + value}>
+                        <line x1={avgTaskTimePoints.dims.left} y1={y} x2={avgTaskTimePoints.dims.width - avgTaskTimePoints.dims.right} y2={y} stroke={C.border} strokeDasharray="4 4" strokeOpacity="0.3" />
+                        <text x={avgTaskTimePoints.dims.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">{value}m</text>
+                      </g>
+                    );
+                  })}
 
-            {Object.entries(avgTaskTimePaths).map(([tool, d]) => (
-              <path key={tool} d={d} fill="none" stroke={toolColors[tool as SessionTool] ?? C.violet} strokeWidth="2" strokeOpacity="0.6" />
-            ))}
+                  {Object.entries(avgTaskTimePaths).map(([tool, d]) => (
+                    <path key={tool} d={d} fill="none" stroke={toolColors[tool as SessionTool] ?? C.violet} strokeWidth="2" strokeOpacity="0.6" />
+                  ))}
 
-            {avgTaskTimePoints.points.map((point, index) => (
-              <circle
-                key={`avg-${point.session}-${index}`}
-                cx={point.x}
-                cy={point.y}
-                r={hoveredPointIndex === index + 10000 ? 6 : 4}
-                fill={toolColors[point.tool as SessionTool]}
-                onMouseEnter={(event) => {
-                  setHoveredPointIndex(index + 10000);
-                  setTooltip({
-                    x: event.clientX, y: event.clientY,
-                    content: (
-                      <>
-                        <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{point.date} — {point.label}</div>
-                        <div style={{ color: C.violet, fontSize: 11 }}>{point.avgMin} min/task</div>
-                        <div style={{ color: C.slate, fontSize: 11 }}>{point.taskCount} tasks in {point.duration}h</div>
-                        <div style={{ color: toolColors[point.tool as SessionTool], fontSize: 11 }}>{point.tool}</div>
-                      </>
-                    ),
-                  });
-                }}
-                onMouseMove={(event) => {
-                  setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
-                }}
-                onMouseLeave={() => { setHoveredPointIndex(null); setTooltip(null); }}
-              />
-            ))}
+                  {Object.entries(lastByTool).map(([tool, pt]) => (
+                    <text key={'label-' + tool} x={pt.x + 8} y={pt.y} fill={toolColors[tool as SessionTool] ?? C.violet} fontSize={10} dominantBaseline="middle">{tool}</text>
+                  ))}
 
-            {avgTaskTimePoints.points.map((point, index) => {
-              if (avgTaskTimePoints.tickInterval > 1 && index % avgTaskTimePoints.tickInterval !== 0 && index !== avgTaskTimePoints.points.length - 1) return null;
-              const tickIndex = avgTaskTimePoints.tickInterval > 1
-                ? Math.floor(index / avgTaskTimePoints.tickInterval)
-                : index;
-              return (
-                <text
-                  key={`avg-label-${index}`}
-                  x={point.x}
-                  y={tickIndex % 2 === 0 ? avgTaskTimePoints.dims.height - 10 : avgTaskTimePoints.dims.height - 22}
-                  textAnchor="middle" fill={C.slate} fontSize="10"
-                >
-                  {point.dateLabel}
-                </text>
-              );
-            })}
-          </svg>
+                  {points.map((point, index) => (
+                    <circle
+                      key={'avg-' + point.session + '-' + index}
+                      cx={point.x}
+                      cy={point.y}
+                      r={hoveredPointIndex === index + 10000 ? 6 : 4}
+                      fill={toolColors[point.tool as SessionTool]}
+                      onMouseEnter={(event) => {
+                        setHoveredPointIndex(index + 10000);
+                        setTooltip({
+                          x: event.clientX, y: event.clientY,
+                          content: (
+                            <>
+                              <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{point.date} \u2014 {point.label}</div>
+                              <div style={{ color: C.violet, fontSize: 11 }}>{point.avgMin} min/task</div>
+                              <div style={{ color: C.slate, fontSize: 11 }}>{point.taskCount} tasks in {point.duration}h</div>
+                              <div style={{ color: toolColors[point.tool as SessionTool], fontSize: 11 }}>{point.tool}</div>
+                            </>
+                          ),
+                        });
+                      }}
+                      onMouseMove={(event) => {
+                        setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                      }}
+                      onMouseLeave={() => { setHoveredPointIndex(null); setTooltip(null); }}
+                    />
+                  ))}
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', marginTop: 2, paddingTop: 4 }}>
-            {Object.entries(toolColors).filter(([tool]) => avgTaskTimePoints.points.some(p => p.tool === tool)).map(([tool, color]) => (
-              <div key={tool} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: C.slate }}>
-                <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: color }} />
-                {tool}
-              </div>
-            ))}
-          </div>
+                  {points.map((point, index) => {
+                    if (!labelVis[index]) return null;
+                    return (
+                      <text
+                        key={'avg-label-' + index}
+                        x={point.x}
+                        y={index % 2 === 0 ? avgTaskTimePoints.dims.height - 10 : avgTaskTimePoints.dims.height - 22}
+                        textAnchor="middle" fill={C.slate} fontSize="10"
+                      >
+                        {point.dateLabel}
+                      </text>
+                    );
+                  })}
+                </svg>
+
+                {allPoints.length > 30 && (
+                  <div className="mt-1">
+                    <svg viewBox="0 0 920 32" style={{ width: '100%', height: 32 }}>
+                      <polyline
+                        points={allPoints.map((p, i) => {
+                          const x = chartDims.left + (i / Math.max(allPoints.length - 1, 1)) * chartInnerWidth;
+                          const y = 24 - (p.avgMin / avgTaskTimePoints.yMax) * 20;
+                          return x + ',' + y;
+                        }).join(' ')}
+                        fill="none" stroke={C.violet} strokeWidth="1" opacity="0.3"
+                      />
+                      <rect
+                        x={chartDims.left + (range[0] / Math.max(allPoints.length - 1, 1)) * chartInnerWidth}
+                        width={((range[1] - range[0]) / Math.max(allPoints.length - 1, 1)) * chartInnerWidth}
+                        y={0} height={32} rx={4}
+                        fill={C.violet} opacity={0.08}
+                        style={{ cursor: 'grab' }}
+                        onMouseDown={handleBrushDrag('avg')}
+                      />
+                    </svg>
+                    <div className="flex justify-between text-[10px] px-12" style={{ color: C.muted }}>
+                      <span>{allPoints[0]?.dateLabel}</span>
+                      <span>{range[1] - range[0] + 1} of {allPoints.length}</span>
+                      <span>{allPoints[allPoints.length - 1]?.dateLabel}</span>
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
       </div>
       )}
-
       {/* Driver Breakdown */}
       {driverChartData.bars.length > 0 && (
       <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
@@ -501,79 +626,115 @@ export default function SessionsTab({
           ))}
         </div>
         <div style={{ position: 'relative', overflowX: 'auto', paddingBottom: 4 }}>
-          <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }} role="img" aria-label="Driver breakdown chart">
-            {Array.from({ length: driverChartData.yTicks + 1 }, (_, index) => {
-              const value = index * driverChartData.step;
-              const y = chartDims.top + chartInnerHeight - (index / driverChartData.yTicks) * chartInnerHeight;
-              return (
-                <g key={`driver-grid-${value}`}>
-                  <line x1={chartDims.left} y1={y} x2={chartDims.width - chartDims.right} y2={y} stroke={C.border} strokeDasharray="4 4" strokeOpacity="0.3" />
-                  <text x={chartDims.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">{value}</text>
-                </g>
-              );
-            })}
-
-            {driverChartData.bars.map((bar, barIndex) => {
-              const barWidth = driverChartData.bars.length > 1
-                ? (chartInnerWidth / driverChartData.bars.length) * 0.7
-                : 40;
-              const barGap = driverChartData.bars.length > 1
-                ? chartInnerWidth / driverChartData.bars.length
-                : 40;
-              const barX = chartDims.left + barIndex * barGap + (barGap - barWidth) / 2;
-              const baseline = chartDims.top + chartInnerHeight;
-              let stackY = baseline;
-
-              return (
-                <g key={`driver-bar-${barIndex}`}>
-                  {driverChartData.drivers.map(d => {
-                    const count = bar.counts[d];
-                    if (count === 0) return null;
-                    const h = (count / driverChartData.yMax) * chartInnerHeight;
-                    stackY -= h;
+          {(() => {
+            const { bars, allBars, range } = driverChartData;
+            const labelVis = thinLabels(bars.map(b => b.dayLabel), 20);
+            return (
+              <>
+                <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }} role="img" aria-label="Driver breakdown chart">
+                  {Array.from({ length: driverChartData.yTicks + 1 }, (_, index) => {
+                    const value = index * driverChartData.step;
+                    const y = chartDims.top + chartInnerHeight - (index / driverChartData.yTicks) * chartInnerHeight;
                     return (
-                      <rect
-                        key={d}
-                        x={barX}
-                        y={stackY}
-                        width={barWidth}
-                        height={h}
-                        rx={2}
-                        fill={driverColors[d]}
-                        opacity={0.8}
-                        onMouseEnter={(event) => {
-                          setTooltip({
-                            x: event.clientX, y: event.clientY,
-                            content: (
-                              <>
-                                <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{bar.dayLabel}</div>
-                                {driverChartData.drivers.filter(dd => bar.counts[dd] > 0).map(dd => (
-                                  <div key={dd} style={{ color: driverColors[dd], fontSize: 11 }}>
-                                    {driverLabels[dd]}: {Math.round(bar.counts[dd] * 10) / 10}
-                                  </div>
-                                ))}
-                              </>
-                            ),
-                          });
-                        }}
-                        onMouseMove={(event) => {
-                          setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
-                        }}
-                        onMouseLeave={() => setTooltip(null)}
-                      />
+                      <g key={'driver-grid-' + value}>
+                        <line x1={chartDims.left} y1={y} x2={chartDims.width - chartDims.right} y2={y} stroke={C.border} strokeDasharray="4 4" strokeOpacity="0.3" />
+                        <text x={chartDims.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">{value}</text>
+                      </g>
                     );
                   })}
-                  <text
-                    x={barX + barWidth / 2}
-                    y={barIndex % 2 === 0 ? chartDims.height - 10 : chartDims.height - 22}
-                    textAnchor="middle" fill={C.slate} fontSize="10"
-                  >
-                    {bar.dayLabel}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
+
+                  {bars.map((bar, barIndex) => {
+                    const barWidth = bars.length > 1
+                      ? (chartInnerWidth / bars.length) * 0.7
+                      : 40;
+                    const barGap = bars.length > 1
+                      ? chartInnerWidth / bars.length
+                      : 40;
+                    const barX = chartDims.left + barIndex * barGap + (barGap - barWidth) / 2;
+                    const baseline = chartDims.top + chartInnerHeight;
+                    let stackY = baseline;
+
+                    return (
+                      <g key={'driver-bar-' + barIndex}>
+                        {driverChartData.drivers.map(d => {
+                          const count = bar.counts[d];
+                          if (count === 0) return null;
+                          const h = (count / driverChartData.yMax) * chartInnerHeight;
+                          stackY -= h;
+                          return (
+                            <rect
+                              key={d}
+                              x={barX}
+                              y={stackY}
+                              width={barWidth}
+                              height={h}
+                              rx={2}
+                              fill={driverColors[d]}
+                              opacity={0.8}
+                              onMouseEnter={(event) => {
+                                setTooltip({
+                                  x: event.clientX, y: event.clientY,
+                                  content: (
+                                    <>
+                                      <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>{bar.dayLabel}</div>
+                                      {driverChartData.drivers.filter(dd => bar.counts[dd] > 0).map(dd => (
+                                        <div key={dd} style={{ color: driverColors[dd], fontSize: 11 }}>
+                                          {driverLabels[dd]}: {Math.round(bar.counts[dd] * 10) / 10}
+                                        </div>
+                                      ))}
+                                    </>
+                                  ),
+                                });
+                              }}
+                              onMouseMove={(event) => {
+                                setTooltip((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                              }}
+                              onMouseLeave={() => setTooltip(null)}
+                            />
+                          );
+                        })}
+                        {labelVis[barIndex] && (
+                          <text
+                            x={barX + barWidth / 2}
+                            y={barIndex % 2 === 0 ? chartDims.height - 10 : chartDims.height - 22}
+                            textAnchor="middle" fill={C.slate} fontSize="10"
+                          >
+                            {bar.dayLabel}
+                          </text>
+                        )}
+                      </g>
+                    );
+                  })}
+                </svg>
+
+                {allBars.length > 30 && (
+                  <div className="mt-1">
+                    <svg viewBox="0 0 920 32" style={{ width: '100%', height: 32 }}>
+                      {allBars.map((bar, i) => {
+                        const x = chartDims.left + (i / Math.max(allBars.length - 1, 1)) * chartInnerWidth;
+                        const total = driverChartData.drivers.reduce((s, d) => s + bar.counts[d], 0);
+                        const h = total > 0 ? (total / driverChartData.yMax) * 24 : 0;
+                        return <rect key={i} x={x - 1} y={28 - h} width={2} height={h} fill={C.emerald} opacity={0.3} />;
+                      })}
+                      <rect
+                        x={chartDims.left + (range[0] / Math.max(allBars.length - 1, 1)) * chartInnerWidth}
+                        width={((range[1] - range[0]) / Math.max(allBars.length - 1, 1)) * chartInnerWidth}
+                        y={0} height={32} rx={4}
+                        fill={C.emerald} opacity={0.08}
+                        style={{ cursor: 'grab' }}
+                        onMouseDown={handleBrushDrag('driver')}
+                      />
+                    </svg>
+                    <div className="flex justify-between text-[10px] px-12" style={{ color: C.muted }}>
+                      <span>{allBars[0]?.dayLabel}</span>
+                      <span>{range[1] - range[0] + 1} of {allBars.length}</span>
+                      <span>{allBars[allBars.length - 1]?.dayLabel}</span>
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
       </div>
       )}

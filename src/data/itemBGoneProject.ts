@@ -6,7 +6,7 @@ export const itemBGoneProject: Project = {
   subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CLAUDE CODE',
   url: 'https://ibg.jynaxxapps.com',
   projectType: 'addon',
-  currentPhase: 'Review',
+  currentPhase: 'Build',
   chapters: [
     {
       id: 'ibg-ch-research',
@@ -165,7 +165,7 @@ export const itemBGoneProject: Project = {
     {
       id: 'ibg-ch-dashboard-detection',
       name: 'Dashboard & Detection',
-      period: 'Mar 7, 2026',
+      period: 'Mar 7 – Apr 6, 2026',
       toolLabel: 'Claude Code',
       tool: 'claude',
       chapterType: 'date-range' as const,
@@ -207,13 +207,13 @@ export const itemBGoneProject: Project = {
     },
   ],
   stats: {
-    totalDays: 5,
+    totalDays: 7,
     chatGptMessages: '0',
     coworkSessions: 0,
-    prsCreated: '8',
+    prsCreated: '13',
     codexTasks: '0',
-    linesOfCode: '~11,550',
-    deadEnds: 0,
-    majorDecisions: 15,
+    linesOfCode: '~2,900',
+    deadEnds: 1,
+    majorDecisions: 16,
   },
 };

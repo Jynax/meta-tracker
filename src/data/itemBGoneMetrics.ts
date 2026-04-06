@@ -8,6 +8,8 @@ export const ibgCodeVolume: CodeVolumeEntry[] = [
   { session: 'Session 41', date: 'Mar 11', label: 'Playwright Suite + CI', added: 1605, deleted: 0, net: 1605, total: 2557 },
   { session: 'Session 43', date: 'Mar 12', label: 'Dashboard Bug Fixes', added: 125, deleted: 171, net: -46, total: 2511 },
   { session: 'Session 50', date: 'Mar 13', label: 'Dependabot + Quality Gates', added: 31, deleted: 0, net: 31, total: 2542 },
+  { session: 'Session 78', date: 'Apr 1', label: 'LOC Audit + Gitignore data.json', added: 12, deleted: 7103, net: -7091, total: -4549 },
+  { session: 'Session 80', date: 'Apr 5', label: 'R2 Storage + Exclude Items', added: 400, deleted: 50, net: 350, total: -4199 },
 ];
 
 export const ibgSessions: SessionEntry[] = [
@@ -19,9 +21,11 @@ export const ibgSessions: SessionEntry[] = [
   { session: 'Session 41', date: 'Mar 11', label: 'Playwright Suite + CI', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'Full Playwright test suite: 37 tests across 5 specs (navigation, data integrity, upload flow, filtering, deep interactions). GitHub Actions CI workflow. Tasks #31-#33.', chapterId: 'ibg-ch-dashboard-detection', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 3, phase: 'Review', driver: 'agent-led' },
   { session: 'Session 43', date: 'Mar 12', label: 'Dashboard Bug Fixes', duration: 1, prs: 2, decisions: 0, deadEnds: 0, focus: 'Fix confidence labels, raw WoW strings, verdict filtering (PR #5). Simplify UI: fix stat cards, remove filter pills, legend read-only (PR #6). 2 dashboard PRs.', chapterId: 'ibg-ch-dashboard-detection', workCategory: 'Bug', tool: 'Claude Code', taskCount: 0, phase: 'Review', driver: 'collaborative' },
   { session: 'Session 50', date: 'Mar 13', label: 'Dependabot + Quality Gates', duration: 0.25, prs: 2, decisions: 0, deadEnds: 0, focus: 'Dependabot config (Dashboard PR #7) + PR quality gates — lint, typecheck, build (Dashboard PR #8). Part of cross-project tooling sweep.', chapterId: 'ibg-ch-dashboard-detection', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 0, phase: 'Review', driver: 'agent-led' },
+  { session: 'Session 78', date: 'Apr 1', label: 'LOC Audit + Gitignore data.json', duration: 0.5, prs: 1, decisions: 2, deadEnds: 0, focus: 'LOC audit: data.json was 7,101 LOC inflating metrics. Gitignored data.json (Dashboard PR #11), added sample-data.json fallback, fixed 4 e2e tests. Tasks #41-#42 done.', chapterId: 'ibg-ch-dashboard-detection', workCategory: 'Bug', tool: 'Claude Code', taskCount: 2, phase: 'Build', driver: 'agent-led' },
+  { session: 'Session 80', date: 'Apr 5', label: 'R2 Storage + Exclude Items', duration: 2, prs: 4, decisions: 1, deadEnds: 1, focus: 'R2 scan data storage (#43): migrated from git-committed JSON to CF R2. Exclude items (#22): Alt+click + slash commands + dashboard badge. Fixed GW2_UI hook compat. 4 PRs across 2 repos.', chapterId: 'ibg-ch-dashboard-detection', workCategory: 'Feature', tool: 'Claude Code', taskCount: 2, phase: 'Build', driver: 'collaborative' },
 ];
 
-export const ibgDateRange = { start: 'Mar 2026', end: 'Mar 2026' };
+export const ibgDateRange = { start: 'Mar 2026', end: 'Apr 2026' };
 
 export const ibgBugs: BugEntry[] = [];
 
@@ -100,5 +104,30 @@ export const ibgDays: DayEntry[] = [
     ],
     metrics: { totalTimeMinutes: 15, linesAdded: 31, linesDeleted: 0, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Apr 1',
+    title: 'LOC Audit + Gitignore data.json',
+    projectId: 'ibg',
+    phase: 'Build',
+    chapterId: 'ibg-ch-dashboard-detection',
+    blocks: [
+      { id: 'ibg-session-78', dayId: 'Apr 1', label: 'LOC Audit + Gitignore data.json', workCategory: 'Bug', driver: 'agent-led', operator: 'claude-code', timeMinutes: 30, linesAdded: 12, linesDeleted: 7103, note: 'LOC audit: data.json was 7,101 LOC inflating metrics. Gitignored data.json (Dashboard PR #11), added sample-data.json fallback, fixed 4 e2e tests. Tasks #41-#42 done.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 30, linesAdded: 12, linesDeleted: 7103, totalDecisions: 2 },
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
+  {
+    date: 'Apr 5',
+    title: 'R2 Storage + Exclude Items',
+    projectId: 'ibg',
+    phase: 'Build',
+    chapterId: 'ibg-ch-dashboard-detection',
+    blocks: [
+      { id: 'ibg-session-80-r2', dayId: 'Apr 5', label: 'R2 Scan Data Storage', workCategory: 'Feature', driver: 'agent-led', operator: 'claude-code', timeMinutes: 45, linesAdded: 200, linesDeleted: 25, note: 'Migrated scan data from git-committed JSON to CF R2. Storage provider abstraction (swappable to Supabase). sync.js uploads to R2. Dashboard fetches with 3-tier fallback. CORS configured. Dashboard PR #12.', contextWindowOrigin: false },
+      { id: 'ibg-session-80-exclude', dayId: 'Apr 5', label: 'Exclude Items from Scan', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 75, linesAdded: 200, linesDeleted: 25, note: 'Alt+click items in bags to toggle exclusion. /ibg slash commands. Excluded items show gray tooltip + dashboard badge. Fixed GW2_UI compat (HandleModifiedItemClick). Fixed parse.js exclusion cross-ref. Addon PR #3, Dashboard PRs #13+#16.', contextWindowOrigin: false },
+    ],
+    metrics: { totalTimeMinutes: 120, linesAdded: 400, linesDeleted: 50, totalDecisions: 1 },
+    driverSummary: { human: 0, ai: 1, collaborative: 1 },
   },
 ];

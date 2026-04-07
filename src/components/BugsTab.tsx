@@ -106,9 +106,9 @@ export default function BugsTab({ bugs, projectId }: BugsTabProps) {
                   <span style={{ fontSize: 12, color: C.muted }}>{group.bugs.length} bug{group.bugs.length > 1 ? 's' : ''}</span>
                   <span style={{ fontSize: 12, color: C.emerald }}>{fixedInGroup} fixed</span>
                 </div>
-                <span style={{ color: C.muted, transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 200ms ease' }}>&#9654;</span>
+                <span style={{ color: C.muted, transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 200ms cubic-bezier(0.23, 1, 0.32, 1)' }}>&#9654;</span>
               </button>
-              <div style={{ maxHeight: isExpanded ? 2000 : 0, overflow: 'hidden', transition: 'max-height 300ms ease' }}>
+              <div style={{ maxHeight: isExpanded ? 2000 : 0, overflow: 'hidden', transition: 'max-height 200ms cubic-bezier(0.23, 1, 0.32, 1)' }}>
                 <table className="w-full border-collapse text-xs">
                   <thead>
                     <tr style={{ backgroundColor: '#162136' }}>

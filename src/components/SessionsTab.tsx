@@ -771,7 +771,7 @@ export default function SessionsTab({
                   });
                 }}
                 className="flex w-full items-center justify-between rounded-lg border px-4 py-3"
-                style={{ backgroundColor: C.cardBg, borderColor: isExpanded ? C.cyan : C.border, transition: 'border-color 200ms ease' }}
+                style={{ backgroundColor: C.cardBg, borderColor: isExpanded ? C.cyan : C.border, transition: 'border-color 200ms cubic-bezier(0.23, 1, 0.32, 1)' }}
               >
                 <div className="flex items-center gap-3 flex-wrap">
                   <span style={{ fontSize: 14, fontWeight: 600, color: C.white }}>{day.date}</span>
@@ -785,12 +785,12 @@ export default function SessionsTab({
                   {day.metrics.linesAdded > 0 && <span style={{ fontSize: 11, color: C.emerald }}>+{day.metrics.linesAdded.toLocaleString()}</span>}
                   {day.metrics.linesDeleted > 0 && <span style={{ fontSize: 11, color: C.rose }}>-{day.metrics.linesDeleted.toLocaleString()}</span>}
                   {day.metrics.totalDecisions > 0 && <span style={{ fontSize: 11, color: C.cyan }}>{day.metrics.totalDecisions}d</span>}
-                  <span style={{ color: C.muted, transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 200ms ease', fontSize: 12 }}>&#9654;</span>
+                  <span style={{ color: C.muted, transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 200ms cubic-bezier(0.23, 1, 0.32, 1)', fontSize: 12 }}>&#9654;</span>
                 </div>
               </button>
 
               {/* Expanded: Work Blocks */}
-              <div style={{ maxHeight: isExpanded ? 2000 : 0, overflow: 'hidden', transition: 'max-height 300ms ease' }}>
+              <div style={{ maxHeight: isExpanded ? 2000 : 0, overflow: 'hidden', transition: 'max-height 200ms cubic-bezier(0.23, 1, 0.32, 1)' }}>
                 <div className="ml-4 mt-1 space-y-1.5 border-l-2 pl-4 pb-2" style={{ borderColor: `color-mix(in srgb, ${C.cyan} 25%, transparent)` }}>
                   {day.blocks.map((block) => (
                     <div

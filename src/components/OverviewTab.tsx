@@ -190,7 +190,7 @@ export default function OverviewTab({
                   width: `${(c.count / workMixTotal) * 100}%`,
                   backgroundColor: c.color,
                   minWidth: 4,
-                  transition: 'width 0.5s ease',
+                  transition: 'width 300ms cubic-bezier(0.23, 1, 0.32, 1)',
                 }}
               />
             ))}

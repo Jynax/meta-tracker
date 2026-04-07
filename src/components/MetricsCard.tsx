@@ -60,7 +60,7 @@ function DonutBreakdown({ label, items, animate }: { label: string; items: Array
         <svg viewBox="0 0 160 160" style={{ width: 160, height: 160, flexShrink: 0 }} role="img" aria-label={`${label} breakdown chart`}>
           <circle cx="80" cy="80" r={radius} fill="none" stroke={C.border} strokeWidth="16" opacity="0.3" />
           {segments.map((seg) => (
-            <circle key={seg.label} cx="80" cy="80" r={radius} fill="none" stroke={seg.color} strokeWidth="16" strokeDasharray={`${seg.arcLength} ${Math.max(circumference - seg.arcLength, 0)}`} strokeDashoffset={animate ? seg.offset : circumference} transform="rotate(-90 80 80)" style={{ transition: 'stroke-dashoffset 0.8s ease', transitionDelay: `${seg.index * 100}ms` }} />
+            <circle key={seg.label} cx="80" cy="80" r={radius} fill="none" stroke={seg.color} strokeWidth="16" strokeDasharray={`${seg.arcLength} ${Math.max(circumference - seg.arcLength, 0)}`} strokeDashoffset={animate ? seg.offset : circumference} transform="rotate(-90 80 80)" style={{ transition: 'stroke-dashoffset 0.8s cubic-bezier(0.23, 1, 0.32, 1)', transitionDelay: `${seg.index * 100}ms` }} />
           ))}
           <text x="80" y="72" textAnchor="middle" fill={C.muted} fontSize="13">{label}</text>
           <text x="80" y="98" textAnchor="middle" fill={C.white} fontSize="28" fontWeight="700">{total}</text>

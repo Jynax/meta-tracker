@@ -150,14 +150,14 @@ export default function TimeMachine() {
                   border: `1px solid ${isExpanded ? colors.violet + "40" : colors.border}`,
                   borderRadius: 10,
                   overflow: "hidden",
-                  transition: "border-color 0.2s ease",
+                  transition: "border-color 200ms cubic-bezier(0.23, 1, 0.32, 1)",
                 }}
               >
                 <button
                   onClick={() => setExpandedItem(isExpanded ? null : item.area)}
                   style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "14px 18px", background: "none", border: "none", cursor: "pointer", textAlign: "left", color: colors.text }}
                 >
-                  <ChevronRight size={14} color={colors.violet} style={{ transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s ease", flexShrink: 0 }} />
+                  <ChevronRight size={14} color={colors.violet} style={{ transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 200ms cubic-bezier(0.23, 1, 0.32, 1)", flexShrink: 0 }} />
                   <span style={{ fontSize: 13, fontWeight: 600, flex: 1 }}>{item.area}</span>
                   <span style={{ fontSize: 10, color: colors.muted, fontFamily: "'JetBrains Mono', monospace", flexShrink: 0 }}>{item.source.session}</span>
                 </button>

@@ -345,7 +345,7 @@ function WorkMixChart({ data }: ChartProps) {
                 backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8',
                 minWidth: count > 0 ? 4 : 0,
                 borderRight: '1px solid #0f172a',
-                transition: 'width 0.5s ease',
+                transition: 'width 300ms cubic-bezier(0.23, 1, 0.32, 1)',
               }}
             />
           ))}

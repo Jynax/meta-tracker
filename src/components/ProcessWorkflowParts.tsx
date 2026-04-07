@@ -17,8 +17,8 @@ const FadeIn = ({ children, delay = 0, style = {} }: FadeInProps) => {
     <div
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(12px)",
-        transition: "opacity 0.5s ease, transform 0.5s ease",
+        transform: visible ? "translateY(0) scale(1)" : "translateY(-8px) scale(0.96)",
+        transition: "opacity 300ms cubic-bezier(0.23, 1, 0.32, 1), transform 300ms cubic-bezier(0.23, 1, 0.32, 1)",
         ...style,
       }}
     >
@@ -154,7 +154,7 @@ const RoleCard = ({
         padding: "20px 22px",
         flex: 1,
         minWidth: 200,
-        transition: "all 0.3s ease",
+        transition: "background-color 200ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms cubic-bezier(0.23, 1, 0.32, 1)",
         cursor: "default",
         position: "relative",
         overflow: "hidden",
@@ -169,7 +169,7 @@ const RoleCard = ({
           height: 3,
           background: `linear-gradient(90deg, ${color}, ${color}00)`,
           opacity: isHovered ? 1 : 0.4,
-          transition: "opacity 0.3s ease",
+          transition: "opacity 200ms cubic-bezier(0.23, 1, 0.32, 1)",
         }}
       />
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>

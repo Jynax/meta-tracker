@@ -93,7 +93,7 @@ export default function ProcessWorkflow() {
                 cursor: "pointer",
                 borderBottom: `2px solid ${activeTab === tab.id ? colors.cyan : "transparent"}`,
                 marginBottom: -1,
-                transition: "all 0.2s ease",
+                transition: "color 200ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms cubic-bezier(0.23, 1, 0.32, 1)",
                 letterSpacing: 0.3,
               }}
             >

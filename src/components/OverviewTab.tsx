@@ -411,7 +411,7 @@ export default function OverviewTab({
                         flex: 1,
                         backgroundColor: i <= phaseIndex ? phaseColors[phase] : C.border,
                         opacity: i <= phaseIndex ? 0.8 : 0.3,
-                        transition: 'background-color 0.3s ease',
+                        transition: 'background-color 200ms cubic-bezier(0.23, 1, 0.32, 1)',
                       }}
                     />
                   ))}

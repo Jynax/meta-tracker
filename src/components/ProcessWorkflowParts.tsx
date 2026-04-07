@@ -169,7 +169,7 @@ const RoleCard = ({
           height: 3,
           background: `linear-gradient(90deg, ${color}, ${color}00)`,
           opacity: isHovered ? 1 : 0.4,
-          transition: "opacity 0.3s ease",
+          transition: "opacity 200ms cubic-bezier(0.23, 1, 0.32, 1)",
         }}
       />
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>

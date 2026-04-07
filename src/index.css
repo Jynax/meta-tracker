@@ -13,6 +13,43 @@ body {
   color: var(--theme-text-primary);
 }
 
+/* Design system: custom easing curves (Emil Kowalski design engineering) */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Accessibility: respect user motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Gate hover effects for touch devices */
+@media (hover: hover) and (pointer: fine) {
+  button:hover,
+  a:hover,
+  [role="button"]:hover,
+  [role="option"]:hover {
+    filter: brightness(1.1);
+  }
+}
+
+/* Button press feedback — immediate scale-down on press */
+button:active,
+a:active,
+[role="button"]:active {
+  transform: scale(0.97);
+  transition: transform 100ms var(--ease-out);
+}
+
 /* Accessibility: focus-visible ring for all interactive elements */
 button:focus-visible,
 a:focus-visible,

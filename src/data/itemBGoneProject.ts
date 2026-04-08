@@ -280,6 +280,6 @@ export const itemBGoneProject: Project = {
     codexTasks: '0',
     linesOfCode: '~2,900',
     deadEnds: 1,
-    majorDecisions: 22,
+    majorDecisions: 21,
   },
 };

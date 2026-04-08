@@ -1,12 +1,190 @@
 [
   {
+    "date": "2026-04-08",
+    "entries": [
+      { "category": "updated", "title": "Backfill Decision Tree with 33 entries across 4 projects", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-04-07",
+    "entries": [
+      { "category": "improved", "title": "Design polish pass — smoother animations, button press feedback, and reduced-motion support", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-04-01",
+    "entries": [
+      { "category": "improved", "title": "Apply data visualization heuristics — direct labels, brush/zoom, and consistent legends across all charts", "description": "" },
+      { "category": "improved", "title": "Tighten chart legends to sit closer to their parent charts", "description": "" },
+      { "category": "updated", "title": "Correct project phase labels and mark Feedback Capture v1.0 milestone", "description": "" },
+      { "category": "improved", "title": "Fix LOC counts to exclude auto-generated data files", "description": "" }
+    ]
+  },
+  {
     "date": "2026-03-31",
     "entries": [
-      {
-        "category": "new",
-        "title": "Automated changelog system powered by PR descriptions",
-        "description": ""
-      }
+      { "category": "new", "title": "Automated changelog system powered by PR descriptions", "description": "" },
+      { "category": "improved", "title": "InsightsView readability pass — larger fonts and better spacing", "description": "" },
+      { "category": "improved", "title": "Apply shared design tokens — Inter font and consistent styling", "description": "" },
+      { "category": "new", "title": "Replace History tab with horizontal process timeline", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-30",
+    "entries": [
+      { "category": "new", "title": "Narrative-driven InsightsView redesign — 5 story chapters replacing raw data tabs", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-29",
+    "entries": [
+      { "category": "new", "title": "Cross-project insights view — select \"All Projects\" for portfolio-wide analytics", "description": "" },
+      { "category": "improved", "title": "Fix LOC chart y-axis overflow on projects with large line counts", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-25",
+    "entries": [
+      { "category": "new", "title": "Add On The Move and Note Worthy projects with live app links", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-23",
+    "entries": [
+      { "category": "new", "title": "Add custom favicon", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-21",
+    "entries": [
+      { "category": "new", "title": "Add Note Worthy to project tracker", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-15",
+    "entries": [
+      { "category": "updated", "title": "Log bugs and add decision tree entries for mid-March sessions", "description": "" },
+      { "category": "improved", "title": "Fix data gaps in charts, milestone markers, and BIP session ordering", "description": "" },
+      { "category": "updated", "title": "Mark Meta Tracker v1.0 milestone", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-14",
+    "entries": [
+      { "category": "improved", "title": "Migrate to Vite 8 and React 19 for faster builds", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-13",
+    "entries": [
+      { "category": "new", "title": "Add PR quality gates — lint, typecheck, and build checks on every pull request", "description": "" },
+      { "category": "new", "title": "Joint project type with contributor tracking and check-in workflow", "description": "" },
+      { "category": "improved", "title": "Grouped project switcher, clickable phase badges, and attribution slider", "description": "" },
+      { "category": "improved", "title": "Timeline day grouping, shared session toggle, and smarter tick density", "description": "" },
+      { "category": "improved", "title": "Fix badge colors, layout shift, and driver chart rendering issues", "description": "" },
+      { "category": "new", "title": "Tracking mode toggle and phase chapter visual indicators", "description": "" },
+      { "category": "new", "title": "Migrate all tabs to Day/Block data model for consistent session grouping", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-12",
+    "entries": [
+      { "category": "new", "title": "Decision tree date anchoring — entries now tied to specific dates", "description": "" },
+      { "category": "new", "title": "Add Landing Page and Feedback Capture projects", "description": "" },
+      { "category": "updated", "title": "Backfill decision tree data for early March across 4 projects", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-11",
+    "entries": [
+      { "category": "new", "title": "Playwright CI — automated end-to-end tests run on every pull request", "description": "" },
+      { "category": "new", "title": "Project milestone markers on timeline with BIP v1.0 as first entry", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-10",
+    "entries": [
+      { "category": "improved", "title": "UX fixes — phase cards, donut charts, driver breakdowns, and research tracking", "description": "" },
+      { "category": "new", "title": "Deep Playwright end-to-end test suite covering all dashboard views", "description": "" },
+      { "category": "new", "title": "Add Vuln Bank project to tracker", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-09",
+    "entries": [
+      { "category": "new", "title": "Cross-project phase view, driver breakdown chart, and phase badges", "description": "" },
+      { "category": "new", "title": "Decision tree updates and hidden Easter egg", "description": "" },
+      { "category": "improved", "title": "Add designer credit and backfill planning session data", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-08",
+    "entries": [
+      { "category": "new", "title": "Add Item-B-Gone and Vuln Bank projects to tracker", "description": "" },
+      { "category": "new", "title": "Extended data model with project metadata and session classification", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-06",
+    "entries": [
+      { "category": "new", "title": "Add Time Machine to History tab — browse dashboard state at any past date", "description": "" },
+      { "category": "improved", "title": "Accessibility pass — screen reader labels, keyboard navigation, and ARIA attributes", "description": "" },
+      { "category": "new", "title": "Security Compass dark/light theme toggle", "description": "" },
+      { "category": "improved", "title": "Add security headers for Cloudflare Pages deployment", "description": "" },
+      { "category": "improved", "title": "Remove Basic Auth — dashboard is now publicly accessible", "description": "" },
+      { "category": "improved", "title": "Fix category bar and parent date bar layout regressions", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-05",
+    "entries": [
+      { "category": "improved", "title": "Fix chart grouping bugs and add per-tool trend lines", "description": "" },
+      { "category": "improved", "title": "Fix weekly chart, donut layout, default project selection, and live app links", "description": "" },
+      { "category": "new", "title": "Session tool tracking and Average Task Time chart", "description": "" },
+      { "category": "improved", "title": "Chart scaling improvements — milestone labels and weekly toggle", "description": "" },
+      { "category": "improved", "title": "Code tab sorted newest-first for faster access to recent sessions", "description": "" },
+      { "category": "improved", "title": "Stacked Tree: collapsible nodes, multi-open support, and pill-style badges", "description": "" },
+      { "category": "new", "title": "Add History tab to How We Work overlay", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-03",
+    "entries": [
+      { "category": "improved", "title": "Metrics UX overhaul — interactive chart tooltips, session grouping, and tab persistence", "description": "" },
+      { "category": "improved", "title": "Dashboard polish — donut charts, bugs table, and timeline tooltips", "description": "" },
+      { "category": "new", "title": "Stacked Tree View — new hierarchical code visualization with filtering", "description": "" },
+      { "category": "improved", "title": "Group Net Change and Code tabs by date with collapsible rows", "description": "" },
+      { "category": "new", "title": "Add Remnants project to tracker", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-03-02",
+    "entries": [
+      { "category": "new", "title": "Metrics Dashboard with Overview, Sessions, Code, and Bugs tabs", "description": "" },
+      { "category": "new", "title": "Animated donut charts for bug tracking visualization", "description": "" },
+      { "category": "new", "title": "SVG area/line chart replacing static LOC bars in Overview", "description": "" },
+      { "category": "new", "title": "Grouped session bars with shared hover tooltips", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-02-28",
+    "entries": [
+      { "category": "new", "title": "Multi-project support with project selector dropdown", "description": "" },
+      { "category": "improved", "title": "Decision Tree: view switcher, compact summary, collapsible filters, and chapter stats", "description": "" },
+      { "category": "improved", "title": "Rename phases to chapters, add Discovery/Pivot node types and category filters", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-02-27",
+    "entries": [
+      { "category": "improved", "title": "Vertical layout refactor with expandable decision branches", "description": "" },
+      { "category": "new", "title": "Node categories with Technical and Functional filtering", "description": "" }
+    ]
+  },
+  {
+    "date": "2026-02-26",
+    "entries": [
+      { "category": "new", "title": "Launch Meta Tracker — interactive decision tree dashboard built with React Flow", "description": "" }
     ]
   }
 ]

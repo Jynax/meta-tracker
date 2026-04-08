@@ -55,6 +55,20 @@ export const bipProject: Project = {
           chosenPath: 'Recharts as primary visualization library',
           alternatives: ['D3.js (too low-level)', 'Chart.js', 'Custom SVG'],
         },
+        {
+          id: 'bip-client-side-only',
+          type: 'decision',
+          dayId: 'Feb 14',
+          category: 'technical',
+          title: 'Client-Side Only Architecture',
+          description:
+            'All data parsing and visualization happens in the browser. SheetJS loaded via CDN for XLSX parsing. No backend, no API, no database. Keeps deployment trivial.',
+          chosenPath: 'Client-side only — SheetJS via CDN, no backend',
+          alternatives: [
+            'Server-side processing with CF Worker',
+            'Pre-processed static JSON',
+          ],
+        },
       ],
     },
     {
@@ -73,6 +87,24 @@ export const bipProject: Project = {
           title: 'The Spreadsheet Challenge',
           description: "Marcie's master spreadsheet contained 30 sheets spanning 1990-2026, with ~5,350 books. Massive inconsistencies drove a multi-session normalization effort.",
           lesson: 'Real-world data is always messier than you expect. Budget time for it.',
+        },
+        {
+          id: 'bip-csv-first-xlsx',
+          type: 'decision',
+          dayId: 'Feb 22',
+          category: 'technical',
+          title: 'CSV-First, Then Direct XLSX Upload',
+          description:
+            'Evolved from CSV-only upload to direct XLSX parsing using SheetJS via CDN. One upload reads the full workbook — all 30 sheets.',
+          lesson:
+            "Don't make the user do work the computer can do.",
+          chosenPath:
+            'Direct XLSX parsing via SheetJS CDN — single file upload for all sheets',
+          alternatives: [
+            'Keeping CSV-only',
+            'Server-side XLSX parsing',
+            'Desktop app',
+          ],
         },
         {
           id: 'bip-multi-sheet-parsing',
@@ -143,6 +175,22 @@ export const bipProject: Project = {
           alternatives: ['Extracting components from the start', 'Using a state management library'],
         },
         {
+          id: 'bip-month-time-bucket',
+          type: 'decision',
+          dayId: 'Feb 16',
+          category: 'functional',
+          title: 'Month as Primary Time Bucket',
+          description:
+            'Selected "Month read" as the default primary time field for all charts. Most consistently populated field across all year sheets.',
+          chosenPath:
+            'Month read as primary time bucket for all charts and drilldowns',
+          alternatives: [
+            'Period-based bucketing (inconsistent)',
+            'Date-based (incomplete)',
+            'Year-only (loses granularity)',
+          ],
+        },
+        {
           id: 'bip-representation-metrics',
           type: 'decision',
           dayId: 'Feb 16',
@@ -173,12 +221,56 @@ export const bipProject: Project = {
       chapterType: 'date-range' as const,
       nodes: [
         {
+          id: 'bip-owned-third-metric',
+          type: 'decision',
+          dayId: 'Feb 17',
+          category: 'functional',
+          title: 'Owned as Third Representation Metric',
+          description:
+            'Added "Owned" as a third filter/chart dimension alongside Women and POC. Tells a meaningful story about which authors Marcie invests in financially.',
+          chosenPath:
+            'Three representation metrics: Women, POC, Owned — all as first-class filters',
+          alternatives: [
+            'Two-dimensional only (Women + POC)',
+            'Adding more metrics (ARC, NonFiction)',
+          ],
+        },
+        {
           id: 'bip-representation-trend-view',
           type: 'event',
           dayId: 'Feb 17',
           category: 'functional',
           title: 'Representation Trend View',
           description: 'Built a Recharts-based trend view showing Women/POC/Owned percentages as line charts across all years with a metric selector.',
+        },
+        {
+          id: 'bip-multi-year-aggregate',
+          type: 'decision',
+          dayId: 'Feb 17',
+          category: 'functional',
+          title: 'Multi-Year Aggregate Scope',
+          description:
+            'Added all-years aggregate scope alongside single-year view. Different scopes need different chart types — all-years shows trends, single-year shows monthly detail.',
+          chosenPath:
+            'Dual scope: all-years aggregate (trend charts) + single-year (monthly breakdowns)',
+          alternatives: [
+            'Single-year only with prev/next (loses big picture)',
+            'All years in one chart (too dense)',
+          ],
+        },
+        {
+          id: 'bip-dark-mode-theme',
+          type: 'decision',
+          dayId: 'Feb 17',
+          category: 'ux-design',
+          title: 'Dark Mode Theme',
+          description:
+            'Full dark mode with custom Tailwind tokens, viewport-spanning background, and compact toggle. All charts and controls respect the theme. Dark mode became the default.',
+          chosenPath: 'Full dark mode theme as default with manual toggle',
+          alternatives: [
+            'Light-only',
+            'System-preference auto-detection',
+          ],
         },
         {
           id: 'bip-trend-metric-split',
@@ -552,6 +644,6 @@ export const bipProject: Project = {
     codexTasks: '40+',
     linesOfCode: '~3,950',
     deadEnds: 5,
-    majorDecisions: 24,
+    majorDecisions: 30,
   },
 };

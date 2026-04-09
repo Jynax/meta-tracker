@@ -1309,15 +1309,370 @@ export const metaProject: Project = {
       },
     ],
   },
+  {
+    id: 'meta-ch-nw-sprint',
+    name: 'Note Worthy Sprint & 8th Project',
+    period: 'Mar 20-23, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    chapterType: 'date-range' as const,
+    nodes: [
+      {
+        id: 'meta-nw-added',
+        type: 'event',
+        dayId: 'Mar 21',
+        category: 'functional',
+        title: 'Note Worthy Added — 8th Project Tracked',
+        description:
+          'Added Note Worthy (sheet music transposer) as the 8th tracked project. Full data model: sessions, metrics, decision tree, phase tracking. NW built from scratch in Sessions 55-61 (Mar 20-22) — MVP, HF Spaces backend migration, OMR post-processing, key detection, MusicXML editor, Playwright tests.',
+      },
+      {
+        id: 'meta-nw-data-pushes',
+        type: 'event',
+        dayId: 'Mar 22',
+        category: 'process',
+        title: 'Note Worthy Sessions 58-60 Data Push',
+        description:
+          'Pushed metrics for NW development sprint. Three sessions of rapid iteration: OMR post-processing + key detection (S58), MusicXML editor (S59), editor bug fixes + toolbar redesign (S60). PR #127.',
+      },
+      {
+        id: 'meta-timeline-overhaul-started',
+        type: 'decision',
+        dayId: 'Mar 23',
+        category: 'ux-design',
+        title: 'Timeline Overhaul Started (#67)',
+        description:
+          'Began replacing the Time Machine (slider + snapshot cards) with a horizontal process timeline inspired by BIP\'s YearTimeline. Session milestones, annotated callouts, color-coded change types. PR #130 opened.',
+        chosenPath: 'Horizontal timeline with session milestones and expand-to-full-view',
+        alternatives: ['Iterate on existing Time Machine slider', 'Remove history view entirely'],
+      },
+      {
+        id: 'meta-flex-session-concept',
+        type: 'event',
+        dayId: 'Mar 23',
+        category: 'process',
+        title: 'Flex Session Concept — Multi-Project Maintenance',
+        description:
+          'Session 62 introduced "Flex" sessions — multi-project maintenance in a single session. BIP bundle optimized (1,093→300KB), Landing + Remnants deps updated. Flex sessions tracked with per-project time allocation.',
+      },
+      {
+        id: 'meta-custom-favicon',
+        type: 'event',
+        dayId: 'Mar 23',
+        category: 'ux-design',
+        title: 'Custom Favicon Added',
+        description:
+          'Added a custom SVG favicon for Meta Tracker, replacing the default Vite icon. PR #128.',
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-loc-audit-insights',
+    name: 'LOC Audit & Cross-Project Insights',
+    period: 'Mar 28-29, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    chapterType: 'date-range' as const,
+    nodes: [
+      {
+        id: 'meta-otm-nw-urls',
+        type: 'event',
+        dayId: 'Mar 25',
+        category: 'functional',
+        title: 'OTM + NW App Links Added',
+        description:
+          'Added live app URLs for On The Move (otm.jynaxxapps.com) and Note Worthy (noteworthy.jynaxxapps.com) to the project switcher. PR #134.',
+      },
+      {
+        id: 'meta-loc-overflow-fix',
+        type: 'event',
+        dayId: 'Mar 28',
+        category: 'technical',
+        title: 'LOC Graph Y-Axis Overflow Fix (#82)',
+        description:
+          'Fixed LOC chart y-axis labels overflowing on projects with high line counts. Truncated long numbers with "k" suffix. PR #135.',
+      },
+      {
+        id: 'meta-ibg-loc-correction',
+        type: 'decision',
+        dayId: 'Mar 28',
+        category: 'process',
+        title: 'IBG LOC Correction — Exclude Auto-Generated Data',
+        description:
+          'Michael flagged IBG as LOC outlier (1,777 LOC/hr). Audit revealed data.json (7,101 lines of auto-synced WoW item dumps) inflating counts. Gitignored data.json, corrected MT session data. IBG LOC/hr dropped from 1,777 to ~391. Only Session 27 affected (9,021 of 9,224 lines were data.json). PR #149.',
+        chosenPath: 'Gitignore auto-generated data files, correct historical metrics',
+        alternatives: ['Keep data.json in LOC counts with a note', 'Move data to external store immediately'],
+        lesson: 'Auto-generated data files should be excluded from LOC metrics — they distort productivity signals.',
+      },
+      {
+        id: 'meta-data-push-sessions-61-70',
+        type: 'event',
+        dayId: 'Mar 29',
+        category: 'process',
+        title: 'Massive Data Push — Sessions 61-70 (NW, OTM, MT)',
+        description:
+          'Pushed metrics for 10 sessions across 3 projects (Note Worthy, On The Move, Meta Tracker). Largest single data push in project history. PR #136.',
+      },
+      {
+        id: 'meta-cross-project-insights',
+        type: 'decision',
+        dayId: 'Mar 29',
+        category: 'functional',
+        title: 'Cross-Project Insights View (#83)',
+        description:
+          'Added "All Projects" option to the project dropdown, revealing an InsightsView with portfolio-level analytics: summary banner, 6 insight cards/tabs covering velocity, driver breakdown, technology mix, and project health. First cross-cutting analytics feature. +987/-105 lines. 85/85 e2e tests. PR #138.',
+        chosenPath: 'Portfolio insights as "All Projects" entry in existing switcher',
+        alternatives: ['Separate analytics page', 'Dashboard widgets on each project view'],
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-insights-redesign',
+    name: 'InsightsView Narrative Redesign',
+    period: 'Mar 30, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    chapterType: 'date-range' as const,
+    nodes: [
+      {
+        id: 'meta-insights-data-integrity',
+        type: 'discovery',
+        dayId: 'Mar 30',
+        category: 'process',
+        title: 'InsightsView Data Integrity Issues Uncovered',
+        description:
+          'Deep research revealed: IBG LOC/hr data gap (missing hours), the 7x productivity multiplier was fabricated (honest range 2-3x per ISBSG/Cortex 2026 benchmarks), driver audit confirmed human-only category is intentionally small. Five feedback captures from Michael on InsightsView quality.',
+        lesson: 'Never claim metrics without citation or research. The 7x multiplier was invented — honest range is 2-3x.',
+      },
+      {
+        id: 'meta-narrative-redesign',
+        type: 'decision',
+        dayId: 'Mar 30',
+        category: 'ux-design',
+        title: 'InsightsView Narrative Redesign — 5 Chapters Replace 6 Tabs',
+        description:
+          'Replaced the 6-tab data dump with 5 narrative chapters: hand-written prose backed by live charts, evidence-backed claims only. New insightsNarrative.ts generates chapter content. insightsData.ts rewritten for honest aggregation. Spec + 7-task implementation plan, executed via subagent-driven development. PR #139.',
+        chosenPath: '5 narrative chapters with prose + charts, evidence-backed claims',
+        alternatives: ['Keep 6-tab layout with better data', 'Simplified 3-card summary'],
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-cross-cutting-infra',
+    name: 'Cross-Cutting Infrastructure',
+    period: 'Mar 31, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    chapterType: 'date-range' as const,
+    nodes: [
+      {
+        id: 'meta-shared-design-system',
+        type: 'decision',
+        dayId: 'Mar 31',
+        category: 'technical',
+        title: 'Shared Design System — jynaxxapps-tokens',
+        description:
+          'Created @jynaxx/jynaxxapps-tokens npm package (public repo) with Inter font, 10px card radius, consistent shadows. Rolled out to 6 projects (MT PR #144, BIP #93, NW #15, OTM #13, IBG #9, Landing #19). Remnants excluded (game, monospace intentional).',
+        chosenPath: 'Shared npm package with CSS custom properties',
+        alternatives: ['Per-project token files', 'Tailwind preset package', 'Copy-paste tokens'],
+      },
+      {
+        id: 'meta-changelog-system',
+        type: 'decision',
+        dayId: 'Mar 31',
+        category: 'process',
+        title: 'Deployment Release Notes System — Changelog Across 7 Apps',
+        description:
+          'Designed and implemented cross-project changelog system. PR template with ## Changelog section → GitHub Actions workflow extracts entries on merge → CHANGELOG.json → /changelog page with date-grouped entries + category badges → cross-repo dispatch to Landing page aggregate. Rolled out to all 7 deployed apps. Spec: _Shared #03.',
+        chosenPath: 'PR template + GH Actions + CHANGELOG.json + /changelog route',
+        alternatives: ['Manual CHANGELOG.md', 'Release-based notes', 'Third-party changelog service'],
+      },
+      {
+        id: 'meta-timeline-overhaul-shipped',
+        type: 'event',
+        dayId: 'Mar 31',
+        category: 'ux-design',
+        title: 'Timeline Overhaul Shipped (#67)',
+        description:
+          'Horizontal process timeline replaced the Time Machine. Rebased PR #130, rewrote 4 Playwright tests for new UI. Shows workflow evolution across sessions with milestones, callouts, and expand-to-detail. Merged.',
+      },
+      {
+        id: 'meta-safe-dep-bumps',
+        type: 'event',
+        dayId: 'Mar 31',
+        category: 'technical',
+        title: 'Safe Dependency Bumps — 8 Patch/Minor Updates',
+        description:
+          'Batch-applied 8 safe patch/minor dependency updates. Closed 3 broken Dependabot PRs (ESLint 10 + TS 6 conflicts). All PRs resolved across all projects. PR #143.',
+      },
+      {
+        id: 'meta-data-push-sessions-71-76',
+        type: 'event',
+        dayId: 'Mar 31',
+        category: 'process',
+        title: 'Data Push Sessions 71-76',
+        description:
+          'Pushed metrics for 6 sessions across multiple projects. Included Playwright test fix for stale stat values. PRs #142 and #146.',
+      },
+      {
+        id: 'meta-insights-readability',
+        type: 'event',
+        dayId: 'Mar 31',
+        category: 'ux-design',
+        title: 'InsightsView Readability Pass (#85)',
+        description:
+          'Font size bumps, timeline label widening, clickable source links, legend size increases across InsightsView. Addressed Michael\'s feedback from Session 76 capture triage. PR #145.',
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-data-viz-pat-audit',
+    name: 'Data Viz Heuristics & PAT Audit',
+    period: 'Apr 1, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    chapterType: 'date-range' as const,
+    nodes: [
+      {
+        id: 'meta-pat-audit',
+        type: 'decision',
+        dayId: 'Apr 1',
+        category: 'process',
+        title: 'PAT Audit & JYNAX_PAT Secret Rollout',
+        description:
+          'Consolidated to one working GitHub PAT, retired dead credentials.md PAT, added secrets read/write permission. Set JYNAX_PAT secret on all 6 repos — unblocking the changelog cross-repo dispatch workflow.',
+        chosenPath: 'Single PAT with appropriate scopes, set as repo secret on all projects',
+        alternatives: ['Per-repo PATs', 'GitHub App for cross-repo auth'],
+      },
+      {
+        id: 'meta-phase-corrections',
+        type: 'event',
+        dayId: 'Apr 1',
+        category: 'process',
+        title: 'Project Phase Corrections',
+        description:
+          'Corrected phase labels: Note Worthy + On The Move moved to Build phase. Feedback Capture got v1.0 milestone badge. PR #150.',
+      },
+      {
+        id: 'meta-data-viz-heuristics',
+        type: 'decision',
+        dayId: 'Apr 1',
+        category: 'ux-design',
+        title: 'Data Viz Heuristics Standard — 5-Rule System',
+        description:
+          'Researched Tufte, Few, Tableau, and Grafana best practices. Established 5-rule data viz standard: (1) direct label first, (2) legend fallback bottom, (3) tooltips never repeat, (4) dense axis brush+zoom, (5) color consistency. Audited all 10 charts — 6 needed fixes, 5 were fine. Built brushUtils.ts utility. Applied across Bug Lifecycle, Velocity scatter, WorkMix, Session Activity, Avg Task Time, and Driver Breakdown charts. PR #151.',
+        chosenPath: '5-rule heuristic standard derived from data viz research',
+        alternatives: ['Chart-by-chart ad hoc fixes', 'Third-party charting library with built-in best practices'],
+      },
+      {
+        id: 'meta-legend-tightening',
+        type: 'event',
+        dayId: 'Apr 1',
+        category: 'ux-design',
+        title: 'Chart Legend Tightening',
+        description:
+          'Repositioned legends to be visually anchored to their parent charts instead of floating. Consistent placement across all chart components. PR #148.',
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-design-polish',
+    name: 'Design Polish Pass',
+    period: 'Apr 7, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    chapterType: 'date-range' as const,
+    nodes: [
+      {
+        id: 'meta-emil-kowalski-audit',
+        type: 'decision',
+        dayId: 'Apr 7',
+        category: 'ux-design',
+        title: 'Emil Kowalski Design Polish — 15 Issues Fixed',
+        description:
+          'Installed emil-design-eng skill (Emil Kowalski\'s design engineering philosophy). Audited full MT codebase against Emil\'s review checklist — found 15 issues across 3 severity levels. Applied: prefers-reduced-motion global rule, button active press feedback (scale 0.97), hover gating for touch devices (@media (hover: hover)), custom easing CSS vars (--ease-out, --ease-in-out, --ease-out-expo), replaced all 17 generic ease transitions with cubic-bezier(0.23, 1, 0.32, 1), fixed 2 transition:all to specific properties, reduced durations (FadeIn 500→300ms, work mix 500→300ms, collapse 300→200ms), enhanced FadeIn with scale(0.96). 11 files changed. PR #154.',
+        chosenPath: 'Systematic audit against Emil Kowalski checklist + batch fixes',
+        alternatives: ['Ad hoc polish as noticed', 'Full design system overhaul'],
+      },
+      {
+        id: 'meta-session-80-data-push',
+        type: 'event',
+        dayId: 'Apr 7',
+        category: 'process',
+        title: 'Session 78+80 IBG Metrics Push',
+        description:
+          'Pushed IBG metrics for Sessions 78 and 80 — LOC audit and R2 storage migration sessions. PR #152.',
+      },
+    ],
+  },
+  {
+    id: 'meta-ch-decision-tree-completeness',
+    name: 'Decision Tree Completeness',
+    period: 'Apr 8, 2026',
+    toolLabel: 'Claude Code',
+    tool: 'claude',
+    chapterType: 'date-range' as const,
+    nodes: [
+      {
+        id: 'meta-decision-tree-4-projects',
+        type: 'event',
+        dayId: 'Apr 8',
+        category: 'functional',
+        title: 'Decision Tree Backfill — 33 Entries Across 4 Projects (#90)',
+        description:
+          'Backfilled decision tree gaps across Landing (7→26 nodes), BIP (42→48), IBG (15→21), and OTM (7→12). 33 new entries total covering months of missed decisions. Executed via subagent-driven development. PR #155.',
+      },
+      {
+        id: 'meta-canvas-handles-fix',
+        type: 'event',
+        dayId: 'Apr 8',
+        category: 'technical',
+        title: 'Canvas Connection Handles Bug Fix',
+        description:
+          'Fixed canvas mode showing interactive grab handles on all nodes. Added isConnectable={false} wrapper to prevent React Flow from rendering interactive connection points on read-only decision tree nodes.',
+      },
+      {
+        id: 'meta-changelog-backfill',
+        type: 'event',
+        dayId: 'Apr 8',
+        category: 'process',
+        title: 'Changelog Backfill — 68 Entries from PR History',
+        description:
+          'Discovered changelog system was dead since Session 77 — PRs weren\'t using the exact **Category:**/**Summary:** format the workflow regex expects. Backfilled CHANGELOG.json with 68 entries across 24 dates from full PR history. PR #156.',
+      },
+      {
+        id: 'meta-changelog-format-lesson',
+        type: 'dead-end',
+        dayId: 'Apr 8',
+        category: 'process',
+        title: 'Changelog PR Format Fragility',
+        description:
+          'The automated changelog workflow silently failed for 2 weeks because PR bodies didn\'t use the exact **Category:**/**Summary:** markdown format the regex expected. No error notification — entries simply weren\'t captured. Fragile regex parsing of freeform markdown is a recurring anti-pattern.',
+        lesson: 'Automated workflows that depend on exact markdown formatting in PR bodies need validation or fallback. Silent failure is worse than no automation.',
+      },
+      {
+        id: 'meta-decision-tree-self-backfill',
+        type: 'decision',
+        dayId: 'Apr 8',
+        category: 'process',
+        title: 'Meta Tracker Self-Backfill — Sessions 54-82',
+        description:
+          'Backfilled MT\'s own decision tree for ~30 sessions (Mar 20 - Apr 8). The biggest miss in the project: MT tracks all other projects but its own decision history was stale since v1.0. Root cause: decision tree entries weren\'t part of the session completion checklist — each session\'s decisions were documented in decisions.md and summaries but never translated to metaProject.ts nodes. Gap grew silently over 30 sessions.',
+        chosenPath: 'Comprehensive backfill from MEMORY.md, PR history, and task files',
+        alternatives: ['Incremental catch-up over multiple sessions', 'Skip historical backfill and start fresh'],
+        lesson: 'Decision tree data should be an incremental habit, not a batch job. Add it to the session completion checklist.',
+      },
+    ],
+  },
 ],
   stats: {
-    totalDays: 18,
+    totalDays: 26,
     chatGptMessages: '250+',
-    coworkSessions: 53,
-    prsCreated: '120',
-    codexTasks: '66+',
-    linesOfCode: '~9,700',
-    deadEnds: 4,
-    majorDecisions: 97,
+    coworkSessions: 82,
+    prsCreated: '156',
+    codexTasks: '92+',
+    linesOfCode: '~12,500',
+    deadEnds: 5,
+    majorDecisions: 130,
   },
 };

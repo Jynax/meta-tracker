@@ -36,8 +36,8 @@ export function PhaseNode({ id, data }: { id: string; data: InteractiveData }) {
   const isRoot = data.kind === 'root';
   return (
     <div className={`${isRoot ? 'w-64' : 'w-[280px]'} rounded-xl border border-sky-400/60 bg-slate-800/90 p-4 text-slate-100 shadow-lg transition hover:brightness-110`}>
-      {!isRoot && <Handle type="target" position={Position.Top} id="top" className="!bg-sky-300" />}
-      {!isRoot && <Handle type="target" position={Position.Top} id="top-right" style={{ left: 'calc(50% + 36px)' }} className="!bg-sky-300" />}
+      {!isRoot && <H type="target" position={Position.Top} id="top" className="!bg-sky-300" />}
+      {!isRoot && <H type="target" position={Position.Top} id="top-right" style={{ left: 'calc(50% + 36px)' }} className="!bg-sky-300" />}
       <button className="w-full text-left" onClick={() => data.onToggleExpand?.(id)}>
         <div className="flex items-start justify-between gap-2">
           <div>
@@ -55,9 +55,9 @@ export function PhaseNode({ id, data }: { id: string; data: InteractiveData }) {
         {!isRoot && <PhaseSummary data={data} />}
       </button>
       <H type="source" position={Position.Bottom} id="bottom" className="!bg-sky-300" />
-      {!isRoot && <Handle type="source" position={Position.Bottom} id="bottom-right" style={{ left: 'calc(50% + 36px)' }} className="!bg-sky-300" />}
-      {!isRoot && <Handle type="source" position={Position.Right} id="right" className="!bg-sky-300" />}
-      {!isRoot && <Handle type="source" position={Position.Left} id="left" className="!bg-sky-300" />}
+      {!isRoot && <H type="source" position={Position.Bottom} id="bottom-right" style={{ left: 'calc(50% + 36px)' }} className="!bg-sky-300" />}
+      {!isRoot && <H type="source" position={Position.Right} id="right" className="!bg-sky-300" />}
+      {!isRoot && <H type="source" position={Position.Left} id="left" className="!bg-sky-300" />}
     </div>
   );
 }

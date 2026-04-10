@@ -1,8 +1,25 @@
 import { Handle, Position, type NodeTypes, type HandleProps } from '@xyflow/react';
 
-/* All handles are non-interactive (read-only visualisation, not an editor). */
+/* All handles are non-interactive AND visually hidden (read-only visualisation, not an editor).
+   They still function as edge anchor points — edges connect to them — but they render as
+   1px transparent elements so no visible dot appears on the node. */
 function H(props: Omit<HandleProps, 'isConnectable'> & { className?: string; style?: React.CSSProperties }) {
-  return <Handle {...props} isConnectable={false} />;
+  const { style, ...rest } = props;
+  return (
+    <Handle
+      {...rest}
+      isConnectable={false}
+      style={{
+        width: 1,
+        height: 1,
+        minWidth: 1,
+        minHeight: 1,
+        background: 'transparent',
+        border: 'none',
+        ...style,
+      }}
+    />
+  );
 }
 import type { TreeNodeData } from './treeLayout';
 

@@ -286,6 +286,10 @@ export const metaBugs: BugEntry[] = [
   { id: 33, session: 'Session 53', date: 'Mar 15', label: 'Data Push + v1.0', summary: 'v1.0 milestone marker not rendering — milestones require matching CodeVolumeEntry by session name, Session 53 had no entry', severity: 'Medium', source: 'Feedback Capture', status: 'Fixed (PR #122)', category: 'Functional' },
   { id: 34, session: 'Session 53', date: 'Mar 15', label: 'Data Push + v1.0', summary: 'BIP decision tree dates out of order — nodes with dayId "Unknown" and "Feb 2026" parsed to invalid sort keys (0 and 2226) by parseDateKey()', severity: 'Medium', source: 'Feedback Capture', status: 'Fixed (PR #122)', category: 'Technical' },
   { id: 35, session: 'Session 53', date: 'Mar 15', label: 'Data Push + v1.0', summary: 'Decision tree empty for Mar 12-15 — four days of active work (Day/Block migration, UX brief, dep migration, v1.0) had no chapter nodes in metaProject.ts', severity: 'Medium', source: 'Feedback Capture', status: 'Fixed (PR #123)', category: 'Functional' },
+  { id: 36, session: 'Session 78', date: 'Apr 1', label: 'IBG LOC Correction', summary: 'IBG LOC/hr inflated to 1,777 (true ~391) — data.json was 7,101 lines of auto-synced WoW item dumps counted as human-written code. Gitignored data.json on dashboard side, corrected MT session data', severity: 'Medium', source: 'Feedback Capture', status: 'Fixed (PR #149)', category: 'Technical' },
+  { id: 37, session: 'Session 79', date: 'Apr 1', label: 'Data Viz Heuristics', summary: 'Velocity scatter plot labels collide when two points are close — Task #86 queued', severity: 'Low', source: 'Data Viz Audit', status: 'Queued (Task #86)', category: 'UX' },
+  { id: 38, session: 'Session 82', date: 'Apr 8', label: 'Canvas Fix + Changelog Backfill', summary: 'Changelog system silently dead since Session 77 — PRs were not using the exact **Category:**/**Summary:** format the GH Actions workflow regex expected, so CHANGELOG.json never got updated. Backfilled 68 entries across 24 dates from full PR history', severity: 'Medium', source: 'Self-Discovered', status: 'Fixed (PR #156)', category: 'Functional' },
+  { id: 39, session: 'Session 82', date: 'Apr 8', label: 'Canvas Fix + Changelog Backfill', summary: 'Canvas nodes show interactive grab handles — React Flow default. Three fix attempts (isConnectable={false} wrapper PR #156, H wrapper swap PR #158, force 1px transparent PR #159) all still show handles on live. Deferred since canvas is being replaced entirely per Task #91', severity: 'Low', source: 'User Report', status: 'Deferred (canvas replacement, Task #91)', category: 'UX' },
 ];
 
 export const metaDerived: DerivedMetric[] = [
@@ -616,9 +620,9 @@ export const metaDays: DayEntry[] = [
     phase: 'Shipped',
     chapterId: 'meta-ch-time-machine-data-model',
     blocks: [
-      { id: 'meta-session-77', dayId: 'Mar 31', label: 'Changelog System (MT)', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 218, linesDeleted: 1, note: 'MT portion of cross-cutting changelog rollout. PR template, GH Actions workflow, /changelog page, cross-repo dispatch receiver. Rolled out to 7 apps same sitting. PR #147.', contextWindowOrigin: false }, // TBD timeMinutes
+      { id: 'meta-session-77', dayId: 'Mar 31', label: 'Changelog System (MT)', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 45, linesAdded: 218, linesDeleted: 1, note: 'MT portion of cross-cutting changelog rollout. PR template, GH Actions workflow, /changelog page, cross-repo dispatch receiver. Rolled out to 7 apps same sitting. PR #147.', contextWindowOrigin: false }, // estimated
     ],
-    metrics: { totalTimeMinutes: 0, linesAdded: 218, linesDeleted: 1, totalDecisions: 0 }, // TBD totalTimeMinutes
+    metrics: { totalTimeMinutes: 45, linesAdded: 218, linesDeleted: 1, totalDecisions: 0 }, // estimated
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
   {
@@ -628,9 +632,9 @@ export const metaDays: DayEntry[] = [
     phase: 'Shipped',
     chapterId: 'meta-ch-time-machine-data-model',
     blocks: [
-      { id: 'meta-session-78', dayId: 'Apr 1', label: 'IBG LOC Correction', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 18, linesDeleted: 11, note: 'Corrected MT session data after IBG LOC audit (data.json gitignored). IBG LOC/hr 1,777 → ~391. PR #149.', contextWindowOrigin: false }, // TBD timeMinutes
+      { id: 'meta-session-78', dayId: 'Apr 1', label: 'IBG LOC Correction', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 10, linesAdded: 18, linesDeleted: 11, note: 'Corrected MT session data after IBG LOC audit (data.json gitignored). IBG LOC/hr 1,777 → ~391. PR #149.', contextWindowOrigin: false }, // estimated
     ],
-    metrics: { totalTimeMinutes: 0, linesAdded: 18, linesDeleted: 11, totalDecisions: 0 }, // TBD totalTimeMinutes
+    metrics: { totalTimeMinutes: 10, linesAdded: 18, linesDeleted: 11, totalDecisions: 0 }, // estimated
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
   {
@@ -640,11 +644,11 @@ export const metaDays: DayEntry[] = [
     phase: 'Shipped',
     chapterId: 'meta-ch-time-machine-data-model',
     blocks: [
-      { id: 'meta-session-79a', dayId: 'Apr 1', label: 'Legend Tightening', workCategory: 'UX', driver: 'agent-led', operator: 'claude-code', timeMinutes: 0, linesAdded: 5, linesDeleted: 5, note: 'Tighten chart legends to parent charts. PR #148.', contextWindowOrigin: false }, // TBD timeMinutes
-      { id: 'meta-session-79b', dayId: 'Apr 1', label: 'Phase Labels + FC Milestone', workCategory: 'Data', driver: 'agent-led', operator: 'claude-code', timeMinutes: 0, linesAdded: 9, linesDeleted: 2, note: 'Correct phase labels (NW+OTM → Build), FC v1.0 milestone. PR #150.', contextWindowOrigin: false }, // TBD timeMinutes
-      { id: 'meta-session-79c', dayId: 'Apr 1', label: 'Data Viz Heuristics', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 486, linesDeleted: 280, note: 'Researched Tufte/Few/Tableau/Grafana. 5-rule standard (direct labels, legend fallback, tooltips, brush+zoom, color consistency). Implemented brushUtils + 6 charts. Task #86 queued (scatter label collisions). PR #151.', contextWindowOrigin: false }, // TBD timeMinutes
+      { id: 'meta-session-79a', dayId: 'Apr 1', label: 'Legend Tightening', workCategory: 'UX', driver: 'agent-led', operator: 'claude-code', timeMinutes: 10, linesAdded: 5, linesDeleted: 5, note: 'Tighten chart legends to parent charts. PR #148.', contextWindowOrigin: false }, // estimated
+      { id: 'meta-session-79b', dayId: 'Apr 1', label: 'Phase Labels + FC Milestone', workCategory: 'Data', driver: 'agent-led', operator: 'claude-code', timeMinutes: 10, linesAdded: 9, linesDeleted: 2, note: 'Correct phase labels (NW+OTM → Build), FC v1.0 milestone. PR #150.', contextWindowOrigin: false }, // estimated
+      { id: 'meta-session-79c', dayId: 'Apr 1', label: 'Data Viz Heuristics', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 120, linesAdded: 486, linesDeleted: 280, note: 'Researched Tufte/Few/Tableau/Grafana. 5-rule standard (direct labels, legend fallback, tooltips, brush+zoom, color consistency). Implemented brushUtils + 6 charts. Task #86 queued (scatter label collisions). PR #151.', contextWindowOrigin: false }, // estimated
     ],
-    metrics: { totalTimeMinutes: 0, linesAdded: 500, linesDeleted: 287, totalDecisions: 1 }, // TBD totalTimeMinutes
+    metrics: { totalTimeMinutes: 140, linesAdded: 500, linesDeleted: 287, totalDecisions: 1 }, // estimated
     driverSummary: { human: 0, ai: 2, collaborative: 1 },
   },
   {
@@ -654,9 +658,9 @@ export const metaDays: DayEntry[] = [
     phase: 'Shipped',
     chapterId: 'meta-ch-time-machine-data-model',
     blocks: [
-      { id: 'meta-session-81', dayId: 'Apr 7', label: 'Emil Design Polish', workCategory: 'UX', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 59, linesDeleted: 22, note: 'emil-design-eng audit, 15 issues, 8-task plan via subagent-driven dev. prefers-reduced-motion, press feedback, hover gating, custom easing vars, replaced 17 transitions, enhanced FadeIn. 11 files, 85/85 tests. Dependabot #153 closed (ESLint 10). PR #154.', contextWindowOrigin: false }, // TBD timeMinutes
+      { id: 'meta-session-81', dayId: 'Apr 7', label: 'Emil Design Polish', workCategory: 'UX', driver: 'collaborative', operator: 'claude-code', timeMinutes: 75, linesAdded: 59, linesDeleted: 22, note: 'emil-design-eng audit, 15 issues, 8-task plan via subagent-driven dev. prefers-reduced-motion, press feedback, hover gating, custom easing vars, replaced 17 transitions, enhanced FadeIn. 11 files, 85/85 tests. Dependabot #153 closed (ESLint 10). PR #154.', contextWindowOrigin: false }, // estimated
     ],
-    metrics: { totalTimeMinutes: 0, linesAdded: 59, linesDeleted: 22, totalDecisions: 0 }, // TBD totalTimeMinutes
+    metrics: { totalTimeMinutes: 75, linesAdded: 59, linesDeleted: 22, totalDecisions: 0 }, // estimated
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
   {
@@ -666,10 +670,10 @@ export const metaDays: DayEntry[] = [
     phase: 'Shipped',
     chapterId: 'meta-ch-time-machine-data-model',
     blocks: [
-      { id: 'meta-session-82a', dayId: 'Apr 8', label: 'Decision Tree Backfill', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 450, linesDeleted: 25, note: 'Decision Tree data gaps: 33 missing entries across 4 projects (Landing 7→26, BIP 42→48, IBG 15→21, OTM 7→12). Task #90 via subagent-driven dev. PR #155.', contextWindowOrigin: false }, // TBD timeMinutes
-      { id: 'meta-session-82b', dayId: 'Apr 8', label: 'Canvas Fix + Changelog Backfill', workCategory: 'Bug', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 206, linesDeleted: 23, note: 'Canvas handle bug (isConnectable={false} wrapper). Changelog system dead since S77 (PR format regex mismatch) — backfilled CHANGELOG.json with 68 entries across 24 dates. Task #91 queued. PR #156.', contextWindowOrigin: false }, // TBD timeMinutes
+      { id: 'meta-session-82a', dayId: 'Apr 8', label: 'Decision Tree Backfill', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 60, linesAdded: 450, linesDeleted: 25, note: 'Decision Tree data gaps: 33 missing entries across 4 projects (Landing 7→26, BIP 42→48, IBG 15→21, OTM 7→12). Task #90 via subagent-driven dev. PR #155.', contextWindowOrigin: false }, // estimated
+      { id: 'meta-session-82b', dayId: 'Apr 8', label: 'Canvas Fix + Changelog Backfill', workCategory: 'Bug', driver: 'collaborative', operator: 'claude-code', timeMinutes: 45, linesAdded: 206, linesDeleted: 23, note: 'Canvas handle bug (isConnectable={false} wrapper). Changelog system dead since S77 (PR format regex mismatch) — backfilled CHANGELOG.json with 68 entries across 24 dates. Task #91 queued. PR #156.', contextWindowOrigin: false }, // estimated
     ],
-    metrics: { totalTimeMinutes: 0, linesAdded: 656, linesDeleted: 48, totalDecisions: 1 }, // TBD totalTimeMinutes
+    metrics: { totalTimeMinutes: 105, linesAdded: 656, linesDeleted: 48, totalDecisions: 1 }, // estimated
     driverSummary: { human: 0, ai: 0, collaborative: 2 },
   },
   {
@@ -679,10 +683,10 @@ export const metaDays: DayEntry[] = [
     phase: 'Shipped',
     chapterId: 'meta-ch-time-machine-data-model',
     blocks: [
-      { id: 'meta-session-86a', dayId: 'Apr 10', label: 'Canvas Handle Fix Attempt 1', workCategory: 'Bug', driver: 'agent-led', operator: 'claude-code', timeMinutes: 0, linesAdded: 5, linesDeleted: 5, note: 'Swap raw Handle → H wrapper on PhaseNode. Still visible on live — superseded by #159. PR #158.', contextWindowOrigin: false }, // TBD timeMinutes
-      { id: 'meta-session-86b', dayId: 'Apr 10', label: 'Canvas Handle Fix #2 + Mind Map Spec', workCategory: 'Bug', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 19, linesDeleted: 2, note: 'Force H wrapper handles to 1px transparent. Still visible on live — deferred since canvas being replaced. Task #91 brainstorm: Obsidian-style force-directed mind map, 3 edge-model mockups via visual companion, Option B chosen (category clustering) for phase-one. Spec written. PR #159.', contextWindowOrigin: false }, // TBD timeMinutes
+      { id: 'meta-session-86a', dayId: 'Apr 10', label: 'Canvas Handle Fix Attempt 1', workCategory: 'Bug', driver: 'agent-led', operator: 'claude-code', timeMinutes: 10, linesAdded: 5, linesDeleted: 5, note: 'Swap raw Handle → H wrapper on PhaseNode. Still visible on live — superseded by #159. PR #158.', contextWindowOrigin: false }, // estimated
+      { id: 'meta-session-86b', dayId: 'Apr 10', label: 'Canvas Handle Fix #2 + Mind Map Spec', workCategory: 'Bug', driver: 'collaborative', operator: 'claude-code', timeMinutes: 90, linesAdded: 19, linesDeleted: 2, note: 'Force H wrapper handles to 1px transparent. Still visible on live — deferred since canvas being replaced. Task #91 brainstorm: Obsidian-style force-directed mind map, 3 edge-model mockups via visual companion, Option B chosen (category clustering) for phase-one. Spec written. PR #159.', contextWindowOrigin: false }, // estimated
     ],
-    metrics: { totalTimeMinutes: 0, linesAdded: 24, linesDeleted: 7, totalDecisions: 3 }, // TBD totalTimeMinutes
+    metrics: { totalTimeMinutes: 100, linesAdded: 24, linesDeleted: 7, totalDecisions: 3 }, // estimated
     driverSummary: { human: 0, ai: 1, collaborative: 1 },
   },
   {
@@ -692,9 +696,9 @@ export const metaDays: DayEntry[] = [
     phase: 'Shipped',
     chapterId: 'meta-ch-time-machine-data-model',
     blocks: [
-      { id: 'meta-session-85', dayId: 'Apr 11', label: 'Local Model Research + Task #07', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 0, linesDeleted: 0, note: 'Research-only session. Investigated "Gemma in Claude Code reduces tokens" claim (mislabeled — replaces Claude, not hybrid). Audited local Ollama stack (7 models). Created _Shared task #07 Local Model Experiment with 2 narrow experiments. Saved user_resource_cost_framing memory. No code.', contextWindowOrigin: false }, // TBD timeMinutes
+      { id: 'meta-session-85', dayId: 'Apr 11', label: 'Local Model Research + Task #07', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 30, linesAdded: 0, linesDeleted: 0, note: 'Research-only session. Investigated "Gemma in Claude Code reduces tokens" claim (mislabeled — replaces Claude, not hybrid). Audited local Ollama stack (7 models). Created _Shared task #07 Local Model Experiment with 2 narrow experiments. Saved user_resource_cost_framing memory. No code.', contextWindowOrigin: false }, // estimated
     ],
-    metrics: { totalTimeMinutes: 0, linesAdded: 0, linesDeleted: 0, totalDecisions: 1 }, // TBD totalTimeMinutes
+    metrics: { totalTimeMinutes: 30, linesAdded: 0, linesDeleted: 0, totalDecisions: 1 }, // estimated
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
 ];

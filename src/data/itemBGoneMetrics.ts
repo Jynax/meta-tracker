@@ -22,14 +22,18 @@ export const ibgSessions: SessionEntry[] = [
   { session: 'Session 41', date: 'Mar 11', label: 'Playwright Suite + CI', duration: 1, prs: 1, decisions: 0, deadEnds: 0, focus: 'Full Playwright test suite: 37 tests across 5 specs (navigation, data integrity, upload flow, filtering, deep interactions). GitHub Actions CI workflow. Tasks #31-#33.', chapterId: 'ibg-ch-dashboard-detection', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 3, phase: 'Review', driver: 'agent-led' },
   { session: 'Session 43', date: 'Mar 12', label: 'Dashboard Bug Fixes', duration: 1, prs: 2, decisions: 0, deadEnds: 0, focus: 'Fix confidence labels, raw WoW strings, verdict filtering (PR #5). Simplify UI: fix stat cards, remove filter pills, legend read-only (PR #6). 2 dashboard PRs.', chapterId: 'ibg-ch-dashboard-detection', workCategory: 'Bug', tool: 'Claude Code', taskCount: 0, phase: 'Review', driver: 'collaborative' },
   { session: 'Session 50', date: 'Mar 13', label: 'Dependabot + Quality Gates', duration: 0.25, prs: 2, decisions: 0, deadEnds: 0, focus: 'Dependabot config (Dashboard PR #7) + PR quality gates — lint, typecheck, build (Dashboard PR #8). Part of cross-project tooling sweep.', chapterId: 'ibg-ch-dashboard-detection', workCategory: 'Tooling', tool: 'Claude Code', taskCount: 0, phase: 'Review', driver: 'agent-led' },
-  { session: 'Session 77', date: 'Mar 31', label: 'Changelog System', duration: 0, prs: 1, decisions: 0, deadEnds: 0, focus: 'Part of cross-cutting S77 changelog rollout. PR template + extract-to-JSON workflow + /changelog page + dispatch to landing. Dashboard PR #10.', chapterId: 'ibg-ch-dashboard-detection', workCategory: 'Feature', tool: 'Claude Code', taskCount: 0, phase: 'Build', driver: 'collaborative' }, // TBD duration
+  { session: 'Session 77', date: 'Mar 31', label: 'Changelog System', duration: 0.25, prs: 1, decisions: 0, deadEnds: 0, focus: 'Part of cross-cutting S77 changelog rollout. PR template + extract-to-JSON workflow + /changelog page + dispatch to landing. Dashboard PR #10.', chapterId: 'ibg-ch-dashboard-detection', workCategory: 'Feature', tool: 'Claude Code', taskCount: 0, phase: 'Build', driver: 'collaborative' }, // estimated
   { session: 'Session 78', date: 'Apr 1', label: 'LOC Audit + Gitignore data.json', duration: 0.5, prs: 1, decisions: 2, deadEnds: 0, focus: 'LOC audit: data.json was 7,101 LOC inflating metrics. Gitignored data.json (Dashboard PR #11), added sample-data.json fallback, fixed 4 e2e tests. Tasks #41-#42 done.', chapterId: 'ibg-ch-dashboard-detection', workCategory: 'Bug', tool: 'Claude Code', taskCount: 2, phase: 'Build', driver: 'agent-led' },
   { session: 'Session 80', date: 'Apr 5', label: 'R2 Storage + Exclude Items', duration: 2, prs: 4, decisions: 1, deadEnds: 1, focus: 'R2 scan data storage (#43): migrated from git-committed JSON to CF R2. Exclude items (#22): Alt+click + slash commands + dashboard badge. Fixed GW2_UI hook compat. 4 PRs across 2 repos.', chapterId: 'ibg-ch-dashboard-detection', workCategory: 'Feature', tool: 'Claude Code', taskCount: 2, phase: 'Build', driver: 'collaborative' },
 ];
 
 export const ibgDateRange = { start: 'Mar 2026', end: 'Apr 2026' };
 
-export const ibgBugs: BugEntry[] = [];
+export const ibgBugs: BugEntry[] = [
+  { id: 1, session: 'Session 78', date: 'Apr 1', label: 'LOC Audit + Gitignore data.json', summary: 'data.json was 7,101 lines of auto-synced WoW item dumps being counted as human-written code — inflated IBG LOC/hr from true ~391 to apparent 1,777. Gitignored on dashboard side, added sample-data.json fallback, fixed 4 e2e tests', severity: 'Medium', source: 'Feedback Capture', status: 'Fixed (Dashboard PR #11)', category: 'Technical' },
+  { id: 2, session: 'Session 80', date: 'Apr 5', label: 'Exclude Items from Scan', summary: 'GW2_UI compatibility broken — ContainerFrameItemButton_OnModifiedClick does not exist in modern WoW. Replaced with HandleModifiedItemClick for Alt+click exclusion hook', severity: 'High', source: 'In-Game Testing', status: 'Fixed (Addon PR #3)', category: 'Technical' },
+  { id: 3, session: 'Session 80', date: 'Apr 5', label: 'Exclude Items from Scan', summary: 'parse.js not cross-referencing exclusions table with scan data — excluded items still appeared on dashboard without grey tooltip or badge', severity: 'Medium', source: 'Self-Discovered', status: 'Fixed (Dashboard PR #16)', category: 'Functional' },
+];
 
 export const ibgDerived: DerivedMetric[] = [
   { label: 'Detection Coverage', value: '32%', detail: '258/819 items classified', color: '#f59e0b' },
@@ -114,9 +118,9 @@ export const ibgDays: DayEntry[] = [
     phase: 'Build',
     chapterId: 'ibg-ch-dashboard-detection',
     blocks: [
-      { id: 'ibg-session-77', dayId: 'Mar 31', label: 'Changelog System', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 227, linesDeleted: 0, note: 'Part of cross-cutting S77 changelog rollout. PR template + extract-to-JSON workflow + /changelog page + dispatch to landing. Dashboard PR #10.', contextWindowOrigin: false }, // TBD timeMinutes
+      { id: 'ibg-session-77', dayId: 'Mar 31', label: 'Changelog System', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 15, linesAdded: 227, linesDeleted: 0, note: 'Part of cross-cutting S77 changelog rollout. PR template + extract-to-JSON workflow + /changelog page + dispatch to landing. Dashboard PR #10.', contextWindowOrigin: false }, // estimated
     ],
-    metrics: { totalTimeMinutes: 0, linesAdded: 227, linesDeleted: 0, totalDecisions: 0 }, // TBD totalTimeMinutes
+    metrics: { totalTimeMinutes: 15, linesAdded: 227, linesDeleted: 0, totalDecisions: 0 }, // estimated
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
   {

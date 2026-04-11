@@ -113,15 +113,18 @@ export const otmDays: DayEntry[] = [
     phase: 'Shipped',
     chapterId: 'ch-ai',
     blocks: [
-      { id: 'otm-session-77', dayId: 'Mar 31', label: 'Changelog System', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 200, linesDeleted: 0, note: 'Part of cross-cutting S77 changelog rollout. PR template + extract-to-JSON workflow + /changelog page + dispatch to landing. PR #14.', contextWindowOrigin: false }, // TBD timeMinutes
+      { id: 'otm-session-77', dayId: 'Mar 31', label: 'Changelog System', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 15, linesAdded: 200, linesDeleted: 0, note: 'Part of cross-cutting S77 changelog rollout. PR template + extract-to-JSON workflow + /changelog page + dispatch to landing. PR #14.', contextWindowOrigin: false }, // estimated
     ],
-    metrics: { totalTimeMinutes: 0, linesAdded: 200, linesDeleted: 0, totalDecisions: 0 }, // TBD totalTimeMinutes
+    metrics: { totalTimeMinutes: 15, linesAdded: 200, linesDeleted: 0, totalDecisions: 0 }, // estimated
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
 ];
 
 // --- Bugs ---
-export const otmBugs: BugEntry[] = [];
+export const otmBugs: BugEntry[] = [
+  { id: 1, session: 'Session 68', date: 'Mar 27', label: 'Platform Data Prep + PDF Parser', summary: 'LinkedIn PDF parser with position-aware extraction improved but still did not fully extract all profile fields. Position-based approach hit a ceiling on layout variations', severity: 'Medium', source: 'User Report', status: 'Superseded (PR #12 — unified AI parser)', category: 'Functional' },
+  { id: 2, session: 'Session 70', date: 'Mar 28', label: 'Unified PDF Import (Workers AI)', summary: 'CF Pages has no Git auto-deploy configured for OTM — pushes to main do not trigger automatic deployment, must use wrangler manually each time', severity: 'Medium', source: 'Self-Discovered', status: 'Fixed (Actions workflow PR #11)', category: 'Technical' },
+];
 
 // --- Derived Metrics ---
 export const otmDerived: DerivedMetric[] = [];

@@ -89,6 +89,31 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const currentLoc = selected.codeVolume[selected.codeVolume.length - 1]?.total ?? 0;
   const totalAdded = selected.codeVolume.reduce((sum, item) => sum + item.added, 0);
   const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);
+
+  // Day-derived values for the Overview stat cards (Task #95 follow-up).
+  // Legacy `sessions` and `codeVolume` arrays have been stale for 6 of 9 projects
+  // since ~Mar 23, so the Overview cards now derive from `days` blocks instead.
+  // Scope is deliberately limited to Overview — Code/Sessions/Bugs tabs continue
+  // reading legacy arrays and are queued for a follow-up sweep.
+  const { overviewLoc, overviewPrs } = useMemo(() => {
+    let loc = 0;
+    const prSet = new Set<number>();
+    const prRegex = /\bPRs?\s*#?(\d+)/gi;
+    for (const day of selected.days) {
+      for (const block of day.blocks) {
+        loc += block.linesAdded ?? 0;
+        if (block.note) {
+          for (const m of block.note.matchAll(prRegex)) prSet.add(Number(m[1]));
+        }
+      }
+    }
+    for (const bug of selected.bugs) {
+      if (bug.status) {
+        for (const m of bug.status.matchAll(prRegex)) prSet.add(Number(m[1]));
+      }
+    }
+    return { overviewLoc: loc, overviewPrs: prSet.size };
+  }, [selected.days, selected.bugs]);
   const firstDate = selected.codeVolume[0]?.date ?? selected.dateRange.start;
   const lastDate = selected.codeVolume[selected.codeVolume.length - 1]?.date ?? selected.dateRange.end;
   const timelineRange = `${firstDate} \u2013 ${lastDate}/26`;
@@ -126,8 +151,8 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                 codeVolume={selected.codeVolume}
                 derived={selected.derived}
                 stack={selected.stack}
-                totalPRs={totalPRs}
-                currentLoc={currentLoc}
+                totalPRs={overviewPrs}
+                currentLoc={overviewLoc}
                 timelineRange={timelineRange}
                 projectId={projectId}
                 hoveredPointIndex={hoveredPointIndex}

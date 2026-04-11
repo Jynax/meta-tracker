@@ -64,7 +64,7 @@ test.describe('Metrics Dashboard', () => {
   test('overview tab shows summary stat cards', async ({ page }) => {
     // Use locators that avoid matching tab buttons — look for the card labels
     await expect(page.locator('text="PRs Merged"')).toBeVisible();
-    await expect(page.locator('text="Current LOC"')).toBeVisible();
+    await expect(page.locator('text="LOC Written"')).toBeVisible();
     await expect(page.locator('text="Timeline"')).toBeVisible();
     // "Sessions" and "Hours" labels exist in stat cards
     await expect(page.locator('text="Hours"').first()).toBeVisible();

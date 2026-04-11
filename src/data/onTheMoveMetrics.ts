@@ -121,7 +121,10 @@ export const otmDays: DayEntry[] = [
 ];
 
 // --- Bugs ---
-export const otmBugs: BugEntry[] = [];
+export const otmBugs: BugEntry[] = [
+  { id: 1, session: 'Session 68', date: 'Mar 27', label: 'Platform Data Prep + PDF Parser', summary: 'LinkedIn PDF parser with position-aware extraction improved but still did not fully extract all profile fields. Position-based approach hit a ceiling on layout variations', severity: 'Medium', source: 'User Report', status: 'Superseded (PR #12 — unified AI parser)', category: 'Functional' },
+  { id: 2, session: 'Session 70', date: 'Mar 28', label: 'Unified PDF Import (Workers AI)', summary: 'CF Pages has no Git auto-deploy configured for OTM — pushes to main do not trigger automatic deployment, must use wrangler manually each time', severity: 'Medium', source: 'Self-Discovered', status: 'Fixed (Actions workflow PR #11)', category: 'Technical' },
+];
 
 // --- Derived Metrics ---
 export const otmDerived: DerivedMetric[] = [];

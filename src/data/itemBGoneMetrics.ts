@@ -29,7 +29,11 @@ export const ibgSessions: SessionEntry[] = [
 
 export const ibgDateRange = { start: 'Mar 2026', end: 'Apr 2026' };
 
-export const ibgBugs: BugEntry[] = [];
+export const ibgBugs: BugEntry[] = [
+  { id: 1, session: 'Session 78', date: 'Apr 1', label: 'LOC Audit + Gitignore data.json', summary: 'data.json was 7,101 lines of auto-synced WoW item dumps being counted as human-written code — inflated IBG LOC/hr from true ~391 to apparent 1,777. Gitignored on dashboard side, added sample-data.json fallback, fixed 4 e2e tests', severity: 'Medium', source: 'Feedback Capture', status: 'Fixed (Dashboard PR #11)', category: 'Technical' },
+  { id: 2, session: 'Session 80', date: 'Apr 5', label: 'Exclude Items from Scan', summary: 'GW2_UI compatibility broken — ContainerFrameItemButton_OnModifiedClick does not exist in modern WoW. Replaced with HandleModifiedItemClick for Alt+click exclusion hook', severity: 'High', source: 'In-Game Testing', status: 'Fixed (Addon PR #3)', category: 'Technical' },
+  { id: 3, session: 'Session 80', date: 'Apr 5', label: 'Exclude Items from Scan', summary: 'parse.js not cross-referencing exclusions table with scan data — excluded items still appeared on dashboard without grey tooltip or badge', severity: 'Medium', source: 'Self-Discovered', status: 'Fixed (Dashboard PR #16)', category: 'Functional' },
+];
 
 export const ibgDerived: DerivedMetric[] = [
   { label: 'Detection Coverage', value: '32%', detail: '258/819 items classified', color: '#f59e0b' },

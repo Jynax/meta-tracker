@@ -144,7 +144,7 @@ export default function OverviewTab({
         <Card label="Days" value={days.length} color={C.cyan} />
         <Card label="PRs Merged" value={totalPRs} color={C.emerald} />
         <Card label="Hours" value={`${totalHours}h`} color={C.amber} />
-        <Card label="Current LOC" value={currentLoc.toLocaleString()} color={C.white} />
+        <Card label="LOC Written" value={currentLoc.toLocaleString()} color={C.white} />
         <Card label="Timeline" value={timelineRange} color={C.violet} />
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">

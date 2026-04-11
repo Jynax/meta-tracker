@@ -157,9 +157,9 @@ export const nwDays: DayEntry[] = [
     phase: 'Shipped',
     chapterId: 'ch-editor',
     blocks: [
-      { id: 'nw-session-77', dayId: 'Mar 31', label: 'Changelog System', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 207, linesDeleted: 4, note: 'Part of cross-cutting S77 changelog rollout. PR template + extract-to-JSON workflow + /changelog page + dispatch to landing. PR #16.', contextWindowOrigin: false }, // TBD timeMinutes
+      { id: 'nw-session-77', dayId: 'Mar 31', label: 'Changelog System', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 15, linesAdded: 207, linesDeleted: 4, note: 'Part of cross-cutting S77 changelog rollout. PR template + extract-to-JSON workflow + /changelog page + dispatch to landing. PR #16.', contextWindowOrigin: false }, // estimated
     ],
-    metrics: { totalTimeMinutes: 0, linesAdded: 207, linesDeleted: 4, totalDecisions: 0 }, // TBD totalTimeMinutes
+    metrics: { totalTimeMinutes: 15, linesAdded: 207, linesDeleted: 4, totalDecisions: 0 }, // estimated
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
 ];

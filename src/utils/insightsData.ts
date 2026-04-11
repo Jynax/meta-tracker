@@ -88,18 +88,80 @@ export interface ProjectBundle {
 
 const ESTIMATED_HOURS_PROJECTS = new Set(['item-b-gone']);
 
+// ── Day-derived aggregates (source of truth for portfolio totals) ──────────
+// Legacy *CodeVolume and *Sessions arrays are stale for 6 of 9 projects since
+// ~Mar 23, so portfolio totals must be derived from *Days blocks, which are
+// the only structures maintained across all projects.
+
+interface BundleAggregates {
+  totalLoc: number;
+  totalHours: number;
+  totalBlocks: number;
+  totalPrs: number;
+  firstDate: string;
+  lastDate: string;
+  dayDates: string[];
+}
+
+const PR_NUMBER_REGEX = /\bPRs?\s*#?(\d+)/gi;
+
+function collectPrNumbers(bundle: ProjectBundle): Set<number> {
+  const prs = new Set<number>();
+  const scan = (text?: string) => {
+    if (!text) return;
+    for (const m of text.matchAll(PR_NUMBER_REGEX)) prs.add(Number(m[1]));
+  };
+  for (const day of bundle.days) {
+    for (const block of day.blocks) scan(block.note);
+  }
+  for (const bug of bundle.bugs) {
+    scan(bug.status);
+    scan(bug.source);
+  }
+  return prs;
+}
+
+function aggregateFromDays(bundle: ProjectBundle): BundleAggregates {
+  // totalLoc uses gross lines added (not net) — a productivity metric, so
+  // refactors/cleanups are counted as work, not subtracted from output.
+  // This also avoids going negative on projects with heavy churn (e.g. IBG's
+  // data.json history).
+  let totalLoc = 0;
+  let totalMinutes = 0;
+  let totalBlocks = 0;
+  for (const day of bundle.days) {
+    for (const block of day.blocks) {
+      totalLoc += block.linesAdded ?? 0;
+      totalMinutes += block.timeMinutes ?? 0;
+      totalBlocks += 1;
+    }
+  }
+  const dayDates = bundle.days.map(d => d.date);
+  const firstDate = dayDates[0] ?? '';
+  const lastDate = dayDates[dayDates.length - 1] ?? '';
+  return {
+    totalLoc,
+    totalHours: Math.round((totalMinutes / 60) * 10) / 10,
+    totalBlocks,
+    totalPrs: collectPrNumbers(bundle).size,
+    firstDate,
+    lastDate,
+    dayDates,
+  };
+}
+
 // ── Research comparisons (evidence-backed) ─────────────────────────────────
 
 const RESEARCH_COMPARISONS: ResearchComparison[] = [
   {
     source: 'ISBSG 2026',
     finding: 'Developers perceive 24% speed increase; measured outcomes are mixed',
-    ourResult: 'Portfolio built in 170h across 9 projects — estimated 2–3x faster than solo traditional development',
+    ourResult: 'Portfolio built in ~206h across 9 projects — estimated 2–3x faster than solo traditional development',
   },
   {
     source: 'Cortex 2026 Benchmark',
     finding: 'AI-assisted teams deliver faster but with higher change failure rate',
-    ourResult: '51 bugs across 55K LOC (0.09 bugs/100 LOC). 29 fixed, 1 deferred. Higher early-stage bug rate, lower late-stage.',
+    ourResult: '74 bugs across ~74K LOC (0.10 bugs/100 LOC). Most fixed, a few deferred. Higher early-stage bug rate, lower late-stage.',
   },
   {
     source: 'Portfolio self-assessment',
@@ -132,38 +194,34 @@ function classifyBugPhase(bug: BugEntry, sessionIndex: number, totalSessions: nu
 // ── Compute ────────────────────────────────────────────────────────────────
 
 export function computeInsights(bundles: ProjectBundle[]): InsightsData {
-  // Portfolio totals
+  // Pre-compute day-based aggregates once per bundle
+  const aggregates = new Map<string, BundleAggregates>();
+  for (const b of bundles) aggregates.set(b.project.id, aggregateFromDays(b));
+  const agg = (id: string) => aggregates.get(id)!;
+
+  // Portfolio totals — all derived from *Days blocks (correctness bug fix, Task #95)
   const portfolio: PortfolioTotals = {
     totalProjects: bundles.length,
-    totalLoc: bundles.reduce((sum, b) => {
-      const last = b.codeVolume[b.codeVolume.length - 1];
-      return sum + (last?.total ?? 0);
-    }, 0),
-    totalHours: bundles.reduce((sum, b) =>
-      sum + b.sessions.reduce((s, sess) => s + sess.duration, 0), 0),
-    totalPrs: bundles.reduce((sum, b) =>
-      sum + b.sessions.reduce((s, sess) => s + sess.prs, 0), 0),
+    totalLoc: bundles.reduce((sum, b) => sum + agg(b.project.id).totalLoc, 0),
+    totalHours: Math.round(bundles.reduce((sum, b) => sum + agg(b.project.id).totalHours, 0) * 10) / 10,
+    totalPrs: bundles.reduce((sum, b) => sum + agg(b.project.id).totalPrs, 0),
     totalBugsFixed: bundles.reduce((sum, b) =>
       sum + b.bugs.filter(bug => bug.status.toLowerCase().startsWith('fixed')).length, 0),
     totalDays: new Set(bundles.flatMap(b => b.days.map(d => d.date))).size,
-    totalBlocks: bundles.reduce((sum, b) =>
-      sum + b.days.reduce((s, d) => s + d.blocks.length, 0), 0),
+    totalBlocks: bundles.reduce((sum, b) => sum + agg(b.project.id).totalBlocks, 0),
   };
 
-  // Velocity
+  // Velocity — per-project totals from day aggregates
   const velocity: VelocityRow[] = bundles.map(b => {
-    const totalHours = b.sessions.reduce((s, sess) => s + sess.duration, 0);
-    const lastVol = b.codeVolume[b.codeVolume.length - 1];
-    const totalLoc = lastVol?.total ?? 0;
-    const totalPrs = b.sessions.reduce((s, sess) => s + sess.prs, 0);
-    const sessionCount = b.sessions.length;
+    const a = agg(b.project.id);
+    const blockCount = a.totalBlocks;
     return {
       projectId: b.project.id,
       projectName: b.project.name,
-      locPerHour: totalHours > 0 ? Math.round(totalLoc / totalHours) : 0,
-      prsPerSession: sessionCount > 0 ? Math.round((totalPrs / sessionCount) * 10) / 10 : 0,
-      totalHours,
-      totalLoc,
+      locPerHour: a.totalHours > 0 ? Math.round(a.totalLoc / a.totalHours) : 0,
+      prsPerSession: blockCount > 0 ? Math.round((a.totalPrs / blockCount) * 10) / 10 : 0,
+      totalHours: a.totalHours,
+      totalLoc: a.totalLoc,
       hasEstimatedHours: ESTIMATED_HOURS_PROJECTS.has(b.project.id),
     };
   }).sort((a, b) => b.locPerHour - a.locPerHour);
@@ -181,9 +239,14 @@ export function computeInsights(bundles: ProjectBundle[]): InsightsData {
         driverMap[d].blockCount += 1;
       }
     }
+    // Attribute each bug to a day-block driver (match by block.label first, then session number in id)
+    const allBlocks = b.days.flatMap(d => d.blocks);
     for (const bug of b.bugs) {
-      const sess = b.sessions.find(s => s.session === bug.session);
-      const d = sess?.driver ?? 'agent-led';
+      const sessionNum = bug.session.match(/\d+/)?.[0];
+      const match = allBlocks.find(bl => bl.label === bug.label)
+        ?? (sessionNum ? allBlocks.find(bl => bl.id.endsWith(`-${sessionNum}`) || bl.id.includes(`session-${sessionNum}`)) : undefined);
+      const rawDriver = match?.driver ?? 'collaborative';
+      const d = rawDriver === 'ai' ? 'agent-led' : rawDriver;
       driverBugCounts[d] = (driverBugCounts[d] ?? 0) + 1;
     }
   }
@@ -193,15 +256,18 @@ export function computeInsights(bundles: ProjectBundle[]): InsightsData {
       : 0;
   }
 
-  // Timeline
+  // Timeline — derived from days
   const timeline: TimelineRow[] = bundles
-    .map(b => ({
-      projectId: b.project.id,
-      projectName: b.project.name,
-      firstDate: b.codeVolume[0]?.date ?? b.days[0]?.date ?? '',
-      lastDate: b.codeVolume[b.codeVolume.length - 1]?.date ?? b.days[b.days.length - 1]?.date ?? '',
-      sessionDates: b.days.map(d => d.date),
-    }))
+    .map(b => {
+      const a = agg(b.project.id);
+      return {
+        projectId: b.project.id,
+        projectName: b.project.name,
+        firstDate: a.firstDate,
+        lastDate: a.lastDate,
+        sessionDates: a.dayDates,
+      };
+    })
     .filter(r => r.firstDate !== '');
 
   // Work Mix
@@ -217,17 +283,16 @@ export function computeInsights(bundles: ProjectBundle[]): InsightsData {
     return { projectId: b.project.id, projectName: b.project.name, categories: cats };
   });
 
-  // Bug summaries with lifecycle phases
+  // Bug summaries with lifecycle phases — position derived from bug index in its
+  // own array (bugs are authored in chronological order per project data files)
   const bugSummaries: BugProjectSummary[] = bundles
     .filter(b => b.bugs.length > 0)
     .map(b => {
-      const sessionList = b.sessions.map(s => s.session);
       const phaseCounts: Record<BugLifecyclePhase['phase'], number> = {
         'Build-time': 0, 'Interaction': 0, 'Code Quality': 0, 'Systemic': 0, 'Integration': 0,
       };
-      for (const bug of b.bugs) {
-        const idx = sessionList.indexOf(bug.session);
-        const phase = classifyBugPhase(bug, idx >= 0 ? idx : 0, sessionList.length);
+      for (let i = 0; i < b.bugs.length; i++) {
+        const phase = classifyBugPhase(b.bugs[i], i, b.bugs.length);
         phaseCounts[phase]++;
       }
       const allPhases: BugLifecyclePhase[] = [

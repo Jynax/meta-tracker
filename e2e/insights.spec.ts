@@ -17,9 +17,14 @@ test.describe('Cross-Project Insights', () => {
     await switcher.getByRole('option', { name: 'All Projects' }).click();
     // Narrative headline
     await expect(page.getByText('9 projects. 3 AI tools. 1 human.')).toBeVisible();
-    // Compact stat row — verify key stats render with their values
-    await expect(page.getByText('41,253')).toBeVisible();
-    await expect(page.getByText('190.5')).toBeVisible();
+    // Compact stat row — verify the portfolio header rendered the LOC and hours labels.
+    // Values are not asserted literally because they're derived from *Days blocks and
+    // shift every metrics push (see Task #95 — previously hard-coded values broke the
+    // suite twice during PR #160).
+    const headerLoc = page.locator('text=/ LOC$/').first();
+    const headerHours = page.locator('text=/ hours$/').first();
+    await expect(headerLoc).toBeVisible();
+    await expect(headerHours).toBeVisible();
   });
 
   test('chapter tabs are clickable and switch content', async ({ page }) => {

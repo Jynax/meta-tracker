@@ -148,4 +148,16 @@ export const landingDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 15, linesAdded: 85, linesDeleted: 85, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
+  {
+    date: 'Mar 31',
+    title: 'Recent Updates + Changelog Receiver',
+    projectId: 'landing',
+    phase: 'Shipped',
+    chapterId: 'landing-ch-testing',
+    blocks: [
+      { id: 'landing-session-77', dayId: 'Mar 31', label: 'Recent Updates + Aggregate Receiver', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 223, linesDeleted: 0, note: 'Part of cross-cutting S77 changelog rollout. Landing-side: Recent Updates section + aggregate changelog receiver (cross-repo dispatch target). PR #20.', contextWindowOrigin: false }, // TBD timeMinutes
+    ],
+    metrics: { totalTimeMinutes: 0, linesAdded: 223, linesDeleted: 0, totalDecisions: 0 }, // TBD totalTimeMinutes
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
 ];

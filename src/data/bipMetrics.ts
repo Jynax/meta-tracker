@@ -700,4 +700,16 @@ export const bipDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 20, linesAdded: 5, linesDeleted: 4, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
+  {
+    date: 'Mar 31',
+    title: 'Changelog System',
+    projectId: 'bip',
+    phase: 'Shipped',
+    chapterId: 'ch-testing',
+    blocks: [
+      { id: 'bip-session-77', dayId: 'Mar 31', label: 'Changelog System', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 196, linesDeleted: 3, note: 'Part of cross-cutting S77 changelog rollout. PR template + extract-to-JSON workflow + /changelog page + dispatch to landing. PR #94.', contextWindowOrigin: false }, // TBD timeMinutes
+    ],
+    metrics: { totalTimeMinutes: 0, linesAdded: 196, linesDeleted: 3, totalDecisions: 0 }, // TBD totalTimeMinutes
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
 ];

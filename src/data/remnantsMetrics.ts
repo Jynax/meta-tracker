@@ -158,4 +158,16 @@ export const remnantsDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 10, linesAdded: 490, linesDeleted: 1322, totalDecisions: 0 },
     driverSummary: { human: 0, ai: 1, collaborative: 0 },
   },
+  {
+    date: 'Mar 31',
+    title: 'Changelog System',
+    projectId: 'remnants',
+    phase: 'Shipped',
+    chapterId: 'ch-repo-deployment',
+    blocks: [
+      { id: 'remnants-session-77', dayId: 'Mar 31', label: 'Changelog System', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 0, linesAdded: 220, linesDeleted: 20, note: 'Part of cross-cutting S77 changelog rollout. PR template + extract-to-JSON workflow + /changelog page + dispatch to landing. PR #14.', contextWindowOrigin: false }, // TBD timeMinutes
+    ],
+    metrics: { totalTimeMinutes: 0, linesAdded: 220, linesDeleted: 20, totalDecisions: 0 }, // TBD totalTimeMinutes
+    driverSummary: { human: 0, ai: 0, collaborative: 1 },
+  },
 ];

@@ -24,7 +24,7 @@ export interface Chapter {
 
 export type ChapterId = 'theStory' | 'whatWeLearned' | 'byTheNumbers' | 'forTeams' | 'fromTheAI';
 
-export const PORTFOLIO_HEADLINE = '9 projects. 3 AI tools. 1 human. 170 hours of building — and an honest look at what we learned.';
+export const PORTFOLIO_HEADLINE = '9 projects. 3 AI tools. 1 human. 206 hours of building — and an honest look at what we learned.';
 
 export const chapters: Record<ChapterId, Chapter> = {
   theStory: {
@@ -53,7 +53,7 @@ export const chapters: Record<ChapterId, Chapter> = {
   whatWeLearned: {
     id: 'whatWeLearned',
     title: 'What We Learned',
-    intro: 'Six findings from 170 hours of human–AI collaboration. Each one backed by portfolio data.',
+    intro: 'Six findings from 206 hours of human–AI collaboration. Each one backed by portfolio data.',
     sections: [
       {
         id: 'velocity-vs-quality',

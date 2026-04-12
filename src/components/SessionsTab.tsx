@@ -49,39 +49,62 @@ export default function SessionsTab({
   const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
   const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
 
-  // Build a lookup of decisions-per-day from the authoritative DayEntry data
-  const dayDecisionMap = useMemo(() => {
-    const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
-    const map = new Map<string, number>();
+  const PR_NUMBER_REGEX = /\bPRs?\s*#?(\d+)/gi;
+  const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+  const operatorDisplayNames: Record<WorkOperator, string> = {
+    'claude-code': 'Claude Code', 'claude-ai': 'Claude AI', cursor: 'Cursor', manual: 'Manual', mixed: 'Mixed',
+  };
+
+  /** Count unique PR numbers mentioned in a day's block notes */
+  const countDayPrs = useCallback((day: DayEntry) => {
+    const prs = new Set<number>();
+    for (const block of day.blocks) {
+      if (!block.note) continue;
+      for (const m of block.note.matchAll(PR_NUMBER_REGEX)) prs.add(Number(m[1]));
+    }
+    return prs.size;
+  }, []);
+
+  const dailyData = useMemo(() => {
+    const dayBuckets = new Map<string, { dayLabel: string; prs: number; decisions: number; blockCount: number }>();
     days.forEach((d) => {
       const [month = 'Jan', day = '1'] = d.date.split(' ');
       const dt = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
       const key = dt.toISOString().slice(0, 10);
-      map.set(key, (map.get(key) ?? 0) + d.metrics.totalDecisions);
-    });
-    return map;
-  }, [days]);
-
-  const dailyData = useMemo(() => {
-    const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
-    const dayBuckets = new Map<string, { dayLabel: string; prs: number; decisions: number; sessionCount: number }>();
-    sessions.forEach((entry) => {
-      const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
-      const [month = 'Jan', day = '1'] = date.split(' ');
-      const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
-      const key = d.toISOString().slice(0, 10);
       const dayLabel = month + ' ' + parseInt(day, 10);
-      const existing = dayBuckets.get(key) ?? { dayLabel, prs: 0, decisions: 0, sessionCount: 0 };
-      existing.prs += entry.prs;
-      existing.sessionCount += 1;
+      const existing = dayBuckets.get(key) ?? { dayLabel, prs: 0, decisions: 0, blockCount: 0 };
+      existing.prs += countDayPrs(d);
+      existing.decisions += d.metrics.totalDecisions;
+      existing.blockCount += d.blocks.length;
       dayBuckets.set(key, existing);
     });
-    // Use DayEntry decisions as the authoritative source for daily view
-    for (const [key, bucket] of dayBuckets) {
-      bucket.decisions = dayDecisionMap.get(key) ?? 0;
-    }
     return Array.from(dayBuckets.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([, v]) => v);
-  }, [sessions, sessionDateMap, dayDecisionMap]);
+  }, [days, countDayPrs]);
+
+  /** Block-level view: one data point per work block */
+  const blockData = useMemo(() => {
+    const result: Array<{ session: string; label: string; date: string; prs: number; decisions: number; deadEnds: number }> = [];
+    for (const d of [...days].sort((a, b) => {
+      const [aMonth = 'Jan', aDay = '1'] = a.date.split(' ');
+      const [bMonth = 'Jan', bDay = '1'] = b.date.split(' ');
+      return new Date(2026, monthMap[aMonth] ?? 0, parseInt(aDay, 10)).getTime() -
+             new Date(2026, monthMap[bMonth] ?? 0, parseInt(bDay, 10)).getTime();
+    })) {
+      for (const block of d.blocks) {
+        const prSet = new Set<number>();
+        if (block.note) for (const m of block.note.matchAll(PR_NUMBER_REGEX)) prSet.add(Number(m[1]));
+        result.push({
+          session: block.id,
+          label: block.label,
+          date: d.date,
+          prs: prSet.size,
+          decisions: d.metrics.totalDecisions,
+          deadEnds: 0,
+        });
+      }
+    }
+    return result;
+  }, [days]);
 
   const sessionActivityPoints = useMemo(() => {
     const yTicks = 4;
@@ -89,16 +112,13 @@ export default function SessionsTab({
     const dataSource = chartView === 'weekly'
       ? dailyData.map((d) => ({
           session: d.dayLabel,
-          label: d.sessionCount + ' session' + (d.sessionCount > 1 ? 's' : ''),
+          label: d.blockCount + ' block' + (d.blockCount > 1 ? 's' : ''),
           date: d.dayLabel,
           prs: d.prs,
           decisions: d.decisions,
           deadEnds: 0,
         }))
-      : sessions.map((entry) => ({
-          ...entry,
-          date: sessionDateMap[entry.session] ?? entry.session,
-        }));
+      : blockData;
 
     const maxMetric = Math.max(...dataSource.map((item) => Math.max(item.prs, item.decisions)), 1);
     const raw = maxMetric / yTicks || 1;
@@ -127,47 +147,64 @@ export default function SessionsTab({
     });
 
     return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points, allPoints, range };
-  }, [sessions, sessionDateMap, chartView, dailyData, visibleRange]);
+  }, [chartView, dailyData, blockData, visibleRange]);
 
 
   const avgTaskTimePoints = useMemo(() => {
-    const validSessions = sessions.filter(s => s.taskCount > 0);
-    if (!validSessions.length) return null;
+    // Filter to days that have blocks with time recorded
+    const validDays = days.filter(d => d.blocks.some(b => (b.timeMinutes ?? 0) > 0));
+    if (!validDays.length) return null;
 
     type AvgPoint = { session: string; date: string; dateLabel: string; label: string; avgMin: number; tool: string; taskCount: number; duration: number };
 
     let rawPoints: AvgPoint[];
     if (chartView === 'weekly') {
-      const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
-      const dayBuckets = new Map<string, { dayLabel: string; totalMinutes: number; totalTasks: number; tool: string }>();
-      validSessions.forEach((entry) => {
-        const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
-        const [month = 'Jan', day = '1'] = date.split(' ');
-        const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
-        const key = d.toISOString().slice(0, 10);
-        const existing = dayBuckets.get(key) ?? { dayLabel: date, totalMinutes: 0, totalTasks: 0, tool: entry.tool };
-        existing.totalMinutes += entry.duration * 60;
-        existing.totalTasks += entry.taskCount;
+      // Day-level aggregation: avg time per block
+      const dayBuckets = new Map<string, { dayLabel: string; totalMinutes: number; totalBlocks: number; operator: WorkOperator }>();
+      validDays.forEach((d) => {
+        const [month = 'Jan', day = '1'] = d.date.split(' ');
+        const dt = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
+        const key = dt.toISOString().slice(0, 10);
+        // Use the dominant operator for the day
+        const opCounts = new Map<WorkOperator, number>();
+        d.blocks.forEach(b => opCounts.set(b.operator, (opCounts.get(b.operator) ?? 0) + 1));
+        const dominantOp = [...opCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'claude-code';
+        const existing = dayBuckets.get(key) ?? { dayLabel: d.date, totalMinutes: 0, totalBlocks: 0, operator: dominantOp };
+        existing.totalMinutes += d.metrics.totalTimeMinutes;
+        existing.totalBlocks += d.blocks.length;
         dayBuckets.set(key, existing);
       });
       const sorted = Array.from(dayBuckets.entries()).sort(([a], [b]) => a.localeCompare(b));
       rawPoints = sorted.map(([, bucket]) => {
-        const avgMin = bucket.totalTasks > 0 ? bucket.totalMinutes / bucket.totalTasks : 0;
+        const avgMin = bucket.totalBlocks > 0 ? bucket.totalMinutes / bucket.totalBlocks : 0;
         return {
           session: bucket.dayLabel, date: bucket.dayLabel, dateLabel: formatShortDate(bucket.dayLabel),
-          label: bucket.totalTasks + ' tasks', avgMin: Math.round(avgMin), tool: bucket.tool,
-          taskCount: bucket.totalTasks, duration: Math.round(bucket.totalMinutes / 60),
+          label: bucket.totalBlocks + ' blocks', avgMin: Math.round(avgMin),
+          tool: operatorDisplayNames[bucket.operator] ?? bucket.operator,
+          taskCount: bucket.totalBlocks, duration: Math.round(bucket.totalMinutes / 60),
         };
       });
     } else {
-      rawPoints = validSessions.map((entry) => {
-        const avgMin = (entry.duration * 60) / entry.taskCount;
-        const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
-        return {
-          ...entry, date, dateLabel: formatShortDate(date),
-          avgMin: Math.round(avgMin), tool: entry.tool,
-        };
+      // Block-level: each block is a data point
+      rawPoints = [];
+      const sortedDaysForAvg = [...validDays].sort((a, b) => {
+        const [aM = 'Jan', aD = '1'] = a.date.split(' ');
+        const [bM = 'Jan', bD = '1'] = b.date.split(' ');
+        return new Date(2026, monthMap[aM] ?? 0, parseInt(aD, 10)).getTime() -
+               new Date(2026, monthMap[bM] ?? 0, parseInt(bD, 10)).getTime();
       });
+      for (const d of sortedDaysForAvg) {
+        for (const block of d.blocks) {
+          const mins = block.timeMinutes ?? 0;
+          if (mins <= 0) continue;
+          rawPoints.push({
+            session: block.id, date: d.date, dateLabel: formatShortDate(d.date),
+            label: block.label, avgMin: mins,
+            tool: operatorDisplayNames[block.operator] ?? block.operator,
+            taskCount: 1, duration: Math.round(mins / 60),
+          });
+        }
+      }
     }
 
     const yTicks = 4;
@@ -193,7 +230,7 @@ export default function SessionsTab({
     });
 
     return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points, allPoints, range };
-  }, [sessions, sessionDateMap, chartView, visibleRangeAvg]);
+  }, [days, chartView, visibleRangeAvg]);
 
   const avgTaskTimePaths = useMemo(() => {
     if (!avgTaskTimePoints) return {};
@@ -227,21 +264,24 @@ export default function SessionsTab({
     const drivers: SessionDriver[] = ['human-only', 'agent-led', 'collaborative', 'human'];
     const rawTotals: Record<SessionDriver, number> = { 'human-only': 0, 'agent-led': 0, collaborative: 0, human: 0 };
 
-    // Group sessions by date to create bars
-    const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+    // Normalize WorkDriver → SessionDriver: 'ai' maps to 'agent-led', 'human' stays 'human'
+    const normalizeDriver = (d: WorkDriver): SessionDriver =>
+      d === 'ai' ? 'agent-led' : d as SessionDriver;
+
+    // Group blocks by date to create bars
     const dayGroups = new Map<string, { dayLabel: string; counts: Record<SessionDriver, number> }>();
 
-    sessions.forEach((entry) => {
-      const driver = entry.driver;
-      if (!driver) return;
-      rawTotals[driver] = (rawTotals[driver] ?? 0) + 1;
-      const date = sessionDateMap[entry.session] ?? entry.date ?? entry.session;
-      const [month = 'Jan', day = '1'] = date.split(' ');
-      const d = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
-      const key = d.toISOString().slice(0, 10);
+    days.forEach((d) => {
+      const [month = 'Jan', day = '1'] = d.date.split(' ');
+      const dt = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
+      const key = dt.toISOString().slice(0, 10);
       const dayLabel = month + ' ' + parseInt(day, 10);
       const existing = dayGroups.get(key) ?? { dayLabel, counts: { 'human-only': 0, 'agent-led': 0, collaborative: 0, human: 0 } };
-      existing.counts[driver] = (existing.counts[driver] ?? 0) + 1;
+      for (const block of d.blocks) {
+        const driver = normalizeDriver(block.driver);
+        rawTotals[driver] = (rawTotals[driver] ?? 0) + 1;
+        existing.counts[driver] = (existing.counts[driver] ?? 0) + 1;
+      }
       dayGroups.set(key, existing);
     });
 
@@ -274,7 +314,7 @@ export default function SessionsTab({
     const yMax = step * yTicks;
 
     return { drivers, driverTotals, bars, allBars, range, yTicks, step, yMax };
-  }, [sessions, sessionDateMap, humanAttribution, visibleRangeDriver]);
+  }, [days, humanAttribution, visibleRangeDriver]);
 
   const sessionLines = useMemo(() => {
     const pathBuilder = chartView === 'weekly'
@@ -344,7 +384,7 @@ export default function SessionsTab({
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Card label="Total PRs" value={totalPRs} color={C.emerald} />
         <Card label="Total Decisions" value={days.reduce((sum, d) => sum + d.metrics.totalDecisions, 0)} color={C.cyan} />
-        <Card label="Total Dead Ends" value={sessions.reduce((sum, item) => sum + item.deadEnds, 0)} color={C.rose} />
+        <Card label="Total Blocks" value={days.reduce((sum, d) => sum + d.blocks.length, 0)} color={C.rose} />
         <Card label="Total Hours" value={`${totalHours}h`} color={C.amber} />
       </div>
 

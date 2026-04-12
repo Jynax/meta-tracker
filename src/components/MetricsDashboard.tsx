@@ -107,6 +107,50 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const totalAdded = selected.codeVolume.reduce((sum, item) => sum + item.added, 0);
   const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);
 
+  // Day-derived codeVolume for the Code tab. Synthesizes one CodeVolumeEntry
+  // per WorkBlock with running net total. Replaces the stale legacy
+  // `*CodeVolume` arrays which stopped being maintained for 6 of 9 projects
+  // around Mar 23.
+  const daysCodeVolume = useMemo(() => {
+    const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+    const sortedDays = [...selected.days].sort((a, b) => {
+      const [aM = 'Jan', aD = '1'] = a.date.split(' ');
+      const [bM = 'Jan', bD = '1'] = b.date.split(' ');
+      return new Date(2026, monthMap[aM] ?? 0, parseInt(aD, 10)).getTime() -
+             new Date(2026, monthMap[bM] ?? 0, parseInt(bD, 10)).getTime();
+    });
+    let running = 0;
+    const entries: typeof selected.codeVolume = [];
+    for (const day of sortedDays) {
+      for (const block of day.blocks) {
+        const added = block.linesAdded ?? 0;
+        const deleted = block.linesDeleted ?? 0;
+        const net = added - deleted;
+        running += net;
+        entries.push({
+          session: block.id,
+          date: day.date,
+          label: block.label,
+          added,
+          deleted,
+          net,
+          total: running,
+        });
+      }
+    }
+    return entries;
+  }, [selected.days]);
+
+  const codeTotalAdded = useMemo(
+    () => daysCodeVolume.reduce((sum, e) => sum + e.added, 0),
+    [daysCodeVolume],
+  );
+  const codeTotalDeleted = useMemo(
+    () => daysCodeVolume.reduce((sum, e) => sum + e.deleted, 0),
+    [daysCodeVolume],
+  );
+  const codeCurrentLoc = codeTotalAdded - codeTotalDeleted;
+
   // Day-derived values for the Overview stat cards (Task #95 follow-up).
   // Legacy `sessions` and `codeVolume` arrays have been stale for 6 of 9 projects
   // since ~Mar 23, so the Overview cards now derive from `days` blocks instead.
@@ -182,11 +226,11 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
 
             {tab === 'code' && (
               <CodeTab
-                codeVolume={selected.codeVolume}
+                codeVolume={daysCodeVolume}
                 days={selected.days}
-                totalAdded={totalAdded}
-                totalDeleted={totalDeleted}
-                currentLoc={currentLoc}
+                totalAdded={codeTotalAdded}
+                totalDeleted={codeTotalDeleted}
+                currentLoc={codeCurrentLoc}
                 hoveredCodeEntry={hoveredCodeEntry}
                 setHoveredCodeEntry={setHoveredCodeEntry}
                 setTooltip={setTooltip}

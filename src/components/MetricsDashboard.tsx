@@ -84,8 +84,25 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
     return map;
   }, [selected.codeVolume]);
 
-  const totalPRs = selected.sessions.reduce((sum, item) => sum + item.prs, 0);
-  const totalHours = selected.sessions.reduce((sum, item) => sum + item.duration, 0);
+  const totalPRs = useMemo(() => {
+    const prRegex = /\bPRs?\s*#?(\d+)/gi;
+    const prs = new Set<number>();
+    for (const day of selected.days) {
+      for (const block of day.blocks) {
+        if (!block.note) continue;
+        for (const m of block.note.matchAll(prRegex)) prs.add(Number(m[1]));
+      }
+    }
+    for (const bug of selected.bugs) {
+      if (!bug.status) continue;
+      for (const m of bug.status.matchAll(prRegex)) prs.add(Number(m[1]));
+    }
+    return prs.size;
+  }, [selected.days, selected.bugs]);
+  const totalHours = useMemo(
+    () => Math.round(selected.days.reduce((sum, d) => sum + d.metrics.totalTimeMinutes, 0) / 60),
+    [selected.days],
+  );
   const currentLoc = selected.codeVolume[selected.codeVolume.length - 1]?.total ?? 0;
   const totalAdded = selected.codeVolume.reduce((sum, item) => sum + item.added, 0);
   const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);

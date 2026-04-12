@@ -248,7 +248,7 @@ export const metaSessions: SessionEntry[] = [
   ] },
 ];
 
-export const metaDateRange = { start: 'Feb 2026', end: 'Mar 2026' };
+export const metaDateRange = { start: 'Feb 2026', end: 'Apr 2026' };
 
 export const metaBugs: BugEntry[] = [
   { id: 1, session: 'Session 1', date: 'Feb 26', label: 'Scaffold & Auth', summary: 'Tailwind CSS not rendering \u2014 missing @tailwindcss/vite plugin', severity: 'High', source: 'Testing', status: 'Fixed', category: 'Technical' },

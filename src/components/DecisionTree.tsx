@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ReactFlow, Background, Controls, Handle, Position } from '@xyflow/react';
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
 import { remnantsProject } from '../data/remnantsProject';
@@ -19,13 +18,11 @@ import { landingDays } from '../data/landingMetrics';
 import { fcDays } from '../data/feedbackCaptureMetrics';
 import { nwDays } from '../data/noteWorthyMetrics';
 import { otmDays } from '../data/onTheMoveMetrics';
-import { nodeTypes } from './CustomNodes';
 import MetricsDashboard from './MetricsDashboard';
 import ProcessWorkflow from './ProcessWorkflow';
 import ErrorBoundary from './ErrorBoundary';
 import StackedTreeView from './StackedTreeView';
-import type { TreeNodeData } from './treeLayout';
-import { buildTreeLayout } from './treeLayout';
+import MindMap from './MindMap';
 import { ExternalLink } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import ChangelogPage from './ChangelogPage';
@@ -107,57 +104,6 @@ function CategoryBar({ categories, total, compact = false }: { categories: Recor
           </div>
         );
       })}
-    </div>
-  );
-}
-
-function PhaseNodeWithStats({ id, data }: { id: string; data: TreeNodeData & { onToggleExpand?: (id: string) => void; chapterStats?: ChapterStat; onJumpToMetrics?: (tab: 'overview' | 'code' | 'bugs' | 'sessions') => void } }) {
-  const isRoot = data.kind === 'root';
-  const stats = data.chapterStats;
-
-  return (
-    <div className={`${isRoot ? 'w-64' : 'w-[280px]'} rounded-xl border border-sky-400/60 bg-slate-800/90 p-4 text-slate-100 shadow-lg transition hover:brightness-110`}>
-      {!isRoot && <Handle type="target" position={Position.Top} id="top" className="!bg-sky-300" />}
-      {!isRoot && <Handle type="target" position={Position.Top} id="top-right" style={{ left: 'calc(50% + 36px)' }} className="!bg-sky-300" />}
-
-      <button className="w-full text-left" onClick={() => data.onToggleExpand?.(id)}>
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <p className="text-xs uppercase tracking-wider text-slate-400">{isRoot ? 'Project' : 'Chapter'}</p>
-            <h3 className="mt-1 text-lg font-semibold">{data.label}</h3>
-            {data.period && <p className="mt-1 text-xs text-slate-300">{data.period}</p>}
-          </div>
-          {!isRoot && <span className="text-slate-300">{data.expanded ? String.fromCharCode(0x2212) : '+'}</span>}
-        </div>
-
-        {!isRoot && !data.expanded && stats && (
-          <div className="mt-2 flex items-center gap-[10px] text-xs text-slate-300">
-            <CategoryBar categories={stats.categories} total={stats.entries} compact />
-            <span>{stats.entries} entries</span>
-            {stats.deadEnds > 0 && <span style={{ color: 'var(--theme-rose)' }}>{stats.deadEnds} dead ends</span>}
-            {stats.discoveries > 0 && <span style={{ color: 'var(--theme-amber)' }}>{stats.discoveries} discoveries</span>}
-            {stats.pivots > 0 && <span style={{ color: 'var(--theme-violet)' }}>{stats.pivots} pivots</span>}
-            {stats.bugs > 0 && (
-              <button
-                type="button"
-                className="underline decoration-dotted"
-                style={{ color: 'var(--theme-rose)' }}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  data.onJumpToMetrics?.('bugs');
-                }}
-              >
-                {stats.bugs} bugs
-              </button>
-            )}
-          </div>
-        )}
-      </button>
-
-      <Handle type="source" position={Position.Bottom} id="bottom" className="!bg-sky-300" />
-      {!isRoot && <Handle type="source" position={Position.Bottom} id="bottom-right" style={{ left: 'calc(50% + 36px)' }} className="!bg-sky-300" />}
-      {!isRoot && <Handle type="source" position={Position.Right} id="right" className="!bg-sky-300" />}
-      {!isRoot && <Handle type="source" position={Position.Left} id="left" className="!bg-sky-300" />}
     </div>
   );
 }
@@ -272,28 +218,6 @@ export default function DecisionTree() {
       categories: allStats.categories,
     };
   }, [activeProject]);
-
-  const { nodes, edges } = useMemo(() => {
-    const result = buildTreeLayout(activeProject, { expandedChapters, detailNodes, filter });
-    return {
-      nodes: result.nodes.map((node) => ({
-        ...node,
-        data: {
-          ...node.data,
-          onToggleExpand: toggleChapter,
-          onToggleDetail: toggleDetail,
-          onJumpToMetrics: (tab: 'overview' | 'code' | 'bugs' | 'sessions') => {
-            setMetricsTab(tab);
-            setView('metrics');
-          },
-          chapterStats: projectSummary.chapterStats[node.id],
-        },
-      })),
-      edges: result.edges,
-    };
-  }, [activeProject, detailNodes, expandedChapters, filter, projectSummary.chapterStats]);
-
-  const enhancedNodeTypes = useMemo(() => ({ ...nodeTypes, phaseNode: PhaseNodeWithStats }), []);
 
   return (
     <section className="mx-auto max-w-[1800px] px-4 py-8 text-slate-100 sm:px-8">
@@ -457,65 +381,38 @@ export default function DecisionTree() {
           </div>
 
           {treeMode === 'canvas' && (
-            <>
-              <div
-                className="mb-4 rounded-xl border"
-                style={{ backgroundColor: 'var(--theme-card-bg)', borderColor: 'var(--theme-border)', padding: '14px 20px' }}
-              >
-                <div className="flex flex-wrap items-center gap-2 text-sm text-slate-200">
-                  <span>{projectSummary.entries} entries</span>
-                  <span className="text-slate-500">|</span>
-                  {projectSummary.deadEnds > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: 'var(--theme-rose)', opacity: 0.15, color: 'var(--theme-rose)' }}>{projectSummary.deadEnds} dead ends</span>}
-                  {projectSummary.discoveries > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: 'color-mix(in srgb, var(--theme-amber) 13%, transparent)', color: 'var(--theme-amber)' }}>{projectSummary.discoveries} discoveries</span>}
-                  {projectSummary.pivots > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: 'color-mix(in srgb, var(--theme-violet) 13%, transparent)', color: 'var(--theme-violet)' }}>{projectSummary.pivots} pivots</span>}
-                </div>
-                <div className="mt-2">
-                  <CategoryBar categories={projectSummary.categories} total={projectSummary.entries} />
-                </div>
-                <div className="mt-2 flex flex-wrap items-center justify-center gap-[14px] text-[10px] text-slate-300">
-                  {CATEGORY_META.map((category) => (
-                    <span key={category.id} className="flex items-center gap-1.5">
-                      <span className="inline-block h-2 w-2 rounded-[2px]" style={{ backgroundColor: category.color }} />
-                      {category.label} {projectSummary.categories[category.id]}
-                    </span>
-                  ))}
-                </div>
-              </div>
+            <div
+              className="mb-3 text-xs"
+              style={{ color: 'var(--theme-text-muted)' }}
+            >
+              Mind map · nodes cluster by shared category, chapter, and session
+            </div>
+          )}
 
-              <div className="mb-4 rounded-xl border border-slate-700 bg-slate-900/80 p-3">
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setFiltersExpanded((current) => !current)}
-                    className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm text-slate-200 transition hover:brightness-110"
-                  >
-                    Filter
-                  </button>
-                  {filter !== 'all' && (
-                    <span className="rounded-full bg-cyan-500/15 px-2 py-0.5 text-xs text-cyan-300">{activeFilterLabel}</span>
-                  )}
-                </div>
-                {(filtersExpanded || filter !== 'all') && (
-                  <div className="mt-2 flex flex-wrap items-center gap-2">
-                    {FILTERS.map((item) => (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          setFilter(item.id);
-                          setFiltersExpanded(false);
-                        }}
-                        className={`rounded-lg px-3 py-1.5 text-sm transition ${
-                          filter === item.id
-                            ? 'bg-slate-100 text-slate-950'
-                            : 'border border-slate-700 bg-slate-800 text-slate-300 hover:brightness-110'
-                        }`}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
+          {treeMode === 'canvas' && (
+            <div
+              className="mb-4 rounded-xl border"
+              style={{ backgroundColor: 'var(--theme-card-bg)', borderColor: 'var(--theme-border)', padding: '14px 20px' }}
+            >
+              <div className="flex flex-wrap items-center gap-2 text-sm text-slate-200">
+                <span>{projectSummary.entries} entries</span>
+                <span className="text-slate-500">|</span>
+                {projectSummary.deadEnds > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: 'var(--theme-rose)', opacity: 0.15, color: 'var(--theme-rose)' }}>{projectSummary.deadEnds} dead ends</span>}
+                {projectSummary.discoveries > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: 'color-mix(in srgb, var(--theme-amber) 13%, transparent)', color: 'var(--theme-amber)' }}>{projectSummary.discoveries} discoveries</span>}
+                {projectSummary.pivots > 0 && <span className="rounded-full px-2 py-0.5" style={{ backgroundColor: 'color-mix(in srgb, var(--theme-violet) 13%, transparent)', color: 'var(--theme-violet)' }}>{projectSummary.pivots} pivots</span>}
               </div>
-            </>
+              <div className="mt-2">
+                <CategoryBar categories={projectSummary.categories} total={projectSummary.entries} />
+              </div>
+              <div className="mt-2 flex flex-wrap items-center justify-center gap-[14px] text-[10px] text-slate-300">
+                {CATEGORY_META.map((category) => (
+                  <span key={category.id} className="flex items-center gap-1.5">
+                    <span className="inline-block h-2 w-2 rounded-[2px]" style={{ backgroundColor: category.color }} />
+                    {category.label} {projectSummary.categories[category.id]}
+                  </span>
+                ))}
+              </div>
+            </div>
           )}
 
           {treeMode === 'stacked' ? (
@@ -534,24 +431,9 @@ export default function DecisionTree() {
             />
             </ErrorBoundary>
           ) : (
-            <div
-              className="h-[calc(100vh-140px)] overflow-hidden rounded-2xl border border-slate-700"
-              style={{ height: 'calc(100vh - 140px)' }}
-            >
-              <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                nodeTypes={enhancedNodeTypes}
-                fitView
-                fitViewOptions={{ maxZoom: 1, minZoom: 0.1, padding: 0.2 }}
-                proOptions={{ hideAttribution: true }}
-                className="bg-[#0f172a]"
-                style={{ backgroundColor: 'var(--theme-bg)' }}
-              >
-                <Controls className="!bg-slate-900 !border-slate-700" />
-                <Background variant="dots" gap={18} size={1.2} color="rgba(148,163,184,0.08)" />
-              </ReactFlow>
-            </div>
+            <ErrorBoundary fallbackLabel="Mind Map">
+              <MindMap project={activeProject} />
+            </ErrorBoundary>
           )}
         </>
       )}

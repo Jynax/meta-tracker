@@ -8,6 +8,7 @@ export interface MindMapNodeData extends Record<string, unknown> {
   tier: 1 | 2 | 3;
   selected: boolean;
   hovered: boolean;
+  hasSelection: boolean;
   onSelect: (id: string) => void;
 }
 
@@ -16,6 +17,7 @@ export function MindMapNode({ id, data }: NodeProps) {
   const color = NODE_TYPE_COLORS[d.nodeType];
   const tier = d.tier;
   const opacity = tier === 1 ? 1 : tier === 2 ? 0.6 : 0.15;
+  const showLabel = d.selected || d.hovered || (d.hasSelection && tier === 1);
   const ring = d.selected ? '2px solid #ffffff' : d.hovered ? `2px solid ${color}` : 'none';
   const outline = d.selected ? `0 0 0 3px ${color}66` : 'none';
 
@@ -42,7 +44,7 @@ export function MindMapNode({ id, data }: NodeProps) {
       }}
       aria-label={d.title}
     >
-      {(tier === 1 || d.selected || d.hovered) && (
+      {showLabel && (
         <span
           style={{
             position: 'absolute',

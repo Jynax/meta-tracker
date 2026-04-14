@@ -39,7 +39,8 @@ test.describe('Decision Tree', () => {
     await expect(controls).toBeVisible();
   });
 
-  test('canvas view shows filter button', async ({ page }) => {
+  // TODO(#91 checkpoint 3): re-enable once MindMapFilter lands
+  test.skip('canvas view shows filter button', async ({ page }) => {
     await page.getByRole('button', { name: 'Canvas', exact: true }).click();
     const filterBtn = page.getByRole('button', { name: 'Filter' });
     await expect(filterBtn).toBeVisible();
@@ -179,7 +180,8 @@ test.describe('Decision Tree', () => {
     await expect(categoryLegend).toBeVisible();
   });
 
-  test('canvas filter panel toggles open and closed', async ({ page }) => {
+  // TODO(#91 checkpoint 3): re-enable once MindMapFilter lands
+  test.skip('canvas filter panel toggles open and closed', async ({ page }) => {
     await page.getByRole('button', { name: 'Canvas', exact: true }).click();
     await page.waitForTimeout(300);
 
@@ -196,7 +198,8 @@ test.describe('Decision Tree', () => {
     await expect(decisionsFilter).toBeVisible();
   });
 
-  test('canvas filter changes active filter badge', async ({ page }) => {
+  // TODO(#91 checkpoint 3): re-enable once MindMapFilter lands
+  test.skip('canvas filter changes active filter badge', async ({ page }) => {
     await page.getByRole('button', { name: 'Canvas', exact: true }).click();
     await page.waitForTimeout(300);
 

@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
+    "@types/d3-force": "^3.0.10",
     "@xyflow/react": "^12.10.2",
+    "d3-force": "^3.0.0",
     "jynaxxapps-tokens": "github:Jynax/jynaxxapps-tokens",
     "lucide-react": "^1.7.0",
     "react": "^19.2.4",

@@ -703,4 +703,19 @@ export const metaDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 30, linesAdded: 0, linesDeleted: 0, totalDecisions: 1 }, // estimated
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
+  {
+    date: 'Apr 14',
+    title: 'Mind Map Iteration + Canvas Mode Retirement',
+    projectId: 'meta',
+    phase: 'Shipped',
+    chapterId: 'meta-ch-decision-tree-completeness',
+    blocks: [
+      { id: 'meta-session-89a', dayId: 'Apr 14', label: 'Dependabot Triage + Safe Subset', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 15, linesAdded: 175, linesDeleted: 173, note: 'PR #167 bundled ESLint 10 + TS 6 majors (still blocked upstream per #80) with 4 safe bumps. Closed #167, opened #170 with safe subset: playwright 1.59.1, prettier 3.8.2, typescript-eslint 8.58.2, vite 8.0.8. Flagged #168 prod deps (lucide 1.8 minor, react/react-dom 19.2.5 patch) as safe. PRs #170 and #168 merged.', contextWindowOrigin: false }, // estimated
+      { id: 'meta-session-89b', dayId: 'Apr 14', label: 'Mind Map Iteration 1', workCategory: 'UX', driver: 'collaborative', operator: 'claude-code', timeMinutes: 45, linesAdded: 32, linesDeleted: 11, note: 'Task #91 iter 1 after S88 checkpoint 2 review. Labels-on-interaction-only (new hasSelection prop), force tuning (charge -220→-400, distanceMax 600→1400, collision +15, link 120→180), chapter pills with post-layout vertical deconfliction, fitView padding 0.2→0.35. tsc + build + 83 e2e passed + 3 skipped. PR #171 merged.', contextWindowOrigin: false }, // estimated
+      { id: 'meta-session-89c', dayId: 'Apr 14', label: 'Mind Map Iteration 2', workCategory: 'UX', driver: 'collaborative', operator: 'claude-code', timeMinutes: 75, linesAdded: 150, linesDeleted: 39, note: 'Task #91 iter 2: zoom-aware progressive disclosure (useViewport via onMove), wayfinding via new BaseNode.featured field + 5 seed nodes (All-PRs, Cowork Retired, Security Audit, Playwright, Day/Block Migration), medoid-based chapter anchors, collision-hide replacing vertical push, zoom-fade on chapter pills. Featured nodes render at 22px with purple halo. 5 files, 83 e2e passed. PR #172 merged.', contextWindowOrigin: false }, // estimated
+      { id: 'meta-session-89d', dayId: 'Apr 14', label: 'Canvas Mode Retirement', workCategory: 'Refactor', driver: 'collaborative', operator: 'claude-code', timeMinutes: 60, linesAdded: 15, linesDeleted: 933, note: 'Michael called it post-iter2 review — mind map exposed a data quality problem: most "decision" nodes aren\'t real forks, they\'re tasks that happened to have alternatives listed. Retired canvas mode entirely. Deleted MindMap.tsx, MindMapNode.tsx, mindMapLayout.ts. Removed d3-force + @types/d3-force. Dropped Stacked/Canvas view toggle + dead scaffolding (CategoryBar, CATEGORY_META, getChapterStats, projectSummary useMemo, detailNodes, activeFilterLabel). Reverted BaseNode.featured schema + 5 seed flags. Deleted 9 canvas e2e tests. Bundle 847kB→651kB (-23%). Task #91 moved to done/ with retirement rationale. Task #100 Decision Node Audit queued as follow-up. 77 e2e passed. PR #173 merged.', contextWindowOrigin: false }, // estimated
+    ],
+    metrics: { totalTimeMinutes: 195, linesAdded: 372, linesDeleted: 1156, totalDecisions: 2 }, // estimated
+    driverSummary: { human: 0, ai: 1, collaborative: 3 },
+  },
 ];

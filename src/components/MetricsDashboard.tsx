@@ -84,21 +84,6 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
     return map;
   }, [selected.codeVolume]);
 
-  const totalPRs = useMemo(() => {
-    const prRegex = /\bPRs?\s*#?(\d+)/gi;
-    const prs = new Set<number>();
-    for (const day of selected.days) {
-      for (const block of day.blocks) {
-        if (!block.note) continue;
-        for (const m of block.note.matchAll(prRegex)) prs.add(Number(m[1]));
-      }
-    }
-    for (const bug of selected.bugs) {
-      if (!bug.status) continue;
-      for (const m of bug.status.matchAll(prRegex)) prs.add(Number(m[1]));
-    }
-    return prs.size;
-  }, [selected.days, selected.bugs]);
   const totalHours = useMemo(
     () => Math.round(selected.days.reduce((sum, d) => sum + d.metrics.totalTimeMinutes, 0) / 60),
     [selected.days],
@@ -248,7 +233,6 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
               <SessionsTab
                 sessions={selected.sessions}
                 days={selected.days}
-                totalPRs={totalPRs}
                 totalHours={totalHours}
                 projectId={projectId}
                 sessionFocusMap={sessionFocusMap}

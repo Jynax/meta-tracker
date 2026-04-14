@@ -3,12 +3,11 @@ import { Card, C } from './MetricsCard';
 import { formatShortDate, buildSmoothPath } from './chartUtils';
 import { thinLabels, defaultWindow } from '../utils/brushUtils';
 import type { SessionEntry, SessionTool, SessionDriver } from '../data/metaMetrics';
-import type { DayEntry, WorkDriver, WorkOperator } from '../types/index';
+import type { DayEntry, WorkBlock, WorkDriver, WorkOperator } from '../types/index';
 
 interface SessionsTabProps {
   sessions: SessionEntry[];
   days: DayEntry[];
-  totalPRs: number;
   totalHours: number;
   projectId: string;
   sessionFocusMap: Record<string, string>;
@@ -21,7 +20,7 @@ interface SessionsTabProps {
 }
 
 export default function SessionsTab({
-  sessions, days, totalPRs, totalHours, projectId,
+  sessions, days, totalHours, projectId,
   sessionFocusMap, sessionDateMap, chapterMap,
   onJumpToChapter, hoveredPointIndex, setHoveredPointIndex, setTooltip,
 }: SessionsTabProps) {
@@ -55,15 +54,55 @@ export default function SessionsTab({
     'claude-code': 'Claude Code', 'claude-ai': 'Claude AI', cursor: 'Cursor', manual: 'Manual', mixed: 'Mixed',
   };
 
-  /** Count unique PR numbers mentioned in a day's block notes */
-  const countDayPrs = useCallback((day: DayEntry) => {
-    const prs = new Set<number>();
-    for (const block of day.blocks) {
-      if (!block.note) continue;
-      for (const m of block.note.matchAll(PR_NUMBER_REGEX)) prs.add(Number(m[1]));
+  // Task #99 — PR #165 migrated Sessions tab charts to derive per-block PRs
+  // by regex-scraping `block.note`, which fails for older blocks whose notes
+  // never contained "PR #xxx". The legacy `metaSessions` array still has the
+  // correct per-session counts — we build a lookup from the `sessions` prop
+  // and fall back to regex only for blocks with no legacy entry (post-S76 era).
+  // Full cross-project structural cleanup is queued under Task #96.
+  const legacyBySessionKey = useMemo(() => {
+    const map: Record<string, SessionEntry> = {};
+    for (const s of sessions) {
+      const key = s.session.toLowerCase().replace(/^session\s+/, '').replace(/\s+/g, '-');
+      map[key] = s;
     }
-    return prs.size;
+    return map;
+  }, [sessions]);
+
+  const blockIdToLegacyKey = useCallback((blockId: string): string | null => {
+    const m = blockId.match(/-(?:session-|pre-tracking-)(.+)$/i);
+    return m ? m[1]!.toLowerCase() : null;
   }, []);
+
+  const getBlockPrs = useCallback((block: WorkBlock): number => {
+    const key = blockIdToLegacyKey(block.id);
+    if (key) {
+      const legacy = legacyBySessionKey[key] ?? legacyBySessionKey[`pre-tracking-${key}`];
+      if (legacy) return legacy.prs;
+    }
+    if (!block.note) return 0;
+    const prs = new Set<number>();
+    for (const m of block.note.matchAll(PR_NUMBER_REGEX)) prs.add(Number(m[1]));
+    return prs.size;
+  }, [legacyBySessionKey, blockIdToLegacyKey]);
+
+  /**
+   * Per-block decision counts for a day, preserving the day total.
+   * Uses legacy session data when every block in the day has a match;
+   * otherwise evenly distributes day total across blocks.
+   */
+  const getBlockDecisionsForDay = useCallback((day: DayEntry): number[] => {
+    const legacyValues = day.blocks.map((block) => {
+      const key = blockIdToLegacyKey(block.id);
+      return key ? legacyBySessionKey[key]?.decisions : undefined;
+    });
+    if (legacyValues.every((v) => v !== undefined)) return legacyValues as number[];
+    const n = day.blocks.length || 1;
+    const total = day.metrics.totalDecisions;
+    const base = Math.floor(total / n);
+    const remainder = total - base * n;
+    return day.blocks.map((_, i) => base + (i < remainder ? 1 : 0));
+  }, [legacyBySessionKey, blockIdToLegacyKey]);
 
   const dailyData = useMemo(() => {
     const dayBuckets = new Map<string, { dayLabel: string; prs: number; decisions: number; blockCount: number }>();
@@ -73,13 +112,13 @@ export default function SessionsTab({
       const key = dt.toISOString().slice(0, 10);
       const dayLabel = month + ' ' + parseInt(day, 10);
       const existing = dayBuckets.get(key) ?? { dayLabel, prs: 0, decisions: 0, blockCount: 0 };
-      existing.prs += countDayPrs(d);
+      existing.prs += d.blocks.reduce((sum, b) => sum + getBlockPrs(b), 0);
       existing.decisions += d.metrics.totalDecisions;
       existing.blockCount += d.blocks.length;
       dayBuckets.set(key, existing);
     });
     return Array.from(dayBuckets.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([, v]) => v);
-  }, [days, countDayPrs]);
+  }, [days, getBlockPrs]);
 
   /** Block-level view: one data point per work block */
   const blockData = useMemo(() => {
@@ -90,21 +129,20 @@ export default function SessionsTab({
       return new Date(2026, monthMap[aMonth] ?? 0, parseInt(aDay, 10)).getTime() -
              new Date(2026, monthMap[bMonth] ?? 0, parseInt(bDay, 10)).getTime();
     })) {
-      for (const block of d.blocks) {
-        const prSet = new Set<number>();
-        if (block.note) for (const m of block.note.matchAll(PR_NUMBER_REGEX)) prSet.add(Number(m[1]));
+      const perBlockDecisions = getBlockDecisionsForDay(d);
+      d.blocks.forEach((block, i) => {
         result.push({
           session: block.id,
           label: block.label,
           date: d.date,
-          prs: prSet.size,
-          decisions: d.metrics.totalDecisions,
+          prs: getBlockPrs(block),
+          decisions: perBlockDecisions[i] ?? 0,
           deadEnds: 0,
         });
-      }
+      });
     }
     return result;
-  }, [days]);
+  }, [days, getBlockPrs, getBlockDecisionsForDay]);
 
   const sessionActivityPoints = useMemo(() => {
     const yTicks = 4;
@@ -379,10 +417,15 @@ export default function SessionsTab({
     setExpandedDays(new Set());
   }
 
+  const derivedTotalPRs = useMemo(
+    () => days.reduce((sum, d) => sum + d.blocks.reduce((s, b) => s + getBlockPrs(b), 0), 0),
+    [days, getBlockPrs],
+  );
+
   return (
     <div className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Card label="Total PRs" value={totalPRs} color={C.emerald} />
+        <Card label="Total PRs" value={derivedTotalPRs} color={C.emerald} />
         <Card label="Total Decisions" value={days.reduce((sum, d) => sum + d.metrics.totalDecisions, 0)} color={C.cyan} />
         <Card label="Total Blocks" value={days.reduce((sum, d) => sum + d.blocks.length, 0)} color={C.rose} />
         <Card label="Total Hours" value={`${totalHours}h`} color={C.amber} />

@@ -146,12 +146,12 @@ function runSimulation(nodes: MindMapNodeDatum[], edges: MindMapEdge[]): void {
       'link',
       forceLink<MindMapNodeDatum, SimLink>(links)
         .id((d) => d.id)
-        .distance((l) => 120 - Math.min(70, l.weight * 4))
+        .distance((l) => 180 - Math.min(90, l.weight * 5))
         .strength((l) => Math.min(0.9, 0.15 + l.weight * 0.05)),
     )
-    .force('charge', forceManyBody<MindMapNodeDatum>().strength(-220).distanceMax(600))
+    .force('charge', forceManyBody<MindMapNodeDatum>().strength(-400).distanceMax(1400))
     .force('center', forceCenter(0, 0))
-    .force('collide', forceCollide<MindMapNodeDatum>(NODE_RADIUS + 6).strength(0.9))
+    .force('collide', forceCollide<MindMapNodeDatum>(NODE_RADIUS + 15).strength(0.95))
     .stop();
 
   for (let i = 0; i < SIM_TICKS; i += 1) {

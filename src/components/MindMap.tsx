@@ -36,11 +36,14 @@ function ChapterLabel({ data }: { data: ChapterLabelData }) {
         fontSize: 11,
         fontWeight: 600,
         letterSpacing: 0.3,
-        color: 'var(--theme-text-muted, #94a3b8)',
+        color: 'var(--theme-text-muted, #cbd5e1)',
         textTransform: 'uppercase',
-        opacity: 0.55,
         whiteSpace: 'nowrap',
-        textShadow: '0 1px 3px rgba(15,23,42,0.9)',
+        padding: '3px 9px',
+        borderRadius: 999,
+        backgroundColor: 'rgba(15,23,42,0.78)',
+        border: '1px solid rgba(148,163,184,0.2)',
+        transform: 'translate(-50%, -50%)',
       }}
     >
       {data.name}
@@ -80,6 +83,21 @@ export default function MindMap({ project }: MindMapProps) {
     [selectedId, tier1, tier2],
   );
 
+  const deconflictedCentroids = useMemo(() => {
+    const MIN_GAP = 28;
+    const sorted = [...layout.chapterCentroids].sort((a, b) => a.y - b.y);
+    for (let i = 1; i < sorted.length; i += 1) {
+      const prev = sorted[i - 1];
+      const curr = sorted[i];
+      if (curr.y - prev.y < MIN_GAP) {
+        sorted[i] = { ...curr, y: prev.y + MIN_GAP };
+      }
+    }
+    return sorted;
+  }, [layout.chapterCentroids]);
+
+  const hasSelection = selectedId !== null;
+
   const flowNodes: Node[] = useMemo(() => {
     const base: Node[] = layout.nodes.map((n: MindMapNodeDatum) => {
       const data: MindMapNodeData = {
@@ -88,6 +106,7 @@ export default function MindMap({ project }: MindMapProps) {
         tier: resolveTier(n.id),
         selected: selectedId === n.id,
         hovered: hoveredId === n.id,
+        hasSelection,
         onSelect: handleSelect,
       };
       return {
@@ -100,17 +119,17 @@ export default function MindMap({ project }: MindMapProps) {
       };
     });
 
-    const labels: Node[] = layout.chapterCentroids.map((c) => ({
+    const labels: Node[] = deconflictedCentroids.map((c) => ({
       id: `chapter-label-${c.chapterId}`,
       type: 'chapterLabel',
-      position: { x: c.x - 60, y: c.y - 90 },
+      position: { x: c.x, y: c.y },
       data: { name: c.name, nodeCount: c.nodeCount } as unknown as Record<string, unknown>,
       draggable: false,
       selectable: false,
     }));
 
     return [...labels, ...base];
-  }, [layout, resolveTier, selectedId, hoveredId, handleSelect]);
+  }, [layout.nodes, deconflictedCentroids, resolveTier, selectedId, hoveredId, hasSelection, handleSelect]);
 
   const flowEdges: Edge[] = useMemo(() => {
     return layout.edges.map((e) => {
@@ -152,7 +171,7 @@ export default function MindMap({ project }: MindMapProps) {
         onNodeMouseLeave={() => setHoveredId(null)}
         onPaneClick={() => setSelectedId(null)}
         fitView
-        fitViewOptions={{ padding: 0.2, maxZoom: 1.4, minZoom: 0.3 }}
+        fitViewOptions={{ padding: 0.35, maxZoom: 1.4, minZoom: 0.3 }}
         minZoom={0.3}
         maxZoom={2}
         proOptions={{ hideAttribution: true }}

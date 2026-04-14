@@ -10,8 +10,6 @@ export interface BaseNode {
   title: string;
   description: string;
   lesson?: string;
-  /** Marks a node as a wayfinding anchor on the mind map — always labeled, rendered with emphasis regardless of zoom */
-  featured?: boolean;
 }
 
 export interface DecisionNode extends BaseNode {

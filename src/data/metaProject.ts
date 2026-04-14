@@ -818,7 +818,6 @@ export const metaProject: Project = {
         type: 'decision',
         dayId: 'Mar 5',
         category: 'process',
-        featured: true,
         title: 'All Code Changes Go Through PRs',
         description:
           'Sessions 17-20 used direct commits to main. Session 20 had two failed Cloudflare deploys that went unnoticed. Established that every code change must go through a PR for deploy visibility, metrics accuracy, and rollback ability.',
@@ -842,7 +841,6 @@ export const metaProject: Project = {
         type: 'pivot',
         dayId: 'Mar 5',
         category: 'process',
-        featured: true,
         title: 'Cowork Retired, Claude Code Promoted',
         description:
           'After Sessions 20 and 22, Claude Code CLI proved dramatically faster and more reliable than Cowork browser automation. Formally retired Cowork — rewrote all How We Work content, added Lucide icons, updated all four tabs.',
@@ -962,7 +960,6 @@ export const metaProject: Project = {
         type: 'decision',
         dayId: 'Mar 5',
         category: 'technical',
-        featured: true,
         title: 'Security Audit Across All Projects',
         description:
           'Full security audit across all 3 projects. Found no unsafe code patterns, no hardcoded secrets, no XSS vectors. Only gap: missing HTTP security headers on all Cloudflare Pages deployments.',
@@ -1141,7 +1138,6 @@ export const metaProject: Project = {
         type: 'decision',
         dayId: 'Mar 10',
         category: 'technical',
-        featured: true,
         title: 'Playwright E2E Testing Framework',
         description:
           'Added Playwright with Chromium for end-to-end testing. 27 baseline tests across 4 spec files covering navigation, decision tree, metrics dashboard, and data integrity. Auto-starts Vite dev server.',
@@ -1215,7 +1211,6 @@ export const metaProject: Project = {
         type: 'decision',
         dayId: 'Mar 12',
         category: 'technical',
-        featured: true,
         title: 'Day/Block Data Model Migration',
         description:
           'Replaced session-centric data model with Day/Block hierarchy. Each day groups related work blocks with driver, operator, category, and time data. Migrated all 7 projects across 6 phases (T-1 types, T-2 migration script, T-3 Sessions tab, T-4 decision tree anchoring, T-5 Overview tab, T-6 tracking mode). 4 PRs (#96-100, #102-104).',

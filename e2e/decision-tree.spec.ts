@@ -7,11 +7,6 @@ test.describe('Decision Tree', () => {
 
   // === Baseline tests ===
 
-  test('stacked view is the default tree mode', async ({ page }) => {
-    const stackedBtn = page.getByRole('button', { name: 'Stacked', exact: true });
-    await expect(stackedBtn).toBeVisible();
-  });
-
   test('stacked view renders chapter cards', async ({ page }) => {
     const chapterCards = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/');
     const count = await chapterCards.count();
@@ -24,26 +19,6 @@ test.describe('Decision Tree', () => {
     await page.waitForTimeout(300);
     const expandedIndicator = page.locator('text="\u25BC"');
     await expect(expandedIndicator.first()).toBeVisible();
-  });
-
-  test('can switch to canvas view', async ({ page }) => {
-    const canvasBtn = page.getByRole('button', { name: 'Canvas', exact: true });
-    await canvasBtn.click();
-    const reactFlow = page.locator('.react-flow');
-    await expect(reactFlow).toBeVisible();
-  });
-
-  test('canvas view renders controls', async ({ page }) => {
-    await page.getByRole('button', { name: 'Canvas', exact: true }).click();
-    const controls = page.locator('.react-flow__controls');
-    await expect(controls).toBeVisible();
-  });
-
-  // TODO(#91 checkpoint 3): re-enable once MindMapFilter lands
-  test.skip('canvas view shows filter button', async ({ page }) => {
-    await page.getByRole('button', { name: 'Canvas', exact: true }).click();
-    const filterBtn = page.getByRole('button', { name: 'Filter' });
-    await expect(filterBtn).toBeVisible();
   });
 
   // === Task #54: Stacked Tree Deep Interaction Tests ===
@@ -160,69 +135,4 @@ test.describe('Decision Tree', () => {
     expect(count).toBeGreaterThanOrEqual(0); // No crash is the main assertion
   });
 
-  // === Task #56: Canvas View Deep Interaction Tests ===
-
-  test('canvas view shows summary stats bar', async ({ page }) => {
-    await page.getByRole('button', { name: 'Canvas', exact: true }).click();
-    await page.waitForTimeout(300);
-
-    // Summary bar shows entries count and stat badges
-    const entriesText = page.locator('text=/\\d+ entries/').first();
-    await expect(entriesText).toBeVisible();
-  });
-
-  test('canvas view shows category bar', async ({ page }) => {
-    await page.getByRole('button', { name: 'Canvas', exact: true }).click();
-    await page.waitForTimeout(300);
-
-    // Category legend items below the bar
-    const categoryLegend = page.locator('text=/Technical \\d+/').first();
-    await expect(categoryLegend).toBeVisible();
-  });
-
-  // TODO(#91 checkpoint 3): re-enable once MindMapFilter lands
-  test.skip('canvas filter panel toggles open and closed', async ({ page }) => {
-    await page.getByRole('button', { name: 'Canvas', exact: true }).click();
-    await page.waitForTimeout(300);
-
-    const filterBtn = page.getByRole('button', { name: 'Filter' });
-    await filterBtn.click();
-    await page.waitForTimeout(200);
-
-    // Filter options should appear
-    const allFilter = page.getByRole('button', { name: 'All', exact: true });
-    await expect(allFilter).toBeVisible();
-
-    // Decisions filter should be available
-    const decisionsFilter = page.getByRole('button', { name: 'Decisions', exact: true });
-    await expect(decisionsFilter).toBeVisible();
-  });
-
-  // TODO(#91 checkpoint 3): re-enable once MindMapFilter lands
-  test.skip('canvas filter changes active filter badge', async ({ page }) => {
-    await page.getByRole('button', { name: 'Canvas', exact: true }).click();
-    await page.waitForTimeout(300);
-
-    // Open filters and select "Dead Ends"
-    await page.getByRole('button', { name: 'Filter' }).click();
-    await page.waitForTimeout(200);
-
-    const deadEndsFilter = page.getByRole('button', { name: 'Dead Ends', exact: true });
-    await deadEndsFilter.click();
-    await page.waitForTimeout(300);
-
-    // Active filter label should appear
-    const activeLabel = page.locator('text="Dead Ends"');
-    await expect(activeLabel.first()).toBeVisible();
-  });
-
-  test('canvas ReactFlow renders project nodes', async ({ page }) => {
-    await page.getByRole('button', { name: 'Canvas', exact: true }).click();
-    await page.waitForTimeout(500);
-
-    // ReactFlow should render node elements
-    const nodes = page.locator('.react-flow__node');
-    const count = await nodes.count();
-    expect(count).toBeGreaterThan(0);
-  });
 });

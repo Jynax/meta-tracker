@@ -6,6 +6,7 @@ import {
   type Edge,
   type Node,
   type NodeTypes,
+  type Viewport,
 } from '@xyflow/react';
 import type { Project } from '../types';
 import {
@@ -26,7 +27,15 @@ interface MindMapProps {
 interface ChapterLabelData extends Record<string, unknown> {
   name: string;
   nodeCount: number;
+  opacity: number;
 }
+
+const CHAPTER_MIN_DIST = 110;
+const CHAPTER_FADE_START = 1.0;
+const CHAPTER_FADE_END = 1.7;
+const CHAPTER_MIN_OPACITY = 0.18;
+const CHAPTER_MAX_OPACITY = 0.85;
+const FEATURED_HALO_LEGEND = 'rgba(167,139,250,0.65)';
 
 function ChapterLabel({ data }: { data: ChapterLabelData }) {
   return (
@@ -44,6 +53,8 @@ function ChapterLabel({ data }: { data: ChapterLabelData }) {
         backgroundColor: 'rgba(15,23,42,0.78)',
         border: '1px solid rgba(148,163,184,0.2)',
         transform: 'translate(-50%, -50%)',
+        opacity: data.opacity,
+        transition: 'opacity 150ms ease-out',
       }}
     >
       {data.name}
@@ -56,9 +67,17 @@ const nodeTypes: NodeTypes = {
   chapterLabel: ChapterLabel as unknown as NodeTypes[string],
 };
 
+function computeChapterOpacity(zoom: number): number {
+  if (zoom <= CHAPTER_FADE_START) return CHAPTER_MAX_OPACITY;
+  if (zoom >= CHAPTER_FADE_END) return CHAPTER_MIN_OPACITY;
+  const t = (zoom - CHAPTER_FADE_START) / (CHAPTER_FADE_END - CHAPTER_FADE_START);
+  return CHAPTER_MAX_OPACITY - t * (CHAPTER_MAX_OPACITY - CHAPTER_MIN_OPACITY);
+}
+
 export default function MindMap({ project }: MindMapProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [zoom, setZoom] = useState(1);
 
   const layout = useMemo(() => buildMindMapLayout(project), [project]);
 
@@ -83,20 +102,21 @@ export default function MindMap({ project }: MindMapProps) {
     [selectedId, tier1, tier2],
   );
 
-  const deconflictedCentroids = useMemo(() => {
-    const MIN_GAP = 28;
-    const sorted = [...layout.chapterCentroids].sort((a, b) => a.y - b.y);
-    for (let i = 1; i < sorted.length; i += 1) {
-      const prev = sorted[i - 1];
-      const curr = sorted[i];
-      if (curr.y - prev.y < MIN_GAP) {
-        sorted[i] = { ...curr, y: prev.y + MIN_GAP };
-      }
-    }
-    return sorted;
+  // Collision-hide: keep higher-nodeCount chapters, drop any that sit within
+  // CHAPTER_MIN_DIST of a chapter already placed. Prevents stranded pills
+  // without forcing vertical stacking.
+  const placedCentroids = useMemo(() => {
+    const sorted = [...layout.chapterCentroids].sort((a, b) => b.nodeCount - a.nodeCount);
+    const kept: typeof sorted = [];
+    sorted.forEach((c) => {
+      const tooClose = kept.some((k) => Math.hypot(k.x - c.x, k.y - c.y) < CHAPTER_MIN_DIST);
+      if (!tooClose) kept.push(c);
+    });
+    return kept;
   }, [layout.chapterCentroids]);
 
   const hasSelection = selectedId !== null;
+  const chapterOpacity = computeChapterOpacity(zoom);
 
   const flowNodes: Node[] = useMemo(() => {
     const base: Node[] = layout.nodes.map((n: MindMapNodeDatum) => {
@@ -107,6 +127,9 @@ export default function MindMap({ project }: MindMapProps) {
         selected: selectedId === n.id,
         hovered: hoveredId === n.id,
         hasSelection,
+        featured: n.featured === true,
+        degree: n.degree,
+        zoom,
         onSelect: handleSelect,
       };
       return {
@@ -119,17 +142,17 @@ export default function MindMap({ project }: MindMapProps) {
       };
     });
 
-    const labels: Node[] = deconflictedCentroids.map((c) => ({
+    const labels: Node[] = placedCentroids.map((c) => ({
       id: `chapter-label-${c.chapterId}`,
       type: 'chapterLabel',
       position: { x: c.x, y: c.y },
-      data: { name: c.name, nodeCount: c.nodeCount } as unknown as Record<string, unknown>,
+      data: { name: c.name, nodeCount: c.nodeCount, opacity: chapterOpacity } as unknown as Record<string, unknown>,
       draggable: false,
       selectable: false,
     }));
 
     return [...labels, ...base];
-  }, [layout.nodes, deconflictedCentroids, resolveTier, selectedId, hoveredId, hasSelection, handleSelect]);
+  }, [layout.nodes, placedCentroids, resolveTier, selectedId, hoveredId, hasSelection, zoom, chapterOpacity, handleSelect]);
 
   const flowEdges: Edge[] = useMemo(() => {
     return layout.edges.map((e) => {
@@ -147,6 +170,10 @@ export default function MindMap({ project }: MindMapProps) {
       };
     });
   }, [layout.edges, selectedId]);
+
+  const handleMove = useCallback((_: unknown, viewport: Viewport) => {
+    setZoom(viewport.zoom);
+  }, []);
 
   return (
     <div
@@ -170,6 +197,7 @@ export default function MindMap({ project }: MindMapProps) {
         }}
         onNodeMouseLeave={() => setHoveredId(null)}
         onPaneClick={() => setSelectedId(null)}
+        onMove={handleMove}
         fitView
         fitViewOptions={{ padding: 0.35, maxZoom: 1.4, minZoom: 0.3 }}
         minZoom={0.3}
@@ -210,6 +238,19 @@ export default function MindMap({ project }: MindMapProps) {
             {NODE_TYPE_LABELS[t]}
           </span>
         ))}
+        <span style={{ display: 'flex', alignItems: 'center', gap: 5, marginLeft: 6, paddingLeft: 10, borderLeft: '1px solid rgba(148,163,184,0.25)' }}>
+          <span
+            style={{
+              width: 9,
+              height: 9,
+              borderRadius: '50%',
+              backgroundColor: NODE_TYPE_COLORS.pivot,
+              boxShadow: `0 0 0 2px ${FEATURED_HALO_LEGEND}, 0 0 8px ${FEATURED_HALO_LEGEND}`,
+              display: 'inline-block',
+            }}
+          />
+          Key moment
+        </span>
       </div>
     </div>
   );

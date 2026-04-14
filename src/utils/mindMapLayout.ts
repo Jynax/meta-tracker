@@ -20,6 +20,8 @@ export interface MindMapNodeDatum extends SimulationNodeDatum {
   chapterId: string;
   chapterName: string;
   sessionIndex: number;
+  featured?: boolean;
+  degree: number;
 }
 
 export interface MindMapEdge {
@@ -69,6 +71,8 @@ function flattenProject(project: Project): MindMapNodeDatum[] {
         chapterId: chapter.id,
         chapterName: chapter.name,
         sessionIndex,
+        featured: node.featured,
+        degree: 0,
       };
       if (node.type === 'decision' || node.type === 'pivot') {
         base.chosenPath = node.chosenPath;
@@ -81,6 +85,17 @@ function flattenProject(project: Project): MindMapNodeDatum[] {
     });
   });
   return result;
+}
+
+function annotateDegrees(nodes: MindMapNodeDatum[], edges: MindMapEdge[]): void {
+  const counts = new Map<string, number>();
+  edges.forEach((e) => {
+    counts.set(e.source, (counts.get(e.source) ?? 0) + 1);
+    counts.set(e.target, (counts.get(e.target) ?? 0) + 1);
+  });
+  nodes.forEach((n) => {
+    n.degree = counts.get(n.id) ?? 0;
+  });
 }
 
 function scorePair(a: MindMapNodeDatum, b: MindMapNodeDatum): number {
@@ -160,21 +175,40 @@ function runSimulation(nodes: MindMapNodeDatum[], edges: MindMapEdge[]): void {
 }
 
 function computeCentroids(nodes: MindMapNodeDatum[]): ChapterCentroid[] {
-  const buckets = new Map<string, { name: string; sumX: number; sumY: number; count: number }>();
+  const buckets = new Map<string, { name: string; members: MindMapNodeDatum[] }>();
   nodes.forEach((n) => {
-    const entry = buckets.get(n.chapterId) ?? { name: n.chapterName, sumX: 0, sumY: 0, count: 0 };
-    entry.sumX += n.x ?? 0;
-    entry.sumY += n.y ?? 0;
-    entry.count += 1;
+    const entry = buckets.get(n.chapterId) ?? { name: n.chapterName, members: [] };
+    entry.members.push(n);
     buckets.set(n.chapterId, entry);
   });
-  return Array.from(buckets.entries()).map(([chapterId, v]) => ({
-    chapterId,
-    name: v.name,
-    x: v.count > 0 ? v.sumX / v.count : 0,
-    y: v.count > 0 ? v.sumY / v.count : 0,
-    nodeCount: v.count,
-  }));
+  return Array.from(buckets.entries()).map(([chapterId, v]) => {
+    const count = v.members.length;
+    if (count === 0) {
+      return { chapterId, name: v.name, x: 0, y: 0, nodeCount: 0 };
+    }
+    const sumX = v.members.reduce((s, n) => s + (n.x ?? 0), 0);
+    const sumY = v.members.reduce((s, n) => s + (n.y ?? 0), 0);
+    const cx = sumX / count;
+    const cy = sumY / count;
+    let best = v.members[0];
+    let bestDist = Infinity;
+    v.members.forEach((m) => {
+      const dx = (m.x ?? 0) - cx;
+      const dy = (m.y ?? 0) - cy;
+      const d = dx * dx + dy * dy;
+      if (d < bestDist) {
+        bestDist = d;
+        best = m;
+      }
+    });
+    return {
+      chapterId,
+      name: v.name,
+      x: best.x ?? 0,
+      y: best.y ?? 0,
+      nodeCount: count,
+    };
+  });
 }
 
 function passesFilter(node: MindMapNodeDatum, filters?: MindMapLayoutFilters): boolean {
@@ -192,6 +226,7 @@ export function buildMindMapLayout(project: Project, filters?: MindMapLayoutFilt
   const all = flattenProject(project);
   const nodes = all.filter((n) => passesFilter(n, filters));
   const edges = buildEdges(nodes);
+  annotateDegrees(nodes, edges);
   runSimulation(nodes, edges);
   const chapterCentroids = computeCentroids(nodes);
   return { nodes, edges, chapterCentroids };

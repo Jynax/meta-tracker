@@ -718,4 +718,17 @@ export const metaDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 195, linesAdded: 372, linesDeleted: 1156, totalDecisions: 2 }, // estimated
     driverSummary: { human: 0, ai: 1, collaborative: 3 },
   },
+  {
+    date: 'Apr 15',
+    title: 'Data Model Rethink — Phase 1 Planning + Execution',
+    projectId: 'meta',
+    phase: 'Shipped',
+    chapterId: 'meta-ch-decision-tree-completeness',
+    blocks: [
+      { id: 'meta-session-90', dayId: 'Apr 15', label: 'Phase 1 Planning (spec + plan)', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 180, linesAdded: 0, linesDeleted: 0, note: 'Pure planning session — zero code. Refined spec §6.6 parallel-rails rule + §6.7 archive strategy. Confirmed cross-project epic over new Saga unit (YAGNI). Consolidated 33 MT chapters into 14 epics (10 MT + 4 shared) with Michael era-by-era. Wrote 1914-line Phase 1 plan at plans/2026-04-15-data-model-rethink-phase-1.md with 10 tasks, TDD discipline on generator, full code for every step, scope-discipline check. Self-review passed on all 5 checks. No PR (local files only).', contextWindowOrigin: false }, // estimated
+      { id: 'meta-session-91', dayId: 'Apr 15', label: 'Phase 1 Execution (foundation plumbing)', workCategory: 'Data', driver: 'collaborative', operator: 'claude-code', timeMinutes: 90, linesAdded: 1084, linesDeleted: 1, note: 'Executed all 10 Phase 1 tasks via subagent-driven-development. Branch feat/data-model-rethink-phase-1, 4 commits, 6 files: gray-matter dep, src/types/tracker.ts (Epic/Task/Decision types), scripts/generate-tracker-data.mjs (Node ESM generator with --verify mode), scripts/generate-tracker-data.test.mjs (11 unit tests via node:test, all pass), src/data/generated-tracker-data.ts (first committed generation, 14 epics + 9 tasks, 463 LOC), npm run generate:data script. Locally created 14 epic files + standardized 9 MT task files to YAML frontmatter. tsc clean, 77/77 e2e, --verify smoke passed both positive and semantic-negative tests. No destructive edits — metaProject.ts/metaMetrics.ts untouched. PR #176 merged.', contextWindowOrigin: false }, // estimated
+    ],
+    metrics: { totalTimeMinutes: 270, linesAdded: 1084, linesDeleted: 1, totalDecisions: 1 }, // estimated
+    driverSummary: { human: 0, ai: 0, collaborative: 2 },
+  },
 ];

@@ -6,6 +6,7 @@
 
 import matter from 'gray-matter';
 import fs from 'node:fs';
+import path from 'node:path';
 
 export function parseEpicFile(filepath) {
   const raw = fs.readFileSync(filepath, 'utf-8');
@@ -91,4 +92,98 @@ export const tasks: Task[] = ${JSON.stringify(cleanTasks, null, 2)};
 `;
   fs.writeFileSync(outputPath, content, 'utf-8');
   return content;
+}
+
+const COWORK_ROOT = process.env.COWORK_ROOT || 'C:/Users/jynax/Downloads/Co-work Projects';
+
+export function walkDir(dir, pattern = /\.md$/) {
+  if (!fs.existsSync(dir)) return [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const files = [];
+  for (const e of entries) {
+    const full = path.join(dir, e.name);
+    if (e.isDirectory()) {
+      if (e.name === 'done') continue;
+      files.push(...walkDir(full, pattern));
+    } else if (pattern.test(e.name) && e.name !== 'index.md') {
+      files.push(full);
+    }
+  }
+  return files;
+}
+
+export function collectEpics() {
+  const epicFiles = [
+    ...walkDir(path.join(COWORK_ROOT, 'Meta Tracker', 'epics')),
+    ...walkDir(path.join(COWORK_ROOT, '_Shared', 'epics')),
+  ];
+  return epicFiles.map(parseEpicFile);
+}
+
+export function collectTasks() {
+  const taskFiles = walkDir(path.join(COWORK_ROOT, 'Meta Tracker', 'tasks'));
+  return taskFiles.map(parseTaskFile);
+}
+
+function main() {
+  const args = process.argv.slice(2);
+  const verify = args.includes('--verify');
+
+  const epics = collectEpics();
+  const tasks = collectTasks();
+
+  const blockers = [];
+  const warnings = [];
+  for (const e of epics) {
+    for (const err of validateEpic(e)) {
+      (err.startsWith('WARN:') ? warnings : blockers).push(err);
+    }
+  }
+  for (const t of tasks) {
+    for (const err of validateTask(t)) {
+      (err.startsWith('WARN:') ? warnings : blockers).push(err);
+    }
+  }
+  for (const err of validateReferentialIntegrity(epics, tasks)) {
+    blockers.push(err);
+  }
+
+  if (warnings.length > 0) {
+    console.warn('Warnings:');
+    for (const w of warnings) console.warn(`  ${w}`);
+  }
+
+  if (blockers.length > 0) {
+    console.error('Validation errors:');
+    for (const err of blockers) console.error(`  ${err}`);
+    process.exit(1);
+  }
+
+  const outputPath = 'src/data/generated-tracker-data.ts';
+
+  if (verify) {
+    const existing = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, 'utf-8') : '';
+    const tempPath = outputPath + '.verify-tmp';
+    emit(epics, tasks, tempPath);
+    const fresh = fs.readFileSync(tempPath, 'utf-8');
+    fs.unlinkSync(tempPath);
+
+    const normalize = (s) => s.replace(/generatedAt: string = "[^"]*"/, 'generatedAt: string = "NORMALIZED"');
+
+    if (normalize(existing) === normalize(fresh)) {
+      console.log('✓ generated-tracker-data.ts is up to date');
+      process.exit(0);
+    } else {
+      console.error('✗ generated-tracker-data.ts is stale. Run `npm run generate:data` and commit.');
+      process.exit(1);
+    }
+  }
+
+  emit(epics, tasks, outputPath);
+  console.log(`✓ Wrote ${outputPath} (${epics.length} epics, ${tasks.length} tasks, ${warnings.length} warnings)`);
+}
+
+// Only run main() when invoked directly, not when imported by tests
+if (import.meta.url === `file://${process.argv[1]}` || import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
+  main();
 }

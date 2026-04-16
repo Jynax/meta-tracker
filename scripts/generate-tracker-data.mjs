@@ -96,15 +96,15 @@ export const tasks: Task[] = ${JSON.stringify(cleanTasks, null, 2)};
 
 const COWORK_ROOT = process.env.COWORK_ROOT || 'C:/Users/jynax/Downloads/Co-work Projects';
 
-export function walkDir(dir, pattern = /\.md$/) {
+export function walkDir(dir, pattern = /\.md$/, nameFilter = null) {
   if (!fs.existsSync(dir)) return [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   const files = [];
   for (const e of entries) {
     const full = path.join(dir, e.name);
     if (e.isDirectory()) {
-      files.push(...walkDir(full, pattern));
-    } else if (pattern.test(e.name) && e.name !== 'index.md') {
+      files.push(...walkDir(full, pattern, nameFilter));
+    } else if (pattern.test(e.name) && e.name !== 'index.md' && (!nameFilter || nameFilter.test(e.name))) {
       files.push(full);
     }
   }
@@ -120,7 +120,7 @@ export function collectEpics() {
 }
 
 export function collectTasks() {
-  const taskFiles = walkDir(path.join(COWORK_ROOT, 'Meta Tracker', 'tasks'));
+  const taskFiles = walkDir(path.join(COWORK_ROOT, 'Meta Tracker', 'tasks'), /\.md$/, /^\d/);
   return taskFiles.map(parseTaskFile);
 }
 
@@ -183,6 +183,7 @@ function main() {
 }
 
 // Only run main() when invoked directly, not when imported by tests
-if (import.meta.url === `file://${process.argv[1]}` || import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
+const __argv1 = process.argv[1];
+if (__argv1 && (import.meta.url === `file://${__argv1}` || import.meta.url === `file:///${__argv1.replace(/\\/g, '/')}`)) {
   main();
 }

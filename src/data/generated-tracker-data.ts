@@ -4,7 +4,7 @@
 // See specs/2026-04-14-data-model-rethink.md.
 import type { Epic, Task } from '../types/tracker';
 
-export const generatedAt: string = "2026-04-16T16:39:32.553Z";
+export const generatedAt: string = "2026-04-16T20:39:32.554Z";
 
 export const epics: Epic[] = [
   {
@@ -3274,6 +3274,32 @@ export const tasks: Task[] = [
     "id": 102,
     "project": "meta",
     "touches": [],
+    "epic": "epic-data-model-rethink",
+    "title": "EpicGantt — hide unused legend statuses + investigate missing Cancelled epics",
+    "status": "Queued",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-04-16T00:00:00.000Z",
+      "started": null,
+      "completed": null
+    },
+    "tool": null,
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [
+      101
+    ],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": 102,
+    "project": "meta",
+    "touches": [],
     "epic": "epic-meta-inception",
     "title": "Decisions & Metrics Template Design",
     "status": "Done",
@@ -3331,6 +3357,32 @@ export const tasks: Task[] = [
     "id": 103,
     "project": "meta",
     "touches": [],
+    "epic": "epic-data-model-rethink",
+    "title": "Task→Epic linkage gap — 6 epics show 0 tasks despite real work",
+    "status": "Queued",
+    "priority": "High",
+    "outputs": [],
+    "dates": {
+      "created": "2026-04-16T00:00:00.000Z",
+      "started": null,
+      "completed": null
+    },
+    "tool": null,
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [
+      101
+    ],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": 103,
+    "project": "meta",
+    "touches": [],
     "epic": "epic-meta-inception",
     "title": "Metrics Dashboard & Workflow Design",
     "status": "Done",
@@ -3348,6 +3400,32 @@ export const tasks: Task[] = [
       "actual": null
     },
     "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": 104,
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-data-model-rethink",
+    "title": "Task Throughput chart — rethink: legend, decision pin overlap, title/metric, stacking dimension",
+    "status": "Queued",
+    "priority": "High",
+    "outputs": [],
+    "dates": {
+      "created": "2026-04-16T00:00:00.000Z",
+      "started": null,
+      "completed": null
+    },
+    "tool": null,
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [
+      101
+    ],
     "decisions": [],
     "events": []
   },
@@ -3374,6 +3452,41 @@ export const tasks: Task[] = [
     "depends_on": [],
     "decisions": [],
     "events": []
+  },
+  {
+    "id": 105,
+    "project": "meta",
+    "touches": [],
+    "epic": null,
+    "title": "Bug triage — close stale open/deferred bugs (especially #40, #41)",
+    "status": "Done",
+    "priority": "Low",
+    "outputs": [
+      {
+        "type": "PR",
+        "ref": 180
+      }
+    ],
+    "dates": {
+      "created": "2026-04-16T00:00:00.000Z",
+      "started": "2026-04-16T00:00:00.000Z",
+      "completed": "2026-04-16T00:00:00.000Z"
+    },
+    "tool": "claude-code",
+    "driver": "agent-led",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": [
+      {
+        "type": "completion",
+        "date": "2026-04-16T00:00:00.000Z",
+        "note": "PR #180 merged — closed bugs #37, #39, #40, #41. Bug #4 stays Deferred per memory (no user impact)."
+      }
+    ]
   },
   {
     "id": 105,
@@ -3445,6 +3558,69 @@ export const tasks: Task[] = [
         "note": "Category Tagging (Technical vs. Functional) — Two categories: Technical and Functional"
       }
     ]
+  },
+  {
+    "id": 106,
+    "project": "meta",
+    "touches": [],
+    "epic": null,
+    "title": "Remove animation on collapse/expand (progressive disclosure feels jumpy)",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [
+      {
+        "type": "PR",
+        "ref": 181
+      }
+    ],
+    "dates": {
+      "created": "2026-04-16T00:00:00.000Z",
+      "started": "2026-04-16T00:00:00.000Z",
+      "completed": "2026-04-16T00:00:00.000Z"
+    },
+    "tool": "claude-code",
+    "driver": "agent-led",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": [
+      {
+        "type": "completion",
+        "date": "2026-04-16T00:00:00.000Z",
+        "note": "PR #181 merged — replaced max-height transitions with display:block/none across CodeTab/SessionsTab/BugsTab; removed chevron rotation transitions on disclosure interactions. Button press/hover/data viz transitions preserved."
+      }
+    ]
+  },
+  {
+    "id": 107,
+    "project": "meta",
+    "touches": [
+      "all"
+    ],
+    "epic": "epic-data-model-rethink",
+    "title": "Wire task-file creation into metrics-push (or session-end) — close the new-views reflection gap",
+    "status": "Queued",
+    "priority": "High",
+    "outputs": [],
+    "dates": {
+      "created": "2026-04-16T00:00:00.000Z",
+      "started": null,
+      "completed": null
+    },
+    "tool": null,
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [
+      101
+    ],
+    "decisions": [],
+    "events": []
   },
   {
     "id": 107,

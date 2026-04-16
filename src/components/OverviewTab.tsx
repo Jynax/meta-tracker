@@ -10,6 +10,8 @@ import { noteWorthyProject } from '../data/noteWorthyProject';
 import { onTheMoveProject } from '../data/onTheMoveProject';
 import type { DayEntry, Project, ProjectPhase, WorkCategory } from '../types';
 import { Card, C } from './MetricsCard';
+import EpicGantt from './EpicGantt';
+import { getOverviewStats } from '../utils/trackerDataAdapter';
 import type { CodeVolumeEntry, DerivedMetric, StackEntry } from '../data/metaMetrics';
 
 const CATEGORY_COLORS: Record<WorkCategory, string> = {
@@ -138,15 +140,48 @@ export default function OverviewTab({
   }, [allBlocks]);
   const workMixTotal = workMixCounts.reduce((s, c) => s + c.count, 0);
 
+  const isMeta = projectId === 'meta';
+  const overviewStats = useMemo(() => (isMeta ? getOverviewStats() : null), [isMeta]);
+
   return (
     <div className="space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        <Card label="Days" value={days.length} color={C.cyan} />
-        <Card label="PRs Merged" value={totalPRs} color={C.emerald} />
-        <Card label="Hours" value={`${totalHours}h`} color={C.amber} />
-        <Card label="LOC Written" value={currentLoc.toLocaleString()} color={C.white} />
-        <Card label="Timeline" value={timelineRange} color={C.violet} />
-      </div>
+      {isMeta && <EpicGantt />}
+      {isMeta && overviewStats ? (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <Card
+            label="Active Epics"
+            value={`${overviewStats.activeEpics} of ${overviewStats.totalEpics}`}
+            color={C.cyan}
+          />
+          <Card
+            label="Tasks Completed"
+            value={overviewStats.tasksCompleted}
+            color={C.emerald}
+            detail={overviewStats.tasksThisWeek > 0 ? `${overviewStats.tasksThisWeek} this week` : undefined}
+          />
+          <Card
+            label="Outputs"
+            value={`${overviewStats.totalPRs} PRs`}
+            color={C.amber}
+            detail={`${overviewStats.totalSpecs} spec${overviewStats.totalSpecs === 1 ? '' : 's'} · ${overviewStats.totalDocs} doc${overviewStats.totalDocs === 1 ? '' : 's'}`}
+          />
+          <Card
+            label="Decisions"
+            value={overviewStats.decisionCount}
+            color={C.violet}
+            detail="true forks"
+          />
+          <Card label="Hours" value={`${Math.round(overviewStats.totalHours)}h`} color={C.white} />
+        </div>
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <Card label="Days" value={days.length} color={C.cyan} />
+          <Card label="PRs Merged" value={totalPRs} color={C.emerald} />
+          <Card label="Hours" value={`${totalHours}h`} color={C.amber} />
+          <Card label="LOC Written" value={currentLoc.toLocaleString()} color={C.white} />
+          <Card label="Timeline" value={timelineRange} color={C.violet} />
+        </div>
+      )}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {derived.map((metric) => (
           <Card

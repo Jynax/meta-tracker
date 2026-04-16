@@ -36,6 +36,12 @@ test.describe('Regression Guards', () => {
   });
 
   test('Session Activity chart toggle does not break chart', async ({ page }) => {
+    // MT uses TasksTab in Phase 3; Sessions chart only exists for non-MT projects.
+    const switcher = page.locator('nav[aria-label="Project switcher"]');
+    await switcher.locator('button[aria-haspopup="listbox"]').click();
+    await switcher.getByRole('option', { name: 'BIP' }).click();
+    await expect(page.locator('h1')).toContainText('BIP');
+
     const viewSwitcher = page.locator('nav[aria-label="View switcher"]');
     await viewSwitcher.getByText('Metrics').click();
     await page.getByRole('button', { name: 'Sessions' }).click();

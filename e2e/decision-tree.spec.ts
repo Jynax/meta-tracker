@@ -1,4 +1,13 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+// MT migrated to Epic Tree in Phase 3. Chapter-based assertions need a non-MT
+// project. Switch to BIP for tests that exercise the legacy chapter renderer.
+async function switchToBIP(page: Page) {
+  const switcher = page.locator('nav[aria-label="Project switcher"]');
+  await switcher.locator('button[aria-haspopup="listbox"]').click();
+  await switcher.getByRole('option', { name: 'BIP' }).click();
+  await expect(page.locator('h1')).toContainText('BIP');
+}
 
 test.describe('Decision Tree', () => {
   test.beforeEach(async ({ page }) => {
@@ -8,12 +17,14 @@ test.describe('Decision Tree', () => {
   // === Baseline tests ===
 
   test('stacked view renders chapter cards', async ({ page }) => {
+    await switchToBIP(page);
     const chapterCards = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/');
     const count = await chapterCards.count();
     expect(count).toBeGreaterThan(0);
   });
 
   test('clicking a chapter expands it to show nodes', async ({ page }) => {
+    await switchToBIP(page);
     const firstChapter = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/').first();
     await firstChapter.click();
     await page.waitForTimeout(300);
@@ -24,6 +35,7 @@ test.describe('Decision Tree', () => {
   // === Task #54: Stacked Tree Deep Interaction Tests ===
 
   test('expanding a chapter reveals node entries with type badges', async ({ page }) => {
+    await switchToBIP(page);
     const firstChapter = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/').first();
     await firstChapter.click();
     await page.waitForTimeout(300);
@@ -34,6 +46,7 @@ test.describe('Decision Tree', () => {
   });
 
   test('expanded chapter nodes show category pills', async ({ page }) => {
+    await switchToBIP(page);
     const firstChapter = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/').first();
     await firstChapter.click();
     await page.waitForTimeout(300);
@@ -44,6 +57,7 @@ test.describe('Decision Tree', () => {
   });
 
   test('clicking a node expands its detail view', async ({ page }) => {
+    await switchToBIP(page);
     // Expand first chapter
     const firstChapter = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/').first();
     await firstChapter.click();
@@ -61,30 +75,35 @@ test.describe('Decision Tree', () => {
   });
 
   test('day header shows chapter name context', async ({ page }) => {
+    await switchToBIP(page);
     // Day headers show the chapter name as context on the right side
     const dayHeader = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/').first();
     await expect(dayHeader).toBeVisible();
   });
 
   test('chapter summary bar shows entry stats', async ({ page }) => {
+    await switchToBIP(page);
     // Summary stats like "X entries", possibly "Y dead ends", "Z discoveries"
     const entriesText = page.locator('text=/\\d+ entries/').first();
     await expect(entriesText).toBeVisible();
   });
 
   test('stacked view summary shows total entries count', async ({ page }) => {
+    await switchToBIP(page);
     // Top summary card shows total entries across all chapters
     const totalEntries = page.locator('text=/\\d+ entries/').first();
     await expect(totalEntries).toBeVisible();
   });
 
   test('stacked view summary shows category legend', async ({ page }) => {
+    await switchToBIP(page);
     // Category legend with colored dots: Technical, Functional, UX/Design, Process
     const technicalLegend = page.locator('text=/Technical \\(\\d+\\)/').first();
     await expect(technicalLegend).toBeVisible();
   });
 
   test('collapsing an expanded chapter hides its nodes', async ({ page }) => {
+    await switchToBIP(page);
     const firstChapter = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/').first();
 
     // Expand
@@ -100,6 +119,7 @@ test.describe('Decision Tree', () => {
   });
 
   test('multiple day groups can be expanded simultaneously', async ({ page }) => {
+    await switchToBIP(page);
     // Day groups show date headers like "Mar 11", "Mar 10", etc.
     const dayHeaders = page.locator('button >> text=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d/');
     const count = await dayHeaders.count();

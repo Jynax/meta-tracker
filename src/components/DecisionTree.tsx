@@ -25,6 +25,7 @@ import StackedTreeView from './StackedTreeView';
 import { ExternalLink } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import ChangelogPage from './ChangelogPage';
+import { getEpicTree } from '../utils/trackerDataAdapter';
 
 const FILTERS: Array<{ id: FilterType; label: string }> = [
   { id: 'all', label: 'All' },
@@ -64,6 +65,7 @@ export default function DecisionTree() {
   const [projectDropdownOpen, setProjectDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set());
+  const [expandedEpics, setExpandedEpics] = useState<Set<string>>(new Set());
   const [expandedNode, setExpandedNode] = useState<string | null>(null);
 
   const toggleChapter = useCallback((chapterId: string) => {
@@ -71,6 +73,15 @@ export default function DecisionTree() {
       const next = new Set(current);
       if (next.has(chapterId)) next.delete(chapterId);
       else next.add(chapterId);
+      return next;
+    });
+  }, []);
+
+  const toggleEpic = useCallback((epicId: string) => {
+    setExpandedEpics((current) => {
+      const next = new Set(current);
+      if (next.has(epicId)) next.delete(epicId);
+      else next.add(epicId);
       return next;
     });
   }, []);
@@ -128,6 +139,9 @@ export default function DecisionTree() {
     });
     return map;
   }, [activeDaysForTree]);
+
+  const isMeta = activeProject.id === 'meta';
+  const epicTree = useMemo(() => (isMeta ? getEpicTree() : undefined), [isMeta]);
 
   return (
     <section className="mx-auto max-w-[1800px] px-4 py-8 text-slate-100 sm:px-8">
@@ -241,7 +255,7 @@ export default function DecisionTree() {
                 borderBottomColor: view === 'tree' ? 'var(--theme-cyan)' : 'transparent',
               }}
             >
-              🌳 Decision Tree
+              🌳 {isMeta ? 'Epic Tree' : 'Decision Tree'}
             </button>
             <button
               onClick={() => setView('metrics')}
@@ -267,7 +281,7 @@ export default function DecisionTree() {
       </header>
 
       {view === 'tree' && (
-        <ErrorBoundary fallbackLabel="Decision Tree">
+        <ErrorBoundary fallbackLabel={isMeta ? 'Epic Tree' : 'Decision Tree'}>
           <StackedTreeView
             project={activeProject}
             filter={filter}
@@ -279,6 +293,10 @@ export default function DecisionTree() {
             highlightChapter={null}
             days={activeDaysForTree}
             dayPhaseMap={dayPhaseMap}
+            mode={isMeta ? 'epics' : 'chapters'}
+            epicTree={epicTree}
+            expandedEpics={expandedEpics}
+            onEpicToggle={toggleEpic}
           />
         </ErrorBoundary>
       )}

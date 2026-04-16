@@ -103,7 +103,8 @@ test.describe('Cross-Project Insights', () => {
     await switcher.getByRole('option', { name: 'Meta Tracker' }).click();
     const viewSwitcher = page.locator('nav[aria-label="View switcher"]');
     await expect(viewSwitcher).toBeVisible();
-    await expect(viewSwitcher.getByText('Decision Tree')).toBeVisible();
+    // MT uses Epic Tree label after Phase 3.
+    await expect(viewSwitcher.getByText(/Epic Tree|Decision Tree/)).toBeVisible();
     await expect(viewSwitcher.getByText('Metrics')).toBeVisible();
   });
 });

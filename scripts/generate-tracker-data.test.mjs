@@ -10,6 +10,7 @@ import {
   validateTask,
   validateReferentialIntegrity,
   emit,
+  walkDir,
 } from './generate-tracker-data.mjs';
 
 const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tracker-gen-test-'));
@@ -240,4 +241,23 @@ test('emit produces deterministic TypeScript with sorted epics and tasks', () =>
   // _source and body stripped
   assert.ok(!content.includes('_source'));
   assert.ok(!content.includes('"body":'));
+});
+
+test('walkDir includes files from done/ subdirectory', (t) => {
+  const tmpWalkDir = fs.mkdtempSync(path.join(os.tmpdir(), 'walkdir-done-'));
+  const doneDir = path.join(tmpWalkDir, 'done');
+  fs.mkdirSync(doneDir);
+  fs.writeFileSync(path.join(tmpWalkDir, 'active.md'), '---\nid: 1\n---\n# Active');
+  fs.writeFileSync(path.join(doneDir, 'completed.md'), '---\nid: 2\n---\n# Done');
+  fs.writeFileSync(path.join(tmpWalkDir, 'index.md'), '# Index'); // should be skipped
+
+  const files = walkDir(tmpWalkDir);
+  const names = files.map(f => path.basename(f));
+
+  assert.ok(names.includes('active.md'), 'should include active task');
+  assert.ok(names.includes('completed.md'), 'should include done task');
+  assert.ok(!names.includes('index.md'), 'should skip index.md');
+  assert.strictEqual(files.length, 2);
+
+  fs.rmSync(tmpWalkDir, { recursive: true });
 });

@@ -103,7 +103,6 @@ export function walkDir(dir, pattern = /\.md$/) {
   for (const e of entries) {
     const full = path.join(dir, e.name);
     if (e.isDirectory()) {
-      if (e.name === 'done') continue;
       files.push(...walkDir(full, pattern));
     } else if (pattern.test(e.name) && e.name !== 'index.md') {
       files.push(full);

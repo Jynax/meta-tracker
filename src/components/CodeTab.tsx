@@ -185,7 +185,7 @@ export default function CodeTab({
           }}
         >
           <div className="mb-1 flex items-center gap-1 text-xs" style={{ color: C.muted }}>
-            <span style={{ width: 12, display: 'inline-block', color: C.muted, transform: isExpandable && isRowExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 150ms cubic-bezier(0.23, 1, 0.32, 1)' }}>
+            <span style={{ width: 12, display: 'inline-block', color: C.muted, transform: isExpandable && isRowExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>
               {isExpandable ? '\u25B6' : ''}
             </span>
             <span>{row.label}</span>
@@ -196,7 +196,7 @@ export default function CodeTab({
           </div>
         </button>
 
-        <div style={{ maxHeight: isRowExpanded ? 500 : 0, overflow: 'hidden', transition: 'max-height 150ms cubic-bezier(0.23, 1, 0.32, 1)' }}>
+        <div style={{ display: isRowExpanded ? 'block' : 'none' }}>
           {row.kind === 'range' && row.dates.map((dateGroup) => {
             const isDateExpanded = expandedCodeRows.has(dateGroup.date);
             const isNestedExpandable = dateGroup.entries.length > 1;
@@ -217,7 +217,7 @@ export default function CodeTab({
                   style={{ cursor: isNestedExpandable ? 'pointer' : 'default' }}
                 >
                   <div className="mb-1 flex items-center gap-1 text-xs" style={{ color: C.muted }}>
-                    <span style={{ width: 12, display: 'inline-block', transform: isNestedExpandable && isDateExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 150ms cubic-bezier(0.23, 1, 0.32, 1)' }}>
+                    <span style={{ width: 12, display: 'inline-block', transform: isNestedExpandable && isDateExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>
                       {isNestedExpandable ? '\u25B6' : ''}
                     </span>
                     <span>{dateGroup.date}</span>
@@ -228,7 +228,7 @@ export default function CodeTab({
                   </div>
                 </button>
 
-                <div style={{ maxHeight: isDateExpanded ? 400 : 0, overflow: 'hidden', transition: 'max-height 150ms cubic-bezier(0.23, 1, 0.32, 1)' }}>
+                <div style={{ display: isDateExpanded ? 'block' : 'none' }}>
                   {dateGroup.entries.map((entry) => (
                     <div
                       key={entry.session}

@@ -1,4 +1,16 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+// MT renames the Sessions tab to "Tasks" in Phase 3 and replaces the SessionsTab
+// component with TasksTab. Tests that exercise legacy Sessions UI need a non-MT
+// project (e.g. BIP).
+async function switchToBIPMetrics(page: Page) {
+  const switcher = page.locator('nav[aria-label="Project switcher"]');
+  await switcher.locator('button[aria-haspopup="listbox"]').click();
+  await switcher.getByRole('option', { name: 'BIP' }).click();
+  await expect(page.locator('h1')).toContainText('BIP');
+  const viewSwitcher = page.locator('nav[aria-label="View switcher"]');
+  await viewSwitcher.getByText('Metrics').click();
+}
 
 test.describe('Metrics Dashboard', () => {
   test.beforeEach(async ({ page }) => {
@@ -18,7 +30,10 @@ test.describe('Metrics Dashboard', () => {
     await expect(page.getByRole('button', { name: 'Overview' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Code' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Bugs' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Sessions' })).toBeVisible();
+    // MT renames Sessions → Tasks; non-MT projects keep "Sessions".
+    await expect(
+      page.getByRole('button', { name: /^(Tasks|Sessions)$/ }),
+    ).toBeVisible();
   });
 
   test('overview tab renders chart content', async ({ page }) => {
@@ -42,6 +57,8 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('sessions tab renders session cards', async ({ page }) => {
+    // Switch to BIP (non-MT project still uses SessionsTab).
+    await switchToBIPMetrics(page);
     await page.getByRole('button', { name: 'Sessions' }).click();
     await page.waitForTimeout(300);
     const content = page.locator('[class*="rounded-2xl"]').first();
@@ -62,12 +79,24 @@ test.describe('Metrics Dashboard', () => {
   // === Task #55: Overview Tab Deep Tests ===
 
   test('overview tab shows summary stat cards', async ({ page }) => {
-    // Use locators that avoid matching tab buttons — look for the card labels
+    // MT replaced legacy stat cards with task-model cards; test against BIP for legacy cards.
+    await switchToBIPMetrics(page);
     await expect(page.locator('text="PRs Merged"')).toBeVisible();
     await expect(page.locator('text="LOC Written"')).toBeVisible();
     await expect(page.locator('text="Timeline"')).toBeVisible();
-    // "Sessions" and "Hours" labels exist in stat cards
     await expect(page.locator('text="Hours"').first()).toBeVisible();
+  });
+
+  test('MT overview tab shows task-model stat cards', async ({ page }) => {
+    // Phase 3: MT shows Active Epics / Tasks Completed / Outputs / Decisions.
+    await expect(page.locator('text="Active Epics"')).toBeVisible();
+    await expect(page.locator('text="Tasks Completed"')).toBeVisible();
+    await expect(page.locator('text="Outputs"')).toBeVisible();
+    await expect(page.locator('text="Decisions"').first()).toBeVisible();
+  });
+
+  test('MT overview tab shows Epic Timeline (Gantt)', async ({ page }) => {
+    await expect(page.locator('text="Epic Timeline"')).toBeVisible();
   });
 
   test('overview tab shows derived metrics', async ({ page }) => {
@@ -185,9 +214,10 @@ test.describe('Metrics Dashboard', () => {
     await expect(table).toBeVisible();
   });
 
-  // === Task #55: Sessions Tab Deep Tests ===
+  // === Task #55: Sessions Tab Deep Tests (non-MT) ===
 
   test('sessions tab shows header stat cards', async ({ page }) => {
+    await switchToBIPMetrics(page);
     await page.getByRole('button', { name: 'Sessions' }).click();
     await page.waitForTimeout(300);
 
@@ -197,6 +227,7 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('sessions tab shows Session Activity chart', async ({ page }) => {
+    await switchToBIPMetrics(page);
     await page.getByRole('button', { name: 'Sessions' }).click();
     await page.waitForTimeout(300);
 
@@ -205,11 +236,11 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('sessions tab chart toggle switches between By Day and By Session', async ({ page }) => {
+    await switchToBIPMetrics(page);
     await page.getByRole('button', { name: 'Sessions' }).click();
     await page.waitForTimeout(300);
 
     const byDayBtn = page.locator('button:has-text("By Day")');
-    const bySessionBtn = page.locator('button:has-text("By Session")');
 
     if (await byDayBtn.count() > 0) {
       await byDayBtn.click();
@@ -220,6 +251,7 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('sessions tab has collapsible day rows', async ({ page }) => {
+    await switchToBIPMetrics(page);
     await page.getByRole('button', { name: 'Sessions' }).click();
     await page.waitForTimeout(300);
 
@@ -230,6 +262,7 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('sessions tab day row expands to show work blocks', async ({ page }) => {
+    await switchToBIPMetrics(page);
     await page.getByRole('button', { name: 'Sessions' }).click();
     await page.waitForTimeout(300);
 
@@ -242,10 +275,34 @@ test.describe('Metrics Dashboard', () => {
     expect(await workBlocks.count()).toBeGreaterThan(0);
   });
 
+  // === MT Tasks Tab Tests ===
+
+  test('MT tasks tab renders weekly throughput chart', async ({ page }) => {
+    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.waitForTimeout(300);
+    const chart = page.locator('svg[aria-label="Weekly task throughput chart"]');
+    await expect(chart).toBeVisible();
+  });
+
+  test('MT tasks tab shows task throughput heading', async ({ page }) => {
+    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.waitForTimeout(300);
+    await expect(page.locator('text="Task Throughput"').first()).toBeVisible();
+  });
+
+  test('MT tasks tab has expandable week sections', async ({ page }) => {
+    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.waitForTimeout(300);
+    const weekSections = page.locator('button:has-text("Week of")');
+    const count = await weekSections.count();
+    expect(count).toBeGreaterThan(0);
+  });
+
   // === Task #55: Cross-Tab Tests ===
 
   test('rapid tab switching does not crash', async ({ page }) => {
-    const tabs = ['Overview', 'Code', 'Bugs', 'Sessions', 'Overview', 'Bugs', 'Code', 'Sessions'];
+    // Use MT's actual tab labels (Tasks instead of Sessions for MT).
+    const tabs = ['Overview', 'Code', 'Bugs', 'Tasks', 'Overview', 'Bugs', 'Code', 'Tasks'];
     for (const tab of tabs) {
       await page.getByRole('button', { name: tab, exact: true }).click();
       await page.waitForTimeout(150);

@@ -28,14 +28,17 @@ test.describe('Navigation & Layout', () => {
     await expect(page.locator('h1')).toContainText('BIP');
   });
 
-  test('view switcher shows Decision Tree and Metrics tabs', async ({ page }) => {
+  test('view switcher shows tree view and Metrics tabs', async ({ page }) => {
+    // MT renames "Decision Tree" → "Epic Tree" in Phase 3.
     const viewSwitcher = page.locator('nav[aria-label="View switcher"]');
-    await expect(viewSwitcher.getByText('Decision Tree')).toBeVisible();
+    await expect(viewSwitcher.getByText(/Epic Tree|Decision Tree/)).toBeVisible();
     await expect(viewSwitcher.getByText('Metrics')).toBeVisible();
   });
 
-  test('Decision Tree is the default view', async ({ page }) => {
-    const treeTab = page.locator('nav[aria-label="View switcher"] button', { hasText: 'Decision Tree' });
+  test('tree view is the default view', async ({ page }) => {
+    const treeTab = page.locator('nav[aria-label="View switcher"] button', {
+      hasText: /Epic Tree|Decision Tree/,
+    });
     await expect(treeTab).toHaveAttribute('aria-current', 'page');
   });
 

@@ -194,7 +194,7 @@ export default function DecisionTree() {
               aria-expanded={projectDropdownOpen}
             >
               {activeProject.name}
-              <span style={{ fontSize: 10, color: 'var(--theme-text-muted)', transform: projectDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 150ms cubic-bezier(0.23, 1, 0.32, 1)' }}>&#9660;</span>
+              <span style={{ fontSize: 10, color: 'var(--theme-text-muted)', transform: projectDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>&#9660;</span>
             </button>
             {projectDropdownOpen && (
               <div

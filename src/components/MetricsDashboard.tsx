@@ -23,6 +23,7 @@ import OverviewTab from './OverviewTab';
 import CodeTab from './CodeTab';
 import BugsTab from './BugsTab';
 import SessionsTab from './SessionsTab';
+import TasksTab from './TasksTab';
 import InsightsView from './InsightsView';
 
 type MetricsTab = 'overview' | 'code' | 'bugs' | 'sessions';
@@ -35,13 +36,6 @@ interface MetricsDashboardProps {
   onProjectChange?: (projectId: string) => void;
 }
 
-const TABS: Array<{ id: MetricsTab; label: string }> = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'code', label: 'Code' },
-  { id: 'bugs', label: 'Bugs' },
-  { id: 'sessions', label: 'Sessions' },
-];
-
 export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview', onTabChange, onProjectChange }: MetricsDashboardProps) {
   const [tab, setTab] = useState<MetricsTab>(initialTab);
   const [hoveredPointIndex, setHoveredPointIndex] = useState<number | null>(null);
@@ -51,6 +45,18 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   useEffect(() => {
     setTab(initialTab);
   }, [initialTab]);
+
+  // For MT, the last tab is labeled "Tasks" and renders TasksTab from the new
+  // Epic/Task data model. All other projects keep the legacy "Sessions" tab
+  // and SessionsTab. Internal tab id stays 'sessions' to avoid state migration
+  // when switching between MT and non-MT projects.
+  const isMeta = projectId === 'meta';
+  const TABS: Array<{ id: MetricsTab; label: string }> = useMemo(() => [
+    { id: 'overview', label: 'Overview' },
+    { id: 'code', label: 'Code' },
+    { id: 'bugs', label: 'Bugs' },
+    { id: 'sessions', label: isMeta ? 'Tasks' : 'Sessions' },
+  ], [isMeta]);
 
   const selected = useMemo(() => {
     const projectData: Record<string, { project: typeof bipProject; codeVolume: typeof bipCodeVolume; sessions: typeof bipSessions; bugs: typeof bipBugs; derived: typeof bipDerived; stack: typeof bipStack; dateRange: typeof bipDateRange; days: typeof bipDays }> = {
@@ -229,7 +235,11 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
               />
             )}
 
-            {tab === 'sessions' && (
+            {tab === 'sessions' && isMeta && (
+              <TasksTab projectId={projectId} setTooltip={setTooltip} />
+            )}
+
+            {tab === 'sessions' && !isMeta && (
               <SessionsTab
                 sessions={selected.sessions}
                 days={selected.days}

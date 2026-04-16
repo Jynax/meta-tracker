@@ -4,6 +4,9 @@
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {
   parseBoldMarkdown,
   normalizeDate,
@@ -13,6 +16,7 @@ import {
   normalizeStatus,
   normalizePriority,
   escapeYaml,
+  convertDoneTaskFile,
   TASK_TO_SESSION,
   SESSION_TO_CHAPTER,
   CHAPTER_TO_EPIC,
@@ -276,6 +280,52 @@ describe('escapeYaml', () => {
 
   it('leaves simple strings unwrapped', () => {
     assert.equal(escapeYaml('Simple Title'), 'Simple Title');
+  });
+});
+
+// ── convertDoneTaskFile ────────────────────────────────────────────
+
+describe('convertDoneTaskFile', () => {
+  it('converts an old-format file and preserves prose', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'convert-'));
+    const filePath = path.join(tmpDir, '48-designer-credit-header.md');
+    fs.writeFileSync(filePath, `# Task #48 — Add Designer Credit to Header
+
+**Status:** Done
+**Priority:** Low
+**Depends On:** None
+**Created:** Mar 8, 2026
+**Completed:** Mar 9, 2026
+**Executed by:** Claude Code
+**PR:** #78
+
+## Brief
+
+Update the "Built with" attribution line.
+`);
+
+    const result = convertDoneTaskFile(filePath);
+    assert.ok(result.startsWith('---\n'));
+    assert.ok(result.includes('id: 48'));
+    assert.ok(result.includes('epic: epic-meta-process-foundation'));
+    assert.ok(result.includes('status: Done'));
+    assert.ok(result.includes('- { type: PR, ref: 78 }'));
+    assert.ok(result.includes('## Brief'));
+    assert.ok(result.includes('Update the "Built with" attribution line.'));
+
+    fs.rmSync(tmpDir, { recursive: true });
+  });
+
+  it('skips files that already have YAML frontmatter', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'convert-skip-'));
+    const filePath = path.join(tmpDir, '99-test.md');
+    const yamlContent = '---\nid: 99\ntitle: Test\n---\n# Body';
+    fs.writeFileSync(filePath, yamlContent);
+
+    const result = convertDoneTaskFile(filePath);
+    assert.strictEqual(result, yamlContent); // unchanged
+
+    fs.rmSync(tmpDir, { recursive: true });
   });
 });
 

@@ -2,6 +2,9 @@
 // Phase 2 Task 3 — Backfill historical tasks from bold-markdown format
 // to YAML frontmatter format compatible with generate-tracker-data.mjs.
 
+import fs from 'node:fs';
+import path from 'node:path';
+
 // ── Lookup Maps ────────────────────────────────────────────────────
 
 /** Task ID → Session number */
@@ -475,4 +478,95 @@ ${body}
 `.trimEnd() + '\n';
 
   return frontmatter;
+}
+
+// ── convertDoneTaskFile ────────────────────────────────────────────
+
+/**
+ * Convert a single done/ task file from bold-markdown to YAML frontmatter.
+ * Returns the file content unchanged if it already has YAML frontmatter.
+ * @param {string} filepath — absolute path to the .md file
+ * @returns {string}
+ */
+export function convertDoneTaskFile(filepath) {
+  const content = fs.readFileSync(filepath, 'utf-8');
+
+  // Skip files that already have YAML frontmatter
+  if (content.trimStart().startsWith('---')) {
+    return content;
+  }
+
+  // Extract ID from filename if not in H1
+  const filename = path.basename(filepath, '.md');
+  const fileIdMatch = filename.match(/^(\d+)/);
+
+  const parsed = parseBoldMarkdown(content);
+
+  // Use filename ID as fallback
+  if (parsed.id === null && fileIdMatch) {
+    parsed.id = parseInt(fileIdMatch[1], 10);
+  }
+
+  // Enrich with resolved epic and normalized dates/tool
+  parsed.epic = resolveEpic(parsed.id);
+  parsed.created = normalizeDate(parsed.created);
+  parsed.started = normalizeDate(parsed.started);
+  parsed.completed = normalizeDate(parsed.completed);
+  parsed.executedBy = mapTool(parsed.executedBy);
+
+  return buildYamlFrontmatter(parsed);
+}
+
+// ── main (CLI entry point) ─────────────────────────────────────────
+
+const COWORK_ROOT = process.env.COWORK_ROOT || 'C:/Users/jynax/Downloads/Co-work Projects';
+
+function main() {
+  const args = process.argv.slice(2);
+  const dryRun = args.includes('--dry-run');
+  const mode = args.includes('--convert-done') ? 'convert-done'
+             : args.includes('--create-historical') ? 'create-historical'
+             : args.includes('--all') ? 'all'
+             : null;
+
+  if (!mode) {
+    console.log('Usage: node backfill-historical-tasks.mjs [--convert-done|--create-historical|--all] [--dry-run]');
+    process.exit(1);
+  }
+
+  const doneDir = path.join(COWORK_ROOT, 'Meta Tracker', 'tasks', 'done');
+
+  if (mode === 'convert-done' || mode === 'all') {
+    console.log(`Converting done task files in ${doneDir}...`);
+    const files = fs.readdirSync(doneDir).filter(f => f.match(/^\d+.*\.md$/));
+    let converted = 0, skipped = 0, errors = 0;
+
+    for (const file of files) {
+      const filepath = path.join(doneDir, file);
+      try {
+        const content = fs.readFileSync(filepath, 'utf-8');
+        if (content.trimStart().startsWith('---')) {
+          skipped++;
+          continue;
+        }
+        const result = convertDoneTaskFile(filepath);
+        if (dryRun) {
+          console.log(`  [dry-run] Would convert: ${file}`);
+        } else {
+          fs.writeFileSync(filepath, result, 'utf-8');
+          console.log(`  Converted: ${file}`);
+        }
+        converted++;
+      } catch (err) {
+        console.error(`  ERROR converting ${file}: ${err.message}`);
+        errors++;
+      }
+    }
+    console.log(`Done: ${converted} converted, ${skipped} already YAML, ${errors} errors`);
+  }
+}
+
+// Only run main() when invoked directly
+if (import.meta.url === `file://${process.argv[1]}` || import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
+  main();
 }

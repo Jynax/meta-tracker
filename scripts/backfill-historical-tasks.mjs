@@ -302,7 +302,7 @@ export function escapeYaml(str) {
  * @returns {object}
  */
 export function parseBoldMarkdown(content) {
-  const lines = content.split('\n');
+  const lines = content.split('\n').map(l => l.replace(/\r$/, ''));
 
   let id = null;
   let title = '';
@@ -567,6 +567,7 @@ function main() {
 }
 
 // Only run main() when invoked directly
-if (import.meta.url === `file://${process.argv[1]}` || import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
+const __argv1 = process.argv[1];
+if (__argv1 && (import.meta.url === `file://${__argv1}` || import.meta.url === `file:///${__argv1.replace(/\\/g, '/')}`)) {
   main();
 }

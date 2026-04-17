@@ -4,7 +4,7 @@
 // See specs/2026-04-14-data-model-rethink.md.
 import type { Epic, Task } from '../types/tracker';
 
-export const generatedAt: string = "2026-04-17T14:53:32.503Z";
+export const generatedAt: string = "2026-04-17T16:24:22.582Z";
 
 export const epics: Epic[] = [
   {
@@ -3985,6 +3985,30 @@ export const tasks: Task[] = [
         "note": "Hover Tooltips Added Across All Charts — Unified tooltip pattern with dark blue hover highlight"
       }
     ]
+  },
+  {
+    "id": "meta-112",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-data-model-rethink",
+    "title": "Populate epic-shared-project-milestones with milestone task files",
+    "status": "Queued",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-04-17",
+      "started": null,
+      "completed": null
+    },
+    "tool": null,
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
   },
   {
     "id": "meta-112",

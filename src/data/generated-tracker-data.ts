@@ -4,7 +4,7 @@
 // See specs/2026-04-14-data-model-rethink.md.
 import type { Epic, Task } from '../types/tracker';
 
-export const generatedAt: string = "2026-04-17T12:42:38.369Z";
+export const generatedAt: string = "2026-04-17T13:26:36.573Z";
 
 export const epics: Epic[] = [
   {
@@ -235,7 +235,7 @@ export const epics: Epic[] = [
 
 export const tasks: Task[] = [
   {
-    "id": 1,
+    "id": "meta-1",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -259,7 +259,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 3,
+    "id": "meta-3",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -283,7 +283,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 3,
+    "id": "meta-3",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -318,7 +318,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 4,
+    "id": "meta-4",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -348,7 +348,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 5,
+    "id": "meta-5",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -372,7 +372,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 6,
+    "id": "meta-6",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -402,7 +402,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 9,
+    "id": "meta-9",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -426,7 +426,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 10,
+    "id": "meta-10",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -455,7 +455,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 11,
+    "id": "meta-11",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -490,7 +490,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 12,
+    "id": "meta-12",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -520,7 +520,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 13,
+    "id": "meta-13",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -556,7 +556,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 14,
+    "id": "meta-14",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -576,13 +576,13 @@ export const tasks: Task[] = [
       "actual": null
     },
     "depends_on": [
-      15
+      "meta-15"
     ],
     "decisions": [],
     "events": []
   },
   {
-    "id": 15,
+    "id": "meta-15",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -612,7 +612,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 16,
+    "id": "meta-16",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -632,13 +632,13 @@ export const tasks: Task[] = [
       "actual": null
     },
     "depends_on": [
-      15
+      "meta-15"
     ],
     "decisions": [],
     "events": []
   },
   {
-    "id": 17,
+    "id": "meta-17",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -668,7 +668,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 18,
+    "id": "meta-18",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -709,7 +709,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 19,
+    "id": "meta-19",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -746,7 +746,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 20,
+    "id": "meta-20",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -770,7 +770,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 21,
+    "id": "meta-21",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -803,7 +803,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 22,
+    "id": "meta-22",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -828,7 +828,7 @@ export const tasks: Task[] = [
       "actual": null
     },
     "depends_on": [
-      21
+      "meta-21"
     ],
     "decisions": [
       {
@@ -851,7 +851,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 23,
+    "id": "meta-23",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -886,7 +886,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 24,
+    "id": "meta-24",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -925,7 +925,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 25,
+    "id": "meta-25",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -954,7 +954,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 26,
+    "id": "meta-26",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -984,7 +984,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 27,
+    "id": "meta-27",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1013,7 +1013,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 28,
+    "id": "meta-28",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1048,7 +1048,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 29,
+    "id": "meta-29",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1083,7 +1083,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 30,
+    "id": "meta-30",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1118,7 +1118,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 31,
+    "id": "meta-31",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1143,7 +1143,7 @@ export const tasks: Task[] = [
       "actual": null
     },
     "depends_on": [
-      28
+      "meta-28"
     ],
     "decisions": [],
     "events": [
@@ -1155,7 +1155,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 32,
+    "id": "meta-32",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1179,7 +1179,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 33,
+    "id": "meta-33",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1212,7 +1212,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 34,
+    "id": "meta-34",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1241,7 +1241,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 35,
+    "id": "meta-35",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1270,7 +1270,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 36,
+    "id": "meta-36",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1305,7 +1305,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 37,
+    "id": "meta-37",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1334,7 +1334,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 38,
+    "id": "meta-38",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1358,7 +1358,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 39,
+    "id": "meta-39",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1401,7 +1401,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 40,
+    "id": "meta-40",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1430,7 +1430,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 41,
+    "id": "meta-41",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1471,7 +1471,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 42,
+    "id": "meta-42",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1500,7 +1500,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 43,
+    "id": "meta-43",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1529,7 +1529,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 44,
+    "id": "meta-44",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1569,7 +1569,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 45,
+    "id": "meta-45",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1615,7 +1615,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 46,
+    "id": "meta-46",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1654,7 +1654,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 47,
+    "id": "meta-47",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1683,7 +1683,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 48,
+    "id": "meta-48",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1712,7 +1712,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 49,
+    "id": "meta-49",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1741,7 +1741,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 50,
+    "id": "meta-50",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1770,7 +1770,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 51,
+    "id": "meta-51",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1799,7 +1799,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 52,
+    "id": "meta-52",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1828,7 +1828,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 53,
+    "id": "meta-53",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1863,7 +1863,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 54,
+    "id": "meta-54",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1892,7 +1892,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 55,
+    "id": "meta-55",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1921,7 +1921,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 56,
+    "id": "meta-56",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1950,7 +1950,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 57,
+    "id": "meta-57",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -1979,7 +1979,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 58,
+    "id": "meta-58",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -2014,7 +2014,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 59,
+    "id": "meta-59",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -2043,7 +2043,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 60,
+    "id": "meta-60",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -2078,7 +2078,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 61,
+    "id": "meta-61",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -2107,7 +2107,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 62,
+    "id": "meta-62",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -2136,7 +2136,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 63,
+    "id": "meta-63",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -2171,7 +2171,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 64,
+    "id": "meta-64",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -2195,7 +2195,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 66,
+    "id": "meta-66",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-process-foundation",
@@ -2225,7 +2225,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 67,
+    "id": "meta-67",
     "project": "meta",
     "touches": [],
     "epic": null,
@@ -2249,7 +2249,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 68,
+    "id": "meta-68",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2278,7 +2278,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 69,
+    "id": "meta-69",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2307,7 +2307,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 70,
+    "id": "meta-70",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2336,7 +2336,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 71,
+    "id": "meta-71",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2365,7 +2365,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 72,
+    "id": "meta-72",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2394,7 +2394,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 73,
+    "id": "meta-73",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2423,7 +2423,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 74,
+    "id": "meta-74",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2452,7 +2452,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 75,
+    "id": "meta-75",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2481,7 +2481,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 76,
+    "id": "meta-76",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2510,7 +2510,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 77,
+    "id": "meta-77",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2539,7 +2539,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 78,
+    "id": "meta-78",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2568,7 +2568,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 79,
+    "id": "meta-79",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2597,7 +2597,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 81,
+    "id": "meta-81",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-day-block-v1",
@@ -2626,7 +2626,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 82,
+    "id": "meta-82",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-ux-data-fixes",
@@ -2661,7 +2661,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 83,
+    "id": "meta-83",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-insights-redesign",
@@ -2701,7 +2701,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 84,
+    "id": "meta-84",
     "project": "meta",
     "touches": [],
     "epic": null,
@@ -2725,7 +2725,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 85,
+    "id": "meta-85",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-insights-redesign",
@@ -2765,7 +2765,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 86,
+    "id": "meta-86",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-insights-redesign",
@@ -2790,13 +2790,13 @@ export const tasks: Task[] = [
       "actual": null
     },
     "depends_on": [
-      151
+      "meta-151"
     ],
     "decisions": [],
     "events": []
   },
   {
-    "id": 87,
+    "id": "meta-87",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-insights-redesign",
@@ -2829,7 +2829,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 88,
+    "id": "meta-88",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-canvas-mindmap-retired",
@@ -2858,7 +2858,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 89,
+    "id": "meta-89",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-design-polish",
@@ -2916,7 +2916,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 90,
+    "id": "meta-90",
     "project": "meta",
     "touches": [],
     "epic": "epic-shared-decision-tree-backfill",
@@ -2945,7 +2945,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 91,
+    "id": "meta-91",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-canvas-mindmap-retired",
@@ -2969,7 +2969,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 92,
+    "id": "meta-92",
     "project": "meta",
     "touches": [],
     "epic": "epic-shared-decision-tree-backfill",
@@ -3009,7 +3009,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 93,
+    "id": "meta-93",
     "project": "meta",
     "touches": [],
     "epic": "epic-data-model-rethink",
@@ -3044,7 +3044,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 94,
+    "id": "meta-94",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-ux-data-fixes",
@@ -3077,7 +3077,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 95,
+    "id": "meta-95",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-insights-redesign",
@@ -3106,7 +3106,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 96,
+    "id": "meta-96",
     "project": "meta",
     "touches": [],
     "epic": "epic-data-model-rethink",
@@ -3141,7 +3141,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 97,
+    "id": "meta-97",
     "project": "meta",
     "touches": [],
     "epic": null,
@@ -3165,7 +3165,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 98,
+    "id": "meta-98",
     "project": "meta",
     "touches": [],
     "epic": null,
@@ -3189,7 +3189,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 99,
+    "id": "meta-99",
     "project": "meta",
     "touches": [],
     "epic": "epic-data-model-rethink",
@@ -3218,7 +3218,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 100,
+    "id": "meta-100",
     "project": "meta",
     "touches": [],
     "epic": "epic-data-model-rethink",
@@ -3242,7 +3242,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 101,
+    "id": "meta-101",
     "project": "meta",
     "touches": [],
     "epic": "epic-data-model-rethink",
@@ -3271,7 +3271,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 102,
+    "id": "meta-102",
     "project": "meta",
     "touches": [],
     "epic": "epic-data-model-rethink",
@@ -3291,13 +3291,13 @@ export const tasks: Task[] = [
       "actual": null
     },
     "depends_on": [
-      101
+      "meta-101"
     ],
     "decisions": [],
     "events": []
   },
   {
-    "id": 102,
+    "id": "meta-102",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-inception",
@@ -3354,33 +3354,38 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 103,
+    "id": "meta-103",
     "project": "meta",
     "touches": [],
     "epic": "epic-data-model-rethink",
     "title": "Task→Epic linkage gap — 6 epics show 0 tasks despite real work",
-    "status": "Queued",
+    "status": "Done",
     "priority": "High",
-    "outputs": [],
+    "outputs": [
+      {
+        "type": "PR",
+        "ref": 183
+      }
+    ],
     "dates": {
       "created": "2026-04-16T00:00:00.000Z",
-      "started": null,
-      "completed": null
+      "started": "2026-04-17T00:00:00.000Z",
+      "completed": "2026-04-17T00:00:00.000Z"
     },
-    "tool": null,
-    "driver": null,
+    "tool": "claude-code",
+    "driver": "collaborative",
     "effort": {
       "estimate": null,
       "actual": null
     },
     "depends_on": [
-      101
+      "meta-101"
     ],
     "decisions": [],
     "events": []
   },
   {
-    "id": 103,
+    "id": "meta-103",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-inception",
@@ -3404,7 +3409,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 104,
+    "id": "meta-104",
     "project": "meta",
     "touches": [],
     "epic": "epic-data-model-rethink",
@@ -3424,13 +3429,13 @@ export const tasks: Task[] = [
       "actual": null
     },
     "depends_on": [
-      101
+      "meta-101"
     ],
     "decisions": [],
     "events": []
   },
   {
-    "id": 104,
+    "id": "meta-104",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-inception",
@@ -3454,7 +3459,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 105,
+    "id": "meta-105",
     "project": "meta",
     "touches": [],
     "epic": null,
@@ -3489,7 +3494,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 105,
+    "id": "meta-105",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-inception",
@@ -3525,7 +3530,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 106,
+    "id": "meta-106",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-inception",
@@ -3560,7 +3565,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 106,
+    "id": "meta-106",
     "project": "meta",
     "touches": [],
     "epic": null,
@@ -3595,7 +3600,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 107,
+    "id": "meta-107",
     "project": "meta",
     "touches": [
       "all"
@@ -3617,13 +3622,13 @@ export const tasks: Task[] = [
       "actual": null
     },
     "depends_on": [
-      101
+      "meta-101"
     ],
     "decisions": [],
     "events": []
   },
   {
-    "id": 107,
+    "id": "meta-107",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-layout-wars",
@@ -3663,7 +3668,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 108,
+    "id": "meta-108",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-layout-wars",
@@ -3698,7 +3703,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 109,
+    "id": "meta-109",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-layout-wars",
@@ -3760,7 +3765,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 110,
+    "id": "meta-110",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-dashboard-stacked",
@@ -3810,7 +3815,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 111,
+    "id": "meta-111",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-dashboard-stacked",
@@ -3865,7 +3870,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 112,
+    "id": "meta-112",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-dashboard-stacked",
@@ -3895,7 +3900,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 113,
+    "id": "meta-113",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-dashboard-stacked",
@@ -3919,7 +3924,7 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": 114,
+    "id": "meta-114",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-dashboard-stacked",
@@ -3964,7 +3969,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 115,
+    "id": "meta-115",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-dashboard-stacked",
@@ -4006,7 +4011,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 116,
+    "id": "meta-116",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-dashboard-stacked",
@@ -4051,7 +4056,7 @@ export const tasks: Task[] = [
     ]
   },
   {
-    "id": 117,
+    "id": "meta-117",
     "project": "meta",
     "touches": [],
     "epic": "epic-meta-dashboard-stacked",
@@ -4089,5 +4094,137 @@ export const tasks: Task[] = [
         "note": "Project-Agnostic View Behavior — Preserve process view on project switch, reset only metrics"
       }
     ]
+  },
+  {
+    "id": "shared-11",
+    "project": "shared",
+    "touches": [
+      "bip"
+    ],
+    "epic": "epic-shared-infra-dep-migration",
+    "title": "BIP Dependency Migration",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [
+      {
+        "type": "PR",
+        "ref": "bip#80"
+      },
+      {
+        "type": "PR",
+        "ref": "bip#81"
+      },
+      {
+        "type": "PR",
+        "ref": "bip#82"
+      },
+      {
+        "type": "PR",
+        "ref": "bip#83"
+      },
+      {
+        "type": "PR",
+        "ref": "bip#84"
+      },
+      {
+        "type": "PR",
+        "ref": "bip#85"
+      }
+    ],
+    "dates": {
+      "created": "2026-03-14",
+      "started": "2026-03-14",
+      "completed": "2026-03-14"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "shared-12",
+    "project": "shared",
+    "touches": [
+      "bip"
+    ],
+    "epic": "epic-shared-infra-dep-migration",
+    "title": "BIP: Code-split xlsx to reduce bundle size",
+    "status": "Done",
+    "priority": "Low",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-14",
+      "started": null,
+      "completed": "2026-03-23"
+    },
+    "tool": "claude-code",
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [
+      "shared-11"
+    ],
+    "decisions": [],
+    "events": [
+      {
+        "type": "completion",
+        "date": "2026-03-23",
+        "note": "xlsx removed entirely during bundle optimization (1,093→300KB), superseding the code-split plan"
+      }
+    ]
+  },
+  {
+    "id": "shared-13",
+    "project": "shared",
+    "touches": [
+      "meta",
+      "landing",
+      "ibg"
+    ],
+    "epic": "epic-shared-infra-dep-migration",
+    "title": "Cross-Project Dependency Migration (MT, Landing, IBG Dashboard)",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [
+      {
+        "type": "PR",
+        "ref": "meta#117"
+      },
+      {
+        "type": "PR",
+        "ref": "meta#118"
+      },
+      {
+        "type": "PR",
+        "ref": "meta#119"
+      },
+      {
+        "type": "PR",
+        "ref": "landing#11"
+      }
+    ],
+    "dates": {
+      "created": "2026-03-14",
+      "started": "2026-03-14",
+      "completed": "2026-03-14"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [
+      "shared-11"
+    ],
+    "decisions": [],
+    "events": []
   }
 ];

@@ -59,7 +59,7 @@ export interface Epic {
 }
 
 export interface Task {
-  id: number;
+  id: string;                 // namespaced: `${project}-${rawId}` e.g. "meta-103", "shared-11"
   project: string;
   touches: string[];
   epic: string | null;        // nullable for Phase 1 orphan tasks
@@ -71,7 +71,7 @@ export interface Task {
   tool: Tool | null;
   driver: Driver | null;
   effort: TaskEffort;
-  depends_on: number[];
+  depends_on: string[];       // namespaced refs, same shape as id
   decisions: Decision[];
   events: TaskEvent[];
 }

@@ -4,7 +4,7 @@
 // See specs/2026-04-14-data-model-rethink.md.
 import type { Epic, Task } from '../types/tracker';
 
-export const generatedAt: string = "2026-04-17T13:40:02.793Z";
+export const generatedAt: string = "2026-04-17T14:07:50.362Z";
 
 export const epics: Epic[] = [
   {
@@ -119,7 +119,7 @@ export const epics: Epic[] = [
     "title": "Process & Engineering Foundation",
     "status": "Done",
     "startDate": "2026-03-04T00:00:00.000Z",
-    "endDate": "2026-03-06T00:00:00.000Z",
+    "endDate": "2026-03-10T00:00:00.000Z",
     "consolidatesChapters": [
       "meta-ch-process-overhaul",
       "meta-ch-mojibake-fix",
@@ -3692,6 +3692,30 @@ export const tasks: Task[] = [
     "id": "meta-108",
     "project": "meta",
     "touches": [],
+    "epic": null,
+    "title": "Animation on pulldowns/disclosures still happening (PR",
+    "status": "Queued",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-04-17",
+      "started": null,
+      "completed": null
+    },
+    "tool": null,
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "meta-108",
+    "project": "meta",
+    "touches": [],
     "epic": "epic-meta-layout-wars",
     "title": "Layout Refactor",
     "status": "Done",
@@ -3721,6 +3745,30 @@ export const tasks: Task[] = [
         "date": "2026-02-28"
       }
     ],
+    "events": []
+  },
+  {
+    "id": "meta-109",
+    "project": "meta",
+    "touches": [],
+    "epic": null,
+    "title": "Odd UX behaviors on data panels — earmark from Apr 17 review",
+    "status": "Queued",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-04-17",
+      "started": null,
+      "completed": null
+    },
+    "tool": null,
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
     "events": []
   },
   {
@@ -3784,6 +3832,30 @@ export const tasks: Task[] = [
         "note": "Proportional Detail Height Fix — Proportional to character count"
       }
     ]
+  },
+  {
+    "id": "meta-110",
+    "project": "meta",
+    "touches": [],
+    "epic": null,
+    "title": "EpicGantt tooltip dismisses on any keypress (native title attribute)",
+    "status": "Queued",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-04-17",
+      "started": null,
+      "completed": null
+    },
+    "tool": null,
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
   },
   {
     "id": "meta-110",

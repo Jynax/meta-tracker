@@ -17,7 +17,27 @@ export function parseEpicFile(filepath) {
 export function parseTaskFile(filepath) {
   const raw = fs.readFileSync(filepath, 'utf-8');
   const { data, content } = matter(raw);
+  // Skip files without YAML frontmatter (legacy shared-task format).
+  // YAML-ify a task file to include it in the generated tracker data.
+  if (!data || Object.keys(data).length === 0) return null;
   return { ...data, body: content.trim(), _source: filepath };
+}
+
+// Normalize task IDs and depends_on to namespaced strings.
+// Frontmatter may have `id: 103` (number) or `id: "meta-103"` (pre-namespaced) — both accepted.
+// Output always has `id: "${project}-${rawId}"` and `depends_on: string[]`.
+// Numeric depends_on entries are assumed same-project (common case); cross-project refs must be pre-stringified in frontmatter.
+export function normalizeTask(t) {
+  if (!t) return t;
+  const rawId = t.id;
+  const project = t.project;
+  if (rawId == null || project == null) return t; // let validation catch
+  const idStr = String(rawId);
+  const id = idStr.startsWith(`${project}-`) ? idStr : `${project}-${idStr}`;
+  const depends_on = Array.isArray(t.depends_on)
+    ? t.depends_on.map((d) => (typeof d === 'string' ? d : `${project}-${d}`))
+    : t.depends_on;
+  return { ...t, id, depends_on };
 }
 const EPIC_REQUIRED = ['id', 'project', 'touches', 'title', 'status', 'startDate'];
 const VALID_EPIC_STATUS = new Set(['Queued', 'In Progress', 'Done', 'Cancelled', 'Retired']);
@@ -66,8 +86,9 @@ export function validateReferentialIntegrity(epics, tasks) {
 }
 export function emit(epics, tasks, outputPath) {
   const generatedAt = new Date().toISOString();
-  const sortedEpics = [...epics].sort((a, b) => a.id.localeCompare(b.id));
-  const sortedTasks = [...tasks].sort((a, b) => a.id - b.id);
+  const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+  const sortedEpics = [...epics].sort((a, b) => collator.compare(a.id, b.id));
+  const sortedTasks = [...tasks].sort((a, b) => collator.compare(a.id, b.id));
 
   const stripInternal = (obj) => {
     // eslint-disable-next-line no-unused-vars
@@ -120,8 +141,12 @@ export function collectEpics() {
 }
 
 export function collectTasks() {
-  const taskFiles = walkDir(path.join(COWORK_ROOT, 'Meta Tracker', 'tasks'), /\.md$/, /^\d/);
-  return taskFiles.map(parseTaskFile);
+  const mtTaskFiles = walkDir(path.join(COWORK_ROOT, 'Meta Tracker', 'tasks'), /\.md$/, /^\d/);
+  const sharedTaskFiles = walkDir(path.join(COWORK_ROOT, '_Shared', 'tasks-general'), /\.md$/, /^\d/);
+  return [...mtTaskFiles, ...sharedTaskFiles]
+    .map(parseTaskFile)
+    .filter(Boolean)
+    .map(normalizeTask);
 }
 
 function main() {

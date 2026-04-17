@@ -123,7 +123,7 @@ export function getWeeklyTaskBuckets(): WeekBucket[] {
 
 export interface DecisionPin {
   date: string;
-  taskId: number;
+  taskId: string;
   decision: Decision;
 }
 
@@ -144,7 +144,7 @@ export function getDecisionPins(): DecisionPin[] {
 
 export interface TaskTreeNode {
   type: 'task';
-  id: number;
+  id: string;
   title: string;
   status: string;
   epic: string | null;
@@ -198,6 +198,15 @@ export function getEpicTree(): EpicTreeNode[] {
         events: t.events ?? [],
       })),
   }));
+}
+
+// ── Display helpers ─────────────────────────────────────────────────
+
+// Strip the project prefix for display. "meta-103" → "103", "shared-11" → "11".
+// Callers have project context (epic, column, etc.) so the prefix is redundant in UI.
+export function displayTaskId(id: string): string {
+  const idx = id.indexOf('-');
+  return idx >= 0 ? id.slice(idx + 1) : id;
 }
 
 // ── Lookups ─────────────────────────────────────────────────────────

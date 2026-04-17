@@ -6,6 +6,7 @@ import path from 'node:path';
 import {
   parseEpicFile,
   parseTaskFile,
+  normalizeTask,
   validateEpic,
   validateTask,
   validateReferentialIntegrity,
@@ -222,9 +223,10 @@ test('emit produces deterministic TypeScript with sorted epics and tasks', () =>
     { id: 'epic-b', project: 'meta', touches: [], title: 'B', status: 'Done', startDate: '2026-01-02', endDate: null, _source: '/b.md', body: 'ignored' },
     { id: 'epic-a', project: 'meta', touches: [], title: 'A', status: 'Done', startDate: '2026-01-01', endDate: null, _source: '/a.md', body: 'ignored' },
   ];
+  // tasks arrive at emit post-normalization with string ids
   const tasks = [
-    { id: 2, project: 'meta', touches: [], epic: 'epic-a', title: 'T2', status: 'Done', priority: 'Low', outputs: [], dates: { created: '2026-01-01', started: null, completed: null }, tool: null, driver: null, effort: { estimate: null, actual: null }, depends_on: [], decisions: [], events: [], _source: '/t2.md', body: 'ignored' },
-    { id: 1, project: 'meta', touches: [], epic: 'epic-a', title: 'T1', status: 'Done', priority: 'Low', outputs: [], dates: { created: '2026-01-01', started: null, completed: null }, tool: null, driver: null, effort: { estimate: null, actual: null }, depends_on: [], decisions: [], events: [], _source: '/t1.md', body: 'ignored' },
+    { id: 'meta-2', project: 'meta', touches: [], epic: 'epic-a', title: 'T2', status: 'Done', priority: 'Low', outputs: [], dates: { created: '2026-01-01', started: null, completed: null }, tool: null, driver: null, effort: { estimate: null, actual: null }, depends_on: [], decisions: [], events: [], _source: '/t2.md', body: 'ignored' },
+    { id: 'meta-1', project: 'meta', touches: [], epic: 'epic-a', title: 'T1', status: 'Done', priority: 'Low', outputs: [], dates: { created: '2026-01-01', started: null, completed: null }, tool: null, driver: null, effort: { estimate: null, actual: null }, depends_on: [], decisions: [], events: [], _source: '/t1.md', body: 'ignored' },
   ];
 
   emit(epics, tasks, outputPath);
@@ -238,9 +240,78 @@ test('emit produces deterministic TypeScript with sorted epics and tasks', () =>
   const aIdx = content.indexOf('"epic-a"');
   const bIdx = content.indexOf('"epic-b"');
   assert.ok(aIdx < bIdx, 'epic-a should appear before epic-b');
+  // Tasks sorted by string id with numeric-aware collator
+  const t1Idx = content.indexOf('"meta-1"');
+  const t2Idx = content.indexOf('"meta-2"');
+  assert.ok(t1Idx < t2Idx, 'meta-1 should appear before meta-2');
   // _source and body stripped
   assert.ok(!content.includes('_source'));
   assert.ok(!content.includes('"body":'));
+});
+
+test('emit sorts numeric-aware so meta-100 comes after meta-82', () => {
+  const outputPath = path.join(tmpDir, 'out-numeric.ts');
+  const tasks = [
+    { id: 'meta-100', project: 'meta', touches: [], epic: null, title: 'T100', status: 'Done', priority: 'Low', outputs: [], dates: { created: '2026-01-01', started: null, completed: null }, tool: null, driver: null, effort: { estimate: null, actual: null }, depends_on: [], decisions: [], events: [] },
+    { id: 'meta-82', project: 'meta', touches: [], epic: null, title: 'T82', status: 'Done', priority: 'Low', outputs: [], dates: { created: '2026-01-01', started: null, completed: null }, tool: null, driver: null, effort: { estimate: null, actual: null }, depends_on: [], decisions: [], events: [] },
+  ];
+  emit([], tasks, outputPath);
+  const content = fs.readFileSync(outputPath, 'utf-8');
+  const i82 = content.indexOf('"meta-82"');
+  const i100 = content.indexOf('"meta-100"');
+  assert.ok(i82 < i100, 'meta-82 should sort before meta-100 (numeric-aware)');
+});
+
+test('normalizeTask prefixes numeric id and depends_on with project namespace', () => {
+  const raw = {
+    id: 103,
+    project: 'meta',
+    touches: [],
+    epic: 'epic-x',
+    title: 'T',
+    status: 'Done',
+    priority: 'Medium',
+    outputs: [],
+    dates: { created: '2026-01-01', started: null, completed: null },
+    tool: null,
+    driver: null,
+    effort: { estimate: null, actual: null },
+    depends_on: [101, 102],
+    decisions: [],
+    events: [],
+  };
+  const out = normalizeTask(raw);
+  assert.equal(out.id, 'meta-103');
+  assert.deepEqual(out.depends_on, ['meta-101', 'meta-102']);
+});
+
+test('normalizeTask leaves pre-namespaced ids alone', () => {
+  const raw = {
+    id: 'shared-11',
+    project: 'shared',
+    touches: [],
+    epic: 'epic-shared-x',
+    title: 'T',
+    status: 'Done',
+    priority: 'Medium',
+    outputs: [],
+    dates: { created: '2026-01-01', started: null, completed: null },
+    tool: null,
+    driver: null,
+    effort: { estimate: null, actual: null },
+    depends_on: ['meta-50', 12],
+    decisions: [],
+    events: [],
+  };
+  const out = normalizeTask(raw);
+  assert.equal(out.id, 'shared-11');
+  // cross-project string dep passes through; numeric dep gets same-project prefix
+  assert.deepEqual(out.depends_on, ['meta-50', 'shared-12']);
+});
+
+test('parseTaskFile returns null for files without frontmatter', () => {
+  const p = writeFixture('no-frontmatter.md', '# Just a markdown heading\n\nNo YAML here.\n');
+  assert.equal(parseTaskFile(p), null);
 });
 
 test('walkDir includes files from done/ subdirectory', (t) => {

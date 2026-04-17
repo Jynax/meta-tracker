@@ -10,7 +10,7 @@ import {
   ProjectPhase,
   ChapterType,
 } from '../types';
-import type { EpicTreeNode } from '../utils/trackerDataAdapter';
+import { displayTaskId, type EpicTreeNode } from '../utils/trackerDataAdapter';
 
 interface DayGroup {
   dayId: string;
@@ -903,7 +903,7 @@ function EpicTreeView({
                           }}
                         >
                           <span style={{ fontSize: 11, color: C.muted, fontWeight: 600 }}>
-                            #{task.id}
+                            #{displayTaskId(task.id)}
                           </span>
                           <span
                             style={{

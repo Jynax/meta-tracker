@@ -5,6 +5,7 @@ import {
   getDecisionPins,
   getAllEpics,
   getAllTasks,
+  displayTaskId,
 } from '../utils/trackerDataAdapter';
 
 interface TasksTabProps {
@@ -406,7 +407,7 @@ export default function TasksTab({ setTooltip }: TasksTabProps) {
                             style={{ fontSize: 13 }}
                           >
                             <span style={{ color: C.muted, fontSize: 11 }}>
-                              #{task.id}
+                              #{displayTaskId(task.id)}
                             </span>
                             <span style={{ color: C.white, fontWeight: 500 }}>
                               {task.title}

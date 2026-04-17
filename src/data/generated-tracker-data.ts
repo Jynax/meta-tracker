@@ -4,7 +4,7 @@
 // See specs/2026-04-14-data-model-rethink.md.
 import type { Epic, Task } from '../types/tracker';
 
-export const generatedAt: string = "2026-04-17T16:24:22.582Z";
+export const generatedAt: string = "2026-04-17T22:07:32.717Z";
 
 export const epics: Epic[] = [
   {
@@ -301,41 +301,6 @@ export const tasks: Task[] = [
     },
     "depends_on": [],
     "decisions": [],
-    "events": []
-  },
-  {
-    "id": "meta-3",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-process-foundation",
-    "title": "Fix Session 16 data — chapterId, decisions, stale stats",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-03-05",
-      "started": null,
-      "completed": "2026-03-05"
-    },
-    "tool": "claude-code",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": null
-    },
-    "depends_on": [],
-    "decisions": [
-      {
-        "id": "d-meta-process-restructure",
-        "title": "Replace Passoff Chain with Living Documents",
-        "chosen": "Living documents updated in place",
-        "alternatives": [
-          "Keep passoff chain and compress periodically",
-          "GitHub Issues for task tracking"
-        ],
-        "date": "2026-03-04"
-      }
-    ],
     "events": []
   },
   {
@@ -3318,63 +3283,6 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": "meta-102",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-inception",
-    "title": "Decisions & Metrics Template Design",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-03-02",
-      "started": "2026-03-02",
-      "completed": "2026-03-02"
-    },
-    "tool": "cowork",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": null
-    },
-    "depends_on": [],
-    "decisions": [
-      {
-        "id": "d-meta-stack-selection",
-        "title": "Architecture & Stack Selection",
-        "chosen": "Same stack as BIP  —  Vite + React + TypeScript + Tailwind + Cloudflare Pages",
-        "alternatives": [
-          "Different framework",
-          "Adding a backend with Cloudflare D1/KV"
-        ],
-        "date": "2026-02-26"
-      },
-      {
-        "id": "d-meta-react-flow",
-        "title": "React Flow for Visualization",
-        "chosen": "React Flow (@xyflow/react v12)",
-        "alternatives": [
-          "D3.js",
-          "Recharts (wrong tool for graphs)",
-          "Custom canvas rendering"
-        ],
-        "date": "2026-02-26"
-      },
-      {
-        "id": "d-meta-hardcoded-json",
-        "title": "Hardcoded JSON Data Model",
-        "chosen": "TypeScript file with typed objects",
-        "alternatives": [
-          "JSON files at runtime",
-          "Cloudflare Worker API",
-          "Simple CMS"
-        ],
-        "date": "2026-02-26"
-      }
-    ],
-    "events": []
-  },
-  {
     "id": "meta-103",
     "project": "meta",
     "touches": [],
@@ -3406,30 +3314,6 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": "meta-103",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-inception",
-    "title": "Metrics Dashboard & Workflow Design",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-03-02",
-      "started": "2026-03-02",
-      "completed": "2026-03-02"
-    },
-    "tool": "cowork",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": null
-    },
-    "depends_on": [],
-    "decisions": [],
-    "events": []
-  },
-  {
     "id": "meta-104",
     "project": "meta",
     "touches": [],
@@ -3452,30 +3336,6 @@ export const tasks: Task[] = [
     "depends_on": [
       "meta-101"
     ],
-    "decisions": [],
-    "events": []
-  },
-  {
-    "id": "meta-104",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-inception",
-    "title": "Scaffold & Auth",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-02-26",
-      "started": "2026-02-26",
-      "completed": "2026-02-26"
-    },
-    "tool": "cowork",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": "~180min"
-    },
-    "depends_on": [],
     "decisions": [],
     "events": []
   },
@@ -3511,77 +3371,6 @@ export const tasks: Task[] = [
         "type": "completion",
         "date": "2026-04-16T00:00:00.000Z",
         "note": "PR #180 merged — closed bugs #37, #39, #40, #41. Bug #4 stays Deferred per memory (no user impact)."
-      }
-    ]
-  },
-  {
-    "id": "meta-105",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-inception",
-    "title": "Vertical Tree",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-02-26",
-      "started": "2026-02-26",
-      "completed": "2026-02-26"
-    },
-    "tool": "cowork",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": "~120min"
-    },
-    "depends_on": [],
-    "decisions": [
-      {
-        "id": "d-meta-horizontal-layout",
-        "title": "Horizontal Tree Layout (v0.1-v0.3)",
-        "chosen": "Left-to-right branching tree with timeline metaphor",
-        "alternatives": [
-          "Vertical stacking",
-          "Radial layout",
-          "Force-directed graph"
-        ],
-        "date": "2026-02-26"
-      }
-    ],
-    "events": []
-  },
-  {
-    "id": "meta-106",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-inception",
-    "title": "React Flow Rebuild",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-02-26",
-      "started": "2026-02-26",
-      "completed": "2026-02-26"
-    },
-    "tool": "cowork",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": "~180min"
-    },
-    "depends_on": [],
-    "decisions": [],
-    "events": [
-      {
-        "type": "completion",
-        "date": "2026-02-26",
-        "note": "Filter Bar Implementation — Inline button bar with fixed filter options"
-      },
-      {
-        "type": "completion",
-        "date": "2026-02-26",
-        "note": "Category Tagging (Technical vs. Functional) — Two categories: Technical and Functional"
       }
     ]
   },
@@ -3628,16 +3417,37 @@ export const tasks: Task[] = [
     ],
     "epic": "epic-data-model-rethink",
     "title": "Wire task-file creation into metrics-push (or session-end) — close the new-views reflection gap",
-    "status": "Queued",
+    "status": "Done",
     "priority": "High",
-    "outputs": [],
+    "outputs": [
+      {
+        "type": "spec",
+        "path": "Meta Tracker/specs/2026-04-17-task-file-sync-in-metrics-push.md"
+      },
+      {
+        "type": "plan",
+        "path": "Meta Tracker/plans/2026-04-17-task-file-sync-in-metrics-push.md"
+      },
+      {
+        "type": "command",
+        "path": "~/.claude/commands/metrics-push.md"
+      },
+      {
+        "type": "command",
+        "path": "~/.claude/commands/session-end.md"
+      },
+      {
+        "type": "doc",
+        "path": "_Shared/Decision Framework/How We Work.md"
+      }
+    ],
     "dates": {
       "created": "2026-04-16T00:00:00.000Z",
-      "started": null,
-      "completed": null
+      "started": "2026-04-17T00:00:00.000Z",
+      "completed": "2026-04-17T00:00:00.000Z"
     },
-    "tool": null,
-    "driver": null,
+    "tool": "claude-code",
+    "driver": "collaborative",
     "effort": {
       "estimate": null,
       "actual": null
@@ -3647,46 +3457,6 @@ export const tasks: Task[] = [
     ],
     "decisions": [],
     "events": []
-  },
-  {
-    "id": "meta-107",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-layout-wars",
-    "title": "Overlap & Filters",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-02-27",
-      "started": "2026-02-27",
-      "completed": "2026-02-27"
-    },
-    "tool": "cowork",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": "~120min"
-    },
-    "depends_on": [],
-    "decisions": [],
-    "events": [
-      {
-        "type": "completion",
-        "date": "2026-02-27",
-        "note": "Expandable/Collapsible Phases — Collapsed-by-default with summary counts, first phase expanded"
-      },
-      {
-        "type": "completion",
-        "date": "2026-02-27",
-        "note": "Handle Routing Overhaul — Named handles with position-aware routing per edge type"
-      },
-      {
-        "type": "completion",
-        "date": "2026-02-27",
-        "note": "Dynamic Detail Height — Dynamic 60px adjustment on detail expand"
-      }
-    ]
   },
   {
     "id": "meta-108",
@@ -3710,41 +3480,6 @@ export const tasks: Task[] = [
     },
     "depends_on": [],
     "decisions": [],
-    "events": []
-  },
-  {
-    "id": "meta-108",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-layout-wars",
-    "title": "Layout Refactor",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-02-28",
-      "started": "2026-02-28",
-      "completed": "2026-02-28"
-    },
-    "tool": "cowork",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": "~180min"
-    },
-    "depends_on": [],
-    "decisions": [
-      {
-        "id": "d-meta-minimap-removal",
-        "title": "MiniMap Removal",
-        "chosen": "Remove MiniMap entirely",
-        "alternatives": [
-          "Styling it for dark theme",
-          "Moving it to a toggle"
-        ],
-        "date": "2026-02-28"
-      }
-    ],
     "events": []
   },
   {
@@ -3772,68 +3507,6 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": "meta-109",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-layout-wars",
-    "title": "Data Model Alignment",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-02-28",
-      "started": "2026-02-28",
-      "completed": "2026-02-28"
-    },
-    "tool": "cowork",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": "~180min"
-    },
-    "depends_on": [],
-    "decisions": [
-      {
-        "id": "d-meta-multi-project",
-        "title": "Multi-Project Support with Project Selector",
-        "chosen": "Button selector with state reset on switch",
-        "alternatives": [
-          "Dropdown menu",
-          "Separate routes per project",
-          "Tabs"
-        ],
-        "date": "2026-02-28"
-      }
-    ],
-    "events": [
-      {
-        "type": "completion",
-        "date": "2026-02-28",
-        "note": "Phases Renamed to Chapters — Full rename across codebase"
-      },
-      {
-        "type": "completion",
-        "date": "2026-02-28",
-        "note": "Discovery and Pivot Node Types Added — First-class types with visual distinction"
-      },
-      {
-        "type": "completion",
-        "date": "2026-02-28",
-        "note": "Category Expansion to Four — Four categories: Technical, Functional, UX/Design, Process"
-      },
-      {
-        "type": "completion",
-        "date": "2026-02-28",
-        "note": "Build-Time Markdown Parser Deferred — Manual conversion now, automate later"
-      },
-      {
-        "type": "completion",
-        "date": "2026-02-28",
-        "note": "Proportional Detail Height Fix — Proportional to character count"
-      }
-    ]
-  },
-  {
     "id": "meta-110",
     "project": "meta",
     "touches": [],
@@ -3856,56 +3529,6 @@ export const tasks: Task[] = [
     "depends_on": [],
     "decisions": [],
     "events": []
-  },
-  {
-    "id": "meta-110",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-dashboard-stacked",
-    "title": "Spine Fix & Dashboard",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-03-02",
-      "started": "2026-03-02",
-      "completed": "2026-03-02"
-    },
-    "tool": "cowork",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": "~180min"
-    },
-    "depends_on": [],
-    "decisions": [
-      {
-        "id": "d-meta-chapter-stats-simplified",
-        "title": "Chapter Stats Simplified",
-        "chosen": "Decision context only, metrics in Metrics view",
-        "alternatives": [
-          "Keeping all stats"
-        ],
-        "date": "2026-03-02"
-      }
-    ],
-    "events": [
-      {
-        "type": "completion",
-        "date": "2026-03-02",
-        "note": "Spine Edge Offset Fix — Offset spine right (Option A)"
-      },
-      {
-        "type": "completion",
-        "date": "2026-03-02",
-        "note": "View Switcher Added — Tab-style view switcher"
-      },
-      {
-        "type": "completion",
-        "date": "2026-03-02",
-        "note": "Collapsible Filter Buttons — Hidden by default with toggle"
-      }
-    ]
   },
   {
     "id": "meta-111",
@@ -3932,61 +3555,6 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": "meta-111",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-dashboard-stacked",
-    "title": "UX Polish",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-03-02",
-      "started": "2026-03-02",
-      "completed": "2026-03-02"
-    },
-    "tool": "cowork",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": "~120min"
-    },
-    "depends_on": [],
-    "decisions": [
-      {
-        "id": "d-meta-overview-cleanup",
-        "title": "Overview Tab Decluttered",
-        "chosen": "Code metrics only in Metrics view; decision data stays in tree",
-        "alternatives": [
-          "Keeping all stats in both views"
-        ],
-        "date": "2026-03-02"
-      }
-    ],
-    "events": [
-      {
-        "type": "completion",
-        "date": "2026-03-02",
-        "note": "Codebase Chart Converted to SVG Area Chart — Inline SVG area chart with gradient fill"
-      },
-      {
-        "type": "completion",
-        "date": "2026-03-02",
-        "note": "Bug Breakdowns Converted to Donut Charts — SVG donut rings with staggered animation"
-      },
-      {
-        "type": "completion",
-        "date": "2026-03-02",
-        "note": "Session Activity Vertical Bar Chart — Vertical grouped bars"
-      },
-      {
-        "type": "completion",
-        "date": "2026-03-02",
-        "note": "Hover Tooltips Added Across All Charts — Unified tooltip pattern with dark blue hover highlight"
-      }
-    ]
-  },
-  {
     "id": "meta-112",
     "project": "meta",
     "touches": [],
@@ -4011,103 +3579,32 @@ export const tasks: Task[] = [
     "events": []
   },
   {
-    "id": "meta-112",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-dashboard-stacked",
-    "title": "Data Verification",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-03-02",
-      "started": "2026-03-02",
-      "completed": "2026-03-02"
-    },
-    "tool": "cowork",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": "~60min"
-    },
-    "depends_on": [],
-    "decisions": [],
-    "events": [
-      {
-        "type": "completion",
-        "date": "2026-03-02",
-        "note": "Technical Review Checklist Added — Checklist in How We Work doc, matched to change type"
-      }
-    ]
-  },
-  {
     "id": "meta-113",
     "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-dashboard-stacked",
-    "title": "Data Scrape",
-    "status": "Done",
+    "touches": [
+      "Meta Tracker/tasks/"
+    ],
+    "epic": "epic-data-model-rethink",
+    "title": "Backfill task files for S93+S94 untracked PRs (#180, #181, #184, #185, #186, #187)",
+    "status": "Queued",
     "priority": "Medium",
     "outputs": [],
     "dates": {
-      "created": "2026-03-02",
-      "started": "2026-03-02",
-      "completed": "2026-03-02"
+      "created": "2026-04-17T00:00:00.000Z",
+      "started": null,
+      "completed": null
     },
-    "tool": "cowork",
-    "driver": "agent-led",
+    "tool": null,
+    "driver": null,
     "effort": {
       "estimate": null,
-      "actual": "~180min"
+      "actual": null
     },
-    "depends_on": [],
+    "depends_on": [
+      "meta-107"
+    ],
     "decisions": [],
     "events": []
-  },
-  {
-    "id": "meta-114",
-    "project": "meta",
-    "touches": [],
-    "epic": "epic-meta-dashboard-stacked",
-    "title": "Dashboard Data Overhaul",
-    "status": "Done",
-    "priority": "Medium",
-    "outputs": [],
-    "dates": {
-      "created": "2026-03-03",
-      "started": "2026-03-03",
-      "completed": "2026-03-03"
-    },
-    "tool": "cowork",
-    "driver": "collaborative",
-    "effort": {
-      "estimate": null,
-      "actual": "~180min"
-    },
-    "depends_on": [],
-    "decisions": [
-      {
-        "id": "d-meta-keep-both-charts",
-        "title": "Keep Both Code Tab Charts",
-        "chosen": "Both charts retained, both upgraded to date-grouped pattern",
-        "alternatives": [
-          "Merging into a single chart"
-        ],
-        "date": "2026-03-03"
-      }
-    ],
-    "events": [
-      {
-        "type": "completion",
-        "date": "2026-03-03",
-        "note": "Date-Grouped Collapsible Chart Sessions — Date-grouped rows with 8-row cap and expand/collapse"
-      },
-      {
-        "type": "discovery",
-        "date": "2026-03-03",
-        "note": "Deep Code Review via Source Analysis — Fetch full source, DOM render, JavaScript pattern analysis"
-      }
-    ]
   },
   {
     "id": "meta-115",
@@ -4233,6 +3730,558 @@ export const tasks: Task[] = [
         "type": "completion",
         "date": "2026-03-03",
         "note": "Project-Agnostic View Behavior — Preserve process view on project switch, reset only metrics"
+      }
+    ]
+  },
+  {
+    "id": "meta-900",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-process-foundation",
+    "title": "Fix Session 16 data — chapterId, decisions, stale stats",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-05",
+      "started": null,
+      "completed": "2026-03-05"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [
+      {
+        "id": "d-meta-process-restructure",
+        "title": "Replace Passoff Chain with Living Documents",
+        "chosen": "Living documents updated in place",
+        "alternatives": [
+          "Keep passoff chain and compress periodically",
+          "GitHub Issues for task tracking"
+        ],
+        "date": "2026-03-04"
+      }
+    ],
+    "events": []
+  },
+  {
+    "id": "meta-902",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-inception",
+    "title": "Decisions & Metrics Template Design",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-02",
+      "started": "2026-03-02",
+      "completed": "2026-03-02"
+    },
+    "tool": "cowork",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [
+      {
+        "id": "d-meta-stack-selection",
+        "title": "Architecture & Stack Selection",
+        "chosen": "Same stack as BIP  —  Vite + React + TypeScript + Tailwind + Cloudflare Pages",
+        "alternatives": [
+          "Different framework",
+          "Adding a backend with Cloudflare D1/KV"
+        ],
+        "date": "2026-02-26"
+      },
+      {
+        "id": "d-meta-react-flow",
+        "title": "React Flow for Visualization",
+        "chosen": "React Flow (@xyflow/react v12)",
+        "alternatives": [
+          "D3.js",
+          "Recharts (wrong tool for graphs)",
+          "Custom canvas rendering"
+        ],
+        "date": "2026-02-26"
+      },
+      {
+        "id": "d-meta-hardcoded-json",
+        "title": "Hardcoded JSON Data Model",
+        "chosen": "TypeScript file with typed objects",
+        "alternatives": [
+          "JSON files at runtime",
+          "Cloudflare Worker API",
+          "Simple CMS"
+        ],
+        "date": "2026-02-26"
+      }
+    ],
+    "events": []
+  },
+  {
+    "id": "meta-903",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-inception",
+    "title": "Metrics Dashboard & Workflow Design",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-02",
+      "started": "2026-03-02",
+      "completed": "2026-03-02"
+    },
+    "tool": "cowork",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "meta-904",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-inception",
+    "title": "Scaffold & Auth",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-02-26",
+      "started": "2026-02-26",
+      "completed": "2026-02-26"
+    },
+    "tool": "cowork",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": "~180min"
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "meta-905",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-inception",
+    "title": "Vertical Tree",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-02-26",
+      "started": "2026-02-26",
+      "completed": "2026-02-26"
+    },
+    "tool": "cowork",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": "~120min"
+    },
+    "depends_on": [],
+    "decisions": [
+      {
+        "id": "d-meta-horizontal-layout",
+        "title": "Horizontal Tree Layout (v0.1-v0.3)",
+        "chosen": "Left-to-right branching tree with timeline metaphor",
+        "alternatives": [
+          "Vertical stacking",
+          "Radial layout",
+          "Force-directed graph"
+        ],
+        "date": "2026-02-26"
+      }
+    ],
+    "events": []
+  },
+  {
+    "id": "meta-906",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-inception",
+    "title": "React Flow Rebuild",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-02-26",
+      "started": "2026-02-26",
+      "completed": "2026-02-26"
+    },
+    "tool": "cowork",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": "~180min"
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": [
+      {
+        "type": "completion",
+        "date": "2026-02-26",
+        "note": "Filter Bar Implementation — Inline button bar with fixed filter options"
+      },
+      {
+        "type": "completion",
+        "date": "2026-02-26",
+        "note": "Category Tagging (Technical vs. Functional) — Two categories: Technical and Functional"
+      }
+    ]
+  },
+  {
+    "id": "meta-907",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-layout-wars",
+    "title": "Overlap & Filters",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-02-27",
+      "started": "2026-02-27",
+      "completed": "2026-02-27"
+    },
+    "tool": "cowork",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": "~120min"
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": [
+      {
+        "type": "completion",
+        "date": "2026-02-27",
+        "note": "Expandable/Collapsible Phases — Collapsed-by-default with summary counts, first phase expanded"
+      },
+      {
+        "type": "completion",
+        "date": "2026-02-27",
+        "note": "Handle Routing Overhaul — Named handles with position-aware routing per edge type"
+      },
+      {
+        "type": "completion",
+        "date": "2026-02-27",
+        "note": "Dynamic Detail Height — Dynamic 60px adjustment on detail expand"
+      }
+    ]
+  },
+  {
+    "id": "meta-908",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-layout-wars",
+    "title": "Layout Refactor",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-02-28",
+      "started": "2026-02-28",
+      "completed": "2026-02-28"
+    },
+    "tool": "cowork",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": "~180min"
+    },
+    "depends_on": [],
+    "decisions": [
+      {
+        "id": "d-meta-minimap-removal",
+        "title": "MiniMap Removal",
+        "chosen": "Remove MiniMap entirely",
+        "alternatives": [
+          "Styling it for dark theme",
+          "Moving it to a toggle"
+        ],
+        "date": "2026-02-28"
+      }
+    ],
+    "events": []
+  },
+  {
+    "id": "meta-909",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-layout-wars",
+    "title": "Data Model Alignment",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-02-28",
+      "started": "2026-02-28",
+      "completed": "2026-02-28"
+    },
+    "tool": "cowork",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": "~180min"
+    },
+    "depends_on": [],
+    "decisions": [
+      {
+        "id": "d-meta-multi-project",
+        "title": "Multi-Project Support with Project Selector",
+        "chosen": "Button selector with state reset on switch",
+        "alternatives": [
+          "Dropdown menu",
+          "Separate routes per project",
+          "Tabs"
+        ],
+        "date": "2026-02-28"
+      }
+    ],
+    "events": [
+      {
+        "type": "completion",
+        "date": "2026-02-28",
+        "note": "Phases Renamed to Chapters — Full rename across codebase"
+      },
+      {
+        "type": "completion",
+        "date": "2026-02-28",
+        "note": "Discovery and Pivot Node Types Added — First-class types with visual distinction"
+      },
+      {
+        "type": "completion",
+        "date": "2026-02-28",
+        "note": "Category Expansion to Four — Four categories: Technical, Functional, UX/Design, Process"
+      },
+      {
+        "type": "completion",
+        "date": "2026-02-28",
+        "note": "Build-Time Markdown Parser Deferred — Manual conversion now, automate later"
+      },
+      {
+        "type": "completion",
+        "date": "2026-02-28",
+        "note": "Proportional Detail Height Fix — Proportional to character count"
+      }
+    ]
+  },
+  {
+    "id": "meta-910",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-dashboard-stacked",
+    "title": "Spine Fix & Dashboard",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-02",
+      "started": "2026-03-02",
+      "completed": "2026-03-02"
+    },
+    "tool": "cowork",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": "~180min"
+    },
+    "depends_on": [],
+    "decisions": [
+      {
+        "id": "d-meta-chapter-stats-simplified",
+        "title": "Chapter Stats Simplified",
+        "chosen": "Decision context only, metrics in Metrics view",
+        "alternatives": [
+          "Keeping all stats"
+        ],
+        "date": "2026-03-02"
+      }
+    ],
+    "events": [
+      {
+        "type": "completion",
+        "date": "2026-03-02",
+        "note": "Spine Edge Offset Fix — Offset spine right (Option A)"
+      },
+      {
+        "type": "completion",
+        "date": "2026-03-02",
+        "note": "View Switcher Added — Tab-style view switcher"
+      },
+      {
+        "type": "completion",
+        "date": "2026-03-02",
+        "note": "Collapsible Filter Buttons — Hidden by default with toggle"
+      }
+    ]
+  },
+  {
+    "id": "meta-911",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-dashboard-stacked",
+    "title": "UX Polish",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-02",
+      "started": "2026-03-02",
+      "completed": "2026-03-02"
+    },
+    "tool": "cowork",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": "~120min"
+    },
+    "depends_on": [],
+    "decisions": [
+      {
+        "id": "d-meta-overview-cleanup",
+        "title": "Overview Tab Decluttered",
+        "chosen": "Code metrics only in Metrics view; decision data stays in tree",
+        "alternatives": [
+          "Keeping all stats in both views"
+        ],
+        "date": "2026-03-02"
+      }
+    ],
+    "events": [
+      {
+        "type": "completion",
+        "date": "2026-03-02",
+        "note": "Codebase Chart Converted to SVG Area Chart — Inline SVG area chart with gradient fill"
+      },
+      {
+        "type": "completion",
+        "date": "2026-03-02",
+        "note": "Bug Breakdowns Converted to Donut Charts — SVG donut rings with staggered animation"
+      },
+      {
+        "type": "completion",
+        "date": "2026-03-02",
+        "note": "Session Activity Vertical Bar Chart — Vertical grouped bars"
+      },
+      {
+        "type": "completion",
+        "date": "2026-03-02",
+        "note": "Hover Tooltips Added Across All Charts — Unified tooltip pattern with dark blue hover highlight"
+      }
+    ]
+  },
+  {
+    "id": "meta-912",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-dashboard-stacked",
+    "title": "Data Verification",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-02",
+      "started": "2026-03-02",
+      "completed": "2026-03-02"
+    },
+    "tool": "cowork",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": "~60min"
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": [
+      {
+        "type": "completion",
+        "date": "2026-03-02",
+        "note": "Technical Review Checklist Added — Checklist in How We Work doc, matched to change type"
+      }
+    ]
+  },
+  {
+    "id": "meta-913",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-dashboard-stacked",
+    "title": "Data Scrape",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-02",
+      "started": "2026-03-02",
+      "completed": "2026-03-02"
+    },
+    "tool": "cowork",
+    "driver": "agent-led",
+    "effort": {
+      "estimate": null,
+      "actual": "~180min"
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "meta-914",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-meta-dashboard-stacked",
+    "title": "Dashboard Data Overhaul",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-03",
+      "started": "2026-03-03",
+      "completed": "2026-03-03"
+    },
+    "tool": "cowork",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": "~180min"
+    },
+    "depends_on": [],
+    "decisions": [
+      {
+        "id": "d-meta-keep-both-charts",
+        "title": "Keep Both Code Tab Charts",
+        "chosen": "Both charts retained, both upgraded to date-grouped pattern",
+        "alternatives": [
+          "Merging into a single chart"
+        ],
+        "date": "2026-03-03"
+      }
+    ],
+    "events": [
+      {
+        "type": "completion",
+        "date": "2026-03-03",
+        "note": "Date-Grouped Collapsible Chart Sessions — Date-grouped rows with 8-row cap and expand/collapse"
+      },
+      {
+        "type": "discovery",
+        "date": "2026-03-03",
+        "note": "Deep Code Review via Source Analysis — Fetch full source, DOM render, JavaScript pattern analysis"
       }
     ]
   },

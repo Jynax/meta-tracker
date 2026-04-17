@@ -4,7 +4,7 @@
 // See specs/2026-04-14-data-model-rethink.md.
 import type { Epic, Task } from '../types/tracker';
 
-export const generatedAt: string = "2026-04-17T14:07:50.362Z";
+export const generatedAt: string = "2026-04-17T14:53:32.503Z";
 
 export const epics: Epic[] = [
   {
@@ -3692,7 +3692,7 @@ export const tasks: Task[] = [
     "id": "meta-108",
     "project": "meta",
     "touches": [],
-    "epic": null,
+    "epic": "epic-data-model-rethink",
     "title": "Animation on pulldowns/disclosures still happening (PR",
     "status": "Queued",
     "priority": "Medium",
@@ -3751,7 +3751,7 @@ export const tasks: Task[] = [
     "id": "meta-109",
     "project": "meta",
     "touches": [],
-    "epic": null,
+    "epic": "epic-data-model-rethink",
     "title": "Odd UX behaviors on data panels — earmark from Apr 17 review",
     "status": "Queued",
     "priority": "Medium",
@@ -3837,7 +3837,7 @@ export const tasks: Task[] = [
     "id": "meta-110",
     "project": "meta",
     "touches": [],
-    "epic": null,
+    "epic": "epic-data-model-rethink",
     "title": "EpicGantt tooltip dismisses on any keypress (native title attribute)",
     "status": "Queued",
     "priority": "Medium",
@@ -3906,6 +3906,30 @@ export const tasks: Task[] = [
         "note": "Collapsible Filter Buttons — Hidden by default with toggle"
       }
     ]
+  },
+  {
+    "id": "meta-111",
+    "project": "meta",
+    "touches": [],
+    "epic": "epic-data-model-rethink",
+    "title": "Epic Timeline Gantt — re-evaluate visualization (bar length ≠ density)",
+    "status": "Queued",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-04-17",
+      "started": null,
+      "completed": null
+    },
+    "tool": null,
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
   },
   {
     "id": "meta-111",

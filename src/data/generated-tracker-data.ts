@@ -4,7 +4,7 @@
 // See specs/2026-04-14-data-model-rethink.md.
 import type { Epic, Task } from '../types/tracker';
 
-export const generatedAt: string = "2026-04-17T13:26:36.573Z";
+export const generatedAt: string = "2026-04-17T13:40:02.793Z";
 
 export const epics: Epic[] = [
   {
@@ -230,6 +230,27 @@ export const epics: Epic[] = [
       "meta-ch-loc-audit-insights",
       "meta-ch-data-viz-pat-audit"
     ]
+  },
+  {
+    "id": "epic-shared-workflow-tooling",
+    "project": "shared",
+    "touches": [
+      "meta",
+      "bip",
+      "ibg",
+      "landing",
+      "nw",
+      "otm",
+      "remnants",
+      "vb",
+      "fc",
+      "sc"
+    ],
+    "title": "Workflow Tooling & Cross-Environment Setup",
+    "status": "In Progress",
+    "startDate": "2026-03-04T00:00:00.000Z",
+    "endDate": null,
+    "consolidatesChapters": []
   }
 ];
 
@@ -4096,6 +4117,280 @@ export const tasks: Task[] = [
     ]
   },
   {
+    "id": "shared-1",
+    "project": "shared",
+    "touches": [],
+    "epic": "epic-shared-workflow-tooling",
+    "title": "Desktop Workflow Improvement (Details TBD)",
+    "status": "Queued",
+    "priority": "Low",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-04",
+      "started": null,
+      "completed": null
+    },
+    "tool": null,
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "shared-2",
+    "project": "shared",
+    "touches": [
+      "meta",
+      "bip"
+    ],
+    "epic": "epic-shared-workflow-tooling",
+    "title": "Automated Build Verification After Pushes",
+    "status": "Done",
+    "priority": "Low",
+    "outputs": [
+      {
+        "type": "Other",
+        "ref": "_Shared/tools/cf-deploy-check.mjs"
+      }
+    ],
+    "dates": {
+      "created": "2026-03-04",
+      "started": null,
+      "completed": "2026-03-13"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "shared-3",
+    "project": "shared",
+    "touches": [],
+    "epic": "epic-shared-workflow-tooling",
+    "title": "Create Project Kickstart Automation",
+    "status": "Done",
+    "priority": "Low",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-04",
+      "started": null,
+      "completed": "2026-03-30"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "shared-4",
+    "project": "shared",
+    "touches": [],
+    "epic": "epic-shared-workflow-tooling",
+    "title": "Workflow Tools Audit — Lighten the Load",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [
+      {
+        "type": "Doc",
+        "ref": "_Shared/Workflow Tools Audit — Recommendations.md"
+      }
+    ],
+    "dates": {
+      "created": "2026-03-04",
+      "started": null,
+      "completed": "2026-03-13"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "shared-5",
+    "project": "shared",
+    "touches": [
+      "meta",
+      "bip",
+      "remnants"
+    ],
+    "epic": "epic-shared-workflow-tooling",
+    "title": "Update Project Portfolio (March 2026)",
+    "status": "Queued",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-05",
+      "started": null,
+      "completed": null
+    },
+    "tool": null,
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "shared-6",
+    "project": "shared",
+    "touches": [],
+    "epic": "epic-shared-workflow-tooling",
+    "title": "Update Shareable Workflow Package",
+    "status": "Done",
+    "priority": "Low",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-06",
+      "started": "2026-03-06",
+      "completed": "2026-03-06"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "shared-7",
+    "project": "shared",
+    "touches": [],
+    "epic": "epic-shared-workflow-tooling",
+    "title": "Travel Laptop Setup & Sync",
+    "status": "Done",
+    "priority": "High",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-10",
+      "started": null,
+      "completed": "2026-03-15"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "shared-8",
+    "project": "shared",
+    "touches": [
+      "meta"
+    ],
+    "epic": "epic-shared-workflow-tooling",
+    "title": "Claude QoL: Restructure Memory & Split Growing Files",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-10",
+      "started": null,
+      "completed": "2026-03-30"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "shared-9",
+    "project": "shared",
+    "touches": [
+      "meta",
+      "bip",
+      "ibg",
+      "landing",
+      "vb"
+    ],
+    "epic": "epic-shared-quality-audit",
+    "title": "Code Comments Audit — Best Practices Pass",
+    "status": "Queued",
+    "priority": "Low",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-11",
+      "started": null,
+      "completed": null
+    },
+    "tool": null,
+    "driver": null,
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "shared-10",
+    "project": "shared",
+    "touches": [],
+    "epic": "epic-shared-workflow-tooling",
+    "title": "Mine ChatGPT Export for Claude Transition",
+    "status": "Done",
+    "priority": "Low",
+    "outputs": [
+      {
+        "type": "Doc",
+        "ref": "_Shared/ChatGPT-Session-Audit.md"
+      },
+      {
+        "type": "Doc",
+        "ref": "_Shared/ChatGPT Export Mining Summary.md"
+      }
+    ],
+    "dates": {
+      "created": "2026-03-11",
+      "started": null,
+      "completed": "2026-04-01"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
+  },
+  {
     "id": "shared-11",
     "project": "shared",
     "touches": [
@@ -4223,6 +4518,32 @@ export const tasks: Task[] = [
     },
     "depends_on": [
       "shared-11"
+    ],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "shared-14",
+    "project": "shared",
+    "touches": [],
+    "epic": "epic-shared-workflow-tooling",
+    "title": "USB Bootstrapping Folder for Friend",
+    "status": "Done",
+    "priority": "High",
+    "outputs": [],
+    "dates": {
+      "created": "2026-03-14",
+      "started": null,
+      "completed": "2026-03-15"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [
+      "shared-7"
     ],
     "decisions": [],
     "events": []

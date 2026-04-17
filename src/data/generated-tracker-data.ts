@@ -4,7 +4,7 @@
 // See specs/2026-04-14-data-model-rethink.md.
 import type { Epic, Task } from '../types/tracker';
 
-export const generatedAt: string = "2026-04-16T20:39:32.554Z";
+export const generatedAt: string = "2026-04-17T12:42:38.369Z";
 
 export const epics: Epic[] = [
   {
@@ -2629,7 +2629,7 @@ export const tasks: Task[] = [
     "id": 82,
     "project": "meta",
     "touches": [],
-    "epic": "epic-meta-day-block-v1",
+    "epic": "epic-meta-ux-data-fixes",
     "title": "LOC graph overflow for several projects",
     "status": "Done",
     "priority": "Medium",
@@ -2664,7 +2664,7 @@ export const tasks: Task[] = [
     "id": 83,
     "project": "meta",
     "touches": [],
-    "epic": "epic-meta-day-block-v1",
+    "epic": "epic-meta-insights-redesign",
     "title": "Cross-project data correlation insights",
     "status": "Done",
     "priority": "Medium",
@@ -2728,7 +2728,7 @@ export const tasks: Task[] = [
     "id": 85,
     "project": "meta",
     "touches": [],
-    "epic": "epic-meta-day-block-v1",
+    "epic": "epic-meta-insights-redesign",
     "title": "InsightsView Readability Pass",
     "status": "Done",
     "priority": "Medium",
@@ -2768,7 +2768,7 @@ export const tasks: Task[] = [
     "id": 86,
     "project": "meta",
     "touches": [],
-    "epic": "epic-meta-day-block-v1",
+    "epic": "epic-meta-insights-redesign",
     "title": "Velocity Scatter Plot Label Collision Fix",
     "status": "Done",
     "priority": "Medium",
@@ -2799,7 +2799,7 @@ export const tasks: Task[] = [
     "id": 87,
     "project": "meta",
     "touches": [],
-    "epic": "epic-meta-day-block-v1",
+    "epic": "epic-meta-insights-redesign",
     "title": "Data Correctness Sprint",
     "status": "Done",
     "priority": "Medium",
@@ -2919,7 +2919,7 @@ export const tasks: Task[] = [
     "id": 90,
     "project": "meta",
     "touches": [],
-    "epic": "epic-meta-day-block-v1",
+    "epic": "epic-shared-decision-tree-backfill",
     "title": "Decision Tree Data Backfill",
     "status": "Done",
     "priority": "High",
@@ -2972,7 +2972,7 @@ export const tasks: Task[] = [
     "id": 92,
     "project": "meta",
     "touches": [],
-    "epic": "epic-meta-day-block-v1",
+    "epic": "epic-shared-decision-tree-backfill",
     "title": "Meta Tracker Decision Tree Backfill (Sessions 54-82)",
     "status": "Done",
     "priority": "High",
@@ -3047,7 +3047,7 @@ export const tasks: Task[] = [
     "id": 94,
     "project": "meta",
     "touches": [],
-    "epic": "epic-meta-day-block-v1",
+    "epic": "epic-meta-ux-data-fixes",
     "title": "Backfill Bugs Since Mar 15",
     "status": "Done",
     "priority": "Medium",
@@ -3080,7 +3080,7 @@ export const tasks: Task[] = [
     "id": 95,
     "project": "meta",
     "touches": [],
-    "epic": "epic-meta-day-block-v1",
+    "epic": "epic-meta-insights-redesign",
     "title": "Insights Compute Refactor (derive totals from *Days not legacy arrays)",
     "status": "Done",
     "priority": "Medium",

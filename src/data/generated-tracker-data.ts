@@ -4,7 +4,7 @@
 // See specs/2026-04-14-data-model-rethink.md.
 import type { Epic, Task } from '../types/tracker';
 
-export const generatedAt: string = "2026-04-17T22:07:32.717Z";
+export const generatedAt: string = "2026-04-18T19:49:35.352Z";
 
 export const epics: Epic[] = [
   {
@@ -3586,22 +3586,61 @@ export const tasks: Task[] = [
     ],
     "epic": "epic-data-model-rethink",
     "title": "Backfill task files for S93+S94 untracked PRs (#180, #181, #184, #185, #186, #187)",
-    "status": "Queued",
+    "status": "Done",
     "priority": "Medium",
     "outputs": [],
     "dates": {
       "created": "2026-04-17T00:00:00.000Z",
-      "started": null,
-      "completed": null
+      "started": "2026-04-18T00:00:00.000Z",
+      "completed": "2026-04-18T00:00:00.000Z"
     },
-    "tool": null,
-    "driver": null,
+    "tool": "claude-code",
+    "driver": "collaborative",
     "effort": {
       "estimate": null,
       "actual": null
     },
     "depends_on": [
       "meta-107"
+    ],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "meta-114",
+    "project": "meta",
+    "touches": [
+      "scripts/generate-tracker-data.mjs",
+      "scripts/generate-tracker-data.test.mjs",
+      "src/types/tracker.ts",
+      "src/utils/trackerDataAdapter.ts",
+      "src/components/TasksTab.tsx",
+      "src/components/StackedTreeView.tsx",
+      "src/data/generated-tracker-data.ts"
+    ],
+    "epic": "epic-data-model-rethink",
+    "title": "Namespaced string task IDs + scan _Shared/tasks-general",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [
+      {
+        "type": "PR",
+        "ref": 184
+      }
+    ],
+    "dates": {
+      "created": "2026-04-17T00:00:00.000Z",
+      "started": "2026-04-17T00:00:00.000Z",
+      "completed": "2026-04-17T00:00:00.000Z"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [
+      "meta-103"
     ],
     "decisions": [],
     "events": []
@@ -3732,6 +3771,73 @@ export const tasks: Task[] = [
         "note": "Project-Agnostic View Behavior — Preserve process view on project switch, reset only metrics"
       }
     ]
+  },
+  {
+    "id": "meta-118",
+    "project": "meta",
+    "touches": [
+      "_Shared/tasks-general/",
+      "_Shared/epics/epic-shared-workflow-tooling.md",
+      "src/data/generated-tracker-data.ts"
+    ],
+    "epic": "epic-shared-workflow-tooling",
+    "title": "YAML-ify 11 remaining _Shared tasks + create epic-shared-workflow-tooling",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [
+      {
+        "type": "PR",
+        "ref": 185
+      }
+    ],
+    "dates": {
+      "created": "2026-04-17T00:00:00.000Z",
+      "started": "2026-04-17T00:00:00.000Z",
+      "completed": "2026-04-17T00:00:00.000Z"
+    },
+    "tool": "claude-code",
+    "driver": "agent-led",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [
+      "meta-114"
+    ],
+    "decisions": [],
+    "events": []
+  },
+  {
+    "id": "meta-119",
+    "project": "meta",
+    "touches": [
+      "Meta Tracker/epics/epic-meta-process-foundation.md",
+      "src/data/generated-tracker-data.ts"
+    ],
+    "epic": "epic-data-model-rethink",
+    "title": "Extend epic-meta-process-foundation endDate Mar 6 → Mar 10",
+    "status": "Done",
+    "priority": "Medium",
+    "outputs": [
+      {
+        "type": "PR",
+        "ref": 186
+      }
+    ],
+    "dates": {
+      "created": "2026-04-17T00:00:00.000Z",
+      "started": "2026-04-17T00:00:00.000Z",
+      "completed": "2026-04-17T00:00:00.000Z"
+    },
+    "tool": "claude-code",
+    "driver": "collaborative",
+    "effort": {
+      "estimate": null,
+      "actual": null
+    },
+    "depends_on": [],
+    "decisions": [],
+    "events": []
   },
   {
     "id": "meta-900",

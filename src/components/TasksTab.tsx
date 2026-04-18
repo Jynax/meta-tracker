@@ -366,6 +366,7 @@ export default function TasksTab({ setTooltip }: TasksTabProps) {
             >
               <button
                 type="button"
+                aria-expanded={isExpanded}
                 onClick={() => toggleWeek(bucket.weekStart)}
                 className="flex w-full items-center justify-between p-4 text-left"
                 style={{ color: C.white, cursor: 'pointer' }}

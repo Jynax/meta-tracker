@@ -50,6 +50,14 @@ a:active,
   transition: transform 100ms var(--ease-out);
 }
 
+/* Disclosure buttons (aria-expanded) are toggles, not actions — skip the press-scale
+   so expand/collapse feels instant rather than momentarily pulsing the row. */
+button[aria-expanded]:active,
+[role="button"][aria-expanded]:active {
+  transform: none;
+  transition: none;
+}
+
 /* Accessibility: focus-visible ring for all interactive elements */
 button:focus-visible,
 a:focus-visible,

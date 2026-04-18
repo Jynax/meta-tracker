@@ -159,6 +159,7 @@ export default function CodeTab({
       <div key={row.key} className="rounded-md" style={{ border: `1px solid ${C.border}` }}>
         <button
           type="button"
+          aria-expanded={isExpandable ? isRowExpanded : undefined}
           onClick={toggleRow}
           className="w-full text-left"
           onMouseEnter={(event) => {
@@ -204,6 +205,7 @@ export default function CodeTab({
               <div key={dateGroup.date} style={{ paddingLeft: 20, paddingBottom: 4 }}>
                 <button
                   type="button"
+                  aria-expanded={isNestedExpandable ? isDateExpanded : undefined}
                   onClick={() => {
                     if (!isNestedExpandable) return;
                     setExpandedCodeRows((prev) => {

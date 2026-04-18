@@ -90,6 +90,8 @@ export default function BugsTab({ bugs, projectId }: BugsTabProps) {
           return (
             <div key={group.isoKey} className="rounded-xl border" style={{ backgroundColor: C.cardBg, borderColor: C.border, overflow: 'hidden' }}>
               <button
+                type="button"
+                aria-expanded={isExpanded}
                 onClick={() => {
                   setExpandedDays((prev) => {
                     const next = new Set(prev);

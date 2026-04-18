@@ -306,6 +306,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
     return (
       <button
         type="button"
+        aria-expanded={isExpanded}
         onClick={() => {
           onChapterToggle(group.dayId);
         }}
@@ -533,6 +534,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                       <button
                         key={node.id}
                         type="button"
+                        aria-expanded={expandedNode === node.id}
                         onClick={() => onNodeToggle(node.id)}
                         style={{
                           width: '100%',
@@ -809,6 +811,7 @@ function EpicTreeView({
           >
             <button
               type="button"
+              aria-expanded={isExpanded}
               onClick={() => onEpicToggle(epic.id)}
               style={{
                 width: '100%',
@@ -880,6 +883,7 @@ function EpicTreeView({
                       <button
                         key={task.id}
                         type="button"
+                        aria-expanded={isTaskExpanded}
                         onClick={() => onNodeToggle(taskNodeId)}
                         style={{
                           width: '100%',

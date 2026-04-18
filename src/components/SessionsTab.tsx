@@ -845,6 +845,8 @@ export default function SessionsTab({
             <div key={day.date}>
               {/* Day row — collapsed header */}
               <button
+                type="button"
+                aria-expanded={isExpanded}
                 onClick={() => {
                   setExpandedDays((prev) => {
                     const next = new Set(prev);

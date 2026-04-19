@@ -333,5 +333,13 @@ export function getEpicCumulativeSeries(opts: EpicCumulativeOpts): EpicSeries[] 
     }
   }
 
-  return active;
+  active.sort((a, b) => {
+    const aLast = a.points[a.points.length - 1]?.weekStart ?? '';
+    const bLast = b.points[b.points.length - 1]?.weekStart ?? '';
+    if (aLast !== bLast) return bLast.localeCompare(aLast);
+    if (a.totalCompleted !== b.totalCompleted) return b.totalCompleted - a.totalCompleted;
+    return a.epicId.localeCompare(b.epicId);
+  });
+
+  return active.slice(0, opts.cap);
 }

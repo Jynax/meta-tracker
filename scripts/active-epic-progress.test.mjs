@@ -87,3 +87,21 @@ test('In Progress epic with zero recent completions is included and flagged stal
   assert.equal(stalled.stalled, true);
   assert.equal(stalled.status, 'In Progress');
 });
+
+test('default view sorts by most-recent completion (desc) then caps at 6', () => {
+  const out = getEpicCumulativeSeries({
+    now: new Date('2026-04-19T00:00:00Z'),
+    windowDays: 30,
+    plotWindowWeeks: 8,
+    cap: 6,
+    includeAll: false,
+  });
+
+  assert.ok(out.length <= 6, `default view should be capped at 6, got ${out.length}`);
+
+  for (let i = 0; i < out.length - 1; i++) {
+    const aLast = out[i].points[out[i].points.length - 1]?.weekStart ?? '';
+    const bLast = out[i + 1].points[out[i + 1].points.length - 1]?.weekStart ?? '';
+    assert.ok(aLast >= bLast, `out[${i}] (${aLast}) should be >= out[${i + 1}] (${bLast})`);
+  }
+});

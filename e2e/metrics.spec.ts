@@ -277,17 +277,55 @@ test.describe('Metrics Dashboard', () => {
 
   // === MT Tasks Tab Tests ===
 
-  test('MT tasks tab renders weekly throughput chart', async ({ page }) => {
+  test('MT tasks tab renders Active Epic Progress chart', async ({ page }) => {
     await page.getByRole('button', { name: 'Tasks' }).click();
     await page.waitForTimeout(300);
-    const chart = page.locator('svg[aria-label="Weekly task throughput chart"]');
+    const chart = page.locator('svg[aria-label^="Cumulative task completion chart"]');
     await expect(chart).toBeVisible();
   });
 
-  test('MT tasks tab shows task throughput heading', async ({ page }) => {
+  test('MT tasks tab shows Active Epic Progress heading', async ({ page }) => {
     await page.getByRole('button', { name: 'Tasks' }).click();
     await page.waitForTimeout(300);
-    await expect(page.locator('text="Task Throughput"').first()).toBeVisible();
+    await expect(page.getByText('Active Epic Progress')).toBeVisible();
+  });
+
+  test('MT tasks tab Active Epic Progress renders subtitle', async ({ page }) => {
+    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.waitForTimeout(300);
+    await expect(page.getByText(/Cumulative tasks completed/)).toBeVisible();
+  });
+
+  test('MT tasks tab default view has Active + stalled toggle active', async ({ page }) => {
+    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.waitForTimeout(300);
+    const activeBtn = page.getByRole('button', { name: 'Active + stalled' });
+    await expect(activeBtn).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  test('MT tasks tab clicking All epics adds curves', async ({ page }) => {
+    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.waitForTimeout(300);
+    const defaultCount = await page.locator('.curve-label').count();
+    await page.getByRole('button', { name: 'All epics' }).click();
+    await page.waitForTimeout(200);
+    const allCount = await page.locator('.curve-label').count();
+    expect(allCount).toBeGreaterThan(defaultCount);
+  });
+
+  test('MT tasks tab shows stalled epic indicator in default view', async ({ page }) => {
+    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.waitForTimeout(300);
+    // epic-shared-project-milestones is In Progress with no completed tasks — stalled epics
+    // bypass the cap and always appear.
+    const stalled = page.locator('.curve-label[data-stalled="true"]');
+    await expect(stalled.first()).toBeVisible();
+  });
+
+  test('MT tasks tab regression guard: no Task Throughput text', async ({ page }) => {
+    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.waitForTimeout(300);
+    await expect(page.getByText('Task Throughput')).toHaveCount(0);
   });
 
   test('MT tasks tab has expandable week sections', async ({ page }) => {

@@ -228,3 +228,128 @@ export function getAllEpics(): Epic[] {
 }
 
 export { generatedAt };
+
+// ── Active Epic Progress: cumulative weekly series per epic ─────────
+
+export interface EpicSeries {
+  epicId: string;
+  epicTitle: string;
+  status: 'Queued' | 'In Progress' | 'Done' | 'Cancelled' | 'Retired';
+  stalled: boolean;
+  color: string;
+  points: { weekStart: string; cumulative: number; delta: number }[];
+  totalCompleted: number;
+}
+
+export interface EpicCumulativeOpts {
+  now: Date;
+  windowDays: number;
+  plotWindowWeeks: number;
+  cap: number;
+  includeAll: boolean;
+}
+
+const EPIC_PALETTE_COLORS = [
+  '#22d3ee', '#a78bfa', '#f59e0b', '#34d399', '#f43f5e',
+  '#60a5fa', '#fbbf24', '#818cf8', '#2dd4bf', '#fb923c',
+  '#94a3b8', '#c084fc', '#facc15', '#4ade80',
+];
+
+function mondayOfWeek(iso: string): string {
+  const d = new Date(iso);
+  const day = d.getUTCDay() || 7;
+  if (day !== 1) d.setUTCDate(d.getUTCDate() - (day - 1));
+  return d.toISOString().slice(0, 10);
+}
+
+export function getEpicCumulativeSeries(opts: EpicCumulativeOpts): EpicSeries[] {
+  const epicById = new Map(epics.map((e) => [e.id, e]));
+
+  const perEpic = new Map<string, Map<string, number>>();
+  for (const t of tasks) {
+    if (t.status !== 'Done') continue;
+    if (!t.epic) continue;
+    if (!t.dates?.completed) continue;
+    const week = mondayOfWeek(t.dates.completed);
+    if (!perEpic.has(t.epic)) perEpic.set(t.epic, new Map());
+    const em = perEpic.get(t.epic)!;
+    em.set(week, (em.get(week) ?? 0) + 1);
+  }
+
+  const results: EpicSeries[] = [];
+  let colorIdx = 0;
+  for (const [epicId, byWeek] of perEpic) {
+    const epic = epicById.get(epicId);
+    if (!epic) continue;
+    const weeks = [...byWeek.entries()].sort(([a], [b]) => a.localeCompare(b));
+    const points: EpicSeries['points'] = [];
+    let cum = 0;
+    for (const [weekStart, delta] of weeks) {
+      cum += delta;
+      points.push({ weekStart, cumulative: cum, delta });
+    }
+    results.push({
+      epicId,
+      epicTitle: epic.title,
+      status: epic.status,
+      stalled: false,
+      color: EPIC_PALETTE_COLORS[colorIdx % EPIC_PALETTE_COLORS.length],
+      points,
+      totalCompleted: cum,
+    });
+    colorIdx++;
+  }
+
+  if (opts.includeAll) return results;
+
+  const cutoffMs = opts.now.getTime() - opts.windowDays * 24 * 60 * 60 * 1000;
+
+  const active: EpicSeries[] = results.filter((s) => {
+    const last = s.points[s.points.length - 1]?.weekStart;
+    if (!last) return false;
+    return new Date(last + 'T00:00:00Z').getTime() >= cutoffMs;
+  });
+
+  // Second pass: stalled In Progress epics
+  const activeIds = new Set(active.map((s) => s.epicId));
+  for (const epic of epics) {
+    if (epic.status !== 'In Progress') continue;
+    if (activeIds.has(epic.id)) continue;
+
+    const existing = results.find((s) => s.epicId === epic.id);
+    if (existing) {
+      active.push({ ...existing, stalled: true, points: [...existing.points] });
+    } else {
+      // Never-started stalled epic: zero completed tasks. Return empty points;
+      // component layer handles the flat-line placeholder render.
+      active.push({
+        epicId: epic.id,
+        epicTitle: epic.title,
+        status: epic.status,
+        stalled: true,
+        color: EPIC_PALETTE_COLORS[colorIdx % EPIC_PALETTE_COLORS.length],
+        points: [],
+        totalCompleted: 0,
+      });
+      colorIdx++;
+    }
+  }
+
+  // Split: stalled epics always show (not subject to cap); cap applies to non-stalled only.
+  const stalled = active.filter((s) => s.stalled);
+  const notStalled = active.filter((s) => !s.stalled);
+
+  const sortByRecency = (a: EpicSeries, b: EpicSeries) => {
+    const aLast = a.points[a.points.length - 1]?.weekStart ?? '';
+    const bLast = b.points[b.points.length - 1]?.weekStart ?? '';
+    if (aLast !== bLast) return bLast.localeCompare(aLast);
+    if (a.totalCompleted !== b.totalCompleted) return b.totalCompleted - a.totalCompleted;
+    return a.epicId.localeCompare(b.epicId);
+  };
+
+  notStalled.sort(sortByRecency);
+  stalled.sort(sortByRecency);
+
+  // Stalled first (visually prominent at top of label column), then top-N non-stalled.
+  return [...stalled, ...notStalled.slice(0, opts.cap)];
+}

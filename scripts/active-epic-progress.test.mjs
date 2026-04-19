@@ -72,3 +72,18 @@ test('default view excludes epics whose latest completion is older than windowDa
   const inception = out.find((s) => s.epicId === 'epic-meta-inception');
   assert.equal(inception, undefined, 'old epics should be excluded by default');
 });
+
+test('In Progress epic with zero recent completions is included and flagged stalled', () => {
+  const out = getEpicCumulativeSeries({
+    now: new Date('2026-04-19T00:00:00Z'),
+    windowDays: 30,
+    plotWindowWeeks: 8,
+    cap: 100,
+    includeAll: false,
+  });
+
+  const stalled = out.find((s) => s.epicId === 'epic-shared-project-milestones');
+  assert.ok(stalled, 'stalled In Progress epic should be present');
+  assert.equal(stalled.stalled, true);
+  assert.equal(stalled.status, 'In Progress');
+});

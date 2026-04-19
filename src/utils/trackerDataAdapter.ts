@@ -303,11 +303,35 @@ export function getEpicCumulativeSeries(opts: EpicCumulativeOpts): EpicSeries[] 
   if (opts.includeAll) return results;
 
   const cutoffMs = opts.now.getTime() - opts.windowDays * 24 * 60 * 60 * 1000;
-  const active = results.filter((s) => {
+
+  const active: EpicSeries[] = results.filter((s) => {
     const last = s.points[s.points.length - 1]?.weekStart;
     if (!last) return false;
     return new Date(last + 'T00:00:00Z').getTime() >= cutoffMs;
   });
+
+  // Second pass: stalled In Progress epics
+  const activeIds = new Set(active.map((s) => s.epicId));
+  for (const epic of epics) {
+    if (epic.status !== 'In Progress') continue;
+    if (activeIds.has(epic.id)) continue;
+
+    const existing = results.find((s) => s.epicId === epic.id);
+    if (existing) {
+      active.push({ ...existing, stalled: true });
+    } else {
+      active.push({
+        epicId: epic.id,
+        epicTitle: epic.title,
+        status: epic.status,
+        stalled: true,
+        color: EPIC_PALETTE_COLORS[colorIdx % EPIC_PALETTE_COLORS.length],
+        points: [{ weekStart: mondayOfWeek(opts.now.toISOString()), cumulative: 0, delta: 0 }],
+        totalCompleted: 0,
+      });
+      colorIdx++;
+    }
+  }
 
   return active;
 }

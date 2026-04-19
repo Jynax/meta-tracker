@@ -249,6 +249,57 @@ export interface EpicCumulativeOpts {
   includeAll: boolean;
 }
 
-export function getEpicCumulativeSeries(_opts: EpicCumulativeOpts): EpicSeries[] {
-  return [];
+const EPIC_PALETTE_COLORS = [
+  '#22d3ee', '#a78bfa', '#f59e0b', '#34d399', '#f43f5e',
+  '#60a5fa', '#fbbf24', '#818cf8', '#2dd4bf', '#fb923c',
+  '#94a3b8', '#c084fc', '#facc15', '#4ade80',
+];
+
+function mondayOfWeek(iso: string): string {
+  const d = new Date(iso);
+  const day = d.getUTCDay() || 7;
+  if (day !== 1) d.setUTCDate(d.getUTCDate() - (day - 1));
+  return d.toISOString().slice(0, 10);
+}
+
+export function getEpicCumulativeSeries(opts: EpicCumulativeOpts): EpicSeries[] {
+  const epicById = new Map(epics.map((e) => [e.id, e]));
+
+  const perEpic = new Map<string, Map<string, number>>();
+  for (const t of tasks) {
+    if (t.status !== 'Done') continue;
+    if (!t.epic) continue;
+    if (!t.dates?.completed) continue;
+    const week = mondayOfWeek(t.dates.completed);
+    if (!perEpic.has(t.epic)) perEpic.set(t.epic, new Map());
+    const em = perEpic.get(t.epic)!;
+    em.set(week, (em.get(week) ?? 0) + 1);
+  }
+
+  const results: EpicSeries[] = [];
+  let colorIdx = 0;
+  for (const [epicId, byWeek] of perEpic) {
+    const epic = epicById.get(epicId);
+    if (!epic) continue;
+    const weeks = [...byWeek.entries()].sort(([a], [b]) => a.localeCompare(b));
+    const points: EpicSeries['points'] = [];
+    let cum = 0;
+    for (const [weekStart, delta] of weeks) {
+      cum += delta;
+      points.push({ weekStart, cumulative: cum, delta });
+    }
+    results.push({
+      epicId,
+      epicTitle: epic.title,
+      status: epic.status,
+      stalled: false,
+      color: EPIC_PALETTE_COLORS[colorIdx % EPIC_PALETTE_COLORS.length],
+      points,
+      totalCompleted: cum,
+    });
+    colorIdx++;
+  }
+
+  if (opts.includeAll) return results;
+  return results;
 }

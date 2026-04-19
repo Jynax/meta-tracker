@@ -4,7 +4,7 @@
 // See specs/2026-04-14-data-model-rethink.md.
 import type { Epic, Task } from '../types/tracker';
 
-export const generatedAt: string = "2026-04-18T19:49:35.352Z";
+export const generatedAt: string = "2026-04-19T13:01:02.803Z";
 
 export const epics: Epic[] = [
   {
@@ -3461,19 +3461,31 @@ export const tasks: Task[] = [
   {
     "id": "meta-108",
     "project": "meta",
-    "touches": [],
+    "touches": [
+      "src/index.css",
+      "src/components/BugsTab.tsx",
+      "src/components/CodeTab.tsx",
+      "src/components/SessionsTab.tsx",
+      "src/components/TasksTab.tsx",
+      "src/components/StackedTreeView.tsx"
+    ],
     "epic": "epic-data-model-rethink",
     "title": "Animation on pulldowns/disclosures still happening (PR",
-    "status": "Queued",
+    "status": "Done",
     "priority": "Medium",
-    "outputs": [],
+    "outputs": [
+      {
+        "type": "PR",
+        "ref": 190
+      }
+    ],
     "dates": {
       "created": "2026-04-17",
-      "started": null,
-      "completed": null
+      "started": "2026-04-18",
+      "completed": "2026-04-18"
     },
-    "tool": null,
-    "driver": null,
+    "tool": "claude-code",
+    "driver": "collaborative",
     "effort": {
       "estimate": null,
       "actual": null
@@ -3509,19 +3521,29 @@ export const tasks: Task[] = [
   {
     "id": "meta-110",
     "project": "meta",
-    "touches": [],
+    "touches": [
+      "src/components/EpicGantt.tsx",
+      "src/components/OverviewTab.tsx",
+      "src/components/TasksTab.tsx",
+      "src/components/StackedTreeView.tsx"
+    ],
     "epic": "epic-data-model-rethink",
     "title": "EpicGantt tooltip dismisses on any keypress (native title attribute)",
-    "status": "Queued",
+    "status": "Done",
     "priority": "Medium",
-    "outputs": [],
+    "outputs": [
+      {
+        "type": "PR",
+        "ref": 191
+      }
+    ],
     "dates": {
       "created": "2026-04-17",
-      "started": null,
-      "completed": null
+      "started": "2026-04-18",
+      "completed": "2026-04-18"
     },
-    "tool": null,
-    "driver": null,
+    "tool": "claude-code",
+    "driver": "collaborative",
     "effort": {
       "estimate": null,
       "actual": null
@@ -3588,7 +3610,12 @@ export const tasks: Task[] = [
     "title": "Backfill task files for S93+S94 untracked PRs (#180, #181, #184, #185, #186, #187)",
     "status": "Done",
     "priority": "Medium",
-    "outputs": [],
+    "outputs": [
+      {
+        "type": "PR",
+        "ref": 189
+      }
+    ],
     "dates": {
       "created": "2026-04-17T00:00:00.000Z",
       "started": "2026-04-18T00:00:00.000Z",

@@ -313,19 +313,13 @@ test.describe('Metrics Dashboard', () => {
     expect(allCount).toBeGreaterThan(defaultCount);
   });
 
-  test('MT tasks tab shows stalled epic indicator', async ({ page }) => {
+  test('MT tasks tab shows stalled epic indicator in default view', async ({ page }) => {
     await page.getByRole('button', { name: 'Tasks' }).click();
     await page.waitForTimeout(300);
-    // Stalled epics only exist in the default ("Active + stalled") view, where
-    // the cap limits rendered curves to 6. When stalled epics are in-set we
-    // expect EITHER a `data-stalled="true"` label to render OR the "X epics
-    // hidden by filter" footer — that footer is how the component signals
-    // stalled data was computed but trimmed below the cap.
-    const stalledLabel = page.locator('.curve-label[data-stalled="true"]');
-    const hiddenFooter = page.getByText(/epics? hidden by filter/);
-    const stalledCount = await stalledLabel.count();
-    const hiddenVisible = await hiddenFooter.count();
-    expect(stalledCount + hiddenVisible).toBeGreaterThan(0);
+    // epic-shared-project-milestones is In Progress with no completed tasks — stalled epics
+    // bypass the cap and always appear.
+    const stalled = page.locator('.curve-label[data-stalled="true"]');
+    await expect(stalled.first()).toBeVisible();
   });
 
   test('MT tasks tab regression guard: no Task Throughput text', async ({ page }) => {

@@ -228,3 +228,27 @@ export function getAllEpics(): Epic[] {
 }
 
 export { generatedAt };
+
+// ── Active Epic Progress: cumulative weekly series per epic ─────────
+
+export interface EpicSeries {
+  epicId: string;
+  epicTitle: string;
+  status: 'Queued' | 'In Progress' | 'Done' | 'Cancelled' | 'Retired';
+  stalled: boolean;
+  color: string;
+  points: { weekStart: string; cumulative: number; delta: number }[];
+  totalCompleted: number;
+}
+
+export interface EpicCumulativeOpts {
+  now: Date;
+  windowDays: number;
+  plotWindowWeeks: number;
+  cap: number;
+  includeAll: boolean;
+}
+
+export function getEpicCumulativeSeries(_opts: EpicCumulativeOpts): EpicSeries[] {
+  return [];
+}

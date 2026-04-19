@@ -6,7 +6,7 @@ interface ActiveEpicProgressProps {
   setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
 }
 
-export default function ActiveEpicProgress({ projectId: _projectId, setTooltip: _setTooltip }: ActiveEpicProgressProps) {
+export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }: ActiveEpicProgressProps) {
   const [includeAll, setIncludeAll] = useState(false);
 
   const series = useMemo(
@@ -183,15 +183,40 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip: 
                 strokeDasharray={isStalled ? '5 4' : undefined}
                 points={pointsStr}
               />
-              {s.points.map((p, i) => (
-                <circle
-                  key={i}
-                  cx={xScale(p.weekStart)}
-                  cy={yScale(p.cumulative)}
-                  r={i === s.points.length - 1 ? 3.5 : 3}
-                  fill={stroke}
-                />
-              ))}
+              {s.points.map((p, i) => {
+                const isLast = i === s.points.length - 1;
+                return (
+                  <circle
+                    key={i}
+                    cx={xScale(p.weekStart)}
+                    cy={yScale(p.cumulative)}
+                    r={isLast ? 3.5 : 3}
+                    fill={stroke}
+                    style={{ cursor: 'pointer' }}
+                    onMouseEnter={(e) =>
+                      setTooltip({
+                        x: e.clientX,
+                        y: e.clientY,
+                        content: (
+                          <div style={{ minWidth: 160 }}>
+                            <div style={{ fontWeight: 600 }}>{s.epicTitle}</div>
+                            <div style={{ fontSize: 11, color: '#94a3b8' }}>Week of {p.weekStart}</div>
+                            {p.delta > 0 && <div style={{ fontSize: 11 }}>+{p.delta} this week</div>}
+                            <div style={{ fontSize: 11 }}>Cumulative: {p.cumulative}</div>
+                            <div style={{ fontSize: 11, color: '#94a3b8' }}>
+                              Status: {isStalled ? 'stalled' : s.status}
+                            </div>
+                          </div>
+                        ),
+                      })
+                    }
+                    onMouseMove={(e) =>
+                      setTooltip((prev) => (prev ? { ...prev, x: e.clientX, y: e.clientY } : prev))
+                    }
+                    onMouseLeave={() => setTooltip(null)}
+                  />
+                );
+              })}
               {isStalled && (
                 <>
                   <circle cx={lastX} cy={lastY} r={5} fill="none" stroke="#fbbf24" strokeWidth={1} />

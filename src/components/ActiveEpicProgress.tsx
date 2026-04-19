@@ -66,6 +66,19 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }
     return new Map(entries.map((e) => [e.epicId, e.y]));
   }, [series, maxY, allWeeks]);
 
+  const totalQualifyingCount = useMemo(() => {
+    if (includeAll) return series.length;
+    const all = getEpicCumulativeSeries({
+      now: new Date(),
+      windowDays: 30,
+      plotWindowWeeks: 8,
+      cap: Number.POSITIVE_INFINITY,
+      includeAll: false,
+    });
+    return all.length;
+  }, [includeAll, series]);
+  const hiddenCount = Math.max(0, totalQualifyingCount - series.length);
+
   return (
     <div
       style={{
@@ -240,6 +253,16 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }
           );
         })}
       </svg>
+      {series.length === 0 && (
+        <div style={{ textAlign: 'center', color: '#64748b', fontSize: 12, padding: '16px 0' }}>
+          No active epics. Toggle "All epics" to see the full history.
+        </div>
+      )}
+      {hiddenCount > 0 && (
+        <div style={{ marginTop: 8, paddingTop: 10, borderTop: '1px solid #1e293b', fontSize: 11, color: '#64748b' }}>
+          <strong style={{ color: '#94a3b8' }}>{hiddenCount} {hiddenCount === 1 ? 'epic' : 'epics'} hidden by filter</strong> — click "All epics" to reveal.
+        </div>
+      )}
     </div>
   );
 }

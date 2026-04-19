@@ -48,6 +48,24 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip: 
 
   const yTicks = [0, maxY / 3, (2 * maxY) / 3, maxY].map((v) => Math.round(v));
 
+  // Compute adjusted y for each curve-end label to avoid collision.
+  const labelYByEpic = useMemo(() => {
+    const entries = series.map((s) => {
+      const last = s.points[s.points.length - 1];
+      // For empty-points stalled, anchor at the y=0 baseline
+      const y = last ? yScale(last.cumulative) : yScale(0);
+      return { epicId: s.epicId, y };
+    });
+    entries.sort((a, b) => a.y - b.y);
+    const MIN_GAP = 14;
+    for (let i = 1; i < entries.length; i++) {
+      if (entries[i].y - entries[i - 1].y < MIN_GAP) {
+        entries[i].y = entries[i - 1].y + MIN_GAP;
+      }
+    }
+    return new Map(entries.map((e) => [e.epicId, e.y]));
+  }, [series, maxY, allWeeks]);
+
   return (
     <div
       style={{
@@ -137,7 +155,7 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip: 
                 <circle cx={rightX} cy={placeholderY} r={8} fill="none" stroke={stroke} strokeWidth={0.5} strokeDasharray="2 2" opacity={0.5} />
                 <text
                   x={rightX + 10}
-                  y={placeholderY + 4}
+                  y={(labelYByEpic.get(s.epicId) ?? placeholderY) + 4}
                   fill={stroke}
                   fontSize={11}
                   fontWeight={600}
@@ -182,7 +200,7 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip: 
               )}
               <text
                 x={lastX + 10}
-                y={lastY + 4}
+                y={(labelYByEpic.get(s.epicId) ?? lastY) + 4}
                 fill={stroke}
                 fontSize={11}
                 fontWeight={600}

@@ -712,4 +712,16 @@ export const bipDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 15, linesAdded: 196, linesDeleted: 3, totalDecisions: 0 }, // estimated
     driverSummary: { human: 0, ai: 0, collaborative: 1 },
   },
+  {
+    date: 'Apr 17',
+    title: 'Dependabot bumps',
+    projectId: 'bip',
+    phase: 'Shipped',
+    chapterId: 'ch-testing',
+    blocks: [
+      { id: 'bip-dependabot-apr17', dayId: 'Apr 17', label: 'Dependabot dev + prod bumps', workCategory: 'Tooling', driver: 'agent-led', operator: 'claude-code', timeMinutes: 5, linesAdded: 109, linesDeleted: 110, note: 'Plumbing — vite dev-dep bump 8.0.5 → 8.0.8 (PR #96) and production-dependencies group 3 updates (PR #97). Both merged Apr 17. No code behavior change.', contextWindowOrigin: false }, // estimated
+    ],
+    metrics: { totalTimeMinutes: 5, linesAdded: 109, linesDeleted: 110, totalDecisions: 0 }, // estimated
+    driverSummary: { human: 0, ai: 1, collaborative: 0 },
+  },
 ];

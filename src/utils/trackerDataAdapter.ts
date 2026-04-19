@@ -301,5 +301,13 @@ export function getEpicCumulativeSeries(opts: EpicCumulativeOpts): EpicSeries[] 
   }
 
   if (opts.includeAll) return results;
-  return results;
+
+  const cutoffMs = opts.now.getTime() - opts.windowDays * 24 * 60 * 60 * 1000;
+  const active = results.filter((s) => {
+    const last = s.points[s.points.length - 1]?.weekStart;
+    if (!last) return false;
+    return new Date(last + 'T00:00:00Z').getTime() >= cutoffMs;
+  });
+
+  return active;
 }

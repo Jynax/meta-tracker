@@ -46,3 +46,29 @@ test('includeAll returns all epics with at least one completed task, cumulative 
     );
   }
 });
+
+test('default view excludes epics whose latest completion is older than windowDays', () => {
+  const now = new Date('2026-04-19T00:00:00Z');
+  const out = getEpicCumulativeSeries({
+    now,
+    windowDays: 30,
+    plotWindowWeeks: 8,
+    cap: 100,
+    includeAll: false,
+  });
+
+  const cutoffMs = now.getTime() - 30 * 24 * 60 * 60 * 1000;
+
+  for (const series of out) {
+    if (series.stalled) continue;
+    const lastWeek = series.points[series.points.length - 1].weekStart;
+    const lastWeekMs = new Date(lastWeek + 'T00:00:00Z').getTime();
+    assert.ok(
+      lastWeekMs >= cutoffMs,
+      `${series.epicId} latest week ${lastWeek} is older than window`,
+    );
+  }
+
+  const inception = out.find((s) => s.epicId === 'epic-meta-inception');
+  assert.equal(inception, undefined, 'old epics should be excluded by default');
+});

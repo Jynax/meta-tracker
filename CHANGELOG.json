@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-04-19",
+    "entries": [
+      {
+        "category": "improved",
+        "title": "Hover tooltips across the app now follow the cursor and persist through keypresses — no more native browser tooltips dismissing on arrow keys",
+        "description": ""
+      }
+    ]
+  },
+  {
     "date": "2026-04-18",
     "entries": [
       {

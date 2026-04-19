@@ -320,13 +320,15 @@ export function getEpicCumulativeSeries(opts: EpicCumulativeOpts): EpicSeries[] 
     if (existing) {
       active.push({ ...existing, stalled: true, points: [...existing.points] });
     } else {
+      // Never-started stalled epic: zero completed tasks. Return empty points;
+      // component layer handles the flat-line placeholder render.
       active.push({
         epicId: epic.id,
         epicTitle: epic.title,
         status: epic.status,
         stalled: true,
         color: EPIC_PALETTE_COLORS[colorIdx % EPIC_PALETTE_COLORS.length],
-        points: [{ weekStart: mondayOfWeek(opts.now.toISOString()), cumulative: 0, delta: 0 }],
+        points: [],
         totalCompleted: 0,
       });
       colorIdx++;

@@ -105,3 +105,19 @@ test('default view sorts by most-recent completion (desc) then caps at 6', () =>
     assert.ok(aLast >= bLast, `out[${i}] (${aLast}) should be >= out[${i + 1}] (${bLast})`);
   }
 });
+
+test('never-started stalled In Progress epic returns empty points array', () => {
+  const out = getEpicCumulativeSeries({
+    now: new Date('2026-04-19T00:00:00Z'),
+    windowDays: 30,
+    plotWindowWeeks: 8,
+    cap: 100,
+    includeAll: false,
+  });
+
+  const neverStarted = out.find((s) => s.epicId === 'epic-shared-project-milestones');
+  assert.ok(neverStarted, 'never-started stalled epic should be present');
+  assert.equal(neverStarted.stalled, true);
+  assert.equal(neverStarted.points.length, 0, 'zero-task stalled should have empty points');
+  assert.equal(neverStarted.totalCompleted, 0);
+});

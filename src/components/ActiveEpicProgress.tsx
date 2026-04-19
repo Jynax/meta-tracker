@@ -113,6 +113,89 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip: 
             </text>
           );
         })}
+        {/* curves */}
+        {series.map((s) => {
+          const isStalled = s.stalled;
+          const stroke = isStalled ? '#fbbf24' : s.color;
+
+          // Empty-points case: never-started stalled epic — draw flat dashed placeholder
+          if (s.points.length === 0) {
+            const placeholderY = yScale(0);
+            const rightX = PLOT.right;
+            return (
+              <g key={s.epicId}>
+                <line
+                  x1={PLOT.left}
+                  y1={placeholderY}
+                  x2={PLOT.right}
+                  y2={placeholderY}
+                  stroke={stroke}
+                  strokeWidth={2}
+                  strokeDasharray="5 4"
+                />
+                <circle cx={rightX} cy={placeholderY} r={5} fill="none" stroke={stroke} strokeWidth={1} />
+                <circle cx={rightX} cy={placeholderY} r={8} fill="none" stroke={stroke} strokeWidth={0.5} strokeDasharray="2 2" opacity={0.5} />
+                <text
+                  x={rightX + 10}
+                  y={placeholderY + 4}
+                  fill={stroke}
+                  fontSize={11}
+                  fontWeight={600}
+                  className="curve-label"
+                  data-epic-id={s.epicId}
+                  data-stalled="true"
+                >
+                  {s.epicTitle} · 0 · stalled
+                </text>
+              </g>
+            );
+          }
+
+          // Normal case: render polyline + points + (if stalled) ring
+          const pointsStr = s.points.map((p) => `${xScale(p.weekStart)},${yScale(p.cumulative)}`).join(' ');
+          const last = s.points[s.points.length - 1];
+          const lastX = xScale(last.weekStart);
+          const lastY = yScale(last.cumulative);
+          return (
+            <g key={s.epicId}>
+              <polyline
+                fill="none"
+                stroke={stroke}
+                strokeWidth={2.5}
+                strokeDasharray={isStalled ? '5 4' : undefined}
+                points={pointsStr}
+              />
+              {s.points.map((p, i) => (
+                <circle
+                  key={i}
+                  cx={xScale(p.weekStart)}
+                  cy={yScale(p.cumulative)}
+                  r={i === s.points.length - 1 ? 3.5 : 3}
+                  fill={stroke}
+                />
+              ))}
+              {isStalled && (
+                <>
+                  <circle cx={lastX} cy={lastY} r={5} fill="none" stroke="#fbbf24" strokeWidth={1} />
+                  <circle cx={lastX} cy={lastY} r={8} fill="none" stroke="#fbbf24" strokeWidth={0.5} strokeDasharray="2 2" opacity={0.5} />
+                </>
+              )}
+              <text
+                x={lastX + 10}
+                y={lastY + 4}
+                fill={stroke}
+                fontSize={11}
+                fontWeight={600}
+                className="curve-label"
+                data-epic-id={s.epicId}
+                data-stalled={isStalled ? 'true' : 'false'}
+              >
+                {s.epicTitle} · {s.totalCompleted}
+                {isStalled ? ' · stalled' : s.status === 'Done' ? ' · done' : ''}
+              </text>
+            </g>
+          );
+        })}
       </svg>
     </div>
   );

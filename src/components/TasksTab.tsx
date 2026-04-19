@@ -233,6 +233,9 @@ export default function TasksTab({ setTooltip }: TasksTabProps) {
                           ),
                         });
                       }}
+                      onMouseMove={(e) => {
+                        setTooltip((prev) => (prev ? { ...prev, x: e.clientX, y: e.clientY } : prev));
+                      }}
                       onMouseLeave={() => setTooltip(null)}
                     />
                   ))}
@@ -268,6 +271,9 @@ export default function TasksTab({ setTooltip }: TasksTabProps) {
                             </>
                           ),
                         });
+                      }}
+                      onMouseMove={(e) => {
+                        setTooltip((prev) => (prev ? { ...prev, x: e.clientX, y: e.clientY } : prev));
                       }}
                       onMouseLeave={() => setTooltip(null)}
                     >
@@ -415,7 +421,28 @@ export default function TasksTab({ setTooltip }: TasksTabProps) {
                             </span>
                             {task.decisions && task.decisions.length > 0 && (
                               <span
-                                title={task.decisions.map((d) => d.title).join(', ')}
+                                onMouseEnter={(e) => {
+                                  setTooltip({
+                                    x: e.clientX,
+                                    y: e.clientY,
+                                    content: (
+                                      <>
+                                        <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>
+                                          {task.decisions.length} decision{task.decisions.length === 1 ? '' : 's'}
+                                        </div>
+                                        {task.decisions.map((d) => (
+                                          <div key={d.id} style={{ color: C.amber, fontSize: 11 }}>
+                                            • {d.title}
+                                          </div>
+                                        ))}
+                                      </>
+                                    ),
+                                  });
+                                }}
+                                onMouseMove={(e) => {
+                                  setTooltip((prev) => (prev ? { ...prev, x: e.clientX, y: e.clientY } : prev));
+                                }}
+                                onMouseLeave={() => setTooltip(null)}
                                 style={{
                                   color: C.amber,
                                   fontSize: 12,
@@ -427,7 +454,28 @@ export default function TasksTab({ setTooltip }: TasksTabProps) {
                             )}
                             {task.events && task.events.length > 0 && (
                               <span
-                                title={task.events.map((e) => `${e.type}: ${e.note}`).join('\n')}
+                                onMouseEnter={(e) => {
+                                  setTooltip({
+                                    x: e.clientX,
+                                    y: e.clientY,
+                                    content: (
+                                      <>
+                                        <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>
+                                          {task.events.length} event{task.events.length === 1 ? '' : 's'}
+                                        </div>
+                                        {task.events.map((ev, i) => (
+                                          <div key={i} style={{ color: C.slate, fontSize: 11 }}>
+                                            <span style={{ color: C.muted }}>{ev.type}:</span> {ev.note}
+                                          </div>
+                                        ))}
+                                      </>
+                                    ),
+                                  });
+                                }}
+                                onMouseMove={(e) => {
+                                  setTooltip((prev) => (prev ? { ...prev, x: e.clientX, y: e.clientY } : prev));
+                                }}
+                                onMouseLeave={() => setTooltip(null)}
                                 style={{
                                   color: C.slate,
                                   fontSize: 10,

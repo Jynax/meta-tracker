@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { getEpicGanttBars } from '../utils/trackerDataAdapter';
 import { C } from './MetricsCard';
 
@@ -15,7 +15,11 @@ function formatShortDate(iso: string): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-export default function EpicGantt() {
+interface EpicGanttProps {
+  setTooltip?: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
+}
+
+export default function EpicGantt({ setTooltip }: EpicGanttProps = {}) {
   const bars = useMemo(() => getEpicGanttBars(), []);
 
   const range = useMemo(() => {
@@ -96,8 +100,23 @@ export default function EpicGantt() {
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
+                  cursor: 'default',
                 }}
-                title={bar.title}
+                onMouseEnter={(event) => {
+                  setTooltip?.({
+                    x: event.clientX,
+                    y: event.clientY,
+                    content: (
+                      <div style={{ color: C.white, fontSize: 12, fontWeight: 600, maxWidth: 260 }}>
+                        {bar.title}
+                      </div>
+                    ),
+                  });
+                }}
+                onMouseMove={(event) => {
+                  setTooltip?.((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                }}
+                onMouseLeave={() => setTooltip?.(null)}
               >
                 {bar.title}
               </div>
@@ -131,10 +150,30 @@ export default function EpicGantt() {
                       ? `linear-gradient(135deg, ${color}30 25%, transparent 25%, transparent 50%, ${color}30 50%, ${color}30 75%, transparent 75%, transparent)`
                       : undefined,
                     backgroundSize: ongoing ? '8px 8px' : undefined,
+                    cursor: 'default',
                   }}
-                  title={`${bar.title} · ${bar.status} · ${formatShortDate(bar.startDate)} → ${
-                    bar.endDate ? formatShortDate(bar.endDate) : 'ongoing'
-                  } · ${bar.taskCount} task${bar.taskCount === 1 ? '' : 's'}`}
+                  onMouseEnter={(event) => {
+                    setTooltip?.({
+                      x: event.clientX,
+                      y: event.clientY,
+                      content: (
+                        <>
+                          <div style={{ color: C.white, fontSize: 12, fontWeight: 600, maxWidth: 260 }}>{bar.title}</div>
+                          <div style={{ color, fontSize: 11 }}>{bar.status}</div>
+                          <div style={{ color: C.muted, fontSize: 11 }}>
+                            {formatShortDate(bar.startDate)} → {bar.endDate ? formatShortDate(bar.endDate) : 'ongoing'}
+                          </div>
+                          <div style={{ color: C.slate, fontSize: 11 }}>
+                            {bar.taskCount} {bar.taskCount === 1 ? 'task' : 'tasks'}
+                          </div>
+                        </>
+                      ),
+                    });
+                  }}
+                  onMouseMove={(event) => {
+                    setTooltip?.((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
+                  }}
+                  onMouseLeave={() => setTooltip?.(null)}
                 />
               </div>
               <div

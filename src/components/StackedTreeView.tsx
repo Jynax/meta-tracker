@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, type ReactNode } from 'react';
 import { C } from './MetricsCard';
 import {
   Project,
@@ -156,6 +156,31 @@ function nodeMatchesFilter(node: ProjectNode, filter: FilterType): boolean {
   return false;
 }
 
+type TooltipState = { x: number; y: number; content: ReactNode } | null;
+
+function TooltipLayer({ tooltip }: { tooltip: TooltipState }) {
+  if (!tooltip) return null;
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        left: tooltip.x + 12,
+        top: tooltip.y - 10,
+        zIndex: 50,
+        pointerEvents: 'none',
+        backgroundColor: C.cardBg,
+        border: `1px solid ${C.border}`,
+        borderRadius: 6,
+        padding: '6px 10px',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+        maxWidth: 360,
+      }}
+    >
+      {tooltip.content}
+    </div>
+  );
+}
+
 export default function StackedTreeView(props: StackedTreeViewProps) {
   const {
     project,
@@ -173,30 +198,14 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
     onEpicToggle,
   } = props;
 
+  const [tooltip, setTooltip] = useState<TooltipState>(null);
+
   const activeFilter: FilterType = filter as FilterType;
 
-  // ── Epic mode rendering ─────────────────────────────────────────
-  if (mode === 'epics' && epicTree) {
-    return (
-      <EpicTreeView
-        epicTree={epicTree}
-        expandedEpics={expandedEpics ?? new Set<string>()}
-        onEpicToggle={onEpicToggle ?? (() => {})}
-        expandedNode={expandedNode}
-        onNodeToggle={onNodeToggle}
-        filter={activeFilter}
-      />
-    );
-  }
-
-  const allNodes = project.chapters.flatMap((chapter) => chapter.nodes);
-  const totalEntries = allNodes.length;
-  const deadEnds = allNodes.filter((node) => node.type === 'dead-end').length;
-  const discoveries = allNodes.filter((node) => node.type === 'discovery').length;
-  const pivots = allNodes.filter((node) => node.type === 'pivot').length;
-  const categoryCounts = getCategoryCounts(allNodes);
-
-  // Build day groups: group all nodes by dayId, sorted newest-first
+  // NOTE: All hooks must be called unconditionally before any early return,
+  // so the hook call order stays stable across mode switches (epic ↔ chapters).
+  // dayGroups is only used in chapters mode but computing it in epic mode is cheap
+  // and avoids "Rendered more hooks than during previous render" violations.
   const dayGroups: DayGroup[] = React.useMemo(() => {
     // Build a day lookup from the days prop
     const dayLookup: Record<string, DayEntry> = {};
@@ -240,6 +249,31 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
     groups.sort((a, b) => parseDateKey(b.dayId) - parseDateKey(a.dayId));
     return groups;
   }, [project.chapters, days, dayPhaseMap]);
+
+  // ── Epic mode rendering ─────────────────────────────────────────
+  if (mode === 'epics' && epicTree) {
+    return (
+      <>
+        <EpicTreeView
+          epicTree={epicTree}
+          expandedEpics={expandedEpics ?? new Set<string>()}
+          onEpicToggle={onEpicToggle ?? (() => {})}
+          expandedNode={expandedNode}
+          onNodeToggle={onNodeToggle}
+          filter={activeFilter}
+          setTooltip={setTooltip}
+        />
+        <TooltipLayer tooltip={tooltip} />
+      </>
+    );
+  }
+
+  const allNodes = project.chapters.flatMap((chapter) => chapter.nodes);
+  const totalEntries = allNodes.length;
+  const deadEnds = allNodes.filter((node) => node.type === 'dead-end').length;
+  const discoveries = allNodes.filter((node) => node.type === 'discovery').length;
+  const pivots = allNodes.filter((node) => node.type === 'pivot').length;
+  const categoryCounts = getCategoryCounts(allNodes);
 
   const renderCategoryBar = (
     counts: Record<NodeCategory, number>,
@@ -285,7 +319,21 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
                 textOverflow: 'ellipsis',
                 padding: showText ? '0 6px' : 0,
               }}
-              title={`${formatCategory(category)} (${count})`}
+              onMouseEnter={(e) => {
+                setTooltip({
+                  x: e.clientX,
+                  y: e.clientY,
+                  content: (
+                    <div style={{ color: COLORS.white, fontSize: 12, fontWeight: 600 }}>
+                      {formatCategory(category)} ({count})
+                    </div>
+                  ),
+                });
+              }}
+              onMouseMove={(e) => {
+                setTooltip((prev) => (prev ? { ...prev, x: e.clientX, y: e.clientY } : prev));
+              }}
+              onMouseLeave={() => setTooltip(null)}
             >
               {showText ? `${formatCategory(category)} (${count})` : ''}
             </div>
@@ -402,6 +450,7 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
   };
 
   return (
+    <>
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
       <div
         style={{
@@ -684,6 +733,8 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
         );
       })}
     </div>
+    <TooltipLayer tooltip={tooltip} />
+    </>
   );
 }
 
@@ -696,6 +747,7 @@ interface EpicTreeViewProps {
   expandedNode: string | null;
   onNodeToggle: (nodeId: string) => void;
   filter: FilterType;
+  setTooltip: (tooltip: TooltipState | ((prev: TooltipState) => TooltipState)) => void;
 }
 
 function EpicTreeView({
@@ -705,6 +757,7 @@ function EpicTreeView({
   expandedNode,
   onNodeToggle,
   filter,
+  setTooltip,
 }: EpicTreeViewProps) {
   const allTasks = epicTree.flatMap((e) => e.children);
   const totalTasks = allTasks.length;
@@ -955,8 +1008,29 @@ function EpicTreeView({
                             ))}
                           {task.decisions.length > 0 && (
                             <span
-                              title={`${task.decisions.length} decision${task.decisions.length === 1 ? '' : 's'}`}
-                              style={{ color: C.amber, fontSize: 12 }}
+                              onMouseEnter={(e) => {
+                                setTooltip({
+                                  x: e.clientX,
+                                  y: e.clientY,
+                                  content: (
+                                    <>
+                                      <div style={{ color: C.white, fontSize: 12, fontWeight: 600 }}>
+                                        {task.decisions.length} decision{task.decisions.length === 1 ? '' : 's'}
+                                      </div>
+                                      {task.decisions.map((d) => (
+                                        <div key={d.id} style={{ color: C.amber, fontSize: 11 }}>
+                                          • {d.title}
+                                        </div>
+                                      ))}
+                                    </>
+                                  ),
+                                });
+                              }}
+                              onMouseMove={(e) => {
+                                setTooltip((prev) => (prev ? { ...prev, x: e.clientX, y: e.clientY } : prev));
+                              }}
+                              onMouseLeave={() => setTooltip(null)}
+                              style={{ color: C.amber, fontSize: 12, cursor: 'help' }}
                             >
                               ◆
                             </span>

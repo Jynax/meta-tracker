@@ -145,7 +145,7 @@ export default function OverviewTab({
 
   return (
     <div className="space-y-4">
-      {isMeta && <EpicGantt />}
+      {isMeta && <EpicGantt setTooltip={setTooltip} />}
       {isMeta && overviewStats ? (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <Card

@@ -763,4 +763,18 @@ export const metaDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 505, linesAdded: 1382, linesDeleted: 649, totalDecisions: 3 }, // estimated
     driverSummary: { human: 0, ai: 2, collaborative: 4 },
   },
+  {
+    date: 'Apr 18',
+    title: 'Session 96 close — backfill dogfood + disclosure fix + tooltip sweep',
+    projectId: 'meta',
+    phase: 'Shipped',
+    chapterId: 'meta-ch-decision-tree-completeness',
+    blocks: [
+      { id: 'meta-session-96a', dayId: 'Apr 18', label: '#113 S92-S95 backfill (metrics-push dogfood replay)', workCategory: 'Tooling', driver: 'collaborative', operator: 'claude-code', timeMinutes: 60, linesAdded: 144, linesDeleted: 6, note: 'Replayed /metrics-push retroactively against 6 S93-S94 untracked PRs. Idempotency pre-flight correctly skipped PR #180 (in done/105-*) and #181 (in done/106-*). Remaining 4 classified: #184 → new-intent task #114; #185 → new-intent task #118; #186 → new-intent task #119; #187 → plumbing (4/4 signals) in session-2026-04-17-plumbing.md bucket. Legacy rail filled the S92-S95 gap: Apr 16 + Apr 17 day-blocks covering PRs #178/#179/#180/#181/#183/#184/#185/#186/#187/#188 (10 blocks, 885 min estimated). Task #113. PR #189.', contextWindowOrigin: false }, // estimated
+      { id: 'meta-session-96b', dayId: 'Apr 18', label: '#108 disclosure press-feedback root cause + fix', workCategory: 'Bug', driver: 'collaborative', operator: 'claude-code', timeMinutes: 45, linesAdded: 19, linesDeleted: 0, note: 'Michael flagged jumpy disclosures still present after PR #181. Root cause: not in-component transitions but the global `button:active { transform: scale(0.97); transition: transform 100ms }` rule from S81 Design Polish firing on every disclosure button, creating a visible pulse during the 100ms :active hold. Fix: added `aria-expanded={isExpanded}` to 9 disclosure buttons across 5 files + CSS override in index.css targeting `button[aria-expanded]:active` to null out transform/transition. Primary action buttons keep press-feedback. 6 files, 82/82 e2e. Task #108. PR #190.', contextWindowOrigin: false }, // estimated
+      { id: 'meta-session-96c', dayId: 'Apr 18', label: '#110 custom tooltip sweep — zero native titles + hook-rule fix', workCategory: 'UX', driver: 'collaborative', operator: 'claude-code', timeMinutes: 120, linesAdded: 196, linesDeleted: 35, note: 'Scope extended in live review from EpicGantt bar-tooltip to every remaining native `title` in MT. 7 surfaces converted to custom cursor-following tooltips via onMouseMove: EpicGantt bar + title column, TasksTab chart bar/decision-pin/row decision marker/row event marker, StackedTreeView category-bar tile and Epic Tree task marker. StackedTreeView self-hosts its own tooltip state (called from DecisionTree, not MetricsDashboard, so no plumbing to a shared owner). Hook-rule violation caught during validation: hoisted React.useMemo(dayGroups) above the epic-mode early return — MT rendered 1 hook, non-MT rendered 2 until fix (14 chapters-mode e2e failing with "Rendered more hooks than during the previous render"). 4 files, 82/82 e2e. Task #110. PR #191.', contextWindowOrigin: false }, // estimated
+    ],
+    metrics: { totalTimeMinutes: 225, linesAdded: 359, linesDeleted: 41, totalDecisions: 3 }, // estimated
+    driverSummary: { human: 0, ai: 0, collaborative: 3 },
+  },
 ];

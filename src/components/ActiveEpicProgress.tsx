@@ -21,6 +21,33 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip: 
     [includeAll],
   );
 
+  const PLOT = { left: 70, right: 700, top: 40, bottom: 260 };
+
+  const maxY = useMemo(() => {
+    const max = Math.max(0, ...series.flatMap((s) => s.points.map((p) => p.cumulative)));
+    if (max <= 3) return 3;
+    return Math.ceil(max / 3) * 3;
+  }, [series]);
+
+  const allWeeks = useMemo(() => {
+    const set = new Set<string>();
+    for (const s of series) for (const p of s.points) set.add(p.weekStart);
+    return [...set].sort();
+  }, [series]);
+
+  const xScale = (weekStart: string) => {
+    if (allWeeks.length === 0) return (PLOT.left + PLOT.right) / 2;
+    if (allWeeks.length === 1) return (PLOT.left + PLOT.right) / 2;
+    const i = allWeeks.indexOf(weekStart);
+    if (i < 0) return PLOT.left;
+    const t = i / (allWeeks.length - 1);
+    return PLOT.left + t * (PLOT.right - PLOT.left);
+  };
+
+  const yScale = (cum: number) => PLOT.bottom - (cum / maxY) * (PLOT.bottom - PLOT.top);
+
+  const yTicks = [0, maxY / 3, (2 * maxY) / 3, maxY].map((v) => Math.round(v));
+
   return (
     <div
       style={{
@@ -60,10 +87,32 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip: 
       </div>
 
       <svg viewBox="0 0 900 300" width="100%" style={{ marginTop: 14 }} role="img" aria-label={`Cumulative task completion chart, ${series.length} epics visible`}>
-        {/* gridlines + axes + curves come in Tasks 7–9 */}
-        <text x="450" y="150" textAnchor="middle" fill="#64748b" fontSize="12">
-          {series.length} series loaded
+        {/* gridlines */}
+        {yTicks.slice(1).map((v) => (
+          <line key={v} x1={PLOT.left} y1={yScale(v)} x2={PLOT.right} y2={yScale(v)} stroke="#1e293b" strokeWidth={1} />
+        ))}
+        {/* axes */}
+        <line x1={PLOT.left} y1={PLOT.bottom} x2={PLOT.right} y2={PLOT.bottom} stroke="#334155" strokeWidth={1} />
+        <line x1={PLOT.left} y1={PLOT.top} x2={PLOT.left} y2={PLOT.bottom} stroke="#334155" strokeWidth={1} />
+        {/* y-axis labels */}
+        {yTicks.map((v) => (
+          <text key={v} x={PLOT.left - 7} y={yScale(v) + 3} textAnchor="end" fill="#64748b" fontSize={10}>
+            {v}
+          </text>
+        ))}
+        <text x={30} y={(PLOT.top + PLOT.bottom) / 2} textAnchor="middle" fill="#64748b" fontSize={10} transform={`rotate(-90 30 ${(PLOT.top + PLOT.bottom) / 2})`}>
+          tasks (cumulative)
         </text>
+        {/* x-axis labels — thin to max 6 visible */}
+        {allWeeks.map((w, i) => {
+          const every = Math.max(1, Math.ceil(allWeeks.length / 6));
+          if (i % every !== 0 && i !== allWeeks.length - 1) return null;
+          return (
+            <text key={w} x={xScale(w)} y={PLOT.bottom + 18} textAnchor="middle" fill="#64748b" fontSize={10}>
+              {formatTick(w)}
+            </text>
+          );
+        })}
       </svg>
     </div>
   );
@@ -79,4 +128,9 @@ function toggleStyle(active: boolean): React.CSSProperties {
     color: active ? '#e2e8f0' : '#94a3b8',
     cursor: 'pointer',
   };
+}
+
+function formatTick(isoWeekStart: string): string {
+  const d = new Date(isoWeekStart + 'T00:00:00Z');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 }

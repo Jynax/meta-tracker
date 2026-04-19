@@ -318,7 +318,7 @@ export function getEpicCumulativeSeries(opts: EpicCumulativeOpts): EpicSeries[] 
 
     const existing = results.find((s) => s.epicId === epic.id);
     if (existing) {
-      active.push({ ...existing, stalled: true });
+      active.push({ ...existing, stalled: true, points: [...existing.points] });
     } else {
       active.push({
         epicId: epic.id,

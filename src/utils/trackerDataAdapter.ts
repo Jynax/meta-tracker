@@ -335,13 +335,21 @@ export function getEpicCumulativeSeries(opts: EpicCumulativeOpts): EpicSeries[] 
     }
   }
 
-  active.sort((a, b) => {
+  // Split: stalled epics always show (not subject to cap); cap applies to non-stalled only.
+  const stalled = active.filter((s) => s.stalled);
+  const notStalled = active.filter((s) => !s.stalled);
+
+  const sortByRecency = (a: EpicSeries, b: EpicSeries) => {
     const aLast = a.points[a.points.length - 1]?.weekStart ?? '';
     const bLast = b.points[b.points.length - 1]?.weekStart ?? '';
     if (aLast !== bLast) return bLast.localeCompare(aLast);
     if (a.totalCompleted !== b.totalCompleted) return b.totalCompleted - a.totalCompleted;
     return a.epicId.localeCompare(b.epicId);
-  });
+  };
 
-  return active.slice(0, opts.cap);
+  notStalled.sort(sortByRecency);
+  stalled.sort(sortByRecency);
+
+  // Stalled first (visually prominent at top of label column), then top-N non-stalled.
+  return [...stalled, ...notStalled.slice(0, opts.cap)];
 }

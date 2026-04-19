@@ -88,7 +88,7 @@ test('In Progress epic with zero recent completions is included and flagged stal
   assert.equal(stalled.status, 'In Progress');
 });
 
-test('default view sorts by most-recent completion (desc) then caps at 6', () => {
+test('default view shows stalled epics plus top-N non-stalled (cap applies to non-stalled only)', () => {
   const out = getEpicCumulativeSeries({
     now: new Date('2026-04-19T00:00:00Z'),
     windowDays: 30,
@@ -97,12 +97,22 @@ test('default view sorts by most-recent completion (desc) then caps at 6', () =>
     includeAll: false,
   });
 
-  assert.ok(out.length <= 6, `default view should be capped at 6, got ${out.length}`);
+  const stalled = out.filter((s) => s.stalled);
+  const nonStalled = out.filter((s) => !s.stalled);
 
-  for (let i = 0; i < out.length - 1; i++) {
-    const aLast = out[i].points[out[i].points.length - 1]?.weekStart ?? '';
-    const bLast = out[i + 1].points[out[i + 1].points.length - 1]?.weekStart ?? '';
-    assert.ok(aLast >= bLast, `out[${i}] (${aLast}) should be >= out[${i + 1}] (${bLast})`);
+  // Stalled returns as the LEADING entries
+  for (let i = 0; i < stalled.length; i++) {
+    assert.equal(out[i].stalled, true, `out[${i}] should be stalled (stalled prepended)`);
+  }
+
+  // Non-stalled capped at 6
+  assert.ok(nonStalled.length <= 6, `non-stalled should be capped at 6, got ${nonStalled.length}`);
+
+  // Non-stalled sorted by most recent first (among themselves)
+  for (let i = 0; i < nonStalled.length - 1; i++) {
+    const aLast = nonStalled[i].points[nonStalled[i].points.length - 1]?.weekStart ?? '';
+    const bLast = nonStalled[i + 1].points[nonStalled[i + 1].points.length - 1]?.weekStart ?? '';
+    assert.ok(aLast >= bLast, `nonStalled[${i}] (${aLast}) should be >= nonStalled[${i + 1}] (${bLast})`);
   }
 });
 

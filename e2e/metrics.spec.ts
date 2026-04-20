@@ -287,7 +287,8 @@ test.describe('Metrics Dashboard', () => {
   test('MT tasks tab shows Active Epic Progress heading', async ({ page }) => {
     await page.getByRole('button', { name: 'Tasks' }).click();
     await page.waitForTimeout(300);
-    await expect(page.getByText('Active Epic Progress')).toBeVisible();
+    // Scope to chart container — task list may render task titles that mention the chart name.
+    await expect(page.getByTestId('active-epic-progress').getByText('Active Epic Progress')).toBeVisible();
   });
 
   test('MT tasks tab Active Epic Progress renders subtitle', async ({ page }) => {
@@ -322,10 +323,12 @@ test.describe('Metrics Dashboard', () => {
     await expect(stalled.first()).toBeVisible();
   });
 
-  test('MT tasks tab regression guard: no Task Throughput text', async ({ page }) => {
+  test('MT tasks tab regression guard: no Task Throughput chart', async ({ page }) => {
     await page.getByRole('button', { name: 'Tasks' }).click();
     await page.waitForTimeout(300);
-    await expect(page.getByText('Task Throughput')).toHaveCount(0);
+    // Guards against the old chart returning. Task titles may legitimately reference
+    // "Task Throughput" (e.g. the rethink task that replaced it), so scope to the chart container.
+    await expect(page.getByTestId('active-epic-progress').getByText('Task Throughput')).toHaveCount(0);
   });
 
   test('MT tasks tab has expandable week sections', async ({ page }) => {

@@ -4,7 +4,7 @@
 // See specs/2026-04-14-data-model-rethink.md.
 import type { Epic, Task } from '../types/tracker';
 
-export const generatedAt: string = "2026-04-19T13:01:02.803Z";
+export const generatedAt: string = "2026-04-19T18:19:52.993Z";
 
 export const epics: Epic[] = [
   {
@@ -3316,19 +3316,38 @@ export const tasks: Task[] = [
   {
     "id": "meta-104",
     "project": "meta",
-    "touches": [],
+    "touches": [
+      "src/components/TasksTab.tsx",
+      "src/components/ActiveEpicProgress.tsx",
+      "src/utils/trackerDataAdapter.ts",
+      "scripts/active-epic-progress.test.mjs",
+      "e2e/metrics.spec.ts"
+    ],
     "epic": "epic-data-model-rethink",
-    "title": "Task Throughput chart — rethink: legend, decision pin overlap, title/metric, stacking dimension",
-    "status": "Queued",
+    "title": "Task Throughput chart — rethink (replaced with Active Epic Progress)",
+    "status": "Done",
     "priority": "High",
-    "outputs": [],
+    "outputs": [
+      {
+        "type": "spec",
+        "path": "Meta Tracker/specs/2026-04-19-active-epic-progress-chart-spec.md"
+      },
+      {
+        "type": "plan",
+        "path": "Meta Tracker/plans/2026-04-19-active-epic-progress-chart.md"
+      },
+      {
+        "type": "PR",
+        "ref": 193
+      }
+    ],
     "dates": {
       "created": "2026-04-16T00:00:00.000Z",
-      "started": null,
-      "completed": null
+      "started": "2026-04-19T00:00:00.000Z",
+      "completed": "2026-04-19T00:00:00.000Z"
     },
-    "tool": null,
-    "driver": null,
+    "tool": "claude-code",
+    "driver": "collaborative",
     "effort": {
       "estimate": null,
       "actual": null
@@ -3422,11 +3441,11 @@ export const tasks: Task[] = [
     "outputs": [
       {
         "type": "spec",
-        "path": "Meta Tracker/specs/2026-04-17-task-file-sync-in-metrics-push.md"
+        "path": "Meta Tracker/specs/2026-04-17-task-file-sync-in-metrics-push-spec.md"
       },
       {
         "type": "plan",
-        "path": "Meta Tracker/plans/2026-04-17-task-file-sync-in-metrics-push.md"
+        "path": "Meta Tracker/plans/2026-04-17-task-file-sync-in-metrics-push-plan.md"
       },
       {
         "type": "command",

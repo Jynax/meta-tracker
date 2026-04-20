@@ -777,4 +777,18 @@ export const metaDays: DayEntry[] = [
     metrics: { totalTimeMinutes: 225, linesAdded: 359, linesDeleted: 41, totalDecisions: 3 }, // estimated
     driverSummary: { human: 0, ai: 0, collaborative: 3 },
   },
+  {
+    date: 'Apr 19',
+    title: 'Session 97 — S96 metrics close + Active Epic Progress + OpenCode A/B capture',
+    projectId: 'meta',
+    phase: 'Shipped',
+    chapterId: 'meta-ch-decision-tree-completeness',
+    blocks: [
+      { id: 'meta-session-97a', dayId: 'Apr 19', label: 'Session 96 metrics close push', workCategory: 'Tooling', driver: 'collaborative', operator: 'claude-code', timeMinutes: 30, linesAdded: 57, linesDeleted: 16, note: 'Second push for S96 close-out — Apr 18 day-block with 3 sub-sessions (#189/#190/#191) and task-file rail sync appending PR #190 to #108 outputs and PR #191 to #110 outputs. Both adapter validation (generate:data) and tsc clean. Hubs already synced from prior push. PR #192.', contextWindowOrigin: false }, // estimated
+      { id: 'meta-session-97b', dayId: 'Apr 19', label: '#104 Active Epic Progress — rethink + ship', workCategory: 'Feature', driver: 'collaborative', operator: 'claude-code', timeMinutes: 270, linesAdded: 1117, linesDeleted: 276, note: 'Full brainstorm → spec → plan → subagent-driven build → review → ship of Tasks-tab chart redesign. Task #104 Task Throughput replaced with Active Epic Progress cumulative-completion line chart. Brainstorm used visual companion (4 shape options → C2 overlapping curves → 2 layout mockups → proposed-defaults sign-off). Decisions: cap=6 applies to non-stalled only (stalled always visible, prepended); empty-points placeholder for never-started stalled epics; inline curve-end labels with 14px collision bump; cursor-following tooltip via shipped #110 pattern; no decision pins on this chart. Velocity chart captured to ideas-inbox for Corp CC MT clone. Adapter: new getEpicCumulativeSeries in trackerDataAdapter.ts + 6 node:test smoke tests via tsx. Component: new ActiveEpicProgress.tsx (285 LOC). Integration: TasksTab.tsx shrank 566 → 297 LOC (dead chart helpers removed). E2E: 82 → 87 tests, 2 retargeted + 5 new + 1 regression guard. Subagent-driven-development: 6 implementer dispatches, 3 review cycles (2 with fixes — points-array clone + stalled-exempt-from-cap). 18 commits. Spec at specs/2026-04-19-active-epic-progress-chart-spec.md, plan at plans/2026-04-19-active-epic-progress-chart.md. PR #193.', contextWindowOrigin: false }, // estimated
+      { id: 'meta-session-97c', dayId: 'Apr 19', label: 'OpenCode A/B test chain capture + Obsidian exploration task', workCategory: 'Tooling', driver: 'collaborative', operator: 'claude-code', timeMinutes: 20, linesAdded: 0, linesDeleted: 0, note: '/capture flow filed 4 cross-project tasks to _Shared/tasks-general/. #16 Explore Obsidian results after Claude Code skill reduction sweep. #17 OpenCode parity setup (desktop shortcut + slash commands port + MCP reuse + agent routing validation; folds in unresolved items from Apr 8 opencode-setup-summary). #18 OpenCode A/B test — simple task (defines speed/quality/security/completeness/workflow-fit scoring framework, go/no-go gate for #19). #19 OpenCode A/B test — complex task (final viability call). Dependency chain: #17 blocks #18 blocks #19. No code changes this block.', contextWindowOrigin: false }, // estimated
+    ],
+    metrics: { totalTimeMinutes: 320, linesAdded: 1174, linesDeleted: 292, totalDecisions: 4 }, // estimated
+    driverSummary: { human: 0, ai: 0, collaborative: 3 },
+  },
 ];

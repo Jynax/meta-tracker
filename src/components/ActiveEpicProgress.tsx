@@ -81,6 +81,7 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }
 
   return (
     <div
+      data-testid="active-epic-progress"
       style={{
         background: '#0f1419',
         border: '1px solid #1e293b',

@@ -29,11 +29,6 @@ export default function ProcessWorkflow() {
         margin: "0 auto",
       }}
     >
-      <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap"
-        rel="stylesheet"
-      />
-
       {/* Header */}
       <FadeIn>
         <div style={{ marginBottom: 36 }}>

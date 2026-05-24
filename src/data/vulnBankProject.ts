@@ -8,7 +8,7 @@ export const vulnBankProject: Project = {
   currentPhase: 'Build',
   contributors: [
     { name: 'Michael', role: 'Product Owner / Designer', tool: 'manual' },
-    { name: 'hrpatel', role: 'Developer', tool: 'cursor' },
+    { name: 'redacted', role: 'Developer', tool: 'cursor' },
     { name: 'Jynax', role: 'Developer / Coordinator', tool: 'claude-code' },
   ],
   chapters: [
@@ -63,7 +63,7 @@ export const vulnBankProject: Project = {
           category: 'process',
           title: 'Repo Migration — Remove Fork Association',
           description:
-            'hrpatel/vuln-bank was a fork of Commando-X/vuln-bank. Git tooling (gh) auto-created PRs against the upstream repo, leaking work to a public project. Deleted the fork and recreated as standalone.',
+            'redacted/vuln-bank was a fork of Commando-X/vuln-bank. Git tooling (gh) auto-created PRs against the upstream repo, leaking work to a public project. Deleted the fork and recreated as standalone.',
           chosenPath: 'Delete the fork, recreate as a standalone repo, re-push all content',
           alternatives: [
             'Remove upstream remote only (does not fix GitHub fork association)',
@@ -192,7 +192,7 @@ export const vulnBankProject: Project = {
           category: 'technical',
           title: 'Fix Commando-X References + Remove Debug Prints',
           description:
-            'Updated 3 README clone URLs, openapi.json contact URL, and 2 index.html repo links from Commando-X/vuln-bank to hrpatel/vuln-bank after the repo migration. Removed 6 debug print statements from login handler and auth.py that exposed usernames, SQL queries, query results, and JWT tokens to stdout.',
+            'Updated 3 README clone URLs, openapi.json contact URL, and 2 index.html repo links from Commando-X/vuln-bank to redacted/vuln-bank after the repo migration. Removed 6 debug print statements from login handler and auth.py that exposed usernames, SQL queries, query results, and JWT tokens to stdout.',
           chosenPath: 'Bulk-fix all stale references and strip all debug prints in one PR',
           alternatives: [
             'Fix references only, leave debug prints for development',

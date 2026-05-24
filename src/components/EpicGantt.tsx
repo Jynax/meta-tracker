@@ -122,8 +122,8 @@ export default function EpicGantt({ setTooltip }: EpicGanttProps = {}) {
                   }}
                 />
                 {/* Bar */}
-                <button
-                  type="button"
+                <div
+                  role="img"
                   aria-label={`Epic: ${bar.title}, ${bar.status}, ${formatShortDate(bar.startDate)} to ${bar.endDate ? formatShortDate(bar.endDate) : 'ongoing'}`}
                   style={{
                     position: 'absolute',
@@ -140,7 +140,6 @@ export default function EpicGantt({ setTooltip }: EpicGanttProps = {}) {
                       : undefined,
                     backgroundSize: ongoing ? '8px 8px' : undefined,
                     cursor: 'default',
-                    padding: 0,
                   }}
                   onMouseEnter={(event) => {
                     setTooltip?.({

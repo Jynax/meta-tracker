@@ -5,6 +5,7 @@
 import { epics, tasks, generatedAt } from '../data/generated-tracker-data';
 import type { Epic, Task, Decision, TaskEvent, TaskOutput } from '../types/tracker';
 import { metaDays } from '../data/metaMetrics';
+import { mondayOfIsoWeek } from './dateUtils';
 
 // ── Overview stat card data ─────────────────────────────────────────
 
@@ -99,11 +100,7 @@ export function getWeeklyTaskBuckets(): WeekBucket[] {
 
   const bucketMap = new Map<string, Task[]>();
   for (const t of done) {
-    const d = new Date(t.dates.completed!);
-    const day = d.getDay();
-    const monday = new Date(d);
-    monday.setDate(d.getDate() - ((day + 6) % 7));
-    const key = monday.toISOString().slice(0, 10);
+    const key = mondayOfIsoWeek(t.dates.completed!);
     if (!bucketMap.has(key)) bucketMap.set(key, []);
     bucketMap.get(key)!.push(t);
   }
@@ -255,13 +252,6 @@ const EPIC_PALETTE_COLORS = [
   '#94a3b8', '#c084fc', '#facc15', '#4ade80',
 ];
 
-function mondayOfWeek(iso: string): string {
-  const d = new Date(iso);
-  const day = d.getUTCDay() || 7;
-  if (day !== 1) d.setUTCDate(d.getUTCDate() - (day - 1));
-  return d.toISOString().slice(0, 10);
-}
-
 export function getEpicCumulativeSeries(opts: EpicCumulativeOpts): EpicSeries[] {
   const epicById = new Map(epics.map((e) => [e.id, e]));
 
@@ -270,7 +260,7 @@ export function getEpicCumulativeSeries(opts: EpicCumulativeOpts): EpicSeries[] 
     if (t.status !== 'Done') continue;
     if (!t.epic) continue;
     if (!t.dates?.completed) continue;
-    const week = mondayOfWeek(t.dates.completed);
+    const week = mondayOfIsoWeek(t.dates.completed);
     if (!perEpic.has(t.epic)) perEpic.set(t.epic, new Map());
     const em = perEpic.get(t.epic)!;
     em.set(week, (em.get(week) ?? 0) + 1);

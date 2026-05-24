@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect, useCallback, type ReactNode } from 'react
 import { Card, C } from './MetricsCard';
 import { formatShortDate, buildSmoothPath } from './chartUtils';
 import { thinLabels, defaultWindow } from '../utils/brushUtils';
+import { countPRsInText } from '../utils/prRefs';
 import type { SessionEntry, SessionTool, SessionDriver } from '../data/metaMetrics';
 import type { DayEntry, WorkBlock, WorkDriver, WorkOperator } from '../types/index';
 
@@ -48,7 +49,6 @@ export default function SessionsTab({
   const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
   const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
 
-  const PR_NUMBER_REGEX = /\bPRs?\s*#?(\d+)/gi;
   const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
   const operatorDisplayNames: Record<WorkOperator, string> = {
     'claude-code': 'Claude Code', 'claude-ai': 'Claude AI', cursor: 'Cursor', manual: 'Manual', mixed: 'Mixed',
@@ -80,10 +80,7 @@ export default function SessionsTab({
       const legacy = legacyBySessionKey[key] ?? legacyBySessionKey[`pre-tracking-${key}`];
       if (legacy) return legacy.prs;
     }
-    if (!block.note) return 0;
-    const prs = new Set<number>();
-    for (const m of block.note.matchAll(PR_NUMBER_REGEX)) prs.add(Number(m[1]));
-    return prs.size;
+    return countPRsInText(block.note);
   }, [legacyBySessionKey, blockIdToLegacyKey]);
 
   /**

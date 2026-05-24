@@ -11,6 +11,7 @@ import {
   ChapterType,
 } from '../types';
 import { displayTaskId, type EpicTreeNode } from '../utils/trackerDataAdapter';
+import { formatIsoDateShort } from '../utils/dateUtils';
 
 interface DayGroup {
   dayId: string;
@@ -70,8 +71,7 @@ const TASK_TOOL_COLOR: Record<string, string> = {
 
 function formatDate(iso: string | null | undefined): string {
   if (!iso) return '—';
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return formatIsoDateShort(iso);
 }
 
 const COLORS = C;

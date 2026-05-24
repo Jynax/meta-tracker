@@ -25,6 +25,7 @@ import BugsTab from './BugsTab';
 import SessionsTab from './SessionsTab';
 import TasksTab from './TasksTab';
 import InsightsView from './InsightsView';
+import { extractPRNumbersInText } from '../utils/prRefs';
 
 type MetricsTab = 'overview' | 'code' | 'bugs' | 'sessions';
 
@@ -150,19 +151,14 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
   const { overviewLoc, overviewPrs } = useMemo(() => {
     let loc = 0;
     const prSet = new Set<number>();
-    const prRegex = /\bPRs?\s*#?(\d+)/gi;
     for (const day of selected.days) {
       for (const block of day.blocks) {
         loc += block.linesAdded ?? 0;
-        if (block.note) {
-          for (const m of block.note.matchAll(prRegex)) prSet.add(Number(m[1]));
-        }
+        for (const pr of extractPRNumbersInText(block.note)) prSet.add(pr);
       }
     }
     for (const bug of selected.bugs) {
-      if (bug.status) {
-        for (const m of bug.status.matchAll(prRegex)) prSet.add(Number(m[1]));
-      }
+      for (const pr of extractPRNumbersInText(bug.status)) prSet.add(pr);
     }
     return { overviewLoc: loc, overviewPrs: prSet.size };
   }, [selected.days, selected.bugs]);

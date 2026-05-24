@@ -1,5 +1,6 @@
 import type { CodeVolumeEntry, SessionEntry, BugEntry } from '../data/bipMetrics';
 import type { DayEntry, WorkCategory, Project } from '../types/index';
+import { extractPRNumbersInText } from './prRefs';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -103,13 +104,10 @@ interface BundleAggregates {
   dayDates: string[];
 }
 
-const PR_NUMBER_REGEX = /\bPRs?\s*#?(\d+)/gi;
-
 function collectPrNumbers(bundle: ProjectBundle): Set<number> {
   const prs = new Set<number>();
   const scan = (text?: string) => {
-    if (!text) return;
-    for (const m of text.matchAll(PR_NUMBER_REGEX)) prs.add(Number(m[1]));
+    for (const pr of extractPRNumbersInText(text)) prs.add(pr);
   };
   for (const day of bundle.days) {
     for (const block of day.blocks) scan(block.note);

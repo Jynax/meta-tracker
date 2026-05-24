@@ -6,6 +6,7 @@ import {
   displayTaskId,
 } from '../utils/trackerDataAdapter';
 import ActiveEpicProgress from './ActiveEpicProgress';
+import { formatIsoDateShort } from '../utils/dateUtils';
 
 interface TasksTabProps {
   projectId: string;
@@ -19,13 +20,12 @@ const EPIC_PALETTE = [
 ];
 
 function formatWeek(weekStart: string): string {
-  const d = new Date(weekStart);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return formatIsoDateShort(weekStart);
 }
 
 function formatTaskDate(iso: string | null): string {
   if (!iso) return '—';
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return formatIsoDateShort(iso);
 }
 
 const STATUS_COLOR: Record<string, string> = {

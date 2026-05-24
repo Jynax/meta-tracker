@@ -1,6 +1,7 @@
 import { useMemo, type ReactNode } from 'react';
 import { getEpicGanttBars } from '../utils/trackerDataAdapter';
 import { C } from './MetricsCard';
+import { formatIsoDateShort } from '../utils/dateUtils';
 
 const STATUS_COLORS: Record<string, string> = {
   'In Progress': C.cyan,
@@ -11,8 +12,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 function formatShortDate(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return formatIsoDateShort(iso);
 }
 
 interface EpicGanttProps {

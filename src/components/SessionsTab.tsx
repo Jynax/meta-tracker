@@ -2,9 +2,16 @@ import { useMemo, useState, useCallback, type ReactNode } from 'react';
 import { Card, C } from './MetricsCard';
 import { formatShortDate, buildSmoothPath } from './chartUtils';
 import { thinLabels, defaultWindow } from '../utils/brushUtils';
-import { countPRsInText } from '../utils/prRefs';
 import type { SessionEntry, SessionTool, SessionDriver } from '../data/metaMetrics';
-import type { DayEntry, WorkBlock, WorkDriver, WorkOperator } from '../types/index';
+import type { DayEntry, WorkDriver, WorkOperator } from '../types/index';
+import {
+  MONTH_MAP,
+  CHART_DIMS,
+  CHART_INNER_WIDTH,
+  CHART_INNER_HEIGHT,
+  OPERATOR_DISPLAY_NAMES,
+} from './sessions-tab/constants';
+import { useBlockMetrics } from './sessions-tab/useBlockMetrics';
 
 interface SessionsTabProps {
   sessions: SessionEntry[];
@@ -19,18 +26,6 @@ interface SessionsTabProps {
   setHoveredPointIndex: (index: number | null) => void;
   setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
 }
-
-const MONTH_MAP: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
-const CHART_DIMS = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
-const CHART_INNER_WIDTH = CHART_DIMS.width - CHART_DIMS.left - CHART_DIMS.right;
-const CHART_INNER_HEIGHT = CHART_DIMS.height - CHART_DIMS.top - CHART_DIMS.bottom;
-const OPERATOR_DISPLAY_NAMES: Record<WorkOperator, string> = {
-  'claude-code': 'Claude Code',
-  'claude-ai': 'Claude AI',
-  cursor: 'Cursor',
-  manual: 'Manual',
-  mixed: 'Mixed',
-};
 
 export default function SessionsTab({
   sessions, days, totalHours, projectId: _projectId,
@@ -57,52 +52,8 @@ export default function SessionsTab({
     'Cowork': C.slate,
     'Mixed': C.violet,
   };
-  // Task #99 — PR #165 migrated Sessions tab charts to derive per-block PRs
-  // by regex-scraping `block.note`, which fails for older blocks whose notes
-  // never contained "PR #xxx". The legacy `metaSessions` array still has the
-  // correct per-session counts — we build a lookup from the `sessions` prop
-  // and fall back to regex only for blocks with no legacy entry (post-S76 era).
-  // Full cross-project structural cleanup is queued under Task #96.
-  const legacyBySessionKey = useMemo(() => {
-    const map: Record<string, SessionEntry> = {};
-    for (const s of sessions) {
-      const key = s.session.toLowerCase().replace(/^session\s+/, '').replace(/\s+/g, '-');
-      map[key] = s;
-    }
-    return map;
-  }, [sessions]);
-
-  const blockIdToLegacyKey = useCallback((blockId: string): string | null => {
-    const m = blockId.match(/-(?:session-|pre-tracking-)(.+)$/i);
-    return m ? m[1]!.toLowerCase() : null;
-  }, []);
-
-  const getBlockPrs = useCallback((block: WorkBlock): number => {
-    const key = blockIdToLegacyKey(block.id);
-    if (key) {
-      const legacy = legacyBySessionKey[key] ?? legacyBySessionKey[`pre-tracking-${key}`];
-      if (legacy) return legacy.prs;
-    }
-    return countPRsInText(block.note);
-  }, [legacyBySessionKey, blockIdToLegacyKey]);
-
-  /**
-   * Per-block decision counts for a day, preserving the day total.
-   * Uses legacy session data when every block in the day has a match;
-   * otherwise evenly distributes day total across blocks.
-   */
-  const getBlockDecisionsForDay = useCallback((day: DayEntry): number[] => {
-    const legacyValues = day.blocks.map((block) => {
-      const key = blockIdToLegacyKey(block.id);
-      return key ? legacyBySessionKey[key]?.decisions : undefined;
-    });
-    if (legacyValues.every((v) => v !== undefined)) return legacyValues as number[];
-    const n = day.blocks.length || 1;
-    const total = day.metrics.totalDecisions;
-    const base = Math.floor(total / n);
-    const remainder = total - base * n;
-    return day.blocks.map((_, i) => base + (i < remainder ? 1 : 0));
-  }, [legacyBySessionKey, blockIdToLegacyKey]);
+  // Per-block PR + decision lookup (Task #99 — see useBlockMetrics for context).
+  const { getBlockPrs, getBlockDecisionsForDay } = useBlockMetrics(sessions);
 
   const dailyData = useMemo(() => {
     const dayBuckets = new Map<string, { dayLabel: string; prs: number; decisions: number; blockCount: number }>();

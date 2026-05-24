@@ -14,7 +14,7 @@ export interface CodeVolumeEntry {
 
 export type SessionPhase = 'Research' | 'Spec' | 'Build' | 'Review';
 export type SessionDriver = 'human' | 'human-only' | 'agent-led' | 'collaborative';
-export type SessionOperator = 'michael' | 'hrpatel' | 'joint';
+export type SessionOperator = 'michael' | 'redacted' | 'joint';
 
 export interface PRDetail {
   number: number;

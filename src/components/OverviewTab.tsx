@@ -1,14 +1,6 @@
 import { useMemo, type ReactNode } from 'react';
-import { bipProject } from '../data/bipProject';
-import { metaProject } from '../data/metaProject';
-import { remnantsProject } from '../data/remnantsProject';
-import { itemBGoneProject } from '../data/itemBGoneProject';
-import { vulnBankProject } from '../data/vulnBankProject';
-import { landingProject } from '../data/landingProject';
-import { feedbackCaptureProject } from '../data/feedbackCaptureProject';
-import { noteWorthyProject } from '../data/noteWorthyProject';
-import { onTheMoveProject } from '../data/onTheMoveProject';
-import type { DayEntry, Project, ProjectPhase, WorkCategory } from '../types';
+import { ALL_PROJECTS } from '../data/projectRegistry';
+import type { DayEntry, ProjectPhase, WorkCategory } from '../types';
 import { Card, C } from './MetricsCard';
 import EpicGantt from './EpicGantt';
 import { getOverviewStats } from '../utils/trackerDataAdapter';
@@ -55,8 +47,7 @@ export default function OverviewTab({
   activeProjectId,
   onProjectChange,
 }: OverviewTabProps) {
-  const allProjects: Project[] = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject, landingProject, feedbackCaptureProject, noteWorthyProject, onTheMoveProject];
-  const activeProject = allProjects.find((p) => p.id === projectId);
+  const activeProject = ALL_PROJECTS.find((p) => p.id === projectId);
 
   const totalHours = useMemo(
     () => Math.round(days.reduce((sum, d) => sum + d.metrics.totalTimeMinutes, 0) / 60),
@@ -355,7 +346,7 @@ export default function OverviewTab({
         <h3 className="mb-1 text-sm font-semibold" style={{ color: C.white }}>Project Phases</h3>
         <div className="text-xs mb-3" style={{ color: C.muted }}>All projects at a glance</div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {allProjects.map((proj) => {
+          {ALL_PROJECTS.map((proj) => {
             const isLightweight = proj.trackingMode === 'lightweight';
             const phase = proj.currentPhase ?? 'Research';
             const isShipped = phase === 'Shipped';

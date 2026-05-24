@@ -346,7 +346,7 @@ export default function OverviewTab({
         <h3 className="mb-1 text-sm font-semibold" style={{ color: C.white }}>Project Phases</h3>
         <div className="text-xs mb-3" style={{ color: C.muted }}>All projects at a glance</div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {allProjects.map((proj) => {
+          {ALL_PROJECTS.map((proj) => {
             const isLightweight = proj.trackingMode === 'lightweight';
             const phase = proj.currentPhase ?? 'Research';
             const isShipped = phase === 'Shipped';

@@ -1,23 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
-import { remnantsProject } from '../data/remnantsProject';
-import { itemBGoneProject } from '../data/itemBGoneProject';
-import { vulnBankProject } from '../data/vulnBankProject';
-import { landingProject } from '../data/landingProject';
-import { feedbackCaptureProject } from '../data/feedbackCaptureProject';
-import { noteWorthyProject } from '../data/noteWorthyProject';
-import { onTheMoveProject } from '../data/onTheMoveProject';
-import type { DayEntry, FilterType, Project, ProjectPhase } from '../types';
-import { bipDays } from '../data/bipMetrics';
-import { metaDays } from '../data/metaMetrics';
-import { remnantsDays } from '../data/remnantsMetrics';
-import { ibgDays } from '../data/itemBGoneMetrics';
-import { vbDays } from '../data/vulnBankMetrics';
-import { landingDays } from '../data/landingMetrics';
-import { fcDays } from '../data/feedbackCaptureMetrics';
-import { nwDays } from '../data/noteWorthyMetrics';
-import { otmDays } from '../data/onTheMoveMetrics';
+import type { FilterType, Project, ProjectPhase } from '../types';
+import {
+  ALL_PROJECTS,
+  PROJECT_DAYS_MAP,
+  SYNTHETIC_ALL_PROJECT,
+} from '../data/projectRegistry';
 import MetricsDashboard from './MetricsDashboard';
 import ProcessWorkflow from './ProcessWorkflow';
 import ErrorBoundary from './ErrorBoundary';
@@ -27,7 +15,7 @@ import { useTheme } from '../hooks/useTheme';
 import ChangelogPage from './ChangelogPage';
 import { getEpicTree } from '../utils/trackerDataAdapter';
 
-const PROJECTS = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject, landingProject, feedbackCaptureProject, noteWorthyProject, onTheMoveProject];
+const PROJECTS = ALL_PROJECTS;
 
 const PROJECT_GROUPS: Array<{ label: string; projects: typeof PROJECTS }> = [
   { label: 'Solo', projects: PROJECTS.filter(p => p.trackingMode !== 'lightweight' && p.projectType !== 'joint') },
@@ -84,7 +72,7 @@ export default function DecisionTree() {
 
   const switchProject = (newProjectId: string) => {
     if (newProjectId === 'all') {
-      setActiveProject({ id: 'all', name: 'All Projects', subtitle: '', chapters: [], stats: { totalDays: 0, chatGptMessages: '0', coworkSessions: 0, prsCreated: '0', codexTasks: '0', linesOfCode: '0', deadEnds: 0, majorDecisions: 0 } } as typeof bipProject);
+      setActiveProject(SYNTHETIC_ALL_PROJECT);
       setView('metrics');
       setMetricsTab('overview');
       return;
@@ -100,20 +88,10 @@ export default function DecisionTree() {
     }
   };
 
-  const activeDaysForTree = useMemo(() => {
-    const dayMap: Record<string, DayEntry[]> = {
-      bip: bipDays,
-      meta: metaDays,
-      remnants: remnantsDays,
-      'item-b-gone': ibgDays,
-      'vuln-bank': vbDays,
-      'landing': landingDays,
-      'feedback-capture': fcDays,
-      'note-worthy': nwDays,
-      'on-the-move': otmDays,
-    };
-    return dayMap[activeProject.id] ?? [];
-  }, [activeProject.id]);
+  const activeDaysForTree = useMemo(
+    () => PROJECT_DAYS_MAP[activeProject.id] ?? [],
+    [activeProject.id],
+  );
 
   const dayPhaseMap = useMemo(() => {
     const map: Record<string, ProjectPhase> = {};

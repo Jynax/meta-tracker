@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { bipProject } from '../data/bipProject';
 import { metaProject } from '../data/metaProject';
 import { bipCodeVolume, bipSessions, bipBugs, bipDerived, bipStack, bipDateRange, bipDays } from '../data/bipMetrics';
@@ -38,14 +38,10 @@ interface MetricsDashboardProps {
 }
 
 export default function MetricsDashboard({ projectId, onJumpToChapter, initialTab = 'overview', onTabChange, onProjectChange }: MetricsDashboardProps) {
-  const [tab, setTab] = useState<MetricsTab>(initialTab);
+  const tab = initialTab;
   const [hoveredPointIndex, setHoveredPointIndex] = useState<number | null>(null);
   const [hoveredCodeEntry, setHoveredCodeEntry] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; content: ReactNode } | null>(null);
-
-  useEffect(() => {
-    setTab(initialTab);
-  }, [initialTab]);
 
   // For MT, the last tab is labeled "Tasks" and renders TasksTab from the new
   // Epic/Task data model. All other projects keep the legacy "Sessions" tab
@@ -95,10 +91,6 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
     () => Math.round(selected.days.reduce((sum, d) => sum + d.metrics.totalTimeMinutes, 0) / 60),
     [selected.days],
   );
-  const currentLoc = selected.codeVolume[selected.codeVolume.length - 1]?.total ?? 0;
-  const totalAdded = selected.codeVolume.reduce((sum, item) => sum + item.added, 0);
-  const totalDeleted = selected.codeVolume.reduce((sum, item) => sum + item.deleted, 0);
-
   // Day-derived codeVolume for the Code tab. Synthesizes one CodeVolumeEntry
   // per WorkBlock with running net total. Replaces the stale legacy
   // `*CodeVolume` arrays which stopped being maintained for 6 of 9 projects
@@ -131,7 +123,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
       }
     }
     return entries;
-  }, [selected.days]);
+  }, [selected]);
 
   const codeTotalAdded = useMemo(
     () => daysCodeVolume.reduce((sum, e) => sum + e.added, 0),
@@ -178,7 +170,6 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
                 <button
                   key={item.id}
                   onClick={() => {
-                    setTab(item.id);
                     onTabChange?.(item.id);
                   }}
                   className="rounded-full border px-4 py-1.5 text-sm font-medium"
@@ -237,6 +228,7 @@ export default function MetricsDashboard({ projectId, onJumpToChapter, initialTa
 
             {tab === 'sessions' && !isMeta && (
               <SessionsTab
+                key={projectId}
                 sessions={selected.sessions}
                 days={selected.days}
                 totalHours={totalHours}

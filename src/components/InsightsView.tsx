@@ -510,7 +510,6 @@ function VelocityQualityChart({ data, setTooltip }: ChartProps) {
   // Strategy: try candidate anchor positions around each dot in preference order
   // (above → below → right → left), pick the first that doesn't overlap either
   // a previously placed label or the x-axis "safe zone" at the bottom.
-  const FONT_SIZE = 9;
   const CHAR_W = 5;        // approx pixel width per char at font-size 9
   const LABEL_H = 11;
   const LABEL_GAP = 3;     // dot-to-label gap

@@ -152,6 +152,8 @@ export default function TasksTab({ projectId, setTooltip }: TasksTabProps) {
                             </span>
                             {task.decisions && task.decisions.length > 0 && (
                               <span
+                                role="img"
+                                aria-label={`${task.decisions.length} decision${task.decisions.length === 1 ? '' : 's'}`}
                                 onMouseEnter={(e) => {
                                   setTooltip({
                                     x: e.clientX,
@@ -185,6 +187,8 @@ export default function TasksTab({ projectId, setTooltip }: TasksTabProps) {
                             )}
                             {task.events && task.events.length > 0 && (
                               <span
+                                role="img"
+                                aria-label={`${task.events.length} event${task.events.length === 1 ? '' : 's'}`}
                                 onMouseEnter={(e) => {
                                   setTooltip({
                                     x: e.clientX,

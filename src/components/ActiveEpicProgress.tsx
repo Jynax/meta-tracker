@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import { getEpicCumulativeSeries } from '../utils/trackerDataAdapter';
 
 interface ActiveEpicProgressProps {
@@ -8,17 +8,18 @@ interface ActiveEpicProgressProps {
 
 export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }: ActiveEpicProgressProps) {
   const [includeAll, setIncludeAll] = useState(false);
+  const [now] = useState(() => new Date());
 
   const series = useMemo(
     () =>
       getEpicCumulativeSeries({
-        now: new Date(),
+        now,
         windowDays: 30,
         plotWindowWeeks: 8,
         cap: 6,
         includeAll,
       }),
-    [includeAll],
+    [includeAll, now],
   );
 
   const PLOT = { left: 70, right: 700, top: 40, bottom: 260 };
@@ -35,16 +36,19 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }
     return [...set].sort();
   }, [series]);
 
-  const xScale = (weekStart: string) => {
+  const xScale = useCallback((weekStart: string) => {
     if (allWeeks.length === 0) return (PLOT.left + PLOT.right) / 2;
     if (allWeeks.length === 1) return (PLOT.left + PLOT.right) / 2;
     const i = allWeeks.indexOf(weekStart);
     if (i < 0) return PLOT.left;
     const t = i / (allWeeks.length - 1);
     return PLOT.left + t * (PLOT.right - PLOT.left);
-  };
+  }, [allWeeks, PLOT.left, PLOT.right]);
 
-  const yScale = (cum: number) => PLOT.bottom - (cum / maxY) * (PLOT.bottom - PLOT.top);
+  const yScale = useCallback(
+    (cum: number) => PLOT.bottom - (cum / maxY) * (PLOT.bottom - PLOT.top),
+    [PLOT.bottom, PLOT.top, maxY],
+  );
 
   const yTicks = [0, maxY / 3, (2 * maxY) / 3, maxY].map((v) => Math.round(v));
 
@@ -64,19 +68,19 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }
       }
     }
     return new Map(entries.map((e) => [e.epicId, e.y]));
-  }, [series, maxY, allWeeks]);
+  }, [series, yScale]);
 
   const totalQualifyingCount = useMemo(() => {
     if (includeAll) return series.length;
     const all = getEpicCumulativeSeries({
-      now: new Date(),
+      now,
       windowDays: 30,
       plotWindowWeeks: 8,
       cap: Number.POSITIVE_INFINITY,
       includeAll: false,
     });
     return all.length;
-  }, [includeAll, series]);
+  }, [includeAll, series, now]);
   const hiddenCount = Math.max(0, totalQualifyingCount - series.length);
 
   return (

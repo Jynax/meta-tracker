@@ -303,6 +303,8 @@ export default function StackedTreeView(props: StackedTreeViewProps) {
           return (
             <div
               key={category}
+              role="img"
+              aria-label={`${formatCategory(category)} (${count})`}
               style={{
                 width: `${percentage}%`,
                 minWidth: 0,
@@ -1008,6 +1010,8 @@ function EpicTreeView({
                             ))}
                           {task.decisions.length > 0 && (
                             <span
+                              role="img"
+                              aria-label={`${task.decisions.length} decision${task.decisions.length === 1 ? '' : 's'}`}
                               onMouseEnter={(e) => {
                                 setTooltip({
                                   x: e.clientX,

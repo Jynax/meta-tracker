@@ -28,6 +28,10 @@ const CATEGORY_COLORS: Record<WorkCategory, string> = {
   Planning: '#fbbf24',
 };
 
+const CHART_DIMS = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
+const CHART_INNER_WIDTH = CHART_DIMS.width - CHART_DIMS.left - CHART_DIMS.right;
+const CHART_INNER_HEIGHT = CHART_DIMS.height - CHART_DIMS.top - CHART_DIMS.bottom;
+
 interface OverviewTabProps {
   days: DayEntry[];
   codeVolume: CodeVolumeEntry[];
@@ -70,9 +74,6 @@ export default function OverviewTab({
     return map;
   }, [days]);
 
-  const chartDims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
-  const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
-  const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
   const yTickCount = 4;
   const maxLoc = Math.max(currentLoc, ...codeVolume.map((e) => e.total));
   const rawStep = maxLoc / yTickCount || 1;
@@ -87,11 +88,11 @@ export default function OverviewTab({
       return {
         ...entry,
         focus: blockFocusLookup.get(`${entry.date}|${entry.label}`) ?? entry.label,
-        x: chartDims.left + ratioX * chartInnerWidth,
-        y: chartDims.top + (1 - ratioY) * chartInnerHeight,
+        x: CHART_DIMS.left + ratioX * CHART_INNER_WIDTH,
+        y: CHART_DIMS.top + (1 - ratioY) * CHART_INNER_HEIGHT,
       };
     }),
-    [chartInnerHeight, chartInnerWidth, chartYMax, codeVolume, blockFocusLookup],
+    [chartYMax, codeVolume, blockFocusLookup],
   );
 
   const smoothLinePath = useMemo(() => {
@@ -114,7 +115,7 @@ export default function OverviewTab({
     if (!chartPoints.length || !smoothLinePath) return '';
     const first = chartPoints[0];
     const last = chartPoints[chartPoints.length - 1];
-    const baseline = chartDims.height - chartDims.bottom;
+    const baseline = CHART_DIMS.height - CHART_DIMS.bottom;
     return `${smoothLinePath} L ${last.x} ${baseline} L ${first.x} ${baseline} Z`;
   }, [chartPoints, smoothLinePath]);
 
@@ -245,7 +246,7 @@ export default function OverviewTab({
       <div className="rounded-xl border p-4" style={{ backgroundColor: C.cardBg, borderColor: C.border }}>
         <h3 className="mb-2 text-sm font-semibold">Codebase Size Over Time</h3>
         <div className="relative">
-          <svg viewBox={`0 0 ${chartDims.width} ${chartDims.height}`} style={{ width: '100%', height: 280 }} role="img" aria-label="Codebase size over time chart">
+          <svg viewBox={`0 0 ${CHART_DIMS.width} ${CHART_DIMS.height}`} style={{ width: '100%', height: 280 }} role="img" aria-label="Codebase size over time chart">
             <defs>
               <linearGradient id={`locAreaGradient-${projectId}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor={C.cyan} stopOpacity="0.3" />
@@ -255,11 +256,11 @@ export default function OverviewTab({
 
             {Array.from({ length: yTickCount + 1 }, (_, index) => {
               const value = index * niceStep;
-              const y = chartDims.top + chartInnerHeight - (index / yTickCount) * chartInnerHeight;
+              const y = CHART_DIMS.top + CHART_INNER_HEIGHT - (index / yTickCount) * CHART_INNER_HEIGHT;
               return (
                 <g key={`tick-${value}`}>
-                  <line x1={chartDims.left} y1={y} x2={chartDims.width - chartDims.right} y2={y} stroke={C.border} strokeDasharray="4 4" strokeOpacity="0.3" />
-                  <text x={chartDims.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">{value.toLocaleString()}</text>
+                  <line x1={CHART_DIMS.left} y1={y} x2={CHART_DIMS.width - CHART_DIMS.right} y2={y} stroke={C.border} strokeDasharray="4 4" strokeOpacity="0.3" />
+                  <text x={CHART_DIMS.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">{value.toLocaleString()}</text>
                 </g>
               );
             })}
@@ -268,7 +269,7 @@ export default function OverviewTab({
             <path d={smoothLinePath} fill="none" stroke={C.cyan} strokeWidth="2" />
 
             {hoveredPoint && (
-              <line x1={hoveredPoint.x} y1={hoveredPoint.y} x2={hoveredPoint.x} y2={chartDims.height - chartDims.bottom} stroke={C.slate} strokeDasharray="4 4" strokeOpacity="0.45" />
+              <line x1={hoveredPoint.x} y1={hoveredPoint.y} x2={hoveredPoint.x} y2={CHART_DIMS.height - CHART_DIMS.bottom} stroke={C.slate} strokeDasharray="4 4" strokeOpacity="0.45" />
             )}
 
             {chartPoints.map((point, index) => (
@@ -307,8 +308,8 @@ export default function OverviewTab({
             {chartPoints.map((point, index) => {
               if (!milestoneFlags[index]) return null;
               const milestoneIndex = milestoneFlags.slice(0, index + 1).filter(Boolean).length - 1;
-              const y = milestoneIndex % 2 === 0 ? chartDims.height - 10 : chartDims.height - 22;
-              const baselineY = chartDims.height - chartDims.bottom;
+              const y = milestoneIndex % 2 === 0 ? CHART_DIMS.height - 10 : CHART_DIMS.height - 22;
+              const baselineY = CHART_DIMS.height - CHART_DIMS.bottom;
               return (
                 <g key={`${point.session}-${index}-label`}>
                   <line x1={point.x} y1={baselineY} x2={point.x} y2={y - 11} stroke={C.slate} strokeWidth="1" strokeOpacity="0.7" />
@@ -323,9 +324,9 @@ export default function OverviewTab({
               const point = chartPoints[matchIndex];
               return (
                 <g key={`milestone-${ms.label}`}>
-                  <line x1={point.x} y1={chartDims.top} x2={point.x} y2={chartDims.height - chartDims.bottom} stroke={C.amber} strokeWidth="1.5" strokeDasharray="6 3" strokeOpacity="0.8" />
-                  <rect x={point.x - 32} y={chartDims.top - 2} width={64} height={16} rx={4} fill={C.amber} fillOpacity="0.15" stroke={C.amber} strokeOpacity="0.4" strokeWidth="0.5" />
-                  <text x={point.x} y={chartDims.top + 10} textAnchor="middle" fill={C.amber} fontSize="9" fontWeight="600">{ms.label}</text>
+                  <line x1={point.x} y1={CHART_DIMS.top} x2={point.x} y2={CHART_DIMS.height - CHART_DIMS.bottom} stroke={C.amber} strokeWidth="1.5" strokeDasharray="6 3" strokeOpacity="0.8" />
+                  <rect x={point.x - 32} y={CHART_DIMS.top - 2} width={64} height={16} rx={4} fill={C.amber} fillOpacity="0.15" stroke={C.amber} strokeOpacity="0.4" strokeWidth="0.5" />
+                  <text x={point.x} y={CHART_DIMS.top + 10} textAnchor="middle" fill={C.amber} fontSize="9" fontWeight="600">{ms.label}</text>
                 </g>
               );
             })}

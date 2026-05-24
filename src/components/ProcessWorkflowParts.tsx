@@ -145,6 +145,7 @@ const RoleCard = ({
   const isHovered = hoveredRole === id;
   return (
     <div
+      role="group"
       onMouseEnter={() => setHoveredRole(id)}
       onMouseLeave={() => setHoveredRole(null)}
       style={{

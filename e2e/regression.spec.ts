@@ -44,7 +44,7 @@ test.describe('Regression Guards', () => {
 
     const viewSwitcher = page.locator('nav[aria-label="View switcher"]');
     await viewSwitcher.getByText('Metrics').click();
-    await page.getByRole('button', { name: 'Sessions' }).click();
+    await page.getByRole('button', { name: 'Sessions', exact: true }).click();
     await page.waitForTimeout(300);
 
     const chart = page.locator('svg[aria-label="Session activity chart"]');
@@ -97,7 +97,7 @@ test.describe('Regression Guards', () => {
   test('code tab parent date bars render with visible width', async ({ page }) => {
     const viewSwitcher = page.locator('nav[aria-label="View switcher"]');
     await viewSwitcher.getByText('Metrics').click();
-    await page.getByRole('button', { name: 'Code' }).click();
+    await page.getByRole('button', { name: 'Code', exact: true }).click();
     await page.waitForTimeout(300);
 
     const dateRows = page.locator('button.w-full.text-left');

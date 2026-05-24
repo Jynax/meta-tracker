@@ -24,13 +24,33 @@ function Card({ label, value, color = C.white, detail, tooltip: tooltipText }: {
     if (showTimerRef.current !== null) window.clearTimeout(showTimerRef.current);
     hideTimerRef.current = window.setTimeout(() => setShowTooltip(false), 200);
   };
+  const cardBody = (
+    <div className="rounded-lg border" style={{ backgroundColor: C.cardBg, borderColor: C.border, padding: '8px 14px' }}>
+      <div className="text-xl font-bold" style={{ color }}>{value}</div>
+      <div className="text-[11px] uppercase tracking-wide" style={{ color: C.muted }}>{label}</div>
+      {detail && <div className="text-xs" style={{ color: C.muted }}>{detail}</div>}
+    </div>
+  );
+
+  if (!tooltipText) {
+    return <div style={{ position: 'relative' }}>{cardBody}</div>;
+  }
+
   return (
-    <div style={{ position: 'relative' }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      <div className="rounded-lg border" style={{ backgroundColor: C.cardBg, borderColor: C.border, padding: '8px 14px' }}>
-        <div className="text-xl font-bold" style={{ color }}>{value}</div>
-        <div className="text-[11px] uppercase tracking-wide" style={{ color: C.muted }}>{label}</div>
-        {detail && <div className="text-xs" style={{ color: C.muted }}>{detail}</div>}
-      </div>
+    <div
+      style={{ position: 'relative' }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleMouseEnter}
+      onBlur={handleMouseLeave}
+      tabIndex={0}
+      role="button"
+      onKeyDown={(event) => {
+        if (!tooltipText) return;
+        if (event.key === 'Escape') setShowTooltip(false);
+      }}
+    >
+      {cardBody}
       {tooltipText && showTooltip && (
         <div style={{ position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)', background: 'var(--theme-card-bg)', border: '1px solid var(--theme-border)', borderRadius: 8, padding: '8px 12px', fontSize: 11, color: 'var(--theme-text-secondary)', zIndex: 50, whiteSpace: 'nowrap', pointerEvents: 'none', marginBottom: 6, }} >
           {tooltipText}

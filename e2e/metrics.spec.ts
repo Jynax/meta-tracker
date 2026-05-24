@@ -22,14 +22,14 @@ test.describe('Metrics Dashboard', () => {
   // === Baseline tests ===
 
   test('metrics view renders with Overview tab active', async ({ page }) => {
-    const overviewBtn = page.getByRole('button', { name: 'Overview' });
+    const overviewBtn = page.getByRole('button', { name: 'Overview', exact: true });
     await expect(overviewBtn).toBeVisible();
   });
 
   test('all four metric tabs are present', async ({ page }) => {
-    await expect(page.getByRole('button', { name: 'Overview' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Code' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Bugs' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Overview', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Code', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Bugs', exact: true })).toBeVisible();
     // MT renames Sessions → Tasks; non-MT projects keep "Sessions".
     await expect(
       page.getByRole('button', { name: /^(Tasks|Sessions)$/ }),
@@ -43,14 +43,14 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('code tab renders content', async ({ page }) => {
-    await page.getByRole('button', { name: 'Code' }).click();
+    await page.getByRole('button', { name: 'Code', exact: true }).click();
     await page.waitForTimeout(300);
     const codeContent = page.locator('text=/LOC|added|deleted/i').first();
     await expect(codeContent).toBeVisible();
   });
 
   test('bugs tab renders content', async ({ page }) => {
-    await page.getByRole('button', { name: 'Bugs' }).click();
+    await page.getByRole('button', { name: 'Bugs', exact: true }).click();
     await page.waitForTimeout(300);
     const metricsContainer = page.locator('[class*="rounded-2xl"]').first();
     await expect(metricsContainer).toBeVisible();
@@ -59,7 +59,7 @@ test.describe('Metrics Dashboard', () => {
   test('sessions tab renders session cards', async ({ page }) => {
     // Switch to BIP (non-MT project still uses SessionsTab).
     await switchToBIPMetrics(page);
-    await page.getByRole('button', { name: 'Sessions' }).click();
+    await page.getByRole('button', { name: 'Sessions', exact: true }).click();
     await page.waitForTimeout(300);
     const content = page.locator('[class*="rounded-2xl"]').first();
     await expect(content).toBeVisible();
@@ -140,7 +140,7 @@ test.describe('Metrics Dashboard', () => {
   // === Task #55: Code Tab Deep Tests ===
 
   test('code tab shows header stat cards', async ({ page }) => {
-    await page.getByRole('button', { name: 'Code' }).click();
+    await page.getByRole('button', { name: 'Code', exact: true }).click();
     await page.waitForTimeout(300);
 
     await expect(page.locator('text="Total Added"')).toBeVisible();
@@ -149,7 +149,7 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('code tab has expandable date rows', async ({ page }) => {
-    await page.getByRole('button', { name: 'Code' }).click();
+    await page.getByRole('button', { name: 'Code', exact: true }).click();
     await page.waitForTimeout(300);
 
     const dateRows = page.locator('button.w-full.text-left');
@@ -158,7 +158,7 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('code tab date row expands on click', async ({ page }) => {
-    await page.getByRole('button', { name: 'Code' }).click();
+    await page.getByRole('button', { name: 'Code', exact: true }).click();
     await page.waitForTimeout(300);
 
     const firstRow = page.locator('button.w-full.text-left').first();
@@ -175,7 +175,7 @@ test.describe('Metrics Dashboard', () => {
   // === Task #55: Bugs Tab Deep Tests ===
 
   test('bugs tab shows summary bar with total and fixed counts', async ({ page }) => {
-    await page.getByRole('button', { name: 'Bugs' }).click();
+    await page.getByRole('button', { name: 'Bugs', exact: true }).click();
     await page.waitForTimeout(300);
 
     // Summary bar shows "N total" and "N fixed"
@@ -184,7 +184,7 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('bugs tab shows donut breakdown charts', async ({ page }) => {
-    await page.getByRole('button', { name: 'Bugs' }).click();
+    await page.getByRole('button', { name: 'Bugs', exact: true }).click();
     await page.waitForTimeout(300);
 
     const svgs = page.locator('svg');
@@ -193,7 +193,7 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('bugs tab has expandable session groups', async ({ page }) => {
-    await page.getByRole('button', { name: 'Bugs' }).click();
+    await page.getByRole('button', { name: 'Bugs', exact: true }).click();
     await page.waitForTimeout(300);
 
     // Session groups show "N bug(s)" and a date — match buttons containing a digit followed by "bug"
@@ -203,7 +203,7 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('bugs tab session group expands to show bug table', async ({ page }) => {
-    await page.getByRole('button', { name: 'Bugs' }).click();
+    await page.getByRole('button', { name: 'Bugs', exact: true }).click();
     await page.waitForTimeout(300);
 
     const sessionGroup = page.locator('button >> text=/\\d+ bugs?/').first();
@@ -218,7 +218,7 @@ test.describe('Metrics Dashboard', () => {
 
   test('sessions tab shows header stat cards', async ({ page }) => {
     await switchToBIPMetrics(page);
-    await page.getByRole('button', { name: 'Sessions' }).click();
+    await page.getByRole('button', { name: 'Sessions', exact: true }).click();
     await page.waitForTimeout(300);
 
     await expect(page.locator('text="Total PRs"')).toBeVisible();
@@ -228,7 +228,7 @@ test.describe('Metrics Dashboard', () => {
 
   test('sessions tab shows Session Activity chart', async ({ page }) => {
     await switchToBIPMetrics(page);
-    await page.getByRole('button', { name: 'Sessions' }).click();
+    await page.getByRole('button', { name: 'Sessions', exact: true }).click();
     await page.waitForTimeout(300);
 
     const chart = page.locator('svg[aria-label="Session activity chart"]');
@@ -237,7 +237,7 @@ test.describe('Metrics Dashboard', () => {
 
   test('sessions tab chart toggle switches between By Day and By Session', async ({ page }) => {
     await switchToBIPMetrics(page);
-    await page.getByRole('button', { name: 'Sessions' }).click();
+    await page.getByRole('button', { name: 'Sessions', exact: true }).click();
     await page.waitForTimeout(300);
 
     const byDayBtn = page.locator('button:has-text("By Day")');
@@ -252,7 +252,7 @@ test.describe('Metrics Dashboard', () => {
 
   test('sessions tab has collapsible day rows', async ({ page }) => {
     await switchToBIPMetrics(page);
-    await page.getByRole('button', { name: 'Sessions' }).click();
+    await page.getByRole('button', { name: 'Sessions', exact: true }).click();
     await page.waitForTimeout(300);
 
     // Day rows show "N block(s)" text — look for buttons with block count
@@ -263,7 +263,7 @@ test.describe('Metrics Dashboard', () => {
 
   test('sessions tab day row expands to show work blocks', async ({ page }) => {
     await switchToBIPMetrics(page);
-    await page.getByRole('button', { name: 'Sessions' }).click();
+    await page.getByRole('button', { name: 'Sessions', exact: true }).click();
     await page.waitForTimeout(300);
 
     const dayRow = page.locator('button:has-text("block")').first();
@@ -278,34 +278,34 @@ test.describe('Metrics Dashboard', () => {
   // === MT Tasks Tab Tests ===
 
   test('MT tasks tab renders Active Epic Progress chart', async ({ page }) => {
-    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.getByRole('button', { name: 'Tasks', exact: true }).click();
     await page.waitForTimeout(300);
     const chart = page.locator('svg[aria-label^="Cumulative task completion chart"]');
     await expect(chart).toBeVisible();
   });
 
   test('MT tasks tab shows Active Epic Progress heading', async ({ page }) => {
-    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.getByRole('button', { name: 'Tasks', exact: true }).click();
     await page.waitForTimeout(300);
     // Scope to chart container — task list may render task titles that mention the chart name.
     await expect(page.getByTestId('active-epic-progress').getByText('Active Epic Progress')).toBeVisible();
   });
 
   test('MT tasks tab Active Epic Progress renders subtitle', async ({ page }) => {
-    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.getByRole('button', { name: 'Tasks', exact: true }).click();
     await page.waitForTimeout(300);
     await expect(page.getByText(/Cumulative tasks completed/)).toBeVisible();
   });
 
   test('MT tasks tab default view has Active + stalled toggle active', async ({ page }) => {
-    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.getByRole('button', { name: 'Tasks', exact: true }).click();
     await page.waitForTimeout(300);
     const activeBtn = page.getByRole('button', { name: 'Active + stalled' });
     await expect(activeBtn).toHaveAttribute('aria-pressed', 'true');
   });
 
   test('MT tasks tab clicking All epics adds curves', async ({ page }) => {
-    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.getByRole('button', { name: 'Tasks', exact: true }).click();
     await page.waitForTimeout(300);
     const defaultCount = await page.locator('.curve-label').count();
     await page.getByRole('button', { name: 'All epics' }).click();
@@ -315,7 +315,7 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('MT tasks tab shows stalled epic indicator in default view', async ({ page }) => {
-    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.getByRole('button', { name: 'Tasks', exact: true }).click();
     await page.waitForTimeout(300);
     // epic-shared-project-milestones is In Progress with no completed tasks — stalled epics
     // bypass the cap and always appear.
@@ -324,7 +324,7 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('MT tasks tab regression guard: no Task Throughput chart', async ({ page }) => {
-    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.getByRole('button', { name: 'Tasks', exact: true }).click();
     await page.waitForTimeout(300);
     // Guards against the old chart returning. Task titles may legitimately reference
     // "Task Throughput" (e.g. the rethink task that replaced it), so scope to the chart container.
@@ -332,7 +332,7 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('MT tasks tab has expandable week sections', async ({ page }) => {
-    await page.getByRole('button', { name: 'Tasks' }).click();
+    await page.getByRole('button', { name: 'Tasks', exact: true }).click();
     await page.waitForTimeout(300);
     const weekSections = page.locator('button:has-text("Week of")');
     const count = await weekSections.count();
@@ -355,7 +355,7 @@ test.describe('Metrics Dashboard', () => {
   });
 
   test('switching projects while on Bugs tab shows new project bugs', async ({ page }) => {
-    await page.getByRole('button', { name: 'Bugs' }).click();
+    await page.getByRole('button', { name: 'Bugs', exact: true }).click();
     await page.waitForTimeout(300);
 
     const switcher = page.locator('nav[aria-label="Project switcher"]');
@@ -365,7 +365,7 @@ test.describe('Metrics Dashboard', () => {
 
     const viewSwitcher = page.locator('nav[aria-label="View switcher"]');
     await viewSwitcher.getByText('Metrics').click();
-    await page.getByRole('button', { name: 'Bugs' }).click();
+    await page.getByRole('button', { name: 'Bugs', exact: true }).click();
     await page.waitForTimeout(300);
 
     const content = page.locator('[class*="rounded"]').first();

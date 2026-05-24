@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { getEpicGanttBars } from '../utils/trackerDataAdapter';
 import { C } from './MetricsCard';
 import { formatIsoDateShort } from '../utils/dateUtils';
@@ -21,17 +21,18 @@ interface EpicGanttProps {
 
 export default function EpicGantt({ setTooltip }: EpicGanttProps = {}) {
   const bars = useMemo(() => getEpicGanttBars(), []);
+  const [nowMs] = useState(() => Date.now());
 
   const range = useMemo(() => {
     if (bars.length === 0) return null;
     const starts = bars.map((b) => new Date(b.startDate).getTime());
     const ends = bars.map((b) =>
-      b.endDate ? new Date(b.endDate).getTime() : Date.now(),
+      b.endDate ? new Date(b.endDate).getTime() : nowMs,
     );
     const min = Math.min(...starts);
-    const max = Math.max(...ends, Date.now());
+    const max = Math.max(...ends, nowMs);
     return { min, max, span: max - min || 1 };
-  }, [bars]);
+  }, [bars, nowMs]);
 
   if (!range || bars.length === 0) {
     return null;
@@ -80,7 +81,7 @@ export default function EpicGantt({ setTooltip }: EpicGanttProps = {}) {
       <div className="space-y-2">
         {bars.map((bar) => {
           const startMs = new Date(bar.startDate).getTime();
-          const endMs = bar.endDate ? new Date(bar.endDate).getTime() : Date.now();
+          const endMs = bar.endDate ? new Date(bar.endDate).getTime() : nowMs;
           const leftPct = ((startMs - range.min) / range.span) * 100;
           const widthPct = Math.max(((endMs - startMs) / range.span) * 100, 1.5);
           const color = STATUS_COLORS[bar.status] ?? C.muted;
@@ -102,21 +103,7 @@ export default function EpicGantt({ setTooltip }: EpicGanttProps = {}) {
                   textOverflow: 'ellipsis',
                   cursor: 'default',
                 }}
-                onMouseEnter={(event) => {
-                  setTooltip?.({
-                    x: event.clientX,
-                    y: event.clientY,
-                    content: (
-                      <div style={{ color: C.white, fontSize: 12, fontWeight: 600, maxWidth: 260 }}>
-                        {bar.title}
-                      </div>
-                    ),
-                  });
-                }}
-                onMouseMove={(event) => {
-                  setTooltip?.((prev) => (prev ? { ...prev, x: event.clientX, y: event.clientY } : prev));
-                }}
-                onMouseLeave={() => setTooltip?.(null)}
+                title={bar.title}
               >
                 {bar.title}
               </div>
@@ -136,6 +123,8 @@ export default function EpicGantt({ setTooltip }: EpicGanttProps = {}) {
                 />
                 {/* Bar */}
                 <div
+                  role="img"
+                  aria-label={`Epic: ${bar.title}, ${bar.status}, ${formatShortDate(bar.startDate)} to ${bar.endDate ? formatShortDate(bar.endDate) : 'ongoing'}`}
                   style={{
                     position: 'absolute',
                     left: `${leftPct}%`,

@@ -27,19 +27,6 @@ import { useTheme } from '../hooks/useTheme';
 import ChangelogPage from './ChangelogPage';
 import { getEpicTree } from '../utils/trackerDataAdapter';
 
-const FILTERS: Array<{ id: FilterType; label: string }> = [
-  { id: 'all', label: 'All' },
-  { id: 'decision', label: 'Decisions' },
-  { id: 'dead-end', label: 'Dead Ends' },
-  { id: 'event', label: 'Events' },
-  { id: 'discovery', label: 'Discoveries' },
-  { id: 'pivot', label: 'Pivots' },
-  { id: 'technical', label: 'Technical' },
-  { id: 'functional', label: 'Functional' },
-  { id: 'ux-design', label: 'UX/Design' },
-  { id: 'process', label: 'Process' },
-];
-
 const PROJECTS = [bipProject, metaProject, remnantsProject, itemBGoneProject, vulnBankProject, landingProject, feedbackCaptureProject, noteWorthyProject, onTheMoveProject];
 
 const PROJECT_GROUPS: Array<{ label: string; projects: typeof PROJECTS }> = [
@@ -60,7 +47,6 @@ export default function DecisionTree() {
   const [view, setView] = useState<'tree' | 'metrics' | 'changelog'>('tree');
   const [showHowWeWork, setShowHowWeWork] = useState(false);
   const [metricsTab, setMetricsTab] = useState<'overview' | 'code' | 'bugs' | 'sessions'>('overview');
-  const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [activeProject, setActiveProject] = useState<Project>(metaProject);
   const [projectDropdownOpen, setProjectDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -109,7 +95,6 @@ export default function DecisionTree() {
       setExpandedChapters(new Set());
       setExpandedNode(null);
       setFilter('all');
-      setFiltersExpanded(false);
       setView('tree');
       setMetricsTab('overview');
     }

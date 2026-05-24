@@ -234,6 +234,8 @@ export default function CodeTab({
                   {dateGroup.entries.map((entry) => (
                     <div
                       key={entry.session}
+                      role="img"
+                      aria-label={`${entry.date} ${entry.label}: ${entry.added.toLocaleString()} lines added, ${entry.deleted.toLocaleString()} lines deleted`}
                       style={{ paddingLeft: 20, paddingTop: 4 }}
                       onMouseEnter={(event) => {
                         setHoveredCodeEntry(entry.session);
@@ -278,6 +280,8 @@ export default function CodeTab({
               {row.dates[0].entries.map((entry) => (
                 <div
                   key={entry.session}
+                  role="img"
+                  aria-label={`${entry.date} ${entry.label}: ${entry.added.toLocaleString()} lines added, ${entry.deleted.toLocaleString()} lines deleted`}
                   style={{ paddingTop: 4 }}
                   onMouseEnter={(event) => {
                     setHoveredCodeEntry(entry.session);

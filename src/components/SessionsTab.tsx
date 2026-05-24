@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { useMemo, useState, useCallback, type ReactNode } from 'react';
 import { Card, C } from './MetricsCard';
 import { formatShortDate, buildSmoothPath } from './chartUtils';
 import { thinLabels, defaultWindow } from '../utils/brushUtils';
@@ -20,24 +20,36 @@ interface SessionsTabProps {
   setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
 }
 
+const MONTH_MAP: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+const CHART_DIMS = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
+const CHART_INNER_WIDTH = CHART_DIMS.width - CHART_DIMS.left - CHART_DIMS.right;
+const CHART_INNER_HEIGHT = CHART_DIMS.height - CHART_DIMS.top - CHART_DIMS.bottom;
+const OPERATOR_DISPLAY_NAMES: Record<WorkOperator, string> = {
+  'claude-code': 'Claude Code',
+  'claude-ai': 'Claude AI',
+  cursor: 'Cursor',
+  manual: 'Manual',
+  mixed: 'Mixed',
+};
+
 export default function SessionsTab({
-  sessions, days, totalHours, projectId,
-  sessionFocusMap, sessionDateMap, chapterMap,
+  sessions, days, totalHours, projectId: _projectId,
+  sessionFocusMap, sessionDateMap: _sessionDateMap, chapterMap,
   onJumpToChapter, hoveredPointIndex, setHoveredPointIndex, setTooltip,
 }: SessionsTabProps) {
   const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
   const [chartView, setChartView] = useState<'daily' | 'weekly'>('weekly');
   const [humanAttribution, setHumanAttribution] = useState(30);
-  const [prevProjectId, setPrevProjectId] = useState(projectId);
   const [visibleRange, setVisibleRange] = useState<[number, number] | null>(null);
   const [visibleRangeAvg, setVisibleRangeAvg] = useState<[number, number] | null>(null);
   const [visibleRangeDriver, setVisibleRangeDriver] = useState<[number, number] | null>(null);
 
-  useEffect(() => {
+  const selectChartView = useCallback((nextView: 'daily' | 'weekly') => {
+    setChartView(nextView);
     setVisibleRange(null);
     setVisibleRangeAvg(null);
     setVisibleRangeDriver(null);
-  }, [chartView, projectId]);
+  }, []);
 
   const toolColors: Record<SessionTool, string> = {
     'Claude Code': C.emerald,
@@ -45,15 +57,6 @@ export default function SessionsTab({
     'Cowork': C.slate,
     'Mixed': C.violet,
   };
-  const chartDims = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
-  const chartInnerWidth = chartDims.width - chartDims.left - chartDims.right;
-  const chartInnerHeight = chartDims.height - chartDims.top - chartDims.bottom;
-
-  const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
-  const operatorDisplayNames: Record<WorkOperator, string> = {
-    'claude-code': 'Claude Code', 'claude-ai': 'Claude AI', cursor: 'Cursor', manual: 'Manual', mixed: 'Mixed',
-  };
-
   // Task #99 — PR #165 migrated Sessions tab charts to derive per-block PRs
   // by regex-scraping `block.note`, which fails for older blocks whose notes
   // never contained "PR #xxx". The legacy `metaSessions` array still has the
@@ -105,7 +108,7 @@ export default function SessionsTab({
     const dayBuckets = new Map<string, { dayLabel: string; prs: number; decisions: number; blockCount: number }>();
     days.forEach((d) => {
       const [month = 'Jan', day = '1'] = d.date.split(' ');
-      const dt = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
+      const dt = new Date(2026, MONTH_MAP[month] ?? 0, parseInt(day, 10));
       const key = dt.toISOString().slice(0, 10);
       const dayLabel = month + ' ' + parseInt(day, 10);
       const existing = dayBuckets.get(key) ?? { dayLabel, prs: 0, decisions: 0, blockCount: 0 };
@@ -123,8 +126,8 @@ export default function SessionsTab({
     for (const d of [...days].sort((a, b) => {
       const [aMonth = 'Jan', aDay = '1'] = a.date.split(' ');
       const [bMonth = 'Jan', bDay = '1'] = b.date.split(' ');
-      return new Date(2026, monthMap[aMonth] ?? 0, parseInt(aDay, 10)).getTime() -
-             new Date(2026, monthMap[bMonth] ?? 0, parseInt(bDay, 10)).getTime();
+      return new Date(2026, MONTH_MAP[aMonth] ?? 0, parseInt(aDay, 10)).getTime() -
+             new Date(2026, MONTH_MAP[bMonth] ?? 0, parseInt(bDay, 10)).getTime();
     })) {
       const perBlockDecisions = getBlockDecisionsForDay(d);
       d.blocks.forEach((block, i) => {
@@ -172,16 +175,16 @@ export default function SessionsTab({
 
     const points = sliced.map((entry, index) => {
       const ratioX = sliced.length > 1 ? index / (sliced.length - 1) : 0;
-      const x = chartDims.left + ratioX * chartInnerWidth;
+      const x = CHART_DIMS.left + ratioX * CHART_INNER_WIDTH;
       return {
         ...entry,
         x,
-        yPrs: chartDims.top + (1 - (entry.prs / yMax)) * chartInnerHeight,
-        yDecisions: chartDims.top + (1 - (entry.decisions / yMax)) * chartInnerHeight,
+        yPrs: CHART_DIMS.top + (1 - (entry.prs / yMax)) * CHART_INNER_HEIGHT,
+        yDecisions: CHART_DIMS.top + (1 - (entry.decisions / yMax)) * CHART_INNER_HEIGHT,
       };
     });
 
-    return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points, allPoints, range };
+    return { dims: CHART_DIMS, innerHeight: CHART_INNER_HEIGHT, yTicks, step, yMax, points, allPoints, range };
   }, [chartView, dailyData, blockData, visibleRange]);
 
 
@@ -198,7 +201,7 @@ export default function SessionsTab({
       const dayBuckets = new Map<string, { dayLabel: string; totalMinutes: number; totalBlocks: number; operator: WorkOperator }>();
       validDays.forEach((d) => {
         const [month = 'Jan', day = '1'] = d.date.split(' ');
-        const dt = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
+        const dt = new Date(2026, MONTH_MAP[month] ?? 0, parseInt(day, 10));
         const key = dt.toISOString().slice(0, 10);
         // Use the dominant operator for the day
         const opCounts = new Map<WorkOperator, number>();
@@ -215,7 +218,7 @@ export default function SessionsTab({
         return {
           session: bucket.dayLabel, date: bucket.dayLabel, dateLabel: formatShortDate(bucket.dayLabel),
           label: bucket.totalBlocks + ' blocks', avgMin: Math.round(avgMin),
-          tool: operatorDisplayNames[bucket.operator] ?? bucket.operator,
+          tool: OPERATOR_DISPLAY_NAMES[bucket.operator] ?? bucket.operator,
           taskCount: bucket.totalBlocks, duration: Math.round(bucket.totalMinutes / 60),
         };
       });
@@ -225,8 +228,8 @@ export default function SessionsTab({
       const sortedDaysForAvg = [...validDays].sort((a, b) => {
         const [aM = 'Jan', aD = '1'] = a.date.split(' ');
         const [bM = 'Jan', bD = '1'] = b.date.split(' ');
-        return new Date(2026, monthMap[aM] ?? 0, parseInt(aD, 10)).getTime() -
-               new Date(2026, monthMap[bM] ?? 0, parseInt(bD, 10)).getTime();
+        return new Date(2026, MONTH_MAP[aM] ?? 0, parseInt(aD, 10)).getTime() -
+               new Date(2026, MONTH_MAP[bM] ?? 0, parseInt(bD, 10)).getTime();
       });
       for (const d of sortedDaysForAvg) {
         for (const block of d.blocks) {
@@ -235,7 +238,7 @@ export default function SessionsTab({
           rawPoints.push({
             session: block.id, date: d.date, dateLabel: formatShortDate(d.date),
             label: block.label, avgMin: mins,
-            tool: operatorDisplayNames[block.operator] ?? block.operator,
+            tool: OPERATOR_DISPLAY_NAMES[block.operator] ?? block.operator,
             taskCount: 1, duration: Math.round(mins / 60),
           });
         }
@@ -256,15 +259,15 @@ export default function SessionsTab({
 
     const points = sliced.map((p, index) => {
       const ratioX = sliced.length > 1 ? index / (sliced.length - 1) : 0;
-      const x = chartDims.left + ratioX * chartInnerWidth;
+      const x = CHART_DIMS.left + ratioX * CHART_INNER_WIDTH;
       return {
         ...p,
         x,
-        y: chartDims.top + (1 - (p.avgMin / yMax)) * chartInnerHeight,
+        y: CHART_DIMS.top + (1 - (p.avgMin / yMax)) * CHART_INNER_HEIGHT,
       };
     });
 
-    return { dims: chartDims, innerHeight: chartInnerHeight, yTicks, step, yMax, points, allPoints, range };
+    return { dims: CHART_DIMS, innerHeight: CHART_INNER_HEIGHT, yTicks, step, yMax, points, allPoints, range };
   }, [days, chartView, visibleRangeAvg]);
 
   const avgTaskTimePaths = useMemo(() => {
@@ -308,7 +311,7 @@ export default function SessionsTab({
 
     days.forEach((d) => {
       const [month = 'Jan', day = '1'] = d.date.split(' ');
-      const dt = new Date(2026, monthMap[month] ?? 0, parseInt(day, 10));
+      const dt = new Date(2026, MONTH_MAP[month] ?? 0, parseInt(day, 10));
       const key = dt.toISOString().slice(0, 10);
       const dayLabel = month + ' ' + parseInt(day, 10);
       const existing = dayGroups.get(key) ?? { dayLabel, counts: { 'human-only': 0, 'agent-led': 0, collaborative: 0, human: 0 } };
@@ -399,20 +402,14 @@ export default function SessionsTab({
   }, [sessionActivityPoints, avgTaskTimePoints, driverChartData, visibleRange, visibleRangeAvg, visibleRangeDriver]);
 
   const sortedDays = useMemo(() => {
-    const monthMap: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
     return [...days].sort((a, b) => {
       const [aMonth = 'Jan', aDay = '1'] = a.date.split(' ');
       const [bMonth = 'Jan', bDay = '1'] = b.date.split(' ');
-      const aDate = new Date(2026, monthMap[aMonth] ?? 0, parseInt(aDay, 10));
-      const bDate = new Date(2026, monthMap[bMonth] ?? 0, parseInt(bDay, 10));
+      const aDate = new Date(2026, MONTH_MAP[aMonth] ?? 0, parseInt(aDay, 10));
+      const bDate = new Date(2026, MONTH_MAP[bMonth] ?? 0, parseInt(bDay, 10));
       return bDate.getTime() - aDate.getTime(); // newest first
     });
   }, [days]);
-
-  if (prevProjectId !== projectId) {
-    setPrevProjectId(projectId);
-    setExpandedDays(new Set());
-  }
 
   const derivedTotalPRs = useMemo(
     () => days.reduce((sum, d) => sum + d.blocks.reduce((s, b) => s + getBlockPrs(b), 0), 0),
@@ -433,12 +430,12 @@ export default function SessionsTab({
           <h3 className="text-sm font-semibold">Session Activity</h3>
           <div className="flex rounded-md border overflow-hidden" style={{ borderColor: C.border }}>
             <button
-              onClick={() => setChartView('weekly')}
+              onClick={() => selectChartView('weekly')}
               className="px-3 py-1 text-xs font-medium transition-colors"
               style={{ backgroundColor: chartView === 'weekly' ? 'color-mix(in srgb, var(--theme-cyan) 13%, transparent)' : 'transparent', color: chartView === 'weekly' ? C.cyan : C.slate, borderRight: `1px solid ${C.border}` }}
             >By Day</button>
             <button
-              onClick={() => setChartView('daily')}
+              onClick={() => selectChartView('daily')}
               className="px-3 py-1 text-xs font-medium transition-colors"
               style={{ backgroundColor: chartView === 'daily' ? 'color-mix(in srgb, var(--theme-cyan) 13%, transparent)' : 'transparent', color: chartView === 'daily' ? C.cyan : C.slate }}
             >By Session</button>
@@ -533,15 +530,15 @@ export default function SessionsTab({
                     <svg viewBox="0 0 920 32" style={{ width: '100%', height: 32 }}>
                       <polyline
                         points={allPoints.map((p, i) => {
-                          const x = chartDims.left + (i / Math.max(allPoints.length - 1, 1)) * chartInnerWidth;
+                          const x = CHART_DIMS.left + (i / Math.max(allPoints.length - 1, 1)) * CHART_INNER_WIDTH;
                           const y = 24 - (p.prs / sessionActivityPoints.yMax) * 20;
                           return x + ',' + y;
                         }).join(' ')}
                         fill="none" stroke={C.cyan} strokeWidth="1" opacity="0.3"
                       />
                       <rect
-                        x={chartDims.left + (range[0] / Math.max(allPoints.length - 1, 1)) * chartInnerWidth}
-                        width={((range[1] - range[0]) / Math.max(allPoints.length - 1, 1)) * chartInnerWidth}
+                        x={CHART_DIMS.left + (range[0] / Math.max(allPoints.length - 1, 1)) * CHART_INNER_WIDTH}
+                        width={((range[1] - range[0]) / Math.max(allPoints.length - 1, 1)) * CHART_INNER_WIDTH}
                         y={0} height={32} rx={4}
                         fill={C.cyan} opacity={0.08}
                         style={{ cursor: 'grab' }}
@@ -642,15 +639,15 @@ export default function SessionsTab({
                     <svg viewBox="0 0 920 32" style={{ width: '100%', height: 32 }}>
                       <polyline
                         points={allPoints.map((p, i) => {
-                          const x = chartDims.left + (i / Math.max(allPoints.length - 1, 1)) * chartInnerWidth;
+                          const x = CHART_DIMS.left + (i / Math.max(allPoints.length - 1, 1)) * CHART_INNER_WIDTH;
                           const y = 24 - (p.avgMin / avgTaskTimePoints.yMax) * 20;
                           return x + ',' + y;
                         }).join(' ')}
                         fill="none" stroke={C.violet} strokeWidth="1" opacity="0.3"
                       />
                       <rect
-                        x={chartDims.left + (range[0] / Math.max(allPoints.length - 1, 1)) * chartInnerWidth}
-                        width={((range[1] - range[0]) / Math.max(allPoints.length - 1, 1)) * chartInnerWidth}
+                        x={CHART_DIMS.left + (range[0] / Math.max(allPoints.length - 1, 1)) * CHART_INNER_WIDTH}
+                        width={((range[1] - range[0]) / Math.max(allPoints.length - 1, 1)) * CHART_INNER_WIDTH}
                         y={0} height={32} rx={4}
                         fill={C.violet} opacity={0.08}
                         style={{ cursor: 'grab' }}
@@ -676,8 +673,9 @@ export default function SessionsTab({
         <div className="flex items-center justify-between mb-1">
           <h3 className="text-sm font-semibold" style={{ color: C.white }}>Driver Breakdown</h3>
           <div className="flex items-center gap-2">
-            <label className="text-[10px]" style={{ color: C.muted }}>Human attribution</label>
+            <label htmlFor="human-attribution" className="text-[10px]" style={{ color: C.muted }}>Human attribution</label>
             <input
+              id="human-attribution"
               type="range"
               min={0}
               max={100}
@@ -714,24 +712,24 @@ export default function SessionsTab({
                 <svg viewBox="0 0 920 280" style={{ width: '100%', height: 280 }} role="img" aria-label="Driver breakdown chart">
                   {Array.from({ length: driverChartData.yTicks + 1 }, (_, index) => {
                     const value = index * driverChartData.step;
-                    const y = chartDims.top + chartInnerHeight - (index / driverChartData.yTicks) * chartInnerHeight;
+                    const y = CHART_DIMS.top + CHART_INNER_HEIGHT - (index / driverChartData.yTicks) * CHART_INNER_HEIGHT;
                     return (
                       <g key={'driver-grid-' + value}>
-                        <line x1={chartDims.left} y1={y} x2={chartDims.width - chartDims.right} y2={y} stroke={C.border} strokeDasharray="4 4" strokeOpacity="0.3" />
-                        <text x={chartDims.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">{value}</text>
+                        <line x1={CHART_DIMS.left} y1={y} x2={CHART_DIMS.width - CHART_DIMS.right} y2={y} stroke={C.border} strokeDasharray="4 4" strokeOpacity="0.3" />
+                        <text x={CHART_DIMS.left - 8} y={y + 4} textAnchor="end" fill={C.slate} fontSize="10">{value}</text>
                       </g>
                     );
                   })}
 
                   {bars.map((bar, barIndex) => {
                     const barWidth = bars.length > 1
-                      ? (chartInnerWidth / bars.length) * 0.7
+                      ? (CHART_INNER_WIDTH / bars.length) * 0.7
                       : 40;
                     const barGap = bars.length > 1
-                      ? chartInnerWidth / bars.length
+                      ? CHART_INNER_WIDTH / bars.length
                       : 40;
-                    const barX = chartDims.left + barIndex * barGap + (barGap - barWidth) / 2;
-                    const baseline = chartDims.top + chartInnerHeight;
+                    const barX = CHART_DIMS.left + barIndex * barGap + (barGap - barWidth) / 2;
+                    const baseline = CHART_DIMS.top + CHART_INNER_HEIGHT;
                     let stackY = baseline;
 
                     return (
@@ -739,7 +737,7 @@ export default function SessionsTab({
                         {driverChartData.drivers.map(d => {
                           const count = bar.counts[d];
                           if (count === 0) return null;
-                          const h = (count / driverChartData.yMax) * chartInnerHeight;
+                          const h = (count / driverChartData.yMax) * CHART_INNER_HEIGHT;
                           stackY -= h;
                           return (
                             <rect
@@ -776,7 +774,7 @@ export default function SessionsTab({
                         {labelVis[barIndex] && (
                           <text
                             x={barX + barWidth / 2}
-                            y={barIndex % 2 === 0 ? chartDims.height - 10 : chartDims.height - 22}
+                            y={barIndex % 2 === 0 ? CHART_DIMS.height - 10 : CHART_DIMS.height - 22}
                             textAnchor="middle" fill={C.slate} fontSize="10"
                           >
                             {bar.dayLabel}
@@ -791,14 +789,14 @@ export default function SessionsTab({
                   <div className="mt-1">
                     <svg viewBox="0 0 920 32" style={{ width: '100%', height: 32 }}>
                       {allBars.map((bar, i) => {
-                        const x = chartDims.left + (i / Math.max(allBars.length - 1, 1)) * chartInnerWidth;
+                        const x = CHART_DIMS.left + (i / Math.max(allBars.length - 1, 1)) * CHART_INNER_WIDTH;
                         const total = driverChartData.drivers.reduce((s, d) => s + bar.counts[d], 0);
                         const h = total > 0 ? (total / driverChartData.yMax) * 24 : 0;
                         return <rect key={i} x={x - 1} y={28 - h} width={2} height={h} fill={C.emerald} opacity={0.3} />;
                       })}
                       <rect
-                        x={chartDims.left + (range[0] / Math.max(allBars.length - 1, 1)) * chartInnerWidth}
-                        width={((range[1] - range[0]) / Math.max(allBars.length - 1, 1)) * chartInnerWidth}
+                        x={CHART_DIMS.left + (range[0] / Math.max(allBars.length - 1, 1)) * CHART_INNER_WIDTH}
+                        width={((range[1] - range[0]) / Math.max(allBars.length - 1, 1)) * CHART_INNER_WIDTH}
                         y={0} height={32} rx={4}
                         fill={C.emerald} opacity={0.08}
                         style={{ cursor: 'grab' }}

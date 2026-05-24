@@ -170,8 +170,8 @@ export const landingProject: Project = {
           dayId: 'Mar 10',
           category: 'technical',
           title: 'Broader CF API Token',
-          description: 'Created a new Cloudflare token with Pages Edit, Workers KV Edit, and Zone DNS Edit permissions — broader scope to support the CMS and deployment workflow.',
-          chosenPath: 'New token with Pages + KV + DNS permissions',
+          description: 'Created a new Cloudflare token with broader API scope covering Pages, KV, and DNS — enough to support the CMS and deployment workflow.',
+          chosenPath: 'New token with broader Pages + KV + DNS scope',
           alternatives: ['Separate tokens per service', 'Global API key'],
         },
         {

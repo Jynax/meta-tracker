@@ -2,7 +2,7 @@ import type { Project } from '../types';
 
 export const bipProject: Project = {
   id: 'bip',
-  name: 'BIP: Buried in Print Reader Stats',
+  name: 'BIP: Reading Blog Stats',
   subtitle: 'DESIGNED BY MICHAEL · BUILT WITH CHATGPT & CLAUDE COWORK & CODEX',
   url: 'https://bip.jynaxxapps.com',
   projectType: 'web-app',
@@ -30,9 +30,9 @@ export const bipProject: Project = {
           dayId: 'Feb 14',
           category: 'functional',
           title: 'Choosing the Project: A Reading Log App',
-          description: "Michael wanted a practical project to learn GPT-5.3 Codex. Chose to build a reading log explorer for Marcie's book blog (Buried in Print) with real data and a real user.",
+          description: "Michael wanted a practical project to learn GPT-5.3 Codex. Chose to build a reading log explorer for a reading blog with real data and a real user.",
           lesson: 'Building for someone you know creates natural accountability and better UX instincts.',
-          chosenPath: "Build a reading log explorer for Marcie's book blog using real data",
+          chosenPath: "Build a reading log explorer for a reading blog using real data",
           alternatives: ['Purely technical demo', 'A game', 'A personal tool without a real user'],
         },
         {
@@ -85,7 +85,7 @@ export const bipProject: Project = {
           dayId: 'Feb 22',
           category: 'functional',
           title: 'The Spreadsheet Challenge',
-          description: "Marcie's master spreadsheet contained 30 sheets spanning 1990-2026, with ~5,350 books. Massive inconsistencies drove a multi-session normalization effort.",
+          description: "The reader's master spreadsheet contained 30 sheets spanning 1990-2026, with ~5,350 books. Massive inconsistencies drove a multi-session normalization effort.",
           lesson: 'Real-world data is always messier than you expect. Budget time for it.',
         },
         {
@@ -227,7 +227,7 @@ export const bipProject: Project = {
           category: 'functional',
           title: 'Owned as Third Representation Metric',
           description:
-            'Added "Owned" as a third filter/chart dimension alongside Women and POC. Tells a meaningful story about which authors Marcie invests in financially.',
+            'Added "Owned" as a third filter/chart dimension alongside Women and POC. Tells a meaningful story about which authors the reader invests in financially.',
           chosenPath:
             'Three representation metrics: Women, POC, Owned — all as first-class filters',
           alternatives: [
@@ -601,7 +601,7 @@ export const bipProject: Project = {
           dayId: 'Feb 17',
           category: 'functional',
           title: 'Published Work Module Exploration',
-          description: "Explored tracking Marcie's published work across the internet. Proposed as a second data source + dashboard. Scoped but deferred.",
+          description: "Explored tracking the reader's published work across the internet. Proposed as a second data source + dashboard. Scoped but deferred.",
         },
       ],
     },

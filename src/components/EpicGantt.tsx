@@ -124,7 +124,7 @@ export default function EpicGantt({ setTooltip }: EpicGanttProps = {}) {
                 {/* Bar */}
                 <button
                   type="button"
-                  aria-label={`${bar.title}, ${bar.status}, ${formatShortDate(bar.startDate)} to ${bar.endDate ? formatShortDate(bar.endDate) : 'ongoing'}`}
+                  aria-label={`Epic: ${bar.title}, ${bar.status}, ${formatShortDate(bar.startDate)} to ${bar.endDate ? formatShortDate(bar.endDate) : 'ongoing'}`}
                   style={{
                     position: 'absolute',
                     left: `${leftPct}%`,

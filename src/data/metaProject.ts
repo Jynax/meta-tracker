@@ -1538,10 +1538,10 @@ export const metaProject: Project = {
         type: 'decision',
         dayId: 'Apr 1',
         category: 'process',
-        title: 'PAT Audit & JYNAX_PAT Secret Rollout',
+        title: 'PAT Audit & Project PAT Secret Rollout',
         description:
-          'Consolidated to one working GitHub PAT, retired dead credentials.md PAT, added secrets read/write permission. Set JYNAX_PAT secret on all 6 repos — unblocking the changelog cross-repo dispatch workflow.',
-        chosenPath: 'Single PAT with appropriate scopes, set as repo secret on all projects',
+          'Consolidated to one working GitHub PAT, retired dead credentials.md PAT, and set the project PAT secret on all 6 repos — unblocking the changelog cross-repo dispatch workflow.',
+        chosenPath: 'Single PAT with appropriate scopes, set as the project PAT secret on all projects',
         alternatives: ['Per-repo PATs', 'GitHub App for cross-repo auth'],
       },
       {

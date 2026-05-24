@@ -155,7 +155,7 @@ export const itemBGoneProject: Project = {
           category: 'process',
           title: 'Cloudflare Token Cleanup',
           description:
-            'Deleted all existing Cloudflare API tokens (including suspicious auto-generated \u201cAgent Lee\u201d token with broad permissions) and created a single fresh token scoped to Pages Edit + DNS Edit.',
+            'Deleted all existing Cloudflare API tokens (including a suspicious auto-generated token with broad permissions) and created a single fresh token scoped only to the dashboard deployment needs.',
           lesson: 'Audit API tokens regularly \u2014 auto-generated tokens can have overly broad permissions.',
           chosenPath: 'Fresh minimal-scope token',
           alternatives: ['Keep existing tokens'],

@@ -1596,7 +1596,7 @@ export const tasks: Task[] = [
       {
         "type": "completion",
         "date": "2026-04-01",
-        "note": "PAT Audit & JYNAX_PAT Secret Rollout — Single PAT with appropriate scopes, set as repo secret on all projects"
+        "note": "PAT Audit & Project PAT Secret Rollout — Single PAT with appropriate scopes, set as repo secret on all projects"
       }
     ]
   },
@@ -3449,11 +3449,11 @@ export const tasks: Task[] = [
       },
       {
         "type": "command",
-        "path": "~/.claude/commands/metrics-push.md"
+        "path": "local workflow command: metrics-push"
       },
       {
         "type": "command",
-        "path": "~/.claude/commands/session-end.md"
+        "path": "local workflow command: session-end"
       },
       {
         "type": "doc",

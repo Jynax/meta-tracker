@@ -17,9 +17,9 @@ export function WorkMixChart({ data }: ChartProps) {
               key={cat}
               style={{
                 width: `${(count / totalBlocks) * 100}%`,
-                backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8',
+                backgroundColor: CATEGORY_COLORS[cat] ?? '#6B7A88',
                 minWidth: count > 0 ? 4 : 0,
-                borderRight: '1px solid #0f172a',
+                borderRight: '1px solid #0E1419',
                 transition: 'width 300ms cubic-bezier(0.23, 1, 0.32, 1)',
               }}
             />
@@ -42,9 +42,9 @@ export function WorkMixChart({ data }: ChartProps) {
                     key={cat}
                     style={{
                       width: `${(count / projectTotal) * 100}%`,
-                      backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8',
+                      backgroundColor: CATEGORY_COLORS[cat] ?? '#6B7A88',
                       minWidth: count > 0 ? 3 : 0,
-                      borderRight: '1px solid #0f172a',
+                      borderRight: '1px solid #0E1419',
                     }}
                   />
                 ))}
@@ -58,7 +58,7 @@ export function WorkMixChart({ data }: ChartProps) {
       <div className="mt-3 flex flex-wrap justify-center gap-3">
         {sortedAggregate.map(([cat, count]) => (
           <div key={cat} className="flex items-center gap-1.5 text-xs" style={{ color: C.muted }}>
-            <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8' }} />
+            <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: CATEGORY_COLORS[cat] ?? '#6B7A88' }} />
             {cat}: {Math.round((count / totalBlocks) * 100)}%
           </div>
         ))}

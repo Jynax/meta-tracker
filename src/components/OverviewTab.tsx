@@ -5,20 +5,7 @@ import { Card, C } from './MetricsCard';
 import EpicGantt from './EpicGantt';
 import { getOverviewStats } from '../utils/trackerDataAdapter';
 import type { CodeVolumeEntry, DerivedMetric, StackEntry } from '../data/metaMetrics';
-
-const CATEGORY_COLORS: Record<WorkCategory, string> = {
-  Feature: '#22d3ee',
-  Bug: '#f43f5e',
-  Refactor: '#a78bfa',
-  UX: '#f59e0b',
-  Tooling: '#34d399',
-  Testing: '#818cf8',
-  Docs: '#94a3b8',
-  Scripting: '#34d399',
-  Data: '#60a5fa',
-  'Local-Tooling': '#34d399',
-  Planning: '#fbbf24',
-};
+import { CATEGORY_COLORS } from './insights/colors';
 
 const CHART_DIMS = { width: 920, height: 280, left: 48, right: 20, top: 16, bottom: 34 };
 const CHART_INNER_WIDTH = CHART_DIMS.width - CHART_DIMS.left - CHART_DIMS.right;
@@ -200,7 +187,7 @@ export default function OverviewTab({
         const detail = researchDays.length > 3 ? labels + '...' : labels;
         return (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            <Card label="Research Days" value={researchDays.length} color="#8b5cf6" detail={detail} />
+            <Card label="Research Days" value={researchDays.length} color="#A6A0F0" detail={detail} />
           </div>
         );
       })()}
@@ -351,10 +338,10 @@ export default function OverviewTab({
             const phase = proj.currentPhase ?? 'Research';
             const isShipped = phase === 'Shipped';
             const phaseColors: Record<ProjectPhase, string> = {
-              Research: '#60a5fa',
+              Research: '#6BA8E6',
               Spec: C.violet,
               Build: C.amber,
-              Review: '#fb923c',
+              Review: '#E8975B',
               Shipped: C.emerald,
             };
             const phaseOrder: ProjectPhase[] = ['Research', 'Spec', 'Build', 'Review', 'Shipped'];
@@ -388,7 +375,7 @@ export default function OverviewTab({
                     {isLightweight && (
                       <span
                         className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
-                        style={{ backgroundColor: 'color-mix(in srgb, #a78bfa 15%, transparent)', color: '#a78bfa', border: '1px solid color-mix(in srgb, #a78bfa 30%, transparent)' }}
+                        style={{ backgroundColor: 'color-mix(in srgb, #A6A0F0 15%, transparent)', color: '#A6A0F0', border: '1px solid color-mix(in srgb, #A6A0F0 30%, transparent)' }}
                       >
                         Micro
                       </span>
@@ -397,7 +384,7 @@ export default function OverviewTab({
                       <span
                         className="rounded-full px-2 py-0.5 text-[10px] font-medium"
                         style={proj.projectType === 'joint'
-                          ? { backgroundColor: 'color-mix(in srgb, #2dd4bf 15%, transparent)', color: '#2dd4bf', border: '1px solid color-mix(in srgb, #2dd4bf 30%, transparent)' }
+                          ? { backgroundColor: 'color-mix(in srgb, #6CE0D4 15%, transparent)', color: '#6CE0D4', border: '1px solid color-mix(in srgb, #6CE0D4 30%, transparent)' }
                           : { backgroundColor: 'color-mix(in srgb, var(--theme-text-secondary) 10%, transparent)', color: C.muted }
                         }
                       >

@@ -87,18 +87,18 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }
     <div
       data-testid="active-epic-progress"
       style={{
-        background: '#0f1419',
-        border: '1px solid #1e293b',
+        background: 'var(--theme-bg)',
+        border: '1px solid var(--theme-border)',
         borderRadius: 10,
         padding: '16px 20px 20px',
-        color: '#e2e8f0',
+        color: 'var(--theme-text-primary)',
         fontFamily: 'ui-sans-serif, system-ui',
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <div style={{ fontSize: 15, fontWeight: 600, color: '#e2e8f0' }}>Active Epic Progress</div>
-          <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>
+          <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--theme-text-primary)' }}>Active Epic Progress</div>
+          <div style={{ fontSize: 11, color: 'var(--theme-text-secondary)', marginTop: 2 }}>
             Cumulative tasks completed — last 30 days + stalled
           </div>
         </div>
@@ -125,18 +125,18 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }
       <svg viewBox="0 0 900 300" width="100%" style={{ marginTop: 14 }} role="img" aria-label={`Cumulative task completion chart, ${series.length} epics visible`}>
         {/* gridlines */}
         {yTicks.slice(1).map((v) => (
-          <line key={v} x1={PLOT.left} y1={yScale(v)} x2={PLOT.right} y2={yScale(v)} stroke="#1e293b" strokeWidth={1} />
+          <line key={v} x1={PLOT.left} y1={yScale(v)} x2={PLOT.right} y2={yScale(v)} stroke="rgba(139,163,176,0.16)" strokeWidth={1} />
         ))}
         {/* axes */}
-        <line x1={PLOT.left} y1={PLOT.bottom} x2={PLOT.right} y2={PLOT.bottom} stroke="#334155" strokeWidth={1} />
-        <line x1={PLOT.left} y1={PLOT.top} x2={PLOT.left} y2={PLOT.bottom} stroke="#334155" strokeWidth={1} />
+        <line x1={PLOT.left} y1={PLOT.bottom} x2={PLOT.right} y2={PLOT.bottom} stroke="rgba(139,163,176,0.30)" strokeWidth={1} />
+        <line x1={PLOT.left} y1={PLOT.top} x2={PLOT.left} y2={PLOT.bottom} stroke="rgba(139,163,176,0.30)" strokeWidth={1} />
         {/* y-axis labels */}
         {yTicks.map((v) => (
-          <text key={v} x={PLOT.left - 7} y={yScale(v) + 3} textAnchor="end" fill="#64748b" fontSize={10}>
+          <text key={v} x={PLOT.left - 7} y={yScale(v) + 3} textAnchor="end" fill="#4F6470" fontSize={10}>
             {v}
           </text>
         ))}
-        <text x={30} y={(PLOT.top + PLOT.bottom) / 2} textAnchor="middle" fill="#64748b" fontSize={10} transform={`rotate(-90 30 ${(PLOT.top + PLOT.bottom) / 2})`}>
+        <text x={30} y={(PLOT.top + PLOT.bottom) / 2} textAnchor="middle" fill="#4F6470" fontSize={10} transform={`rotate(-90 30 ${(PLOT.top + PLOT.bottom) / 2})`}>
           tasks (cumulative)
         </text>
         {/* x-axis labels — thin to max 6 visible */}
@@ -144,7 +144,7 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }
           const every = Math.max(1, Math.ceil(allWeeks.length / 6));
           if (i % every !== 0 && i !== allWeeks.length - 1) return null;
           return (
-            <text key={w} x={xScale(w)} y={PLOT.bottom + 18} textAnchor="middle" fill="#64748b" fontSize={10}>
+            <text key={w} x={xScale(w)} y={PLOT.bottom + 18} textAnchor="middle" fill="#4F6470" fontSize={10}>
               {formatTick(w)}
             </text>
           );
@@ -152,7 +152,7 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }
         {/* curves */}
         {series.map((s) => {
           const isStalled = s.stalled;
-          const stroke = isStalled ? '#fbbf24' : s.color;
+          const stroke = isStalled ? '#E8C56B' : s.color;
 
           // Empty-points case: never-started stalled epic — draw flat dashed placeholder
           if (s.points.length === 0) {
@@ -218,10 +218,10 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }
                         content: (
                           <div style={{ minWidth: 160 }}>
                             <div style={{ fontWeight: 600 }}>{s.epicTitle}</div>
-                            <div style={{ fontSize: 11, color: '#94a3b8' }}>Week of {p.weekStart}</div>
+                            <div style={{ fontSize: 11, color: 'var(--theme-text-secondary)' }}>Week of {p.weekStart}</div>
                             {p.delta > 0 && <div style={{ fontSize: 11 }}>+{p.delta} this week</div>}
                             <div style={{ fontSize: 11 }}>Cumulative: {p.cumulative}</div>
-                            <div style={{ fontSize: 11, color: '#94a3b8' }}>
+                            <div style={{ fontSize: 11, color: 'var(--theme-text-secondary)' }}>
                               Status: {isStalled ? 'stalled' : s.status}
                             </div>
                           </div>
@@ -237,8 +237,8 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }
               })}
               {isStalled && (
                 <>
-                  <circle cx={lastX} cy={lastY} r={5} fill="none" stroke="#fbbf24" strokeWidth={1} />
-                  <circle cx={lastX} cy={lastY} r={8} fill="none" stroke="#fbbf24" strokeWidth={0.5} strokeDasharray="2 2" opacity={0.5} />
+                  <circle cx={lastX} cy={lastY} r={5} fill="none" stroke="#E8C56B" strokeWidth={1} />
+                  <circle cx={lastX} cy={lastY} r={8} fill="none" stroke="#E8C56B" strokeWidth={0.5} strokeDasharray="2 2" opacity={0.5} />
                 </>
               )}
               <text
@@ -259,13 +259,13 @@ export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }
         })}
       </svg>
       {series.length === 0 && (
-        <div style={{ textAlign: 'center', color: '#64748b', fontSize: 12, padding: '16px 0' }}>
+        <div style={{ textAlign: 'center', color: 'var(--theme-text-muted)', fontSize: 12, padding: '16px 0' }}>
           No active epics. Toggle "All epics" to see the full history.
         </div>
       )}
       {hiddenCount > 0 && (
-        <div style={{ marginTop: 8, paddingTop: 10, borderTop: '1px solid #1e293b', fontSize: 11, color: '#64748b' }}>
-          <strong style={{ color: '#94a3b8' }}>{hiddenCount} {hiddenCount === 1 ? 'epic' : 'epics'} hidden by filter</strong> — click "All epics" to reveal.
+        <div style={{ marginTop: 8, paddingTop: 10, borderTop: '1px solid var(--theme-border)', fontSize: 11, color: 'var(--theme-text-muted)' }}>
+          <strong style={{ color: 'var(--theme-text-secondary)' }}>{hiddenCount} {hiddenCount === 1 ? 'epic' : 'epics'} hidden by filter</strong> — click "All epics" to reveal.
         </div>
       )}
     </div>
@@ -276,10 +276,10 @@ function toggleStyle(active: boolean): React.CSSProperties {
   return {
     fontSize: 11,
     padding: '4px 10px',
-    border: `1px solid ${active ? '#475569' : '#334155'}`,
+    border: '1px solid var(--theme-border)',
     borderRadius: 14,
-    background: active ? '#1e293b' : '#0f1419',
-    color: active ? '#e2e8f0' : '#94a3b8',
+    background: active ? 'var(--theme-card-bg)' : 'var(--theme-bg)',
+    color: active ? 'var(--theme-text-primary)' : 'var(--theme-text-secondary)',
     cursor: 'pointer',
   };
 }

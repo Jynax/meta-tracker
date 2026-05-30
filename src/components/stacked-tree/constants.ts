@@ -28,10 +28,10 @@ export const TASK_TOOL_COLOR: Record<string, string> = {
 };
 
 export const PHASE_COLORS: Record<string, string> = {
-  Research: '#60a5fa',
+  Research: '#6BA8E6',
   Spec: C.violet,
   Build: C.amber,
-  Review: '#fb923c',
+  Review: '#E8975B',
   Shipped: C.emerald,
 };
 

@@ -55,7 +55,7 @@ export default function InsightsView({ setTooltip }: InsightsViewProps) {
               className="px-4 py-2 rounded-full text-sm font-semibold transition"
               style={{
                 backgroundColor: isActive ? 'var(--theme-cyan)' : C.cardBg,
-                color: isActive ? '#0f172a' : C.muted,
+                color: isActive ? '#0E1419' : C.muted,
                 border: `1px solid ${isActive ? 'var(--theme-cyan)' : C.border}`,
               }}
             >

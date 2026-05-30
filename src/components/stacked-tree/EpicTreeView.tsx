@@ -48,6 +48,7 @@ export function EpicTreeView({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
       <div
+        className="con-bracketed"
         style={{
           background: C.cardBg,
           border: `1px solid ${C.border}`,

@@ -1,25 +1,26 @@
-/* Security Compass Theme */
+/* Console mode — default theme for meta.jynaxxapps.com */
 
 :root {
-  --theme-bg: #0f172a;
-  --theme-card-bg: #1e293b;
-  --theme-border: #334155;
-  --theme-text-primary: #f8fafc;
-  --theme-text-secondary: #94a3b8;
-  --theme-text-muted: #64748b;
-  --theme-cyan: #22d3ee;
-  --theme-emerald: #34d399;
-  --theme-rose: #fb7185;
-  --theme-amber: #fbbf24;
-  --theme-violet: #a78bfa;
+  --theme-bg:             #0E1419;
+  --theme-card-bg:        #141C23;
+  --theme-border:         rgba(108, 224, 212, 0.18);
+  --theme-text-primary:   #E8F0F5;
+  --theme-text-secondary: #8BA3B0;
+  --theme-text-muted:     #4F6470;
+  --theme-cyan:           #6CE0D4;
+  --theme-emerald:        #5BD6A0;
+  --theme-rose:           #F2768E;
+  --theme-amber:          #E8C56B;
+  --theme-violet:         #A6A0F0;
 
-  --theme-accent-10: #22d3ee1a;
-  --theme-accent-15: #22d3ee26;
-  --theme-accent-20: #22d3ee33;
-  --theme-accent-33: #22d3ee55;
-  --theme-accent-40: #22d3ee66;
+  --theme-accent-10: rgba(108, 224, 212, 0.10);
+  --theme-accent-15: rgba(108, 224, 212, 0.15);
+  --theme-accent-20: rgba(108, 224, 212, 0.20);
+  --theme-accent-33: rgba(108, 224, 212, 0.33);
+  --theme-accent-40: rgba(108, 224, 212, 0.40);
 }
 
+/* Security Compass easter-egg theme — activated via the rogue pixel */
 [data-theme="sc"] {
   --theme-bg: #0F1929;
   --theme-card-bg: #162032;

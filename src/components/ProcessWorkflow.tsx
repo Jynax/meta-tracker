@@ -23,8 +23,7 @@ export default function ProcessWorkflow() {
       style={{
         background: colors.bg,
         minHeight: "100vh",
-        fontFamily:
-          "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        fontFamily: "'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
         color: colors.text,
         padding: "40px 24px",
         maxWidth: 960,
@@ -51,9 +50,8 @@ export default function ProcessWorkflow() {
               fontSize: 28,
               fontWeight: 800,
               margin: 0,
-              background: `linear-gradient(135deg, ${colors.cyan}, ${colors.violet})`,
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
+              color: colors.text,
+              fontFamily: "'Space Grotesk', 'Geist', system-ui, sans-serif",
               letterSpacing: -0.5,
             }}
           >

@@ -11,10 +11,11 @@ interface ChangelogDateGroup {
   entries: ChangelogEntry[];
 }
 
-const categoryStyles: Record<string, { bg: string; text: string; label: string }> = {
-  new: { bg: 'bg-blue-500/10', text: 'text-blue-400', label: 'New' },
-  improved: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', label: 'Improved' },
-  updated: { bg: 'bg-slate-500/10', text: 'text-slate-400', label: 'Updated' },
+const categoryStyles: Record<string, { color: string; bg: string; label: string }> = {
+  new:      { color: '#6CE0D4', bg: 'rgba(108,224,212,0.10)', label: 'New' },
+  improved: { color: '#5BD6A0', bg: 'rgba(91,214,160,0.10)',  label: 'Improved' },
+  updated:  { color: '#6B7A88', bg: 'rgba(107,122,136,0.12)', label: 'Updated' },
+  fixed:    { color: '#5BD6A0', bg: 'rgba(91,214,160,0.10)',  label: 'Fixed' },
 };
 
 function formatDate(dateStr: string): string {
@@ -31,8 +32,8 @@ export default function ChangelogPage({ onClose }: ChangelogPageProps) {
 
   if (groups.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto px-6 py-12 text-center text-slate-400">
-        <h1 className="text-2xl font-semibold text-slate-100 mb-4">Changelog</h1>
+      <div className="max-w-2xl mx-auto px-6 py-12 text-center" style={{ color: 'var(--theme-text-secondary)' }}>
+        <h1 className="text-2xl font-bold mb-4" style={{ fontFamily: 'var(--con-font-display)', color: 'var(--theme-text-primary)' }}>Changelog</h1>
         <p>No entries yet. Check back after the next release.</p>
       </div>
     );
@@ -42,28 +43,41 @@ export default function ChangelogPage({ onClose }: ChangelogPageProps) {
     <div className="max-w-2xl mx-auto px-6 py-12">
       <button
         onClick={onClose}
-        className="text-xs text-slate-400 hover:text-slate-200 transition-colors mb-4 flex items-center gap-1"
+        className="text-xs transition-colors mb-6 flex items-center gap-1 hover:brightness-125"
+        style={{ color: 'var(--theme-cyan)', fontFamily: 'var(--con-font-mono)' }}
       >
         ← Back
       </button>
-      <h1 className="text-2xl font-semibold text-slate-100 mb-8">Changelog</h1>
+      <h1 className="text-2xl font-bold mb-8" style={{ fontFamily: 'var(--con-font-display)', color: 'var(--theme-text-primary)' }}>Changelog</h1>
       {groups.map((group) => (
         <div key={group.date} className="mb-8">
-          <h2 className="text-sm font-medium text-slate-400 mb-3 pb-2 border-b border-slate-700">
+          <h2
+            className="text-xs mb-3 pb-2"
+            style={{
+              fontFamily: 'var(--con-font-mono)',
+              color: 'var(--theme-text-secondary)',
+              borderBottom: '1px solid var(--theme-border)',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+            }}
+          >
             {formatDate(group.date)}
           </h2>
           <div className="space-y-3 pl-3">
             {group.entries.map((entry, i) => {
-              const style = categoryStyles[entry.category] || categoryStyles.updated;
+              const s = categoryStyles[entry.category] ?? categoryStyles.updated;
               return (
                 <div key={`${group.date}-${i}`}>
                   <div className="flex items-center gap-2 mb-0.5">
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${style.bg} ${style.text}`}>
-                      {style.label}
+                    <span
+                      className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                      style={{ color: s.color, backgroundColor: s.bg }}
+                    >
+                      {s.label}
                     </span>
-                    <span className="text-sm font-medium text-slate-200">{entry.title}</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--theme-text-primary)', fontFamily: 'var(--con-font-sans)' }}>{entry.title}</span>
                   </div>
-</div>
+                </div>
               );
             })}
           </div>

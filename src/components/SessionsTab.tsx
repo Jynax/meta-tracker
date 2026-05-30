@@ -777,7 +777,7 @@ export default function SessionsTab({
           const mins = totalMinutes % 60;
           const timeStr = hours > 0 ? `${hours}h ${mins > 0 ? mins + 'm' : ''}` : `${mins}m`;
 
-          const phaseColors: Record<string, string> = { Research: '#60a5fa', Spec: C.violet, Build: C.amber, Review: '#fb923c', Shipped: C.emerald };
+          const phaseColors: Record<string, string> = { Research: '#6BA8E6', Spec: C.violet, Build: C.amber, Review: '#E8975B', Shipped: C.emerald };
           const operatorLabels: Record<WorkOperator, string> = { 'claude-code': 'Claude Code', 'claude-ai': 'Claude AI', cursor: 'Cursor', manual: 'Manual', mixed: 'Mixed' };
           const driverBadgeColors: Record<WorkDriver, string> = { human: C.cyan, 'human-only': C.cyan, ai: C.emerald, 'agent-led': C.emerald, collaborative: C.violet };
           const driverBadgeLabels: Record<WorkDriver, string> = { human: 'Human', 'human-only': 'Human Only', ai: 'Agent-Led', 'agent-led': 'Agent-Led', collaborative: 'Collaborative' };

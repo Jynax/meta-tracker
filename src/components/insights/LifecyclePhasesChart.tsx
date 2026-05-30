@@ -18,9 +18,9 @@ export function LifecyclePhasesChart({ data }: ChartProps) {
                   key={cat}
                   style={{
                     width: `${(count / projectTotal) * 100}%`,
-                    backgroundColor: CATEGORY_COLORS[cat] ?? '#94a3b8',
+                    backgroundColor: CATEGORY_COLORS[cat] ?? '#6B7A88',
                     minWidth: count > 0 ? 3 : 0,
-                    borderRight: '1px solid #0f172a',
+                    borderRight: '1px solid #0E1419',
                   }}
                 />
               ))}

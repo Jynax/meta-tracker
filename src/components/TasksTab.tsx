@@ -14,9 +14,9 @@ interface TasksTabProps {
 }
 
 const EPIC_PALETTE = [
-  '#22d3ee', '#a78bfa', '#f59e0b', '#34d399', '#f43f5e',
-  '#60a5fa', '#fbbf24', '#818cf8', '#2dd4bf', '#fb923c',
-  '#94a3b8', '#c084fc', '#facc15', '#4ade80',
+  '#6CE0D4', '#A6A0F0', '#E8975B', '#5BD6A0', '#F2768E',
+  '#6BA8E6', '#E8C56B', '#A6A0F0', '#6CE0D4', '#E8975B',
+  '#6B7A88', '#A6A0F0', '#E8C56B', '#5BD6A0',
 ];
 
 function formatWeek(weekStart: string): string {

@@ -59,8 +59,8 @@ export default function BugsTab({ bugs, projectId }: BugsTabProps) {
       <div className="grid gap-4 lg:grid-cols-3">
         <DonutBreakdown animate={animateBugDonuts} label="Severity"
           items={[
-            { label: 'Critical', count: bySeverity.Critical ?? 0, color: '#ef4444' },
-            { label: 'High', count: bySeverity.High ?? 0, color: '#f97316' },
+            { label: 'Critical', count: bySeverity.Critical ?? 0, color: '#F2768E' },
+            { label: 'High', count: bySeverity.High ?? 0, color: '#E8975B' },
             { label: 'Medium', count: bySeverity.Medium ?? 0, color: C.amber },
             { label: 'Low', count: bySeverity.Low ?? 0, color: C.muted },
           ]}
@@ -113,7 +113,7 @@ export default function BugsTab({ bugs, projectId }: BugsTabProps) {
               <div style={{ display: isExpanded ? 'block' : 'none' }}>
                 <table className="w-full border-collapse text-xs">
                   <thead>
-                    <tr style={{ backgroundColor: '#162136' }}>
+                    <tr style={{ backgroundColor: '#18222B' }}>
                       {['#', 'Session', 'Summary', 'Decision', 'Severity', 'Category', 'Source', 'Status'].map((header) => (
                         <th key={header} className="px-3 py-2 text-left font-semibold" style={{ color: C.slate }}>{header}</th>
                       ))}

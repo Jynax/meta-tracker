@@ -2,6 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { Card, C } from './MetricsCard';
 import type { CodeVolumeEntry } from '../data/metaMetrics';
 import type { DayEntry } from '../types';
+import { CATEGORY_COLORS } from './insights/colors';
 
 interface CodeTabProps {
   codeVolume: CodeVolumeEntry[];
@@ -13,20 +14,6 @@ interface CodeTabProps {
   setHoveredCodeEntry: (entry: string | null) => void;
   setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
 }
-
-const CATEGORY_COLORS: Record<string, string> = {
-  Feature: '#22d3ee',
-  Bug: '#f43f5e',
-  Refactor: '#a78bfa',
-  UX: '#f59e0b',
-  Tooling: '#34d399',
-  Testing: '#818cf8',
-  Docs: '#94a3b8',
-  Scripting: '#34d399',
-  Data: '#60a5fa',
-  'Local-Tooling': '#34d399',
-  Planning: '#fbbf24',
-};
 
 export default function CodeTab({
   codeVolume, days, totalAdded, totalDeleted, currentLoc,

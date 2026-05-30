@@ -15,6 +15,7 @@ import { useTheme } from '../hooks/useTheme';
 import ChangelogPage from './ChangelogPage';
 import { getEpicTree } from '../utils/trackerDataAdapter';
 import { JynaxxWordmark } from './brand/Wordmark';
+import Footer from './Footer';
 
 const PROJECTS = ALL_PROJECTS;
 
@@ -289,7 +290,7 @@ export default function DecisionTree() {
       {view === 'changelog' && <ChangelogPage onClose={() => setView('tree')} />}
 
       {showHowWeWork && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 100, backgroundColor: 'var(--theme-bg)', overflowY: 'auto' }}>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 100, backgroundColor: 'rgba(10,15,19,0.92)', overflowY: 'auto' }}>
           <div className="mx-auto max-w-[1800px] px-4 py-6 sm:px-8">
             <div className="flex justify-end mb-4">
               <button
@@ -304,6 +305,8 @@ export default function DecisionTree() {
           </div>
         </div>
       )}
+      <Footer />
+
           {easterEggToast && (
         <div
           className="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-lg px-4 py-2 text-sm font-semibold shadow-lg transition-opacity"

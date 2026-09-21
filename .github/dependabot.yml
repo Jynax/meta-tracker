@@ -6,6 +6,12 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 5
+    # Pin TypeScript to the 6.x line: typescript-eslint 8.x does not support
+    # TypeScript 7 yet (TS 7 crashes eslint via @typescript-eslint/typescript-estree).
+    # Remove this ignore once typescript-eslint ships TS 7 support, then bump both together.
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
     groups:
       dev-dependencies:
         dependency-type: "development"

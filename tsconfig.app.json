@@ -20,13 +20,7 @@
     "noFallthroughCasesInSwitch": true,
     "types": [
       "vite/client"
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "@xyflow/react": [
-        "src/lib/xyflow-react.tsx"
-      ]
-    }
+    ]
   },
   "include": [
     "src"

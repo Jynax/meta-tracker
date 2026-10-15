@@ -1,64 +1,14 @@
-export type SessionTool = 'Claude Code' | 'Codex' | 'Cowork' | 'Mixed';
+import type { DayEntry } from '../types/index';
+import type {
+  SessionTool, WorkCategory, CodeVolumeEntry, PRDetail, SessionEntry, SessionPhase,
+  SessionDriver, SessionOperator, BugEntry, DerivedMetric, StackEntry,
+} from './bipMetrics';
 
-export type WorkCategory = 'Feature' | 'Refactor' | 'Bug' | 'Tooling';
-
-export interface CodeVolumeEntry {
-  session: string;
-  date: string;
-  label: string;
-  added: number;
-  deleted: number;
-  net: number;
-  total: number;
-}
-
-export interface PRDetail {
-  number: number;
-  title: string;
-  createdAt: string;
-  mergedAt: string;
-}
-
-/** @deprecated Use DayEntry + WorkBlock from types/index.ts instead. Kept for migration compatibility. */
-export interface SessionEntry {
-  session: string;
-  date: string;
-  label: string;
-  duration: number;
-  prs: number;
-  decisions: number;
-  deadEnds: number;
-  focus: string;
-  chapterId: string;
-  workCategory: WorkCategory;
-  tool: SessionTool;
-  taskCount: number;
-  prDetails?: PRDetail[];
-}
-
-export interface BugEntry {
-  id: number;
-  session: string;
-  date: string;
-  label: string;
-  summary: string;
-  severity: 'Critical' | 'High' | 'Medium' | 'Low';
-  source: string;
-  status: string;
-  category: 'Technical' | 'Functional' | 'UX';
-}
-
-export interface DerivedMetric {
-  label: string;
-  value: string;
-  detail: string;
-  color: string;
-}
-
-export interface StackEntry {
-  name: string;
-  cat: 'Core' | 'UI' | 'Build' | 'Utility';
-}
+// Session types are shared with every other project's metrics file.
+export type {
+  SessionTool, WorkCategory, CodeVolumeEntry, PRDetail, SessionEntry, SessionPhase,
+  SessionDriver, SessionOperator, BugEntry, DerivedMetric, StackEntry,
+};
 
 export const metaCodeVolume: CodeVolumeEntry[] = [
   { session: 'Pre-Tracking A', date: 'Mar 2', label: 'Decisions & Metrics Template Design', added: 0, deleted: 0, net: 0, total: 0 },

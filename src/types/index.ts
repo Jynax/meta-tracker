@@ -1,6 +1,7 @@
 export type NodeType = 'decision' | 'event' | 'dead-end' | 'discovery' | 'pivot';
 
-export type NodeCategory = 'technical' | 'functional' | 'ux-design' | 'process';
+// 'ux' is a legacy value on one meta node; it is not in CATEGORY_ORDER, so it is not counted.
+export type NodeCategory = 'technical' | 'functional' | 'ux-design' | 'process' | 'ux';
 
 export interface BaseNode {
   id: string;
@@ -24,7 +25,7 @@ export interface EventNode extends BaseNode {
 
 export interface DeadEndNode extends BaseNode {
   type: 'dead-end';
-  failureReason: string;
+  failureReason?: string;
 }
 
 export interface DiscoveryNode extends BaseNode {
@@ -64,7 +65,7 @@ export interface ProjectStats {
   majorDecisions: number;
 }
 
-export type ProjectType = 'web-app' | 'addon' | 'game' | 'tool' | 'extension' | 'joint';
+export type ProjectType = 'web-app' | 'app' | 'addon' | 'game' | 'tool' | 'extension' | 'joint';
 export type ProjectPhase = 'Research' | 'Spec' | 'Build' | 'Review' | 'Shipped';
 
 export interface ProjectMilestone {
@@ -109,6 +110,7 @@ export type WorkCategory =
   | 'Data'
   | 'Local-Tooling'
   | 'Planning'
+  | 'Research'
   | 'Tooling';
 
 export type WorkDriver = 'human' | 'human-only' | 'ai' | 'agent-led' | 'collaborative';

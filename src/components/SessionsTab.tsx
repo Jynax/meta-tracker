@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, type ReactNode } from 'react';
+import { useMemo, useState, useCallback, type Dispatch, type ReactNode, type SetStateAction } from 'react';
 import { Card, C } from './MetricsCard';
 import { formatShortDate, buildSmoothPath } from './chartUtils';
 import { thinLabels, defaultWindow } from '../utils/brushUtils';
@@ -24,7 +24,7 @@ interface SessionsTabProps {
   onJumpToChapter?: (chapterId: string) => void;
   hoveredPointIndex: number | null;
   setHoveredPointIndex: (index: number | null) => void;
-  setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
+  setTooltip: Dispatch<SetStateAction<{ x: number; y: number; content: ReactNode } | null>>;
 }
 
 export default function SessionsTab({
@@ -46,7 +46,7 @@ export default function SessionsTab({
     setVisibleRangeDriver(null);
   }, []);
 
-  const toolColors: Record<SessionTool, string> = {
+  const toolColors: Partial<Record<SessionTool, string>> = {
     'Claude Code': C.emerald,
     'Codex': C.amber,
     'Cowork': C.slate,
@@ -847,9 +847,9 @@ export default function SessionsTab({
                         </div>
                       </div>
                       <div className="flex items-center gap-4 text-xs" style={{ color: C.slate }}>
-                        {block.timeMinutes > 0 && <span>{Math.floor(block.timeMinutes / 60)}h {block.timeMinutes % 60 > 0 ? (block.timeMinutes % 60) + 'm' : ''}</span>}
-                        {block.linesAdded > 0 && <span style={{ color: C.emerald }}>+{block.linesAdded.toLocaleString()}</span>}
-                        {block.linesDeleted > 0 && <span style={{ color: C.rose }}>-{block.linesDeleted.toLocaleString()}</span>}
+                        {block.timeMinutes != null && block.timeMinutes > 0 && <span>{Math.floor(block.timeMinutes / 60)}h {block.timeMinutes % 60 > 0 ? (block.timeMinutes % 60) + 'm' : ''}</span>}
+                        {block.linesAdded != null && block.linesAdded > 0 && <span style={{ color: C.emerald }}>+{block.linesAdded.toLocaleString()}</span>}
+                        {block.linesDeleted != null && block.linesDeleted > 0 && <span style={{ color: C.rose }}>-{block.linesDeleted.toLocaleString()}</span>}
                       </div>
                       {block.note && <p className="mt-1 text-xs" style={{ color: C.muted }}>{block.note}</p>}
                     </div>

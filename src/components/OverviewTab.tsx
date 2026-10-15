@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from 'react';
+import { useMemo, type Dispatch, type ReactNode, type SetStateAction } from 'react';
 import { ALL_PROJECTS } from '../data/projectRegistry';
 import type { DayEntry, ProjectPhase, WorkCategory } from '../types';
 import { Card, C } from './MetricsCard';
@@ -22,7 +22,7 @@ interface OverviewTabProps {
   projectId: string;
   hoveredPointIndex: number | null;
   setHoveredPointIndex: (index: number | null) => void;
-  setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
+  setTooltip: Dispatch<SetStateAction<{ x: number; y: number; content: ReactNode } | null>>;
   activeProjectId?: string;
   onProjectChange?: (projectId: string) => void;
 }

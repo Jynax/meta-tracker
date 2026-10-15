@@ -9,19 +9,23 @@ export type TaskStatus = 'Queued' | 'In Progress' | 'Blocked' | 'Done' | 'Cancel
 
 export type Priority = 'Low' | 'Medium' | 'High' | 'Critical';
 
-export type Tool = 'claude-code' | 'claude-ai' | 'cursor' | 'cowork' | 'manual' | 'mixed';
+// The generator passes frontmatter through unvalidated, so free-text values
+// (e.g. 'any (infra only)') appear in the data. `string & {}` keeps autocomplete.
+export type Tool = 'claude-code' | 'claude-ai' | 'cursor' | 'cowork' | 'manual' | 'mixed' | (string & {});
 
 export type Driver = 'human' | 'agent-led' | 'collaborative';
 
-export type OutputType = 'PR' | 'Spec' | 'Doc' | 'Brainstorm' | 'Other';
+// Frontmatter also uses lowercase/unlisted kinds ('spec', 'plan', 'command', 'doc').
+export type OutputType = 'PR' | 'Spec' | 'Doc' | 'Brainstorm' | 'Other' | (string & {});
 
 export interface TaskOutput {
   type: OutputType;
-  ref: string | number;
+  ref?: string | number;
+  path?: string;
 }
 
 export interface TaskDates {
-  created: string;
+  created: string | null;
   started: string | null;
   completed: string | null;
 }
@@ -36,7 +40,7 @@ export interface Decision {
   title: string;
   chosen: string;
   alternatives: string[];
-  rationale: string;
+  rationale?: string;
   date: string;
 }
 
@@ -56,6 +60,7 @@ export interface Epic {
   status: EpicStatus;
   startDate: string;
   endDate: string | null;
+  consolidatesChapters?: string[];
 }
 
 export interface Task {

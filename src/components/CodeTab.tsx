@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from 'react';
 import { Card, C } from './MetricsCard';
 import type { CodeVolumeEntry } from '../data/metaMetrics';
 import type { DayEntry } from '../types';
@@ -12,7 +12,7 @@ interface CodeTabProps {
   currentLoc: number;
   hoveredCodeEntry: string | null;
   setHoveredCodeEntry: (entry: string | null) => void;
-  setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
+  setTooltip: Dispatch<SetStateAction<{ x: number; y: number; content: ReactNode } | null>>;
 }
 
 export default function CodeTab({

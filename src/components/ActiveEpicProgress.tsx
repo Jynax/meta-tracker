@@ -1,9 +1,9 @@
-import { useCallback, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from 'react';
 import { getEpicCumulativeSeries } from '../utils/trackerDataAdapter';
 
 interface ActiveEpicProgressProps {
   projectId: string;
-  setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
+  setTooltip: Dispatch<SetStateAction<{ x: number; y: number; content: ReactNode } | null>>;
 }
 
 export default function ActiveEpicProgress({ projectId: _projectId, setTooltip }: ActiveEpicProgressProps) {

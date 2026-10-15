@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from 'react';
 import { getEpicGanttBars } from '../utils/trackerDataAdapter';
 import { C } from './MetricsCard';
 import { formatIsoDateShort } from '../utils/dateUtils';
@@ -16,7 +16,7 @@ function formatShortDate(iso: string): string {
 }
 
 interface EpicGanttProps {
-  setTooltip?: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
+  setTooltip?: Dispatch<SetStateAction<{ x: number; y: number; content: ReactNode } | null>>;
 }
 
 export default function EpicGantt({ setTooltip }: EpicGanttProps = {}) {

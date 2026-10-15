@@ -1,6 +1,8 @@
-export type SessionTool = 'Claude Code' | 'Codex' | 'Cowork' | 'Mixed';
+import type { DayEntry } from '../types/index';
 
-export type WorkCategory = 'Feature' | 'Refactor' | 'Bug' | 'Tooling' | 'Scripting' | 'Data' | 'Local-Tooling' | 'Planning';
+export type SessionTool = 'Claude Code' | 'Codex' | 'Cowork' | 'Mixed' | 'Cursor';
+
+export type WorkCategory = 'Feature' | 'Refactor' | 'Bug' | 'Tooling' | 'Scripting' | 'Data' | 'Local-Tooling' | 'Planning' | 'Research' | 'UX' | 'Testing';
 
 export interface CodeVolumeEntry {
   session: string;
@@ -12,7 +14,7 @@ export interface CodeVolumeEntry {
   total: number;
 }
 
-export type SessionPhase = 'Research' | 'Spec' | 'Build' | 'Review';
+export type SessionPhase = 'Research' | 'Spec' | 'Build' | 'Review' | 'Shipped';
 export type SessionDriver = 'human' | 'human-only' | 'agent-led' | 'collaborative';
 export type SessionOperator = 'michael' | 'redacted' | 'joint';
 
@@ -64,7 +66,7 @@ export interface DerivedMetric {
 
 export interface StackEntry {
   name: string;
-  cat: 'Core' | 'UI' | 'Build' | 'Utility';
+  cat: 'Core' | 'UI' | 'Build' | 'Utility' | 'Backend' | 'Hosting';
 }
 
 export const bipCodeVolume: CodeVolumeEntry[] = [

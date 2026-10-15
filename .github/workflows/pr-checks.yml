@@ -22,6 +22,5 @@ jobs:
       # follow-up PR, which removes this line so type errors block merges.
       - name: Type check
         run: npx tsc -b
-        continue-on-error: true
       - name: Build
         run: npm run build

@@ -149,7 +149,7 @@ export interface TaskTreeNode {
   tool: string | null;
   driver: string | null;
   outputs: TaskOutput[];
-  dates: { created: string; started: string | null; completed: string | null };
+  dates: { created: string | null; started: string | null; completed: string | null };
   decisions: Decision[];
   events: TaskEvent[];
 }

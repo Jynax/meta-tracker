@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from 'react';
 import { C } from './MetricsCard';
 import {
   getWeeklyTaskBuckets,
@@ -10,7 +10,7 @@ import { formatIsoDateShort } from '../utils/dateUtils';
 
 interface TasksTabProps {
   projectId: string;
-  setTooltip: (tooltip: { x: number; y: number; content: ReactNode } | null) => void;
+  setTooltip: Dispatch<SetStateAction<{ x: number; y: number; content: ReactNode } | null>>;
 }
 
 const EPIC_PALETTE = [
